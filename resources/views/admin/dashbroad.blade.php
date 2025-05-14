@@ -1,9 +1,6 @@
 @extends('layouts.backend')
 
 @section('content')
- <div class="main-content">
-
-            <div class="page-content">
                 <div class="container-fluid">
 
                     <div class="row">
@@ -1280,10 +1277,4 @@
 
                         </div> <!-- end col -->
                     </div>
-
-                </div>
-                <!-- container-fluid -->
-            </div>
-            <!-- End Page-content -->
-
 @endsection
