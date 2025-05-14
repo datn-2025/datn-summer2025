@@ -463,97 +463,11 @@
                                             </ul>
                                         </div>
                                     </li>
-                                    <li class="nav-item">
-                                        <a href="apps-file-manager.html" class="nav-link"> <span data-key="t-file-manager">File Manager</span></a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="apps-todo.html" class="nav-link"> <span data-key="t-to-do">To Do</span></a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="#sidebarjobs" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarjobs" data-key="t-jobs"> Jobs</a>
-                                        <div class="collapse menu-dropdown" id="sidebarjobs">
-                                            <ul class="nav nav-sm flex-column">
-                                                <li class="nav-item">
-                                                    <a href="apps-job-statistics.html" class="nav-link" data-key="t-statistics"> Statistics </a>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a href="#sidebarJoblists" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarJoblists" data-key="t-job-lists">
-                                                        Job Lists
-                                                    </a>
-                                                    <div class="collapse menu-dropdown" id="sidebarJoblists">
-                                                        <ul class="nav nav-sm flex-column">
-                                                            <li class="nav-item">
-                                                                <a href="apps-job-lists.html" class="nav-link" data-key="t-list"> List
-                                                                </a>
-                                                            </li>
-                                                            <li class="nav-item">
-                                                                <a href="apps-job-grid-lists.html" class="nav-link" data-key="t-grid"> Grid </a>
-                                                            </li>
-                                                            <li class="nav-item">
-                                                                <a href="apps-job-details.html" class="nav-link" data-key="t-overview"> Overview</a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a href="#sidebarCandidatelists" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarCandidatelists" data-key="t-candidate-lists">
-                                                        Candidate Lists
-                                                    </a>
-                                                    <div class="collapse menu-dropdown" id="sidebarCandidatelists">
-                                                        <ul class="nav nav-sm flex-column">
-                                                            <li class="nav-item">
-                                                                <a href="apps-job-candidate-lists.html" class="nav-link" data-key="t-list-view"> List View
-                                                                </a>
-                                                            </li>
-                                                            <li class="nav-item">
-                                                                <a href="apps-job-candidate-grid.html" class="nav-link" data-key="t-grid-view"> Grid View</a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a href="apps-job-application.html" class="nav-link" data-key="t-application"> Application </a>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a href="apps-job-new.html" class="nav-link" data-key="t-new-job"> New Job </a>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a href="apps-job-companies-lists.html" class="nav-link" data-key="t-companies-list"> Companies List </a>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a href="apps-job-categories.html" class="nav-link" data-key="t-job-categories"> Job Categories</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="apps-api-key.html" class="nav-link" data-key="t-api-key">API Key</a>
-                                    </li>
                                 </ul>
                             </div>
                         </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link menu-link" href="#sidebarLayouts" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarLayouts">
-                                <i class="ri-layout-3-line"></i> <span data-key="t-layouts">Layouts</span> <span class="badge badge-pill bg-danger" data-key="t-hot">Hot</span>
-                            </a>
-                            <div class="collapse menu-dropdown" id="sidebarLayouts">
-                                <ul class="nav nav-sm flex-column">
-                                    <li class="nav-item">
-                                        <a href="layouts-horizontal.html" target="_blank" class="nav-link" data-key="t-horizontal">Horizontal</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="layouts-detached.html" target="_blank" class="nav-link" data-key="t-detached">Detached</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="layouts-two-column.html" target="_blank" class="nav-link" data-key="t-two-column">Two Column</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="layouts-vertical-hovered.html" target="_blank" class="nav-link" data-key="t-hovered">Hovered</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li> <!-- end Dashboard Menu -->
+                        
                     </ul>
                 </div>
                 <!-- Sidebar -->
