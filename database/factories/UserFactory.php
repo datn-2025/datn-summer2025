@@ -23,11 +23,18 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
-        return [
-            'name' => fake()->name(),
-            'email' => fake()->unique()->safeEmail(),
+         return [
+            'id' => (string) Str::uuid(),
+            'name' => $this->faker->name(),
+            'email' => $this->faker->unique()->safeEmail(),
             'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make('password'),
+            'password' => Hash::make('password'), // hoặc bcrypt('password')
+            'phone_number' => $this->faker->optional()->phoneNumber(),
+            'role' => $this->faker->randomElement(['user', 'admin', 'store']),
+            'status' => $this->faker->randomElement(['Hoạt Động', 'Không Hoạt Động']),
+            'avatar_url' => $this->faker->optional()->imageUrl(200, 200, 'people'),
+            'address' => $this->faker->optional()->address(),
+            'last_login_at' => $this->faker->optional()->dateTimeBetween('-1 year', 'now'),
             'remember_token' => Str::random(10),
         ];
     }
