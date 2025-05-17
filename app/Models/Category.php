@@ -45,6 +45,6 @@ class Category extends Model
     // Sản phẩm thuộc danh mục
     public function products()
     {
-        return $this->hasMany(Product::class);
+        return $this->hasMany(Product::class,'category_id');
     }
 }

@@ -47,7 +47,7 @@ class Product extends Model
     // Product thuộc về 1 category
     public function category()
     {
-        return $this->belongsTo(category::class);
+        return $this->belongsTo(category::class,'category_id');
     }
 
     public function images()
