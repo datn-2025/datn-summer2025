@@ -2,17 +2,26 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use App\Models\Order;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\OrderStatus;
 use Illuminate\Database\Seeder;
 
 class OrderSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
-    public function run(): void
+    public function run()
     {
-        Order::factory()->count(20)->create();
+        $users = User::whereHas('role', function ($query) {
+            $query->where('name', 'User');
+        })->get();
+
+        foreach ($users as $user) {
+            // Mỗi user có 1-3 đơn hàng
+            Order::factory(rand(1, 3))->create([
+                'user_id' => $user->id,
+                'address_id' => $user->addresses()->inRandomOrder()->first()->id,
+                'order_status_id' => OrderStatus::inRandomOrder()->first()->id
+            ]);
+        }
     }
 }

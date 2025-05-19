@@ -2,28 +2,21 @@
 
 namespace Database\Factories;
 
-use Illuminate\Support\Str;
+use App\Models\Category;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Category>
- */
 class CategoryFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
+    protected $model = Category::class;
+
     public function definition(): array
     {
+        $name = $this->faker->unique()->words(2, true);
         return [
-            'id' => (string) Str::uuid(),
-            'name' => $this->faker->unique()->word(),
-            'slug' => Str::slug($this->faker->unique()->word()),
-            'parent_id' => null, // sẽ cập nhật lại trong Seeder nếu cần danh mục con
-            'created_at' => now(),
-            'updated_at' => now(),
+            'name' => ucwords($name),
+            'slug' => Str::slug($name),
+            'image' => $this->faker->imageUrl(640, 480, 'categories'),
         ];
     }
 }

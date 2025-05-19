@@ -2,31 +2,28 @@
 
 namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
+use App\Models\Order;
 use App\Models\User;
+use App\Models\Address;
+use App\Models\Voucher;
 use App\Models\OrderStatus;
 use App\Models\PaymentStatus;
-use App\Models\PaymentMethod;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 class OrderFactory extends Factory
 {
+    protected $model = Order::class;
+
     public function definition(): array
     {
+        $user = User::inRandomOrder()->first() ?? User::factory()->create();
         return [
-            'id' => (string) Str::uuid(),
-            'user_id' => User::inRandomOrder()->first()->id ?? User::factory(),
-            'order_status_id' => OrderStatus::inRandomOrder()->first()->id ?? OrderStatus::factory(),
+            'user_id' => $user->id,
+            'address_id' => Address::where('user_id', $user->id)->inRandomOrder()->first()->id ?? Address::factory()->create(['user_id' => $user->id])->id,
+            'voucher_id' => $this->faker->boolean(30) ? Voucher::inRandomOrder()->first()->id ?? Voucher::factory()->create()->id : null,
+            'total_amount' => $this->faker->randomFloat(2, 100000, 10000000),
+            'order_status_id' => OrderStatus::inRandomOrder()->first()->id ?? OrderStatus::factory()->create()->id,
             'payment_status_id' => PaymentStatus::inRandomOrder()->first()->id ?? PaymentStatus::factory()->create()->id,
-            'payment_method_id' => PaymentMethod::inRandomOrder()->first()->id ?? PaymentMethod::factory(),
-
-            'coupon_code' => $this->faker->optional()->bothify('COUPON###'),
-            'discount_amount' => $this->faker->randomFloat(2, 0, 50),
-            'total_price' => $this->faker->randomFloat(2, 100, 1000),
-            'shipping_address' => $this->faker->address,
-
-            'order_date' => $this->faker->dateTimeBetween('-30 days', 'now'),
-            'shipped_date' => $this->faker->optional()->dateTimeBetween('now', '+10 days'),
         ];
     }
 }

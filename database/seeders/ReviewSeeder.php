@@ -2,13 +2,13 @@
 
 namespace Database\Seeders;
 
-use App\Models\Category;
+use App\Models\Review;
 use Illuminate\Database\Seeder;
 
-class CategorySeeder extends Seeder
+class ReviewSeeder extends Seeder
 {
     public function run()
     {
-        Category::factory(10)->create();
+        Review::factory(30)->create();
     }
 }
