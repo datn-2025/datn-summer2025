@@ -2,20 +2,38 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Str;
-
 class InvoiceItem extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'invoice_id',
-        'product_id',
+        'book_id',
         'quantity',
-        'price',
+        'price'
     ];
+
+    protected $casts = [
+        'quantity' => 'integer',
+        'price' => 'decimal:2'
+    ];
+
+    public $incrementing = false; 
+    protected $keyType = 'string';
+
+    public function invoice(): BelongsTo
+    {
+        return $this->belongsTo(Invoice::class);
+    }
+
+    public function book(): BelongsTo
+    {
+        return $this->belongsTo(Book::class);
+    }
 
     protected static function boot()
     {
@@ -26,15 +44,5 @@ class InvoiceItem extends Model
                 $model->id = (string) Str::uuid();
             }
         });
-    }
-
-    public function invoice()
-    {
-        return $this->belongsTo(Invoice::class);
-    }
-
-    public function product()
-    {
-        return $this->belongsTo(Product::class);
     }
 }
