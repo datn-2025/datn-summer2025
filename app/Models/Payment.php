@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Str;
-
 class Payment extends Model
 {
     use HasFactory;
@@ -13,12 +13,28 @@ class Payment extends Model
     protected $fillable = [
         'order_id',
         'payment_method_id',
-        'payment_status_id',
-        'amount',
         'transaction_id',
-        'payment_gateway',
-        'payment_date',
+        'amount',
+        'paid_at'
     ];
+
+    protected $casts = [
+        'amount' => 'decimal:2',
+        'paid_at' => 'datetime'
+    ];
+
+    public $incrementing = false; 
+    protected $keyType = 'string';
+
+    public function order(): BelongsTo
+    {
+        return $this->belongsTo(Order::class);
+    }
+
+    public function paymentMethod(): BelongsTo
+    {
+        return $this->belongsTo(PaymentMethod::class);
+    }
 
     protected static function boot()
     {
@@ -29,20 +45,5 @@ class Payment extends Model
                 $model->id = (string) Str::uuid();
             }
         });
-    }
-
-    public function order()
-    {
-        return $this->belongsTo(Order::class);
-    }
-
-    public function paymentMethod()
-    {
-        return $this->belongsTo(PaymentMethod::class);
-    }
-
-    public function paymentStatus()
-    {
-        return $this->belongsTo(PaymentStatus::class);
     }
 }
