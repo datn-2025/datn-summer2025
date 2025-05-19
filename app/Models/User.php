@@ -19,9 +19,12 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name', 'email', 'password',
-        'phone_number', 'role', 'status',
-        'avatar_url', 'address',
+        'name',
+        'email',
+        'password',
+        'phone',
+        'status',
+        'role_id'
     ];
 
     /**
@@ -48,7 +51,7 @@ class User extends Authenticatable
     }
 
     public $incrementing = false;
-protected $keyType = 'string';
+    protected $keyType = 'string';
 
     protected static function boot()
     {
@@ -60,19 +63,34 @@ protected $keyType = 'string';
             }
         });
     }
-    
-    public function stores()
+
+    public function role()
     {
-        return $this->hasMany(Store::class);
+        return $this->belongsTo(Role::class);
     }
 
-    public function wishlist()
+    public function addresses()
     {
-        return $this->hasMany(Wishlist::class);
+        return $this->hasMany(Address::class);
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
     }
 
     public function reviews()
     {
         return $this->hasMany(Review::class);
+    }
+
+    public function wishlists()
+    {
+        return $this->hasMany(Wishlist::class);
+    }
+
+    public function appliedVouchers()
+    {
+        return $this->hasMany(AppliedVoucher::class);
     }
 }
