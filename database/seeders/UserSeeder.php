@@ -3,26 +3,25 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Address;
+use App\Models\Role;
 use Illuminate\Database\Seeder;
 
 class UserSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        // Tạo 1 admin
-        // User::factory()->create([
-        //     'name' => 'Admin User',
-        //     'email' => 'admin@example.com',
-        //     'password' => bcrypt('12345678'), // Mật khẩu đã được mã hóa
-        //     'role' => 'admin',
-        //     'status' => 'Hoạt động',
-        // ]);
+        $adminRole = Role::where('name', 'Admin')->first();
+        $userRole = Role::where('name', 'User')->first();
 
-        // Tạo 10 user ngẫu nhiên
-        User::factory()->count(10)->create();
+        // Tạo 2 admin users
+        User::factory(2)->create([
+            'role_id' => $adminRole->id
+        ]);
+
+        // Tạo 20 user thường
+        User::factory(10)->create([
+            'role_id' => $userRole->id
+        ]);
     }
 }
