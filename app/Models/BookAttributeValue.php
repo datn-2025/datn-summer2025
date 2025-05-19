@@ -6,22 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Str;
-class Wishlist extends Model
+class BookAttributeValue extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'user_id',
-        'book_id'
+        'book_id',
+        'attribute_value_id'
     ];
-
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    public $incrementing = false; 
-    protected $keyType = 'string';
 
     protected static function boot()
     {
@@ -34,8 +26,16 @@ class Wishlist extends Model
         });
     }
 
+    public $incrementing = false; 
+    protected $keyType = 'string';
+
     public function book(): BelongsTo
     {
         return $this->belongsTo(Book::class);
+    }
+
+    public function attributeValue(): BelongsTo
+    {
+        return $this->belongsTo(AttributeValue::class);
     }
 }

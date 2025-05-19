@@ -4,18 +4,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
-
 class PaymentMethod extends Model
 {
     use HasFactory;
+    protected $fillable = ['name'];
 
-    protected $fillable = [
-        'name',
-        'description',
-    ];
-    public $incrementing = false;
+    public $incrementing = false; 
     protected $keyType = 'string';
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class);
+    }
 
     protected static function boot()
     {
@@ -26,10 +28,5 @@ class PaymentMethod extends Model
                 $model->id = (string) Str::uuid();
             }
         });
-    }
-
-    public function orders()
-    {
-        return $this->hasMany(Order::class);
     }
 }

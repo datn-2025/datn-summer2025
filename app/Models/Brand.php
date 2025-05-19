@@ -2,22 +2,23 @@
 
 namespace App\Models;
 
-use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Str;
 
-class OrderStatus extends Model
+class Brand extends Model
 {
     use HasFactory;
-    protected $fillable = ['name'];
 
-    public $incrementing = false; 
+    protected $fillable = ['name', 'description', 'image'];
+
+    public $incrementing = false;
     protected $keyType = 'string';
 
-    public function orders(): HasMany
+    public function books(): HasMany
     {
-        return $this->hasMany(Order::class);
+        return $this->hasMany(Book::class);
     }
 
     protected static function boot()

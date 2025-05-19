@@ -3,25 +3,19 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Str;
-class Wishlist extends Model
+class Author extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'user_id',
-        'book_id'
-    ];
+    protected $fillable = ['name', 'biography', 'image'];
 
-    public function user(): BelongsTo
+    public function books(): HasMany
     {
-        return $this->belongsTo(User::class);
+        return $this->hasMany(Book::class);
     }
-
-    public $incrementing = false; 
-    protected $keyType = 'string';
 
     protected static function boot()
     {
@@ -34,8 +28,6 @@ class Wishlist extends Model
         });
     }
 
-    public function book(): BelongsTo
-    {
-        return $this->belongsTo(Book::class);
-    }
+    public $incrementing = false; 
+    protected $keyType = 'string';
 }

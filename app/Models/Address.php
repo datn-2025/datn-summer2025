@@ -2,26 +2,35 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Str;
-class Wishlist extends Model
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+class Address extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'user_id',
-        'book_id'
+        'recipient_name',
+        'phone',
+        'address_detail',
+        'city',
+        'district',
+        'ward',
+        'is_default'
+    ];
+
+    protected $casts = [
+        'is_default' => 'boolean'
     ];
 
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
-
-    public $incrementing = false; 
-    protected $keyType = 'string';
 
     protected static function boot()
     {
@@ -34,8 +43,11 @@ class Wishlist extends Model
         });
     }
 
-    public function book(): BelongsTo
+    public function orders(): HasMany
     {
-        return $this->belongsTo(Book::class);
+        return $this->hasMany(Order::class);
     }
+
+    public $incrementing = false; 
+    protected $keyType = 'string';
 }

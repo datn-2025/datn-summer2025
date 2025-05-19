@@ -6,34 +6,21 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Str;
-class Payment extends Model
+class BookImage extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'order_id',
-        'payment_method_id',
-        'transaction_id',
-        'amount',
-        'paid_at'
-    ];
-
-    protected $casts = [
-        'amount' => 'decimal:2',
-        'paid_at' => 'datetime'
+        'book_id',
+        'image_url'
     ];
 
     public $incrementing = false; 
     protected $keyType = 'string';
 
-    public function order(): BelongsTo
+    public function book(): BelongsTo
     {
-        return $this->belongsTo(Order::class);
-    }
-
-    public function paymentMethod(): BelongsTo
-    {
-        return $this->belongsTo(PaymentMethod::class);
+        return $this->belongsTo(Book::class);
     }
 
     protected static function boot()
