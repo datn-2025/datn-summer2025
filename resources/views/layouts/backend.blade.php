@@ -666,10 +666,6 @@
                                         <a href="{{ route('admin.users.index') }}" class="nav-link" data-key="t-signin"> Danh sách
                                         </a>
                                     </li>
-                                    <li class="nav-item">
-                                        <a href="" class="nav-link" data-key="t-signup"> Thêm
-                                        </a>
-                                    </li>
                                 </ul>
                             </div>
                         </li>

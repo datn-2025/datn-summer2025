@@ -1,6 +1,6 @@
 @extends('layouts.backend')
 
-@section('title', 'Dashboard')
+@section('title', 'Danh Sách Người Dùng')
 
 @section('content')
 <div class="container-fluid">
@@ -84,8 +84,18 @@
                                                         </td>
                                                         <td>{{ $user->email }}</td>
                                                         <td>{{ $user->phone }}</td>
-                                                        <td>{{ $user->role_id == 1 ? 'Admin' : 'Người dùng' }}</td>
-                                                        <td>{{ $user->status == 1 ? 'Hoạt động' : 'Đã Chặn' }}</td>
+                                                        <td>{{ $user->role ? $user->role->name : 'Chưa phân quyền' }}</td>
+                                                        <td>
+                                                            @if($user->status === 'Hoạt Động')
+                                                                <span class="badge bg-success">Hoạt Động</span>
+                                                            @elseif($user->status === 'Bị Khóa')
+                                                                <span class="badge bg-danger">Bị Khóa</span>
+                                                            @elseif($user->status === 'Chưa kích Hoạt')
+                                                                <span class="badge bg-warning">Chưa kích Hoạt</span>
+                                                            @else
+                                                                <span class="badge bg-secondary">Không xác định</span>
+                                                            @endif
+                                                        </td>
                                                         <td>
                                                             <a href="{{ route('admin.users.show', ['id' => $user->id]) }}" class="link-success fs-15">
                                                                 <i class="las la-eye"></i>

@@ -58,7 +58,7 @@
                                                                     </tr>
                                                                     <tr>
                                                                         <th>Vai trò:</th>
-                                                                        <td>{{ $user->role_id == 1 ? 'Admin' : 'Client' }}</td>
+                                                                        <td>{{ $user->role ? $user->role->name : 'Chưa phân quyền' }}</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th>Ngày tạo:</th>
@@ -80,130 +80,77 @@
                                                                         <tr>
                                                                             <th>STT</th>
                                                                             <th>Mã đơn hàng</th>
-                                                                            <th>Tên người nhân</th>
+                                                                            <th>Tên người nhận</th>
                                                                             <th>Số điện thoại</th>
                                                                             <th>Ngày đặt</th>
                                                                             <th>Tổng Tiền</th>
-                                                                            <th>Trạng thái</th>
+                                                                            <th>Trạng thái đơn hàng </th>
+                                                                            <th>Trạng thái thanh toán  </th>
                                                                             <th>Thao tác</th>
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
-                                                                        <?php foreach ($listDonHang as $key => $donHang) : ?>
+                                                                        @forelse($listDonHang as $key => $donHang)
                                                                             <tr>
-                                                                                <td><?= $key + 1 ?></td>
-                                                                                <td><?= $donHang['ma_don_hang'] ?></td>
-                                                                                <td><?= $donHang['ten_nguoi_nhan'] ?></td>
-                                                                                <td><?= $donHang['sdt_nguoi_nhan'] ?></td>
-                                                                                <td><?= $donHang['ngay_dat'] ?></td>
-                                                                                <td><?= $donHang['tong_don_hang'] ?></td>
+                                                                                <td>{{ $key + 1 }}</td>
+                                                                                <td>{{ $donHang->order_code }}</td>
+                                                                                <td>{{ $donHang->shipping_name }}</td>
+                                                                                <td>{{ $donHang->shipping_phone }}</td>
+                                                                                <td>{{ $donHang->created_at }}</td>
+                                                                                <td>{{ number_format($donHang->total_amount, 0, ',', '.') }}đ</td>
                                                                                 <td>
-                                                                                    <?php
-                                                            if ($donHang["trang_thai_id"] >= 1 &&  $donHang["trang_thai_id"] <= 5){
-                                                            ?>
-                                                            <span class="badge bg-primary"><?= $donHang["ten_trang_thai"]?></span>
-                                                            <?php
-                                                            }elseif($donHang["trang_thai_id"] == 6 ){
-                                                            ?>
-                                                            <span class="badge bg-danger"><?= $donHang["ten_trang_thai"]?></span>
-                                                            <?php } elseif($donHang["trang_thai_id"] == 7 ){
-                                                            ?>
-                                                            <span class="badge bg-warning"><?= $donHang["ten_trang_thai"]?></span>
-                                                            <?php }else{
-                                                            ?>
-                                                            <span class="badge bg-success"><?= $donHang["ten_trang_thai"]?></span>
-                                                            <?php } 
-                                                            ?>
+                                                                                    @if($donHang->orderStatus)
+                                                                                        @php
+                                                                                            $statusClass = match($donHang->orderStatus->name) {
+                                                                                                'Chờ xác nhận' => 'bg-warning',
+                                                                                                'Đã xác nhận' => 'bg-info',
+                                                                                                'Đang chuẩn bị' => 'bg-info',
+                                                                                                'Đang giao hàng' => 'bg-primary', 
+                                                                                                'Đã giao thành công' => 'bg-success',
+                                                                                                'Đã nhận hàng' => 'bg-success',
+                                                                                                'Thành công' => 'bg-success',
+                                                                                                'Giao thất bại' => 'bg-danger',
+                                                                                                'Đã hủy' => 'bg-danger',
+                                                                                                'Đã hoàn tiền' => 'bg-warning',
+                                                                                                default => 'bg-secondary'
+                                                                                            };
+                                                                                        @endphp
+                                                                                        <span class="badge {{ $statusClass }}">{{ $donHang->orderStatus->name }}</span>
+                                                                                    @else
+                                                                                        <span class="badge bg-secondary">Không xác định</span>
+                                                                                    @endif                                                                                </td>
+                                                                                <td>
+                                                                                    @if($donHang->paymentStatus)
+                                                                                        @php
+                                                                                            $paymentStatusClass = match($donHang->paymentStatus->name) {
+                                                                                                'Chưa thanh toán' => 'bg-warning',
+                                                                                                'Đã thanh toán' => 'bg-success',
+                                                                                                'Đã hoàn tiền' => 'bg-info',
+                                                                                                'Thanh toán thất bại' => 'bg-danger',
+                                                                                                'Đang xử lý' => 'bg-primary',
+                                                                                                default => 'bg-secondary'
+                                                                                            };
+                                                                                        @endphp
+                                                                                        <span class="badge {{ $paymentStatusClass }}">{{ $donHang->paymentStatus->name }}</span>
+                                                                                    @else
+                                                                                        <span class="badge bg-secondary">Không xác định</span>
+                                                                                    @endif
                                                                                 </td>
                                                                                 <td>
                                                                                     <div class="btn-group">
-                                                                                       <a style="margin-right:15px;" href="<?= '?act=chi-tiet-don-hang&id_don_hang=' . $donHang['id'] ?>" class="link-success fs-15"><i class="las la-eye"></i></a>
-                                                <a href="<?=  '?act=form-sua-don-hang&id_don_hang=' . $donHang['id'] ?>"  class="link-success fs-15"><i class="ri-edit-2-line"></i></a>
+                                                                                        <a href="" class="link-success fs-15"><i class="las la-eye"></i></a>
                                                                                     </div>
                                                                                 </td>
                                                                             </tr>
-                                                                            <?php endforeach ?>
-                                                                        </tbody>
-                                                                    </table>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-12">
-                                                            <hr>
-                                                            <h2>Lịch sử bình luận</h2>
-                                                            <div>
-                                                                <table id="example1" class="table table-striped table-nowrap align-middle mb-0">
-                                                                <thead>
-                                                                    <tr>
-                                                                    <th>STT</th>
-                                                                    <th>Sản Phẩm</th>
-                                                                    <th>Ảnh Sản phẩm</th>
-                                                                    <th>Nội dung</th>
-                                                                    <th>Ngày bình luận</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    <?php if (!empty($listBinhLuan)) : ?>
-                                                                    <?php foreach ($listBinhLuan as $key => $binhluan) :?>
-                                                                    <tr>
-                                                                        <td><?= $key + 1?></td>
-                                                                        
-                                                                        <td><?= $binhluan['ten_san_pham']?></td>
-                                                                        <td>
-                                                                            <img style="border-radius:5px;" src="<?= BASE_URL . $binhluan['hinh_anh']?>" alt="chưa có ảnh" width="100px" height="100px">
-                                                                        </td>
-                                                                        <td><?= $binhluan['noi_dung']?></td>
-                                                                        <td><?= $binhluan['ngay_binh_luan']?></td>
-                                                                        
-                                                                        
-                                                                    </tr>
-                                                                    <?php endforeach;?>
-                                                                    <?php else : ?>
-                                                                        <tr>
-                                                                            <td colspan="6" class="text-center">Người dùng chưa có bình luận nào.</td>
-                                                                        </tr>
-                                                                    <?php endif; ?>
-                                                                </tbody>
-                                                                </table>
-                                                            </div>
-                                                            <hr>
-                                                            <h2>Lịch sử đánh giá</h2>
-                                                            <div>
-                                                                <table id="example1" class="table table-striped table-nowrap align-middle mb-0">
-                                                                <thead>
-                                                                    <tr>
-                                                                    <th>STT</th>
-                                                                    <th>Sản Phẩm</th>
-                                                                    <th>Ảnh Sản phẩm</th>
-                                                                    <th>Đánh giá</th>
-                                                                    <th>Ngày đánh giá</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    <?php if (!empty($listDanhGia)) : ?>
-                                                                    <?php foreach ($listDanhGia as $key => $danhgia) :?>
-                                                                    <tr>
-                                                                        <td><?= $key + 1?></td>
-                                                                        
-                                                                        <td><?= $danhgia['ten_san_pham']?></td>
-                                                                        <td>
-                                                                            <img style="border-radius:5px;" src="<?= BASE_URL . $danhgia['hinh_anh']?>" alt="chưa có ảnh" width="100px" height="100px">
-                                                                        </td>
-                                                                        <td><?= $danhgia['danh_gia']?></td>
-                                                                        <td><?= $danhgia['ngay_danh_gia']?></td>
-                                                                        
-                                                                        
-                                                                    </tr>
-                                                                    <?php endforeach;?>
-                                                                    <?php else : ?>
-                                                                        <tr>
-                                                                            <td colspan="6" class="text-center">Người dùng chưa có bình luận nào.</td>
-                                                                        </tr>
-                                                                    <?php endif; ?>
-                                                                </tbody>
+                                                                        @empty
+                                                                            <tr>
+                                                                                <td colspan="8" class="text-center">Chưa có đơn hàng nào</td>
+                                                                            </tr>
+                                                                        @endforelse
+                                                                    </tbody>
                                                                 </table>
                                                             </div>
                                                         </div>
-                                                        <!-- /.col -->
                                                     </div>
                                                     <!-- /.row -->
                                                 </div>
