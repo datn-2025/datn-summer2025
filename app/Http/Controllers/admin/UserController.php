@@ -11,17 +11,23 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $query = User::with('role')->select('id', 'name', 'avatar', 'email', 'phone', 'role_id', 'status');
+
+        // Tìm kiếm theo text
         if ($request->filled('search')) {
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%$search%")
                     ->orWhere('email', 'like', "%$search%")
-                    ->orWhere('phone', 'like', "%$search%")
-                    ->orWhere('role_id', 'like', "%$search%")
-                    ->orWhere('status', 'like', "%$search%");
+                    ->orWhere('phone', 'like', "%$search%");
             });
         }
-        $users = $query->paginate(10)->appends($request->only('search'));
+
+        // Lọc theo trạng thái
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $users = $query->paginate(10)->appends($request->only(['search', 'status']));
 
         return view('users.index', compact('users'));
     }

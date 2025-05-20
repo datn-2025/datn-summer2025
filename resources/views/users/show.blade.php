@@ -81,11 +81,9 @@
                                                                             <th>STT</th>
                                                                             <th>Mã đơn hàng</th>
                                                                             <th>Tên người nhận</th>
-                                                                            <th>Số điện thoại</th>
                                                                             <th>Ngày đặt</th>
                                                                             <th>Tổng Tiền</th>
-                                                                            <th>Trạng thái đơn hàng </th>
-                                                                            <th>Trạng thái thanh toán  </th>
+                                                                            <th>Trạng thái </th>
                                                                             <th>Thao tác</th>
                                                                         </tr>
                                                                     </thead>
@@ -94,8 +92,9 @@
                                                                             <tr>
                                                                                 <td>{{ $key + 1 }}</td>
                                                                                 <td>{{ $donHang->order_code }}</td>
-                                                                                <td>{{ $donHang->shipping_name }}</td>
-                                                                                <td>{{ $donHang->shipping_phone }}</td>
+                                                                                <td>{{ $donHang->shipping_name }} <br>
+                                                                               {{ $donHang->shipping_phone }} </td>
+                                                                                
                                                                                 <td>{{ $donHang->created_at }}</td>
                                                                                 <td>{{ number_format($donHang->total_amount, 0, ',', '.') }}đ</td>
                                                                                 <td>
@@ -118,8 +117,8 @@
                                                                                         <span class="badge {{ $statusClass }}">{{ $donHang->orderStatus->name }}</span>
                                                                                     @else
                                                                                         <span class="badge bg-secondary">Không xác định</span>
-                                                                                    @endif                                                                                </td>
-                                                                                <td>
+                                                                                    @endif                                                                                
+                                                                                <br>
                                                                                     @if($donHang->paymentStatus)
                                                                                         @php
                                                                                             $paymentStatusClass = match($donHang->paymentStatus->name) {
@@ -135,7 +134,7 @@
                                                                                     @else
                                                                                         <span class="badge bg-secondary">Không xác định</span>
                                                                                     @endif
-                                                                                </td>
+                                                                                        </td>
                                                                                 <td>
                                                                                     <div class="btn-group">
                                                                                         <a href="" class="link-success fs-15"><i class="las la-eye"></i></a>

@@ -17,22 +17,28 @@
                                         <li class="breadcrumb-item active">Người Dùng</li>
                                     </ol>
                                 </div>
-
                             </div>
                         </div>
                     </div>
                     <!-- end page title -->
-                     <!-- Bắt đầu Form tìm kiếm -->
-                     <div class="row">
+                     <!-- Bắt đầu Form tìm kiếm -->                     <div class="row">
                         <div class="col">
                             <form action="{{ route('admin.users.index') }}" method="GET">
                                 <div class="row">
                                     <div class="col-md-3">
                                         <input type="text" name="search" class="form-control" placeholder="Tìm kiếm thông tin" value="{{ request('search') }}">
                                     </div>
-
+                                    <div class="col-md-3">
+                                        <select name="status" class="form-select">
+                                            <option value="">-- Chọn trạng thái --</option>
+                                            <option value="Hoạt Động" {{ request('status') == 'Hoạt Động' ? 'selected' : '' }}>Hoạt Động</option>
+                                            <option value="Bị Khóa" {{ request('status') == 'Bị Khóa' ? 'selected' : '' }}>Bị Khóa</option>
+                                            <option value="Chưa kích Hoạt" {{ request('status') == 'Chưa kích Hoạt' ? 'selected' : '' }}>Chưa kích Hoạt</option>
+                                        </select>
+                                    </div>
                                     <div class="col-md-3">
                                         <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                                        <a href="{{ route('admin.users.index') }}" class="btn btn-secondary">Đặt lại</a>
                                     </div>
                                 </div>
                             </form>
