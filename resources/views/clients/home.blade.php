@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'addidas-vietnam')
+@section('title', 'BookBee')
 
 @section('content')
     <section class="relative w-full">
@@ -110,7 +110,7 @@
                     id="next-{{$category->id}}">
                     <i class="fas fa-chevron-right text-xl text-black bg-white rounded-full shadow p-2 hover:bg-gray-200"></i>
                 </div>
-            </div>
+            </div>xz
    
         @endforeach
     </section>
