@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Role;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -23,29 +24,18 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
-         return [
+        return [
             'id' => (string) Str::uuid(),
-            'name' => $this->faker->name(),
-            'email' => $this->faker->unique()->safeEmail(),
-            'email_verified_at' => now(),
-            'password' => Hash::make('password'), // hoặc bcrypt('password')
-            'phone_number' => $this->faker->optional()->phoneNumber(),
-            'role' => $this->faker->randomElement(['user', 'admin', 'store']),
-            'status' => $this->faker->randomElement(['Hoạt Động', 'Không Hoạt Động']),
-            'avatar_url' => $this->faker->optional()->imageUrl(200, 200, 'people'),
-            'address' => $this->faker->optional()->address(),
-            'last_login_at' => $this->faker->optional()->dateTimeBetween('-1 year', 'now'),
+            'name' => $this->faker->name,
+            'email' => $this->faker->unique()->safeEmail,
+            'avatar' => $this->faker->imageUrl(200, 200, 'people'),
+            'password' => bcrypt('password'), // hoặc dùng Hash::make nếu muốn bảo mật hơn
+            'phone' => $this->faker->phoneNumber,
+            'status' => $this->faker->randomElement(['Hoạt Động', 'Bị Khóa', 'Chưa kích Hoạt']),
+            'role_id' => Role::inRandomOrder()->value('id'),
             'remember_token' => Str::random(10),
+            'created_at' => now(),
+            'updated_at' => now(),
         ];
-    }
-
-    /**
-     * Indicate that the model's email address should be unverified.
-     */
-    public function unverified(): static
-    {
-        return $this->state(fn (array $attributes) => [
-            'email_verified_at' => null,
-        ]);
     }
 }
