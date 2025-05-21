@@ -95,10 +95,14 @@ class UserController extends Controller
         // Kiểm tra nếu có sự thay đổi thì mới gửi email
         if ($oldRole !== $user->role->name || $oldStatus !== $user->status) {
             try {
-                Mail::to($user->email)->send(new UserStatusUpdated($user, $oldRole, $oldStatus));
+                Mail::to($user->email)
+                    ->queue(new UserStatusUpdated($user, $oldRole, $oldStatus));
+                    
+                // Log thành công vào queue
+                Log::info('Đã thêm email thông báo vào queue cho user: ' . $user->email);
             } catch (\Exception $e) {
                 // Log lỗi nhưng vẫn cho phép tiếp tục
-                Log::error('Không thể gửi email thông báo: ' . $e->getMessage());
+                Log::error('Không thể thêm email vào queue: ' . $e->getMessage());
             }
         }
 

@@ -4,12 +4,16 @@ namespace App\Mail;
 
 use App\Models\User;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class UserStatusUpdated extends Mailable
+class UserStatusUpdated extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
+    
+    public $tries = 3; // Số lần thử lại nếu fail
+    public $timeout = 30; // Thời gian tối đa cho mỗi lần thử (giây)
 
     public $user;
     public $oldRole;
