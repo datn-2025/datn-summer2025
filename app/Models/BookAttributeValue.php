@@ -12,7 +12,8 @@ class BookAttributeValue extends Model
 
     protected $fillable = [
         'book_id',
-        'attribute_value_id'
+        'attribute_value_id',
+        'extra_price',
     ];
 
     protected static function boot()
