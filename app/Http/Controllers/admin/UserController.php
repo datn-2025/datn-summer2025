@@ -3,8 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Mail\UserStatusUpdated;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
@@ -54,5 +58,51 @@ class UserController extends Controller
         return view('users.show', compact('user', 'listDonHang'));
     }
 
+    public function edit($id)
+    {
+        $user = User::with('role')->findOrFail($id);
+        $roles = Role::all();
+        return view('users.edit', compact('user', 'roles'));
+    }
 
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'role_id' => 'required|exists:roles,id',
+            'status' => 'required|in:Hoạt Động,Bị Khóa,Chưa kích Hoạt',
+        ], [
+            'role_id.required' => 'Vui lòng chọn vai trò',
+            'role_id.exists' => 'Vai trò không tồn tại',
+            'status.required' => 'Vui lòng chọn trạng thái',
+            'status.in' => 'Trạng thái không hợp lệ',
+        ]);
+
+        $user = User::with('role')->findOrFail($id);
+        
+        // Lưu thông tin cũ trước khi cập nhật
+        $oldRole = $user->role ? $user->role->name : 'Chưa phân quyền';
+        $oldStatus = $user->status;
+
+        // Cập nhật thông tin
+        $user->update([
+            'role_id' => $request->role_id,
+            'status' => $request->status,
+        ]);
+
+        // Tải lại thông tin user sau khi cập nhật
+        $user->load('role');
+
+        // Kiểm tra nếu có sự thay đổi thì mới gửi email
+        if ($oldRole !== $user->role->name || $oldStatus !== $user->status) {
+            try {
+                Mail::to($user->email)->send(new UserStatusUpdated($user, $oldRole, $oldStatus));
+            } catch (\Exception $e) {
+                // Log lỗi nhưng vẫn cho phép tiếp tục
+                Log::error('Không thể gửi email thông báo: ' . $e->getMessage());
+            }
+        }
+
+        return redirect()->route('admin.users.show', $user->id)
+            ->with('success', 'Cập nhật thành công');
+    }
 }
