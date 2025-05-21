@@ -102,7 +102,7 @@ class UserController extends Controller
             }
         }
 
-        return redirect()->route('admin.users.show', $user->id)
+        return redirect()->route('admin.users.index', $user->id)
             ->with('success', 'Cập nhật thành công');
     }
 }
