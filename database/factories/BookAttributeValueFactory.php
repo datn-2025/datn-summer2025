@@ -15,7 +15,8 @@ class BookAttributeValueFactory extends Factory
     {
         return [
             'book_id' => Book::factory(),
-            'attribute_value_id' => AttributeValue::factory()
+            'attribute_value_id' => AttributeValue::factory(),
+            'extra_price' => $this->faker->optional()->randomFloat(2, 0, 50000),
         ];
     }
 

@@ -31,18 +31,11 @@ class BookSeeder extends Seeder
             for ($i = 0; $i < 5; $i++) {
                 $book = Book::factory()->create();
 
-                // Tạo format cho sách
-                // Luôn có bản bìa mềm
-                BookFormat::factory()->create([
-                    'book_id' => $book->id,
-                    'format_name' => 'Bìa mềm'
-                ]);
-
                 // 70% sách có bản bìa cứng
                 if (fake()->boolean(70)) {
                     BookFormat::factory()->create([
                         'book_id' => $book->id,
-                        'format_name' => 'Bìa cứng'
+                        'format_name' => 'Sách Vật Lý',
                     ]);
                 }
 
