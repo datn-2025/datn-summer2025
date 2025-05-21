@@ -663,11 +663,7 @@
                             <div class="collapse menu-dropdown" id="sidebarAuth">
                                 <ul class="nav nav-sm flex-column">
                                     <li class="nav-item">
-                                        <a href="" class="nav-link" data-key="t-signin"> Danh sách
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="" class="nav-link" data-key="t-signup"> Thêm
+                                        <a href="{{ route('admin.users.index') }}" class="nav-link" data-key="t-signin"> Danh sách
                                         </a>
                                     </li>
                                 </ul>
@@ -794,7 +790,7 @@
                         </div>
                         <div class="col-sm-6">
                             <div class="text-sm-end d-none d-sm-block">
-                                Design & Develop by Themesbrand
+                                Design & Develop by Bookbee
                             </div>
                         </div>
                     </div>
