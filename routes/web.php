@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\BookController as AdminBookController;
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\BookController;
 use Illuminate\Support\Facades\Route;
@@ -27,6 +28,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/edit/{id}/{slug}', [AdminBookController::class, 'edit'])->name('edit');
         Route::put('/update/{id}/{slug}', [AdminBookController::class, 'update'])->name('update');
         Route::delete('/delete/{id}', [AdminBookController::class, 'destroy'])->name('destroy');
+    });
+
+    // Route admin/categories
+    Route::prefix('categories')->name('categories.')->group(function () {
+        Route::get('/', [CategoryController::class, 'index'])->name('index');
     });
 
     // Route admin/users
