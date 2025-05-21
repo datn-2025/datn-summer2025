@@ -17,7 +17,7 @@ class Category extends Model
 
     public function books(): HasMany
     {
-        return $this->hasMany(Book::class);
+        return $this->hasMany(Book::class, 'category_id');
     }
 
     protected static function boot()
@@ -31,8 +31,8 @@ class Category extends Model
         });
     }
 
-    public $incrementing = false;
-    protected $keyType = 'string';
+    // public $incrementing = false;
+    // protected $keyType = 'string';
 
     // Danh mục cha
     public function parent()

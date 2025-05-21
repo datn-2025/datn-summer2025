@@ -2,47 +2,51 @@
 @section('title', 'BookBee')
 
 @section('content')
-    <section class="relative w-full">
-        <div class="swiper myHeroSwpier h-[550px]">
-            <div class="swiper-wrapper">
-                {{-- Slide 1 --}}
-                <div class="swiper-slide">
-                    <div class="grid grid-cols-3 h-full">
-                        <img src="{{asset('storage/images/hero1.jpg')}}" class="w-full h-full object-cover" alt="">
-                        <img src="{{asset('storage/images/hero2.jpg')}}" class="w-full h-full object-cover" alt="">
-                        <img src="{{asset('storage/images/hero3.jpg')}}" class="w-full h-full object-cover" alt="">
-                    </div>
-                </div>
-                {{-- Slide 2 --}}
-                <div class="swiper-slide">
-                    <div class="grid grid-cols-3 h-full">
-                        <img src="{{asset('storage/images/hot1.jpg')}}" class="w-full h-full object-cover" alt="">
-                        <img src="{{asset('storage/images/hot2.jpg')}}" class="w-full h-full object-cover" alt="">
-                        <img src="{{asset('storage/images/hot3.jpg')}}" class="w-full h-full object-cover" alt="">
-                    </div>
-                </div>
+    <section class="w-full bg-cover bg-center bg-no-repeat py-40"
+        style="background-image: url('{{asset('storage/images/banner-image-bg.jpg')}}')">
+        <div class="grid grid-cols-1 md:grid-cols-2 items-center px-6 md:px-10 gap-10 max-w-screen-xl mx-auto">
+            {{-- Left text --}}
+            <div class="space-y-4 text-black">
+                <h2 class="text-5xl md:text-6xl font-bold leading-tight">
+                    Sách đặc biệt<br>Bộ sưu tập sách
+                </h2>
+                <p class="text-xl md:text-2xl">
+                    Ưu đãi lớn - Giảm giá đến 30%. Mua ngay hôm nay!
+                </p><br>
+                <a href="#"
+                    class="bg-red-400 text-white px-8 py-5 rounded-full text-sm font-semibold hover:bg-black transition duration-300 w-max">
+                    Xem ngay
+                </a>
+            </div>
+            {{-- Right image --}}
+            <div class="flex  justify-center">
+                <img src="{{asset('storage/images/banner-image2.png')}}" class="h-full object-contain" alt="">
             </div>
         </div>
-        {{-- Overlay text --}}
-        <div class="absolute left-10 bottom-10 text-white max-w-xl z-10 space-y-3">
-            <h2 class="inline-block bg-white text-black px-3 py-1 text-2xl font-extrabold uppercase tracking-widest">
-                Taekwondo</h2>
-            <p class="inline-block bg-white text-black px-3 py-1 text-lg">Sự trở lại bùng nổ: Tái hiện tinh thần thể thao
-                qua BST Taekwondo tâm điểm đường phố!</p>
 
-            {{-- Nút hiệu ứng viền lệch --}}
-            <a href="#"
-                class="group relative mt-4 inline-block px-6 py-2 font-bold text-black bg-white uppercase text-sm transition duration-300">
-                {{-- Viền trắng lệch phía sau --}}
-                <span
-                    class="absolute inset-0 translate-x-[4px] translate-y-[4px] border border-white group-hover:border-gray-800 transition duration-300 z-[-1]"></span>
-                {{-- Nền hover xám nhẹ --}}
-                <span
-                    class="absolute inset-0 bg-gray-100 opacity-0 group-hover:opacity-100 transition duration-300 z-0"></span>
-                {{-- Nội dung --}}
-                <span class="relative z-10 flex items-center gap-2">Mua ngay →</span>
 
-            </a>
+    </section>
+
+
+
+    <section class="bg-white py-10">
+        <div class=" max-w-screen-xl mx-auto grid grid-cols-1 sm:grid-cols-2 sm:grid-cols-4 gap-8 px-6 py-10 text-center">
+            <div>
+                <h3 class="text-lg font-semibold text-gray-800">Giao hàng miễn phí</h3>
+                <p class=" text-gray-600 text-sm mt-1">Miễn phí vận chuyển cho mọi đơn hàng toàn quốc.</p>
+            </div>
+            <div>
+                <h3 class="text-lg font-semibold text-gray-800">Cam kết chất lượng</h3>
+                <p class=" text-gray-600 text-sm mt-1">Sản phẩm chính hãng, đảm bảo chất lượng 100%.</p>
+            </div>
+            <div>
+                <h3 class="text-lg font-semibold text-gray-800">Ưu đãi mỗi ngày</h3>
+                <p class=" text-gray-600 text-sm mt-1">Khuyến mãi hấp dẫn cập nhật liên tục mỗi ngày.</p>
+            </div>
+            <div>
+                <h3 class="text-lg font-semibold text-gray-800">Thanh toán an toàn</h3>
+                <p class=" text-gray-600 text-sm mt-1">Hỗ trợ nhiều hình thức thanh toán bảo mật cao.</p>
+            </div>
         </div>
     </section>
 
@@ -69,21 +73,21 @@
             <div id="tab-tab-{{$category->id}}" class="tab-content {{ $index === 0 ? 'block' : 'hidden'}} relative">
                 <div class="swiper categorySwiper" id="swiper-{{ $category->id}}">
                     <div class="swiper-wrapper">
-                        @foreach ($category->products as $product)
+                        @foreach ($category->books as $book)
                             <div class="swiper-slide pb-6">
                                 <div
                                     class="group bg-white border border-transparent hover:border-black rounded transition duration-300 overflow-hidden flex flex-col h-full">
                                     <div class="relative aspect-[1/1.05] bg-gray-100 overflow-hidden">
-                                        <img src="{{asset('storage/images/' . $product->image)}}" alt="{{$product->name}}">
+                                        <img src="{{asset('storage/images/' . $book->image)}}" alt="{{$book->title}}">
                                         <div class="absolute top-2 right-2 z-10">
                                             <i class="far fa-heart text-2xl text-gray-700 hover:text-red-500 cursor-pointer"></i>
                                         </div>
                                     </div>
                                     <div class="p-4 flex-1">
                                         <p class="text-black font-bold text-[15px]">
-                                            {{number_format($product->price, 0, ',', '.')}}₫
+                                            {{number_format($book->price, 0, ',', '.')}}₫
                                         </p>
-                                        <h3 class="text-sm font-semibold mt-1">{{$product->name}}</h3>
+                                        <h3 class="text-sm font-semibold mt-1">{{$book->title}}</h3>
                                         <p class="text-xs text-gray-500 mt-1">
                                             {{$category->name ?? 'Chưa có danh mục'}}
                                         </p>
@@ -110,56 +114,148 @@
                     id="next-{{$category->id}}">
                     <i class="fas fa-chevron-right text-xl text-black bg-white rounded-full shadow p-2 hover:bg-gray-200"></i>
                 </div>
-            </div>xz
-   
+            </div>
+
         @endforeach
     </section>
 
 
-    <section class="relative w-full mt-6">
-        <img src="{{asset('storage/images/lookbook.jpg')}}" alt='lookbook'
-            class="w-full h-[550px] object-cover brightness-90">
-        <div class="absolute left-10 bottom-10 text-white max-w-xl z-10 space-y-3">
-            <h2 class="inline-block bg-white text-black px-3 py-1 text-2xl font-extrabold uppercase tracking-widest">
-                Tăng nhiệt độ lên</h2>
-            <p class="inline-block bg-white text-black px-3 py-1 text-lg">Bộ sưu tập mùa hè mới của adidas x Mercedes-AMG
-                PETRONAS F1.</p>
+    <section class="w-full bg-cover bg-center bg-no-repeat py-40"
+        style="background-image: url('{{asset('storage/images/banner-image-bg-1.jpg')}}')">
+        <div class="grid grid-cols-1 md:grid-cols-2 items-center px-6 md:px-10 gap-10 max-w-screen-xl mx-auto">
+            <!-- Ảnh sách bên trái -->
+            <div class="flex  justify-center">
+                <img src="{{asset('storage/images/banner-image3.png')}}" class="h-full object-contain" alt="">
+            </div>
+            <!-- Nội dung bên phải -->
+            <div class="md:text-left space-y-6 text-black text-center">
+                <h2 class="text-5xl md:text-6xl font-semibold leading-tight">
+                    Giảm giá 30%<br>Cho tất cả sản phẩm. Nhanh tay nào!!!
+                </h2>
+                <!-- Bộ đếm thời gian -->
+                <div class=" flex justify-center md:justify-start gap-6 text-center text-black font-medium text-xl">
+                    <div>
+                        <div class="text-4xl font-bold" id="days">0</div>
+                        <div class="text-sm mt-1">Ngày</div>
+                    </div>
+                    <div>
+                        <div class="text-4xl font-bold" id="hours">0</div>
+                        <div class="text-sm mt-1">Giờ</div>
+                    </div>
+                    <div>
+                        <div class="text-4xl font-bold" id="minutes">0</div>
+                        <div class="text-sm mt-1">Phút</div>
+                    </div>
+                    <div>
+                        <div class="text-4xl font-bold" id="seconds">0</div>
+                        <div class="text-sm mt-1">Giây</div>
+                    </div>
+                </div>
 
-            {{-- Nút hiệu ứng viền lệch --}}
-            <a href="#"
-                class="group relative inline-block px-6 py-2 font-bold text-black bg-white uppercase text-sm transition duration-300">
-                {{-- Viền trắng lệch phía sau --}}
-                <span
-                    class="absolute inset-0 translate-x-[4px] translate-y-[4px] border border-white group-hover:border-gray-800 transition duration-300 z-[-1]"></span>
-                {{-- Nền hover xám nhẹ --}}
-                <span
-                    class="absolute inset-0 bg-gray-100 opacity-0 group-hover:opacity-100 transition duration-300 z-0"></span>
-                {{-- Nội dung --}}
-                <span class="relative z-10 flex items-center gap-2">Mua ngay →</span>
+                <a href="#"
+                    class="inline-block bg-red-400 text-white px-8 py-4 rounded-full text-sm font-semibold hover:bg-red-600 transition duration-300">
+                    Mua ngay
+                </a>
+            </div>
 
-            </a>
+        </div>
+
+
     </section>
+
+
+    <section class="bg-white py-16">
+        <div class="max-w-screen-xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+
+            <!-- Featured -->
+            <div>
+                <h3 class="text-xl font-bold mb-4">Nổi bật</h3>
+                @foreach($featuredBooks as $book)
+                    <div class="mb-6">
+                        <img src="{{ $book->images->first() ? asset('storage/' . $book->images->first()->image_url) : asset('storage/default.jpg') }}"
+                            alt="{{ $book->title }}" class="w-20 h-28 object-cover mb-2">
+                        <p class="font-semibold text-sm leading-tight">{{ $book->title }}</p>
+                        <p class="text-xs text-gray-500">{{ $book->author->name ?? 'Không rõ' }}</p>
+                        <p class="text-red-500 font-bold">
+                            {{ number_format($book->formats->first()->price ?? 0, 0, ',', '.') }}₫
+                        </p>
+                    </div>
+                @endforeach
+            </div>
+
+            <!-- Mới nhất -->
+            <div>
+                <h3 class="text-xl font-bold mb-4">Mới nhất</h3>
+                @foreach($latestBooks as $book)
+                    <div class="mb-6">
+                        <img src="{{ asset('storage/' . ($book->images->first()->image_url ?? 'default.jpg')) }}"
+                            alt="{{ $book->title }}" class="w-20 h-28 object-cover mb-2">
+                        <p class="font-semibold text-sm leading-tight">{{ $book->title }}</p>
+                        <p class="text-xs text-gray-500">{{ $book->author->name ?? 'Không rõ' }}</p>
+                     <p class="text-red-500 font-bold">
+                            {{ number_format($book->formats->first()->price ?? 0, 0, ',', '.') }}₫
+                        </p>
+                    </div>
+                @endforeach
+            </div>
+
+            <!-- Đánh giá cao -->
+            <div>
+                <h3 class="text-xl font-bold mb-4">Đánh giá cao</h3>
+                @foreach($bestReviewedBooks as $book)
+                    <div class="mb-6">
+                        <img src="{{ asset('storage/' . ($book->images->first()->image_url ?? 'default.jpg')) }}"
+                            alt="{{ $book->title }}" class="w-20 h-28 object-cover mb-2">
+                        <p class="font-semibold text-sm leading-tight">{{ $book->title }}</p>
+                        <p class="text-xs text-gray-500">{{ $book->author->name ?? 'Không rõ' }}</p>
+                        <p class="text-red-500 font-bold">
+                            {{ number_format($book->formats->first()->price ?? 0, 0, ',', '.') }}₫
+                        </p>
+                    </div>
+                @endforeach
+            </div>
+
+            <!-- Giảm giá -->
+            <div>
+                <h3 class="text-xl font-bold mb-4">Giảm giá</h3>
+                @foreach($saleBooks as $book)
+                    <div class="mb-6">
+                        <img src="{{ asset('storage/' . ($book->images->first()->image_url ?? 'default.jpg')) }}"
+                            alt="{{ $book->title }}" class="w-20 h-28 object-cover mb-2">
+                        <p class="font-semibold text-sm leading-tight">{{ $book->title }}</p>
+                        <p class="text-xs text-gray-500">{{ $book->author->name ?? 'Không rõ' }}</p>
+                        <p class="text-red-500 font-bold">
+                            {{ number_format($book->formats->first()->price ?? 0, 0, ',', '.') }}₫
+                        </p>
+                    </div>
+                @endforeach
+            </div>
+
+        </div>
+    </section>
+
+
 
 
 
     <section class="px-4 py-10 max-w-screen-xl mx-auto">
         <h2 class="text-2xl md:text-3xl font-bold uppercase mb-6">🆕 Sản phẩm mới nhất</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-            @forelse($products as $product)
+            @forelse($books as $book)
                 <div
                     class="bg-white rounded shadow-sm overflow-hidden transition-all duration-200 hover:border hover:border-black group">
                     <div class="relative aspect-[1/1.05] bg-gray-100 overflow-hidden">
-                        <img src="{{asset('storage/images/' . $product->image)}}"
+                        <img src="{{asset('storage/images/' . $book->image)}}"
                             class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                            alt="{{$product->name}}">
+                            alt="{{$book->title}}">
                         <div class="absolute top-2 right-2 z-10">
                             <i class="far fa-heart text-2xl text-gray-700 hover:text-red-500 cursor-pointer"></i>
                         </div>
                     </div>
                     <div class="p-4 bg-white">
-                        <h3 class="text-base font-semibold text-gray-800">{{$product->name}}</h3>
-                        <p class="text-sm text-gray-500">{{$product->category?->name ?? 'Chưa có danh mục'}}</p>
-                        <p class="text-lg font-bold text-red-600 mt-2">{{number_format($product->price, 0, ',', '.')}}₫ </p>
+                        <h3 class="text-base font-semibold text-gray-800">{{$book->title}}</h3>
+                        <p class="text-sm text-gray-500">{{$book->category?->name ?? 'Chưa có danh mục'}}</p>
+                        <p class="text-lg font-bold text-red-600 mt-2">{{number_format($book->price, 0, ',', '.')}}₫ </p>
                         <a href="#" class="mt-4 inline-block bg-black text-white px-4 py-2 rounded text-sm hover:bg-gray-800">
                             Mua ngay →
                         </a>
@@ -174,69 +270,61 @@
 
 
 
-    <section class="w-full mt-10">
-        <img src="{{asset('storage/images/focus-banner.jpg')}}" alt="Focus Banner"
-            class="w-full h-[500px] object-cover md:h-[600px]">
-    </section>
+    <section class="py-20 bg-cover bg-center bg-no-repeat"
+         style="background-image: url('{{ asset('storage/images/banner-image-bg.jpg') }}')">
+    <h2 class="text-center text-3xl md:text-4xl font-bold mb-10 text-gray-800">Khách hàng nói gì?</h2>
 
-
-
-    <section class="px-4 py-10 max-w-screen-xl mx-auto">
-        <h2 class="text-2xl md:text-3xl font-bold uppercase mb-6">Hãy Thể Hiện Phong Cách Của Bạn</h2>
-        <div class="relative">
-            <div class="swiper brandCollabSwiper">
-                <div class="swiper-wrapper">
-                    <div class="swiper-slide rounded overflow-hidden shadow hover:shadow-xl transition">
-                        <img src="{{asset('storage/images/collab1.jpg')}}" alt="Collab 1" class="w-full h-[300px] object-cover">
+    <div class="swiper reviewSwiper max-w-4xl mx-auto px-4">
+        <div class="swiper-wrapper">
+            @foreach ($reviews as $review)
+                <div class="swiper-slide bg-white p-6 rounded shadow text-center">
+                    <p class="text-gray-700 italic mb-4">“{{ $review->comment ?? 'Không có nội dung.' }}”</p>
+                    <div class="mb-2 text-yellow-400">
+                        @for ($i = 0; $i < $review->rating; $i++)
+                            ★
+                        @endfor
                     </div>
-                    <div class="swiper-slide rounded overflow-hidden shadow hover:shadow-xl transition">
-                        <img src="{{asset('storage/images/collab2.jpg')}}" alt="Collab 2" class="w-full h-[300px] object-cover">
-                    </div>
-                    <div class="swiper-slide rounded overflow-hidden shadow hover:shadow-xl transition">
-                        <img src="{{asset('storage/images/collab3.jpg')}}" alt="Collab 3" class="w-full h-[300px] object-cover">
-                    </div>
-                    <div class="swiper-slide rounded overflow-hidden shadow hover:shadow-xl transition">
-                        <img src="{{asset('storage/images/collab1.jpg')}}" alt="Collab 1" class="w-full h-[300px] object-cover">
-                    </div>
-                    <div class="swiper-slide rounded overflow-hidden shadow hover:shadow-xl transition">
-                        <img src="{{asset('storage/images/collab2.jpg')}}" alt="Collab 2" class="w-full h-[300px] object-cover">
-                    </div>
-                    <div class="swiper-slide rounded overflow-hidden shadow hover:shadow-xl transition">
-                        <img src="{{asset('storage/images/collab3.jpg')}}" alt="Collab 3" class="w-full h-[300px] object-cover">
-                    </div>
-                    <div class="swiper-slide rounded overflow-hidden shadow hover:shadow-xl transition">
-                        <img src="{{asset('storage/images/collab1.jpg')}}" alt="Collab 1" class="w-full h-[300px] object-cover">
-                    </div>
-                    <div class="swiper-slide rounded overflow-hidden shadow hover:shadow-xl transition">
-                        <img src="{{asset('storage/images/collab2.jpg')}}" alt="Collab 2" class="w-full h-[300px] object-cover">
-                    </div>
-                    <div class="swiper-slide rounded overflow-hidden shadow hover:shadow-xl transition">
-                        <img src="{{asset('storage/images/collab3.jpg')}}" alt="Collab 3" class="w-full h-[300px] object-cover">
-                    </div>
+                    <p class="text-black font-semibold">
+                        {{ $review->user->name ?? 'Ẩn danh' }}
+                    </p>
                 </div>
-                {{-- 🔹 Thanh tiến trình --}}
-                <div class="brand-collab-pagination mt-4 flex justify-center gap-2"></div>
-            </div>
-            {{-- 🔹 Nút điều hướng --}}
-            <div class="brand-collab-prev absolute -left-3 top-1/2 -translate-y-1/2 z-10 cursor-pointer">
-                <i class="fas fa-chevron-left text-xl text-black bg-white rounded-full shadow p-2 hover:bg-gray-200"></i>
-            </div>
-            <div class="brand-collab-next absolute -right-3 top-1/2 -translate-y-1/2 z-10 cursor-pointer">
-                <i class="fas fa-chevron-right text-xl text-black bg-white rounded-full shadow p-2 hover:bg-gray-200"></i>
-            </div>
+            @endforeach
         </div>
-    </section>
+        <div class="swiper-pagination mt-6"></div>
+    </div>
+</section>
+
+
+<section class="px-4 py-16 max-w-screen-xl mx-auto">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl md:text-3xl font-bold uppercase flex items-center gap-2">📰 Tin tức mới nhất</h2>
+        <a href="#" class="bg-red-400 text-white px-6 py-2 rounded-full text-sm hover:bg-red-600 transition duration-300">
+            Xem tất cả
+        </a>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+        @forelse($articles as $article)
+            <div class="bg-white rounded shadow overflow-hidden hover:shadow-lg transition">
+                <img src="{{asset('storage/' . $article->thumbnail)}}" alt="{{$article->title}}"
+                    class="w-full h-48 object-cover">
+                <div class="p-4">
+                    <p class=" text-sm text-pink-500 font-medium mb-1">
+                        {{ $article->category ?? ' Tin tức' }}
+                    </p>
+                    <h3 class=" text-lg font-bold mb-2 leading-snug">{{$article->title}}</h3>
+                    <p class=" text-sm text-gray-600 mb-4">{{Str::limit($article->summary, 100)}}</p>
+                    <a href="#" class=" inline-block text-sm text-red-500 hover:underline font-semibold">
+                        Đọc thêm →
+                    </a>
+                </div>
+            </div>
+            @empty
+                <p class="col-span-4 text-center text-gray-500">Chưa có bài viết nào.</p>
+        @endforelse
+    </div>
+</section>
 
 
 
-    <section class="bg-black text-white px-6 py-12 text-sm leading-relaxed">
-        <div class="max-w-4xl mx-auto text-center">
-            <h2 class="text-2xl md:text-3xl font-extrabold uppercase mb-6">Cửa hàng thể thao Adidas – Hiệu năng, phong cách & Đổi mới từ năm 1949</h2>
-            <p class="mb-5">Thể thao nâng cao sức khoẻ. Giúp bạn luôn tỉnh táo. Kết nối chúng ta.</p>
-            <p class="mb-5">Tìm kiếm trang phục thể thao hiệu suất cao được ứng dụng công nghệ tiên tiến nhất...</p>
-            <p class="mb-5">Khám phá cửa hàng trực tuyến của adidas để cập nhật những bộ sưu tập mới nhất...</p>
-            <p class="mb-5">Cửa hàng thể thao adidas không chỉ là nơi mua sắm—đây còn là không gian dành cho sự đổi mới và nguồn cảm hứng.</p>
-        </div>
-    </section>
 
 @endsection
