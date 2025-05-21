@@ -10,10 +10,12 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->string('order_code')->unique(); // Mã đơn hàng để hiển thị
             $table->uuid('user_id');
             $table->uuid('address_id');
             $table->uuid('voucher_id')->nullable();
             $table->decimal('total_amount', 12, 2);
+            $table->text('note')->nullable();
             $table->uuid('order_status_id');
             $table->foreign('order_status_id')->references('id')->on('order_statuses');
             $table->uuid('payment_status_id');
