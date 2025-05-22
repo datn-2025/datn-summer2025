@@ -15,9 +15,6 @@
     <!-- jsvectormap css -->
     <link href="{{ asset('assets/libs/jsvectormap/jsvectormap.min.css') }}" rel="stylesheet" type="text/css" />
 
-    <!--Swiper slider css-->
-    <link href="{{ asset('assets/libs/swiper/swiper-bundle.min.css') }}" rel="stylesheet" type="text/css" />
-
     <!-- Layout config Js -->
     <script src="{{ asset('assets/js/layout.js') }}"></script>
     <!-- Bootstrap Css -->
@@ -31,6 +28,22 @@
 
     {{-- toastr notification --}}
     <link rel="stylesheet" href="http://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css">
+
+    <!--Swiper slider css-->
+    <link href="{{ asset('assets/libs/swiper/swiper-bundle.min.css') }}" rel="stylesheet" type="text/css" />
+
+    {{-- TinyMCE --}}
+    <script src="https://cdn.jsdelivr.net/npm/tinymce@6/tinymce.min.js"></script>
+    <script>
+        tinymce.init({
+            selector: '#description',
+            height: 300,
+            menubar: false,
+            plugins: 'lists link image preview code fullscreen',
+            toolbar: 'undo redo | bold italic underline | bullist numlist | link image | preview code fullscreen',
+            placeholder: 'Nhập mô tả chi tiết...'
+        });
+    </script>
 
 </head>
 
@@ -699,10 +712,12 @@
                             <div class="collapse menu-dropdown" id="sidebarApps">
                                 <ul class="nav nav-sm flex-column">
                                     <li class="nav-item">
-                                        <a href="" class="nav-link" data-key="t-chat"> Danh sách </a>
+                                        <a href="{{route('admin.books.index')}}" class="nav-link" data-key="t-chat">
+                                            Danh sách </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="" class="nav-link"> <span data-key="t-file-manager">Thêm</span></a>
+                                        <a href="{{route('admin.books.create')}}" class="nav-link"> <span
+                                                data-key="t-file-manager">Thêm</span></a>
                                     </li>
                                 </ul>
                             </div>
@@ -794,7 +809,8 @@
                         </div>
                         <div class="col-sm-6">
                             <div class="text-sm-end d-none d-sm-block">
-                                Design & Develop by Themesbrand
+                                Design & Develop by <a href="https://themesbrand.com/" target="_blank"
+                                    class="text-reset">Walk Zone</a>
                             </div>
                         </div>
                     </div>
@@ -809,9 +825,9 @@
 
 
     <!--start back-to-top-->
-    <button onclick="topFunction()" class="btn btn-danger btn-icon" id="back-to-top">
+    {{-- <button onclick="topFunction()" class="btn btn-danger btn-icon" id="back-to-top">
         <i class="ri-arrow-up-line"></i>
-    </button>
+    </button> --}}
     <!--end back-to-top-->
 
     <!--preloader-->
@@ -1512,6 +1528,8 @@
         </div>
     </div>
 
+    {{-- định dang sách from thêm sách --}}
+    <script src="{{ asset('assets/js/custom.js') }}"></script>
     <!-- JAVASCRIPT -->
     <script src="{{ asset('assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/libs/simplebar/simplebar.min.js') }}"></script>
@@ -1540,6 +1558,32 @@
     <script src="http://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
     <script src="http://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
     {!! Toastr::message() !!}
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+    <script>
+        const thumbnailSlider = new Swiper(".thumbnail-slider", {
+        spaceBetween: 10,
+        slidesPerView: 4,
+        freeMode: true,
+        watchSlidesProgress: true,
+        breakpoints: {
+            640: { slidesPerView: 4 },
+            768: { slidesPerView: 5 },
+            1024: { slidesPerView: 6 },
+        },
+    });
+
+    const mainSlider = new Swiper(".main-slider", {
+        spaceBetween: 10,
+        navigation: {
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev"
+        },
+        thumbs: {
+            swiper: thumbnailSlider,
+        },
+    });
+    </script>
 </body>
 
 </html>
