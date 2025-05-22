@@ -1,17 +1,17 @@
 <?php
 
+
 use App\Http\Controllers\Admin\BookController as AdminBookController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
-// Trang chủ
-Route::get('/', function () {
-    return view('welcome');
-});
 
 // Route public cho books (categoryId optional)
+Route::get('/', [HomeController::class, 'index']);
+Route::get('/books/{slug}', [HomeController::class, 'show'])->name('books.show');
 Route::get('/books/{categoryId?}', [BookController::class, 'index'])->name('books.index');
 
 // Route nhóm admin
