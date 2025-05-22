@@ -1532,6 +1532,16 @@
     <!-- App js -->
     <script src="{{ asset('assets/js/app.js') }}"></script>
 
+    <script src="{{ asset('assets/libs/prismjs/prism.js') }}"></script>
+    <script src="{{ asset('assets/libs/list.js/list.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/list.pagination.js/list.pagination.min.js') }}"></script>
+
+    <!-- listjs init -->
+    <script src="{{ asset('assets/js/pages/listjs.init.js') }}"></script>
+
+    <!-- Sweet Alerts js -->
+    <script src="{{ asset('assets/libs/sweetalert2/sweetalert2.min.js') }}"></script>
+
     {{-- toastr notification --}}
     <script src="http://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
     <script src="http://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
