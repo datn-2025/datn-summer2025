@@ -9,6 +9,21 @@ class AuthorSeeder extends Seeder
 {
     public function run(): void
     {
-        Author::factory(15)->create();
+        $authors = [
+            'Nguyễn Nhật Ánh',
+            'Dale Carnegie',
+            'Paulo Coelho',
+            'Nguyễn Ngọc Tư',
+            'Tô Hoài',
+            'Rosie Nguyễn'
+        ];
+
+        foreach ($authors as $author) {
+            Author::create([
+                'name' => $author,
+                'biography' => 'Tiểu sử của tác giả ' . $author,
+                'image' => null
+            ]);
+        }
     }
 }

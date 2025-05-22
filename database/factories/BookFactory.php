@@ -16,15 +16,21 @@ class BookFactory extends Factory
     public function definition(): array
     {
         $title = $this->faker->unique()->sentence(4);
+        
+        // Lấy ID có sẵn từ các bảng liên quan
+        $authorId = Author::pluck('id')->random();
+        $brandId = Brand::pluck('id')->random();
+        $categoryId = Category::pluck('id')->random();
+        
         return [
             'title' => $title,
             'slug' => Str::slug($title),
             'description' => $this->faker->paragraphs(3, true),
-            'author_id' => Author::factory(),
-            'brand_id' => Brand::factory(),
-            'category_id' => Category::factory(),
+            'author_id' => $authorId,
+            'brand_id' => $brandId,
+            'category_id' => $categoryId,
             'status' => $this->faker->randomElement(['Còn Hàng', 'Hết Hàng Tồn Kho', 'Sắp Ra Mắt', 'Ngừng Kinh Doanh']),
-            'cover_image' => $this->faker->imageUrl(640, 480, 'books'),
+            'cover_image' => 'books/book-' . $this->faker->numberBetween(1, 5) . '.jpg',
             'isbn' => $this->faker->isbn13(),
             'publication_date' => $this->faker->dateTimeBetween('-5 years', 'now'),
             'page_count' => $this->faker->numberBetween(100, 1000)
