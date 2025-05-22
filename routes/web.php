@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Route;
 
 // Route public cho books (categoryId optional)
 Route::get('/', [HomeController::class, 'index']);
+Route::get('/books/{slug}', [HomeController::class, 'show'])->name('books.show');
 Route::get('/books/{categoryId?}', [BookController::class, 'index'])->name('books.index');
 
 // Route nhóm admin
