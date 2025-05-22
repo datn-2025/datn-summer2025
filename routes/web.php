@@ -7,12 +7,14 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\Contact\ContactController;
 
 // Route public cho books (categoryId optional)
 Route::get('/', [HomeController::class, 'index']);
 Route::get('/books/{slug}', [HomeController::class, 'show'])->name('books.show');
 Route::get('/books/{categoryId?}', [BookController::class, 'index'])->name('books.index');
+Route::get('/contact', [ContactController::class, 'showForm'])->name('contact.form');
+Route::post('/contact', [ContactController::class, 'submitForm'])->name('contact.submit');
 
 // Route nhóm admin
 Route::prefix('admin')->name('admin.')->group(function () {
