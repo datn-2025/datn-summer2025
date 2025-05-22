@@ -45,7 +45,7 @@ class Book extends Model
         });
     }
 
-    public $incrementing = false; 
+    public $incrementing = false;
     protected $keyType = 'string';
 
     public function author(): BelongsTo
@@ -60,8 +60,9 @@ class Book extends Model
 
     public function category(): BelongsTo
     {
-        return $this->belongsTo(Category::class);
-    }    public function formats(): HasMany
+        return $this->belongsTo(Category::class, 'category_id');
+    }
+    public function formats(): HasMany
     {
         return $this->hasMany(BookFormat::class);
     }

@@ -676,11 +676,7 @@
                             <div class="collapse menu-dropdown" id="sidebarAuth">
                                 <ul class="nav nav-sm flex-column">
                                     <li class="nav-item">
-                                        <a href="" class="nav-link" data-key="t-signin"> Danh sách
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="" class="nav-link" data-key="t-signup"> Thêm
+                                        <a href="{{ route('admin.users.index') }}" class="nav-link" data-key="t-signin"> Danh sách
                                         </a>
                                     </li>
                                 </ul>
@@ -809,8 +805,7 @@
                         </div>
                         <div class="col-sm-6">
                             <div class="text-sm-end d-none d-sm-block">
-                                Design & Develop by <a href="https://themesbrand.com/" target="_blank"
-                                    class="text-reset">Walk Zone</a>
+                                Design & Develop by Bookbee
                             </div>
                         </div>
                     </div>
@@ -1553,6 +1548,16 @@
 
     <!-- App js -->
     <script src="{{ asset('assets/js/app.js') }}"></script>
+
+    <script src="{{ asset('assets/libs/prismjs/prism.js') }}"></script>
+    <script src="{{ asset('assets/libs/list.js/list.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/list.pagination.js/list.pagination.min.js') }}"></script>
+
+    <!-- listjs init -->
+    <script src="{{ asset('assets/js/pages/listjs.init.js') }}"></script>
+
+    <!-- Sweet Alerts js -->
+    <script src="{{ asset('assets/libs/sweetalert2/sweetalert2.min.js') }}"></script>
 
     {{-- toastr notification --}}
     <script src="http://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
