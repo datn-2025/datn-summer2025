@@ -13,7 +13,10 @@ class HomeController extends Controller
     public function index()
     //dau noi di
     {
-        $books = Book::with('category', 'formats', 'images')->latest()->take(8)->get();
+        $books = Book::with('category', 'formats', 'images')
+            ->orderBy('publication_date', 'desc')
+            ->take(8)
+            ->get();
 
         // $categories = Category::whereHas('books')->with('books')->take(3)->get();
         $categories = Category::withCount('books')
@@ -25,31 +28,58 @@ class HomeController extends Controller
             ->get();
 
 
-        $featuredBooks = Book::select('books.*',)
-            ->join('book_formats', 'book_formats.book_id', '=', 'books.id')
-            ->with(['formats' => function ($q) {
-                $q->orderByDesc('price');
-            }, 'author', 'images'])
-            ->orderBy(DB::raw('(SELECT MAX(price) FROM book_formats WHERE book_formats.book_id = books.id)'), 'desc')
-            ->groupBy('books.id')
+
+
+        $featuredBooks = Book::with(['formats' => function ($q) {
+            $q->orderByDesc('price');
+        }, 'author', 'images'])
+            ->withMax('formats', 'price')
+            ->orderBy('formats_max_price', 'desc')
             ->take(4)
             ->get();
 
-        $latestBooks = Book::with(['author', 'images'])->latest()->take(4)->get();
-        $bestReviewedBooks = Book::with(['author', 'images'])->orderBy('page_count', 'desc')->take(4)->get();
-        $saleBooks = Book::select('books.*')
-            ->join('book_formats', 'book_formats.book_id', '=', 'books.id')
-            ->with(['formats' => function ($q) {
-                $q->orderByDesc('discount');
-            }, 'author', 'images'])
-            ->orderBy(DB::raw('(SELECT MAX(discount) FROM book_formats WHERE book_formats.book_id = books.id)'), 'desc')
-            ->groupBy('books.id')
+
+        $latestBooks = Book::with(['author', 'images'])
+            ->orderBy('publication_date', 'desc')
+            ->take(4)
+            ->get();
+        $bestReviewedBooks = Book::with(['author', 'images', 'formats', 'reviews'])
+            ->withMax('reviews', 'rating')
+            ->orderBy('reviews_max_rating', 'desc')
+            ->take(4)
+            ->get();
+
+        $saleBooks = Book::with(['formats' => function ($q) {
+            $q->orderByDesc('discount');
+        }, 'author', 'images'])
+            ->withMax('formats', 'discount')
+            ->orderBy('formats_max_discount', 'desc')
             ->take(4)
             ->get();
 
         // Lấy 10 đánh giá mới nhất
-        $reviews = Review::with('user')->latest()->take(10)->get();
+        $reviews = Review::with('user', 'book')
+            ->orderBy('rating', 'desc')
+            ->latest()
+            ->take(10)
+            ->get();
         $articles = NewsArticle::latest()->take(4)->get();
         return view('clients.home', compact('books', 'categories', 'featuredBooks', 'latestBooks', 'bestReviewedBooks', 'saleBooks', 'reviews', 'articles'));
+    }
+
+    public function show($slug)
+    {
+        $book = Book::with(['author', 'category', 'brand', 'formats', 'images', 'reviews.user'])
+            ->where('slug', $slug)->firstOrFail();
+
+
+
+
+
+        $relatedBooks = Book::where('category_id', $book->category_id)
+            ->where('id', '!=', $book->id)
+            ->with(['images', 'author', 'formats'])
+            ->take(4)->get();
+        return view('clients.show', compact('book', 'relatedBooks'));
     }
 }
