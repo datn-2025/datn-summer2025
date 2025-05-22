@@ -1,19 +1,3 @@
-<div class="hidden md:block border border-gray-200 bg-white">
-    <div class="max-w-screen-xl mx-auto grid grid-cols-1 md:grid-cols-3 max-w-screen-xl text-center text-base text-gray-700 ">
-        {{-- Dòng thông báo --}}
-
-        <div class="flex items-center justify-center border-b md:border-b-0 md:border-r border-gray-300 h-10 px-2">
-            Cần giúp đỡ gì không? Hãy gọi cho chúng tôi <a href="#" class="underline ml-1">123456789</a>
-        </div>
-        <div class="flex items-center justify-center border-b md:border-b-0 md:border-r border-gray-300 h-10 px-2">
-            Khuyến mãi mùa hè giảm giá 60%! <a href="#" class="underline ml-1">Shop now</a>
-        </div>
-        <div class="flex items-center justify-center h-10 px-2">
-            Giao hàng trong 2-3 ngày làm việc và trả hàng miễn phí </div>
-
-
-    </div>
-</div>
 
 <nav class="bg-white px-6 py-5 shadow-sm border-b">
     <div class="max-w-screen-xl mx-auto flex flex-col gap-2 md:flex-row md:items-center md:justify-between min-h-[80px]">
@@ -25,7 +9,7 @@
         </div>
         {{-- Giữa: Menu chính --}}
         <ul class="flex flex-wrap justify-center items-center gap-8 text-base semi-bold uppercase tracking-wide text-gray-900">
-            <li><a href="#" class="hover:text-red-500">Trang chủ</a></li>
+            <li><a href="/" class="hover:text-red-500 text-red-500">Trang chủ</a></li>
             <li><a href="#" class="hover:text-red-500">Giới thiệu</a></li>
             <li><a href="#" class="hover:text-red-500">Cửa hàng</a></li>
             <li><a href="#" class="hover:text-red-500">Tin tức</a></li>

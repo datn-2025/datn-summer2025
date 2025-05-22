@@ -26,8 +26,34 @@ document.addEventListener('DOMContentLoaded', () => {
                 el: parent.querySelector('.swiper-scrollbar'),
                 draggable: true,
             },
+            // ⬇ Thêm xử lý khi init hoặc chuyển slide
+            on: {
+                init: function () {
+                    updateNavButtons(this, parent);
+                },
+                slideChange: function () {
+                    updateNavButtons(this, parent);
+                }
+            }
         });
     });
+     // ✅ Hàm cập nhật nút điều hướng
+    function updateNavButtons(swiper, parent) {
+        const prev = parent.querySelector('.swiper-prev');
+        const next = parent.querySelector('.swiper-next');
+
+        if (swiper.isBeginning) {
+            prev.classList.add('hidden');
+        } else {
+            prev.classList.remove('hidden');
+        }
+
+        if (swiper.isEnd) {
+            next.classList.add('hidden');
+        } else {
+            next.classList.remove('hidden');
+        }
+    }
     // ✅ Tab switching
     const buttons = document.querySelectorAll('.tab-button');
     const contents = document.querySelectorAll('.tab-content');
