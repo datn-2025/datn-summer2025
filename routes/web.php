@@ -7,11 +7,16 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\Wishlists\WishlistController;
 
 // Route public cho books (categoryId optional)
+Route::post('/wishlist/add', [WishlistController::class, 'add']);
 Route::get('/', [HomeController::class, 'index']);
-Route::get('/books/{slug}', [HomeController::class, 'show'])->name('books.show');
+Route::get('/', [HomeController::class, 'index']);
+// Hiển thị danh sách và danh mục
+Route::get('/books/{slug?}', [BookController::class, 'index'])->name('books.index');
+// Hiển thị chi tiết sách
+Route::get('/book/{slug}', [HomeController::class, 'show'])->name('book.show');
 Route::get('/books/{categoryId?}', [BookController::class, 'index'])->name('books.index');
 
 // Route nhóm admin
