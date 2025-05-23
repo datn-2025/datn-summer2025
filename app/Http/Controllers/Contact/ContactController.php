@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Queue;
 
 class ContactController extends Controller
 {
@@ -23,7 +24,7 @@ class ContactController extends Controller
       'phone' => 'required|string|max:20',
       'address' => 'nullable|string|max:255',
       'note' => 'nullable|string',
-      'message' => 'required|string', // Nếu bạn dùng trường message, sẽ map sang note hoặc note riêng
+      // 'message' => 'required|string', 
     ]);
 
     // Nếu bạn muốn lưu message vào note, gán như sau:
@@ -39,16 +40,18 @@ class ContactController extends Controller
       'updated_at' => now(),
     ]);
 
-    // Gửi mail cảm ơn
+    // Gửi mail trong queue
     $fromAddress = config('mail.from.address');
     $fromName = config('mail.from.name');
 
-    Mail::raw('Cảm ơn bạn đã góp ý cho chúng tôi!', function ($mail) use ($data, $fromAddress, $fromName) {
-      $mail->from($fromAddress, $fromName)
-        ->to($data['email'])
-        ->subject('Cảm ơn bạn đã liên hệ BookBee!');
+    Queue::push(function () use ($data, $fromAddress, $fromName) {
+      Mail::raw('Cảm ơn bạn đã góp ý cho chúng tôi!', function ($mail) use ($data, $fromAddress, $fromName) {
+        $mail->from($fromAddress, $fromName)
+          ->to($data['email'])
+          ->subject('Cảm ơn bạn đã liên hệ BookBee!');
+      });
     });
 
-    return back()->with('success', 'Gửi liên hệ thành công! Vui lòng kiểm tra email.');
+    return back()->with('success', 'Gửi liên hệ thành công! Email xác nhận sẽ được gửi đến bạn trong giây lát.');
   }
 }

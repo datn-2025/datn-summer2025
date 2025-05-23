@@ -46,45 +46,15 @@
       </div>
 
       <div class="sm:col-span-2">
-        <label for="message" class="block text-sm font-semibold text-gray-900">Nội dung</label>
+        <label for="note" class="block text-sm font-semibold text-gray-900">Nội dung</label>
         <div class="mt-2.5">
-          <textarea name="message" id="message" rows="4" required
+          <textarea name="note" id="note" rows="4" required
                     class="block w-full rounded-md bg-white px-3.5 py-2 text-base text-gray-900 outline-1 outline-gray-300 placeholder:text-gray-400
                            focus:outline-2 focus:outline-indigo-600 focus:outline-offset-2"
-                    placeholder="Nhập nội dung">{{ old('message') }}</textarea>
+                    placeholder="Nhập nội dung">{{ old('note') }}</textarea>
         </div>
       </div>
-
-      <div class="sm:col-span-2">
-        <label for="address" class="block text-sm font-semibold text-gray-900">Địa chỉ (tuỳ chọn)</label>
-        <div class="mt-2.5">
-          <input type="text" name="address" id="address" autocomplete="address" 
-                 class="block w-full rounded-md bg-white px-3.5 py-2 text-base text-gray-900 outline-1 outline-gray-300 placeholder:text-gray-400
-                        focus:outline-2 focus:outline-indigo-600 focus:outline-offset-2"
-                 placeholder="Nhập địa chỉ" value="{{ old('address') }}">
-        </div>
-      </div>
-
-      <div class="sm:col-span-2">
-        <label for="note" class="block text-sm font-semibold text-gray-900">Ghi chú (tuỳ chọn)</label>
-        <div class="mt-2.5">
-          <textarea name="note" id="note" rows="2"
-                    class="block w-full rounded-md bg-white px-3.5 py-2 text-base text-gray-900 outline-1 outline-gray-300 placeholder:text-gray-400
-                           focus:outline-2 focus:outline-indigo-600 focus:outline-offset-2"
-                    placeholder="Nhập ghi chú thêm nếu có">{{ old('note') }}</textarea>
-        </div>
-      </div>
-
-      <div class="flex gap-x-4 sm:col-span-2 items-center">
-  <input type="checkbox" id="privacy_policy" name="privacy_policy" required class="h-5 w-5 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
-  <label for="privacy_policy" class="text-sm text-gray-600" id="switch-label">
-    Tôi đồng ý với
-    <a href="#" class="font-semibold text-indigo-600">chính sách bảo mật</a>.
-  </label>
-</div>
-
     </div>
-
     <div class="mt-10">
       <button type="submit"
               class="block w-full rounded-md bg-indigo-600 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-xs

@@ -8,13 +8,19 @@ use App\Http\Controllers\BookController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Contact\ContactController;
+use App\Http\Controllers\Article\NewsController;
 
 // Route public cho books (categoryId optional)
 Route::get('/', [HomeController::class, 'index']);
-Route::get('/books/{slug}', [HomeController::class, 'show'])->name('books.show');
+// Hiển thị danh sách và danh mục
+Route::get('/books/{slug?}', [BookController::class, 'index'])->name('books.index');
+// Hiển thị chi tiết sách
+Route::get('/book/{slug}', [HomeController::class, 'show'])->name('book.show');
 Route::get('/books/{categoryId?}', [BookController::class, 'index'])->name('books.index');
 Route::get('/contact', [ContactController::class, 'showForm'])->name('contact.form');
 Route::post('/contact', [ContactController::class, 'submitForm'])->name('contact.submit');
+Route::get('/news', [NewsController::class, 'index'])->name('news.index');
+Route::get('/news/{id}', [NewsController::class, 'show'])->name('news.show');
 
 // Route nhóm admin
 Route::prefix('admin')->name('admin.')->group(function () {
