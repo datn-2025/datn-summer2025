@@ -4,6 +4,7 @@
 use App\Http\Controllers\Admin\BookController as AdminBookController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\VoucherController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
@@ -34,6 +35,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::prefix('categories')->name('categories.')->group(function () {
         Route::get('/', [CategoryController::class, 'index'])->name('index');
     });
+    // Route admin/vouchers
+    Route::resource('vouchers', VoucherController::class);
 
     // Route admin/users
     Route::prefix('users')->name('users.')->group(function () {

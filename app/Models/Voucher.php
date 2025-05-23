@@ -55,4 +55,21 @@ class Voucher extends Model
     {
         return $this->hasMany(AppliedVoucher::class);
     }
+    public function isValid()
+    {
+        $now = now()->startOfDay();
+        return $this->status === 'active' 
+            && $now->between($this->valid_from, $this->valid_to)
+            && ($this->quantity > $this->appliedVouchers()->count());
+    }
+
+    public function getUsedCountAttribute()
+    {
+        return $this->appliedVouchers()->count();
+    }
+
+    public function getRemainingQuantityAttribute()
+    {
+        return $this->quantity - $this->used_count;
+    }
 }
