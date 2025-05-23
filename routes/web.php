@@ -20,18 +20,18 @@ Route::prefix('admin')->name('admin.')->group(function () {
              return view('admin.dashboard');
          });
     Route::prefix('books')->name('books.')->group(function(){
-        Route::get('/', [BookController::class, 'index'])->name('index');
-        Route::get('/create', [BookController::class, 'create'])->name('create');
-        Route::post('/store', [BookController::class, 'store'])->name('store');
-        Route::get('/show/{id}/{slug}', [BookController::class, 'show'])->name('show');
-        Route::get('/edit/{id}/{slug}', [BookController::class, 'edit'])->name('edit');
-        Route::put('/update/{id}/{slug}', [BookController::class, 'update'])->name('update');
-        Route::delete('/delete/{id}', [BookController::class, 'destroy'])->name('destroy');
+        Route::get('/', [AdminBookController::class, 'index'])->name('index');
+        Route::get('/create', [AdminBookController::class, 'create'])->name('create');
+        Route::post('/store', [AdminBookController::class, 'store'])->name('store');
+        Route::get('/show/{id}/{slug}', [AdminBookController::class, 'show'])->name('show');
+        Route::get('/edit/{id}/{slug}', [AdminBookController::class, 'edit'])->name('edit');
+        Route::put('/update/{id}/{slug}', [AdminBookController::class, 'update'])->name('update');
+        Route::delete('/delete/{id}', [AdminBookController::class, 'destroy'])->name('destroy');
         
         // Trash routes
-        Route::get('/trash', [BookController::class, 'trash'])->name('trash');
-        Route::post('/restore/{id}', [BookController::class, 'restore'])->name('restore');
-        Route::delete('/force-delete/{id}', [BookController::class, 'forceDelete'])->name('force-delete');
+        Route::get('/trash', [AdminBookController::class, 'trash'])->name('trash');
+        Route::post('/restore/{id}', [AdminBookController::class, 'restore'])->name('restore');
+        Route::delete('/force-delete/{id}', [AdminBookController::class, 'forceDelete'])->name('force-delete');
     })->name('dashboard');
   
     // Route admin/categories
