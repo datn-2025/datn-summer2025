@@ -7,10 +7,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
+
 class Book extends Model
 {
     use HasFactory;
+    use SoftDeletes;
 
     protected $fillable = [
         'title',
@@ -42,7 +45,7 @@ class Book extends Model
         });
     }
 
-    public $incrementing = false; 
+    public $incrementing = false;
     protected $keyType = 'string';
 
     public function author(): BelongsTo
@@ -57,8 +60,9 @@ class Book extends Model
 
     public function category(): BelongsTo
     {
-        return $this->belongsTo(Category::class);
-    }    public function formats(): HasMany
+        return $this->belongsTo(Category::class, 'category_id');
+    }
+    public function formats(): HasMany
     {
         return $this->hasMany(BookFormat::class);
     }
@@ -81,6 +85,7 @@ class Book extends Model
     public function attributeValues(): BelongsToMany
     {
         return $this->belongsToMany(AttributeValue::class, 'book_attribute_values')
+                    ->withPivot('extra_price')
                     ->withTimestamps();
     }
 
