@@ -15,7 +15,7 @@ Route::get('/', [HomeController::class, 'index']);
 // Hiển thị danh sách và danh mục
 Route::get('/books/{slug?}', [BookController::class, 'index'])->name('books.index');
 // Hiển thị chi tiết sách
-Route::get('/book/{slug}', [HomeController::class, 'show'])->name('book.show');
+Route::get('/book/{slug}', [HomeController::class, 'show'])->name('books.show');
 Route::get('/books/{categoryId?}', [BookController::class, 'index'])->name('books.index');
 Route::get('/contact', [ContactController::class, 'showForm'])->name('contact.form');
 Route::post('/contact', [ContactController::class, 'submitForm'])->name('contact.submit');
