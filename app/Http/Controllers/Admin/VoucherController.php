@@ -13,6 +13,29 @@ class VoucherController extends Controller
     {
         $query = Voucher::withCount(['appliedVouchers as used_count']);
 
+        // Search functionality
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('code', 'LIKE', "%{$search}%")
+                  ->orWhere('description', 'LIKE', "%{$search}%");
+            });
+        }
+
+        // Filter by discount range
+        if ($request->filled('min_discount') && $request->filled('max_discount')) {
+            $query->whereBetween('discount_percent', [$request->min_discount, $request->max_discount]);
+        }
+
+        // Filter by validity period
+        if ($request->filled('date_from')) {
+            $query->where('valid_from', '>=', $request->date_from);
+        }
+        if ($request->filled('date_to')) {
+            $query->where('valid_to', '<=', $request->date_to);
+        }
+
+        // Filter by status (existing code)
         if ($request->has('status')) {
             $now = now()->toDateString();
             if ($request->status == 'active') {
