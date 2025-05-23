@@ -28,12 +28,18 @@
                                 <h5 class="card-title mb-0">Thông tin cơ bản</h5>
                             </div>
                             <div class="card-body">
+
                                 <div class="row g-3">
                                     <div class="col-12">
                                         <label for="title" class="form-label">Tiêu đề sách <span
                                                 class="text-danger">*</span></label>
-                                        <input type="text" name="title" class="form-control" id="title"
-                                            value="{{ old('title') }}" required>
+                                        <input type="text" name="title" class="form-control @error('title') is-invalid @enderror" id="title"
+                                            value="{{ old('title') }}" >
+                                        @error('title')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
                                     </div>
                                     <div class="col-12">
                                         <label for="description" class="form-label">Mô tả</label>
@@ -69,8 +75,13 @@
                                     <div class="col-md-4">
                                         <div class="mb-3">
                                             <label class="form-label">Giá bán <span class="text-danger">*</span></label>
-                                            <input type="" name="formats[physical][price]"
-                                                class="form-control physical-field" min="0" step="1000">
+                                            <input type="number" name="formats[physical][price]"
+                                                class="form-control physical-field @error('formats.physical.price') is-invalid @enderror" min="0" step="1000" value="{{ old('formats.physical.price') }}">
+                                            @error('formats.physical.price')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
                                         </div>
                                     </div>
                                     <div class="col-md-4">
@@ -85,7 +96,12 @@
                                             <label class="form-label">Số lượng <span
                                                     class="text-danger">*</span></label>
                                             <input type="number" name="formats[physical][stock]"
-                                                class="form-control physical-field" min="0">
+                                                class="form-control physical-field @error('formats.physical.stock') is-invalid @enderror" min="0" value="{{ old('formats.physical.stock') }}">
+                                            @error('formats.physical.stock')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
                                         </div>
                                     </div>
                                 </div>
@@ -108,7 +124,12 @@
                                         <div class="mb-3">
                                             <label class="form-label">Giá bán <span class="text-danger">*</span></label>
                                             <input type="number" name="formats[ebook][price]"
-                                                class="form-control ebook-field" min="0" step="1000">
+                                                class="form-control ebook-field @error('formats.ebook.price') is-invalid @enderror" min="0" step="1000" value="{{ old('formats.ebook.price') }}">
+                                            @error('formats.ebook.price')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -122,8 +143,13 @@
 
                                 <div class="mb-3">
                                     <label class="form-label">File Ebook <span class="text-danger">*</span></label>
-                                    <input type="file" name="formats[ebook][file]" class="form-control ebook-field"
+                                    <input type="file" name="formats[ebook][file]" class="form-control ebook-field @error('formats.ebook.file') is-invalid @enderror"
                                         accept=".pdf,.epub">
+                                    @error('formats.ebook.file')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
                                     <small class="text-muted">Hỗ trợ định dạng PDF, EPUB</small>
                                 </div>
 
@@ -144,6 +170,11 @@
                             </div>
                         </div>
 
+                        @error('format')
+                            <div class="alert alert-danger mb-3">
+                                {{ $message }}
+                            </div>
+                        @enderror
                         <div class="alert alert-info mb-3" id="format_validation_message" style="display: none;">
                             Vui lòng kích hoạt ít nhất một định dạng sách.
                         </div>
@@ -153,6 +184,7 @@
                                 <h5 class="card-title mb-0">Thuộc tính sản phẩm</h5>
                             </div>
                             <div class="card-body">
+
                                 <div class="row g-3">
                                     @foreach($attributes as $attribute)
                                     <div class="col-md-6 mb-3">
@@ -205,35 +237,50 @@
                                 <div class="mb-3">
                                     <label for="category_id" class="form-label">Danh mục <span
                                             class="text-danger">*</span></label>
-                                    <select name="category_id" id="category_id" class="form-select" required>
+                                    <select name="category_id" id="category_id" class="form-select @error('category_id') is-invalid @enderror" >
                                         <option value="">-- Chọn danh mục --</option>
                                         @foreach($categories as $category)
                                         <option value="{{ $category->id }}" {{ old('category_id')==$category->id ?
                                             'selected' : '' }}>{{ $category->name }}</option>
                                         @endforeach
                                     </select>
+                                    @error('category_id')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
                                 </div>
                                 <div class="mb-3">
                                     <label for="author_id" class="form-label">Tác giả <span
                                             class="text-danger">*</span></label>
-                                    <select name="author_id" id="author_id" class="form-select" required>
+                                    <select name="author_id" id="author_id" class="form-select @error('author_id') is-invalid @enderror" >
                                         <option value="">-- Chọn tác giả --</option>
                                         @foreach($authors as $author)
                                         <option value="{{ $author->id }}" {{ old('author_id')==$author->id ? 'selected'
                                             : '' }}>{{ $author->name }}</option>
                                         @endforeach
                                     </select>
+                                    @error('author_id')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
                                 </div>
                                 <div class="mb-3">
                                     <label for="brand_id" class="form-label">Thương hiệu <span
                                             class="text-danger">*</span></label>
-                                    <select name="brand_id" id="brand_id" class="form-select" required>
+                                    <select name="brand_id" id="brand_id" class="form-select @error('brand_id') is-invalid @enderror" >
                                         <option value="">-- Chọn thương hiệu --</option>
                                         @foreach($brands as $brand)
                                         <option value="{{ $brand->id }}" {{ old('brand_id')==$brand->id ? 'selected' :
                                             '' }}>{{ $brand->name }}</option>
                                         @endforeach
                                     </select>
+                                    @error('brand_id')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
                                 </div>
                                 <div class="mb-3">
                                     <label for="publication_date" class="form-label">Ngày xuất bản</label>
@@ -252,8 +299,13 @@
                                 <div class="mb-3">
                                     <label for="cover_image" class="form-label">Ảnh bìa <span
                                             class="text-danger">*</span></label>
-                                    <input type="file" name="cover_image" class="form-control" id="cover_image"
-                                        accept="image/*">
+                                    <input type="file" name="cover_image" class="form-control @error('cover_image') is-invalid @enderror" id="cover_image"
+                                        accept="image/*" >
+                                    @error('cover_image')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
                                     <div id="cover_preview" class="mt-2">
                                         <div class="preview-container" style="max-width: 200px;"></div>
                                     </div>
