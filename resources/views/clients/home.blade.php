@@ -93,7 +93,7 @@
                                         </p>
                                         <a href="#"
                                             class="mt-4 inline-block bg-black text-white px-4 py-2 rounded text-sm hover:bg-gray-800 text-center w-full">
-                                            Mua ngay →
+                                            Thêm vào giỏ hàng →
                                         </a>
                                     </div>
 
@@ -102,7 +102,7 @@
 
                         @endforeach
                     </div>
-                    <div class="swiper-scrollbar mt-4 h-[4px] bg-gray-200 rounded overflow-hidden"
+                    <div class="swiper-scrollbar mt-4 h-[4px] bg-black rounded overflow-hidden"
                         id="scrollbar-{{$category->id}}"></div>
                 </div>
                 {{-- Nút điều hướng --}}
@@ -128,36 +128,22 @@
                 <img src="{{asset('storage/images/banner-image3.png')}}" class="h-full object-contain" alt="">
             </div>
             <!-- Nội dung bên phải -->
-            <div class="md:text-left space-y-6 text-black text-center">
+            <div class="text-center md:text-left space-y-4 text-black">
                 <h2 class="text-5xl md:text-6xl font-semibold leading-tight">
-                    Đồng hồ đang đếm ngược...<br>
+                    Giờ hiện tại
                 </h2>
                 <p class="text-xl md:text-2xl">Một hành trình tri thức đang chờ bạn khám phá!</p>
-                <!-- Bộ đếm thời gian -->
-                <div class=" flex justify-center md:justify-start gap-6 text-center text-black font-medium text-xl">
-                    <div>
-                        <div class="text-4xl font-bold" id="days">0</div>
-                        <div class="text-sm mt-1">Ngày</div>
-                    </div>
-                    <div>
-                        <div class="text-4xl font-bold" id="hours">0</div>
-                        <div class="text-sm mt-1">Giờ</div>
-                    </div>
-                    <div>
-                        <div class="text-4xl font-bold" id="minutes">0</div>
-                        <div class="text-sm mt-1">Phút</div>
-                    </div>
-                    <div>
-                        <div class="text-4xl font-bold" id="seconds">0</div>
-                        <div class="text-sm mt-1">Giây</div>
-                    </div>
-                </div>
+
+                <!-- Hiển thị thời gian -->
+                <div class="text-5xl font-bold" id="clock-time">00:00:00</div>
+                <div class="text-lg mt-1" id="clock-date">Thứ..., 00/00/0000</div>
 
                 <a href="#"
-                    class="inline-block bg-red-400 text-white px-8 py-4 rounded-full text-sm font-semibold hover:bg-red-600 transition duration-300 ">
+                    class="inline-block bg-red-400 text-white px-8 py-4 rounded-full text-sm font-semibold hover:bg-red-600 transition duration-300">
                     Mua ngay
                 </a>
             </div>
+
 
         </div>
 
@@ -171,96 +157,97 @@
             <!-- Featured -->
             <div>
                 <h3 class="text-xl font-bold mb-4">Nổi bật</h3>
-                @foreach($featuredBooks as $book)
-                    <div onclick="window.location='{{ route('books.show', ['slug' => $book->slug]) }}'"
-                        class="h-[300px] flex flex-col justify-between border border-gray-200 rounded py-10 hover:border-black transition">
-                        <img src="{{ $book->images->first() ? asset('storage/' . $book->images->first()->image_url) : asset('storage/default.jpg') }}"
-                            alt="{{ $book->title }}" class="w-20 h-28 object-cover mb-2">
-                        <p class="font-semibold text-sm leading-tight">Tiêu đề: {{ $book->title }}</p>
-                        <p class="text-xs text-gray-500">Tác giả: {{ $book->author->name ?? 'Không rõ' }}</p>
-                        <p class="text-red-500 font-bold">
-                            Giá tiền: {{ number_format($book->formats->first()->price ?? 0, 0, ',', '.') }}₫
-                        </p>
-                    </div>
-                @endforeach
+                <div class="flex flex-col gap-y-6">
+                    @foreach($featuredBooks as $book)
+                        <div onclick="window.location='{{ route('books.show', ['slug' => $book->slug]) }}'"
+                            class="min-h-[300px] flex flex-col justify-between border border-gray-200 rounded p-3 hover:border-black transition">
+                            <img src="{{ $book->images->first() ? asset('storage/' . $book->images->first()->image_url) : asset('storage/default.jpg') }}"
+                                alt="{{ $book->title }}" class="w-20 h-28 object-cover mb-2">
+                            <p class="font-semibold text-sm leading-tight">Tiêu đề: {{ $book->title }}</p>
+                            <p class="text-xs text-gray-500">Tác giả: {{ $book->author->name ?? 'Không rõ' }}</p>
+                            <p class="text-red-500 font-bold">
+                                Giá tiền: {{ number_format($book->formats->first()->price ?? 0, 0, ',', '.') }}₫
+                            </p>
+                        </div>
+                    @endforeach
+                </div>
+
             </div>
 
             <!-- Mới nhất -->
             <div>
                 <h3 class="text-xl font-bold mb-4">Mới nhất</h3>
-                @foreach($latestBooks as $book)
-                    <div onclick="window.location='{{ route('books.show', ['slug' => $book->slug]) }}'"
-                        class="h-[300px] flex flex-col justify-between border border-gray-200 rounded p-3 hover:border-black transition">
-                        <img src="{{ asset('storage/' . ($book->images->first()->image_url ?? 'default.jpg')) }}"
-                            alt="{{ $book->title }}" class="w-20 h-28 object-cover mb-2">
-                        <p class="font-semibold text-sm leading-tight">Tiêu đề: {{ $book->title }}</p>
-                        <p class="text-xs text-gray-500">Tác giả: {{ $book->author->name ?? 'Không rõ' }}</p>
-                        <p class="text-xs text-gray-400">
-                            Ngày xuất bản: {{ $book->publication_date?->format('d/m/Y') ?? 'Chưa rõ' }}
-                        </p>
+                <div class="flex flex-col gap-y-6">
+                    @foreach($latestBooks as $book)
+                        <div onclick="window.location='{{ route('books.show', ['slug' => $book->slug]) }}'"
+                            class="min-h-[300px] flex flex-col justify-between border border-gray-200 rounded p-3 hover:border-black transition">
+                            <img src="{{ asset('storage/' . ($book->images->first()->image_url ?? 'default.jpg')) }}"
+                                alt="{{ $book->title }}" class="w-20 h-28 object-cover mb-2">
+                            <p class="font-semibold text-sm leading-tight">Tiêu đề: {{ $book->title }}</p>
+                            <p class="text-xs text-gray-500">Tác giả: {{ $book->author->name ?? 'Không rõ' }}</p>
+                            <p class="text-red-500 font-bold">
+                                Giá tiền {{ number_format($book->formats->first()->price ?? 0, 0, ',', '.') }}₫
+                            </p>
+                        </div>
+                    @endforeach
+                </div>
 
-                        <p class="text-red-500 font-bold">
-                           Giá tiền {{ number_format($book->formats->first()->price ?? 0, 0, ',', '.') }}₫
-                        </p>
-                    </div>
-                @endforeach
             </div>
 
             <!-- Đánh giá cao -->
             <div>
                 <h3 class="text-xl font-bold mb-4">Đánh giá cao</h3>
-                @foreach($bestReviewedBooks as $book)
-                    @php
-                        $rating = round($book->reviews->avg('rating'), 1);
-                        
-                    @endphp
-                    <div onclick="window.location='{{ route('books.show', ['slug' => $book->slug]) }}'"
-                        class="h-[300px] flex flex-col justify-between border border-gray-200 rounded p-3 hover:border-black transition">
-                        <img src="{{ asset('storage/' . ($book->images->first()->image_url ?? 'default.jpg')) }}"
-                            alt="{{ $book->title }}" class="w-20 h-28 object-cover mb-2">
-                        {{-- ⭐ Đánh giá sao --}}
-                        <div class="flex items-center text-yellow-400 text-sm mb-1">
-                            @for($i = 1; $i <= 5; $i++)
-                                <span>{{ $i <= $rating ? '★' : '☆' }}</span>
-                            @endfor
-                            <span class="ml-1 text-gray-500">({{ $rating }}/5)</span>
+                <div class="flex flex-col gap-y-6">
+                    @foreach($bestReviewedBooks as $book)
+                        @php
+                            $rating = round($book->reviews->avg('rating'), 1);
+
+                        @endphp
+                        <div onclick="window.location='{{ route('books.show', ['slug' => $book->slug]) }}'"
+                            class="min-h-[300px] flex flex-col justify-between border border-gray-200 rounded p-3 hover:border-black transition">
+                            <img src="{{ asset('storage/' . ($book->images->first()->image_url ?? 'default.jpg')) }}"
+                                alt="{{ $book->title }}" class="w-20 h-28 object-cover mb-2">
+                            <p class="font-semibold text-sm leading-tight">Tiêu đề: {{ $book->title }}</p>
+                            <p class="text-xs text-gray-500">Tác giả: {{ $book->author->name ?? 'Không rõ' }}</p>
+                            <p class="text-red-500 font-bold">
+                                Giá tiền: {{ number_format($book->formats->first()->price ?? 0, 0, ',', '.') }}₫
+                            </p>
                         </div>
-                        <p class="font-semibold text-sm leading-tight">Tiêu đề: {{ $book->title }}</p>
-                        <p class="text-xs text-gray-500">Tác giả: {{ $book->author->name ?? 'Không rõ' }}</p>
-                        <p class="text-red-500 font-bold">
-                           Giá tiền: {{ number_format($book->formats->first()->price ?? 0, 0, ',', '.') }}₫
-                        </p>
-                    </div>
-                @endforeach
+                    @endforeach
+                </div>
+
             </div>
 
             <!-- Giảm giá -->
             <div>
                 <h3 class="text-xl font-bold mb-4">Giảm giá</h3>
-                @foreach($saleBooks as $book)
-                    @php
-                        $fomat = $book->formats->first();
-                        $oldPrice = $fomat->price ?? 0;
-                        $discount = $fomat->discount ?? 0;
-                        $newPrice = $oldPrice - ($oldPrice * ($discount / 100));
-                    @endphp
-                    <div onclick="window.location='{{ route('books.show', ['slug' => $book->slug]) }}'"
-                        class="h-[300px] flex flex-col justify-between border border-gray-200 rounded p-3 hover:border-black transition">
-                        <img src="{{ asset('storage/' . ($book->images->first()->image_url ?? 'default.jpg')) }}"
-                            alt="{{ $book->title }}" class="w-20 h-28 object-cover mb-2">
-                        <p class="font-semibold text-sm leading-tight">Tiêu đề: {{ $book->title }}</p>
-                        <p class="text-xs text-gray-500">Tác giả: {{ $book->author->name ?? 'Không rõ' }}</p>
-                        {{-- 💸 Giá có giảm --}}
-                        <div class="text-sm mt-1">
-                            <span class="line-through text-gray-700 mr-2">
-                                Giá tiền: {{ number_format($oldPrice, 0, ',', '.') }}₫
-                            </span>
-                            <span class="text-red-600 font-bold">
-                               Giá tiền: {{ number_format($newPrice, 0, ',', '.') }}₫
-                            </span>
+                <div class="flex flex-col gap-y-6">
+                    @foreach($saleBooks as $book)
+                        @php
+                            $fomat = $book->formats->first();
+                            $oldPrice = $fomat->price ?? 0;
+                            $discount = $fomat->discount ?? 0;
+                            $newPrice = $oldPrice - ($oldPrice * ($discount / 100));
+                        @endphp
+                        <div onclick="window.location='{{ route('books.show', ['slug' => $book->slug]) }}'"
+                            class="min-h-[300px] flex flex-col justify-between border border-gray-200 rounded p-3 hover:border-black transition">
+                            <img src="{{ asset('storage/' . ($book->images->first()->image_url ?? 'default.jpg')) }}"
+                                alt="{{ $book->title }}" class="w-20 h-28 object-cover mb-2">
+                            <p class="font-semibold text-sm leading-tight">Tiêu đề: {{ $book->title }}</p>
+                            <p class="text-xs text-gray-500">Tác giả: {{ $book->author->name ?? 'Không rõ' }}</p>
+                            {{-- 💸 Giá có giảm --}}
+                            <div class="text-sm mt-1">
+                                <span class="line-through text-gray-700 mr-2">
+                                    Giá tiền: {{ number_format($oldPrice, 0, ',', '.') }}₫
+                                </span>
+                                <span class="text-red-600 font-bold">
+                                    Giá tiền: {{ number_format($newPrice, 0, ',', '.') }}₫
+                                </span>
+                            </div>
                         </div>
-                    </div>
-                @endforeach
+                    @endforeach
+                </div>
+
             </div>
 
         </div>
@@ -286,11 +273,11 @@
                     </div>
                     <div class="p-4 bg-white flex flex-col flex-1 justify-between h-[180px]">
                         <h3 class="text-base font-semibold text-gray-800">{{$book->title}}</h3>
-                        <p class="text-sm text-gray-500">{{$book->category?->name ?? 'Chưa có danh mục'}}</p>
+                        <p class="text-sm text-gray-500">{{$book->author?->name ?? 'Không rõ'}}</p>
                         <p class="text-lg font-bold text-red-600 mt-2">{{number_format($book->price, 0, ',', '.')}}₫ </p>
                         <a href="#"
                             class="mt-4 inline-block bg-black text-white px-4 py-2 rounded text-sm hover:bg-gray-800 text-center w-full">
-                            Mua ngay →
+                            Thêm vào giỏ hàng →
                         </a>
                     </div>
 
@@ -353,15 +340,21 @@
                 <div class="bg-white rounded shadow overflow-hidden hover:shadow-lg transition">
                     <img src="{{asset('storage/' . $article->thumbnail)}}" alt="{{$article->title}}"
                         class="w-full h-48 object-cover">
-                    <div class="p-4">
-                        <p class=" text-sm text-pink-500 font-medium mb-1">
+                    <div class="p-4 flex flex-col min-h-[270px]">
+                        <div class="flex flex-col flex-grow">
+                             <p class=" text-sm text-pink-500 font-medium mb-1">
                             {{ $article->category ?? ' Tin tức' }}
                         </p>
                         <h3 class=" text-lg font-bold mb-2 leading-snug">{{$article->title}}</h3>
                         <p class=" text-sm text-gray-600 mb-4">{{Str::limit($article->summary, 100)}}</p>
-                        <a href="#" class=" inline-block text-sm text-red-500 hover:underline font-semibold">
+                       
+                        </div>
+                        <div class="mt-4">
+                             <a href="#" class=" inline-block text-sm text-red-500 hover:underline font-semibold">
                             Đọc thêm →
                         </a>
+                        </div>
+                       
                     </div>
                 </div>
             @empty

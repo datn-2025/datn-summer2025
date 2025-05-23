@@ -82,7 +82,7 @@ class Book extends Model
 
     public function attributeValues(): BelongsToMany
     {
-        return $this->belongsToMany(AttributeValue::class, 'book_attribute_values')
+        return $this->belongsToMany(AttributeValue::class, 'book_attribute_values', 'book_id', 'attribute_value_id')
             ->withTimestamps();
     }
 

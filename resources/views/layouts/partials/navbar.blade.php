@@ -13,18 +13,13 @@
             <li><a href="#" class="hover:text-red-500">Giới thiệu</a></li>
             <li><a href="#" class="hover:text-red-500">Cửa hàng</a></li>
             <li><a href="#" class="hover:text-red-500">Tin tức</a></li>
-            <li><a href="#" class="hover:text-red-500">Trang</a></li>
             <li><a href="#" class="hover:text-red-500">Liên hệ</a></li>
-            <li><a href="#" class="hover:text-red-500 underline">Nhận Pro</a></li>
         </ul>
         {{-- Phải: Tìm kiếm + icon + dòng phụ --}}
         <div class="flex flex-col items-end gap-1 text-sm md:text-xs">
             {{-- Dòng phụ --}}
             <div class="flex items-center gap-4">
-                <a href="#" class="hover:underline whitespace-nowrap">trợ giúp</a>
-                <a href="#" class="hover:underline whitespace-nowrap">trình theo dõi đơn hàng</a>
-                <a href="#" class="hover:underline whitespace-nowrap">đăng ký hội viên</a>
-
+                
                 {{-- Cờ + chọn ngôn ngữ --}}
                 <nav class="relative">
                     <div class="flex items-center space-x-2">
