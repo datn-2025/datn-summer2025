@@ -4,8 +4,8 @@
 use App\Http\Controllers\Admin\BookController as AdminBookController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\AuthorController;
 use App\Http\Controllers\Login\LoginController;
-
 use App\Http\Controllers\Admin\VoucherController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\HomeController;
@@ -36,11 +36,19 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/trash', [AdminBookController::class, 'trash'])->name('trash');
         Route::post('/restore/{id}', [AdminBookController::class, 'restore'])->name('restore');
         Route::delete('/force-delete/{id}', [AdminBookController::class, 'forceDelete'])->name('force-delete');
-    })->name('dashboard');
+    });
   
     // Route admin/categories
     Route::prefix('categories')->name('categories.')->group(function () {
         Route::get('/', [CategoryController::class, 'index'])->name('index');
+        // Route admin/authors
+        Route::prefix('authors')->name('authors.')->group(function () {
+            Route::get('/', [AuthorController::class, 'index'])->name('index');
+            Route::get('/trash', [AuthorController::class, 'trash'])->name('trash');
+            Route::delete('/{author}', [AuthorController::class, 'destroy'])->name('destroy');
+            Route::put('/{id}/restore', [AuthorController::class, 'restore'])->name('restore');
+            Route::delete('/{id}/force', [AuthorController::class, 'forceDelete'])->name('force-delete');
+        });
     });
     // Route admin/vouchers
     Route::prefix('vouchers')->name('vouchers.')->group(function () {
@@ -49,6 +57,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::delete('{id}/force-delete', [VoucherController::class, 'forceDelete'])->name('force-delete');
     });
     Route::resource('vouchers', VoucherController::class);
+
+    
 
     // Route admin/users
     Route::prefix('users')->name('users.')->group(function () {
