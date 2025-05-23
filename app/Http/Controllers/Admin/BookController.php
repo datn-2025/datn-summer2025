@@ -113,7 +113,9 @@ class BookController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request->all());
+        
+        
+        // Validation với thông báo tùy chỉnh
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -126,6 +128,7 @@ class BookController extends Controller
             'formats.physical.price' => 'required_if:has_physical,1|nullable|numeric|min:0',
             'formats.physical.discount' => 'nullable|numeric|min:0|max:100',
             'formats.physical.stock' => 'required_if:has_physical,1|nullable|integer|min:0',
+            'has_ebook' => 'boolean',
             'formats.ebook.price' => 'required_if:has_ebook,1|nullable|numeric|min:0',
             'formats.ebook.discount' => 'nullable|numeric|min:0|max:100',
             'formats.ebook.file' => 'required_if:has_ebook,1|nullable|mimes:pdf,epub|max:50000',
@@ -136,10 +139,30 @@ class BookController extends Controller
             'author_id' => 'required|exists:authors,id',
             'brand_id' => 'required|exists:brands,id',
             'publication_date' => 'nullable|date',
-            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'cover_image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-            'has_ebook' => 'boolean',
+        ], [
+            'title.required' => 'Vui lòng nhập tiêu đề sách',
+            'category_id.required' => 'Vui lòng chọn danh mục',
+            'author_id.required' => 'Vui lòng chọn tác giả',
+            'brand_id.required' => 'Vui lòng chọn thương hiệu',
+            'status.required' => 'Vui lòng chọn trạng thái',
+            'cover_image.required' => 'Vui lòng chọn ảnh bìa cho sách',
+            'cover_image.image' => 'File ảnh bìa không hợp lệ',
+            'cover_image.max' => 'Kích thước ảnh bìa không được vượt quá 2MB',
+            'formats.physical.price.required_if' => 'Vui lòng nhập giá bán cho sách vật lý',
+            'formats.physical.stock.required_if' => 'Vui lòng nhập số lượng cho sách vật lý',
+            'formats.ebook.price.required_if' => 'Vui lòng nhập giá bán cho ebook',
+            'formats.ebook.file.required_if' => 'Vui lòng chọn file ebook',
+            'formats.ebook.file.mimes' => 'File ebook phải có định dạng PDF hoặc EPUB',
+            'formats.ebook.file.max' => 'Kích thước file ebook không được vượt quá 50MB',
         ]);
+        // Kiểm tra xem ít nhất một định dạng sách được chọn
+        if (!$request->boolean('has_physical') && !$request->boolean('has_ebook')) {
+            return back()->withInput()->withErrors([
+                'format' => 'Vui lòng chọn ít nhất một định dạng sách (Sách vật lý hoặc Ebook)'
+            ]);
+        }
 
         $data = $request->only([
             'title',
@@ -261,6 +284,237 @@ class BookController extends Controller
         }
 
         return view('admin.books.show', compact('book', 'attributes', 'averageRating', 'reviewCount'));
+    }
+    
+    public function edit($id, $slug)
+    {
+        $book = Book::with([
+            'formats',
+            'images',
+            'attributeValues'
+        ])->findOrFail($id);
+        
+        $categories = Category::all();
+        $brands = Brand::all();
+        $authors = Author::all();
+        $attributes = Attribute::with('values')->get();
+        
+        // Lấy định dạng sách vật lý nếu có
+        $physicalFormat = $book->formats->where('format_name', 'Sách Vật Lý')->first();
+        
+        // Lấy định dạng ebook nếu có
+        $ebookFormat = $book->formats->where('format_name', 'Ebook')->first();
+        
+        // Chuẩn bị dữ liệu thuộc tính đã chọn
+        $selectedAttributeValues = [];
+        foreach ($book->attributeValues as $attributeValue) {
+            $selectedAttributeValues[$attributeValue->id] = [
+                'id' => $attributeValue->id,
+                'extra_price' => $attributeValue->pivot->extra_price ?? 0
+            ];
+        }
+        
+        return view('admin.books.edit', compact(
+            'book', 
+            'categories', 
+            'brands', 
+            'authors', 
+            'attributes', 
+            'physicalFormat', 
+            'ebookFormat', 
+            'selectedAttributeValues'
+        ));
+    }
+    
+    public function update(Request $request, $id, $slug)
+{
+    $book = Book::findOrFail($id);
+
+    // Validation với thông báo tùy chỉnh
+    $request->validate([
+        'title' => 'required|string|max:255',
+        'description' => 'nullable|string',
+        'isbn' => 'nullable|string|max:20',
+        'page_count' => 'nullable|integer',
+        'attribute_values.*.id' => 'exists:attribute_values,id',
+        'attribute_values' => 'nullable|array',
+        'attribute_values.*.extra_price' => 'nullable|numeric|min:0',
+        'has_physical' => 'boolean',
+        'formats.physical.price' => 'required_if:has_physical,1|nullable|numeric|min:0',
+        'formats.physical.discount' => 'nullable|numeric|min:0|max:100',
+        'formats.physical.stock' => 'required_if:has_physical,1|nullable|integer|min:0',
+        'has_ebook' => 'boolean',
+        'formats.ebook.price' => 'required_if:has_ebook,1|nullable|numeric|min:0',
+        'formats.ebook.discount' => 'nullable|numeric|min:0|max:100',
+        'formats.ebook.file' => 'nullable|mimes:pdf,epub|max:50000',
+        'formats.ebook.sample_file' => 'nullable|mimes:pdf,epub|max:10000',
+        'formats.ebook.allow_sample_read' => 'boolean',
+        'status' => 'required|string|max:50',
+        'category_id' => 'required|exists:categories,id',
+        'author_id' => 'required|exists:authors,id',
+        'brand_id' => 'required|exists:brands,id',
+        'publication_date' => 'nullable|date',
+        'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+        'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+    ], [
+        'title.required' => 'Vui lòng nhập tiêu đề sách',
+        'category_id.required' => 'Vui lòng chọn danh mục',
+        'author_id.required' => 'Vui lòng chọn tác giả',
+        'brand_id.required' => 'Vui lòng chọn thương hiệu',
+        'status.required' => 'Vui lòng chọn trạng thái',
+        'cover_image.image' => 'File ảnh bìa không hợp lệ',
+        'cover_image.max' => 'Kích thước ảnh bìa không được vượt quá 2MB',
+        'formats.physical.price.required_if' => 'Vui lòng nhập giá bán cho sách vật lý',
+        'formats.physical.stock.required_if' => 'Vui lòng nhập số lượng cho sách vật lý',
+        'formats.ebook.price.required_if' => 'Vui lòng nhập giá bán cho ebook',
+        'formats.ebook.file.mimes' => 'File ebook phải có định dạng PDF hoặc EPUB',
+        'formats.ebook.file.max' => 'Kích thước file ebook không được vượt quá 50MB',
+    ]);
+    // Kiểm tra xem ít nhất một định dạng sách được chọn
+    if (!$request->boolean('has_physical') && !$request->boolean('has_ebook')) {
+        return back()->withInput()->withErrors([
+            'format' => 'Vui lòng chọn ít nhất một định dạng sách (Sách vật lý hoặc Ebook)'
+        ]);
+    }
+        
+        $data = $request->only([
+            'title',
+            'description',
+            'author_id',
+            'brand_id',
+            'category_id',
+            'status',
+            'isbn',
+            'publication_date',
+            'page_count'
+        ]);
+        
+        $slug = Str::slug($data['title']);
+        $data['slug'] = $slug;
+        
+        // Xử lý ảnh chính nếu có cập nhật
+        if ($request->hasFile('cover_image')) {
+            // Xóa ảnh cũ nếu có
+            if ($book->cover_image && Storage::disk('public')->exists($book->cover_image)) {
+                Storage::disk('public')->delete($book->cover_image);
+            }
+            
+            $coverImage = $request->file('cover_image');
+            $coverImagePath = $coverImage->store('books', 'public');
+            $data['cover_image'] = $coverImagePath;
+        }
+        
+        // Cập nhật thông tin sách
+        $book->update($data);
+        
+        // Xử lý ảnh phụ nếu có cập nhật
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('books/thumbnail', 'public');
+                $book->images()->create([
+                    'image_url' => $path
+                ]);
+            }
+        }
+        
+        // Xử lý xóa ảnh nếu có yêu cầu
+        if ($request->filled('delete_images')) {
+            $imageIds = $request->input('delete_images');
+            $imagesToDelete = $book->images()->whereIn('id', $imageIds)->get();
+            
+            foreach ($imagesToDelete as $image) {
+                if (Storage::disk('public')->exists($image->image_url)) {
+                    Storage::disk('public')->delete($image->image_url);
+                }
+                $image->delete();
+            }
+        }
+        
+        // Cập nhật định dạng sách vật lý
+        if ($request->boolean('has_physical')) {
+            $physicalFormat = $book->formats()->where('format_name', 'Sách Vật Lý')->first();
+            
+            $physicalData = [
+                'format_name' => 'Sách Vật Lý',
+                'price' => $request->input('formats.physical.price'),
+                'discount' => $request->input('formats.physical.discount'),
+                'stock' => $request->input('formats.physical.stock'),
+            ];
+            
+            if ($physicalFormat) {
+                $physicalFormat->update($physicalData);
+            } else {
+                $book->formats()->create($physicalData);
+            }
+        } else {
+            // Xóa định dạng sách vật lý nếu không còn sử dụng
+            $book->formats()->where('format_name', 'Sách Vật Lý')->delete();
+        }
+        
+        // Cập nhật định dạng ebook
+        if ($request->boolean('has_ebook')) {
+            $ebookFormat = $book->formats()->where('format_name', 'Ebook')->first();
+            
+            $ebookData = [
+                'format_name' => 'Ebook',
+                'price' => $request->input('formats.ebook.price'),
+                'discount' => $request->input('formats.ebook.discount'),
+                'allow_sample_read' => $request->boolean('formats.ebook.allow_sample_read'),
+            ];
+            
+            // Upload file ebook chính nếu có cập nhật
+            if ($request->hasFile('formats.ebook.file')) {
+                // Xóa file cũ nếu có
+                if ($ebookFormat && $ebookFormat->file_url && Storage::disk('public')->exists($ebookFormat->file_url)) {
+                    Storage::disk('public')->delete($ebookFormat->file_url);
+                }
+                
+                $ebookFile = $request->file('formats.ebook.file');
+                $ebookFilename = time() . '_' . Str::slug(pathinfo($ebookFile->getClientOriginalName(), PATHINFO_FILENAME)) . '.' . $ebookFile->getClientOriginalExtension();
+                $ebookPath = $ebookFile->storeAs('ebooks', $ebookFilename, 'public');
+                $ebookData['file_url'] = $ebookPath;
+            }
+            
+            // Upload file xem thử nếu có cập nhật
+            if ($request->hasFile('formats.ebook.sample_file')) {
+                // Xóa file cũ nếu có
+                if ($ebookFormat && $ebookFormat->sample_file_url && Storage::disk('public')->exists($ebookFormat->sample_file_url)) {
+                    Storage::disk('public')->delete($ebookFormat->sample_file_url);
+                }
+                
+                $sampleFile = $request->file('formats.ebook.sample_file');
+                $sampleFilename = time() . '_sample_' . Str::slug(pathinfo($sampleFile->getClientOriginalName(), PATHINFO_FILENAME)) . '.' . $sampleFile->getClientOriginalExtension();
+                $samplePath = $sampleFile->storeAs('ebook-samples', $sampleFilename, 'public');
+                $ebookData['sample_file_url'] = $samplePath;
+            }
+            
+            if ($ebookFormat) {
+                $ebookFormat->update($ebookData);
+            } else {
+                $book->formats()->create($ebookData);
+            }
+        } else {
+            // Xóa định dạng ebook nếu không còn sử dụng
+            $book->formats()->where('format_name', 'Ebook')->delete();
+        }
+        
+        // Cập nhật thuộc tính và giá thêm
+        // Xóa tất cả các liên kết thuộc tính hiện tại
+        $book->attributeValues()->detach();
+        
+        // Thêm lại các thuộc tính mới
+        if ($request->filled('attribute_values')) {
+            foreach ($request->attribute_values as $valueId => $data) {
+                BookAttributeValue::create([
+                    'book_id' => $book->id,
+                    'attribute_value_id' => $data['id'],
+                    'extra_price' => $data['extra_price'] ?? 0
+                ]);
+            }
+        }
+        
+        Toastr::success('Cập nhật sách thành công!');
+        return redirect()->route('admin.books.index');
     }
     
     public function destroy($id)
