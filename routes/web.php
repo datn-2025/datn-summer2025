@@ -4,9 +4,12 @@
 use App\Http\Controllers\Admin\BookController as AdminBookController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Login\LoginController;
+
 use App\Http\Controllers\Admin\VoucherController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\HomeController;
+
 use Illuminate\Support\Facades\Route;
 
 
@@ -54,4 +57,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/{id}/edit', [UserController::class, 'edit'])->name('edit');
         Route::put('/{id}', [UserController::class, 'update'])->name('update');
     });
+});
+Route::prefix('account')->name('account.')->group(function () {
+    Route::get('/', [LoginController::class, 'index'])->name('index');
+    Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
+    Route::get('/register', [LoginController::class, 'register'])->name('register');
+    Route::post('/register', [LoginController::class, 'handleRegister'])->name('register.submit');
+    Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 });
