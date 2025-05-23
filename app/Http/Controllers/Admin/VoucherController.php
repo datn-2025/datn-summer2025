@@ -53,7 +53,17 @@ class VoucherController extends Controller
         return redirect()->route('admin.vouchers.index')
             ->with('success', 'Thêm voucher thành công');
     }
-
+    public function show(Voucher $voucher)
+{
+    $voucher->loadCount('appliedVouchers');
+    $recentUsage = $voucher->appliedVouchers()
+        ->with('order.user')
+        ->latest()
+        ->take(10)
+        ->get();
+        
+    return view('admin.vouchers.show', compact('voucher', 'recentUsage'));
+}
     public function edit(Voucher $voucher)
     {
         return view('admin.vouchers.edit', compact('voucher'));
@@ -77,10 +87,38 @@ class VoucherController extends Controller
         return redirect()->route('admin.vouchers.index')
             ->with('success', 'Cập nhật voucher thành công');
     }
+ // Add restore method
+    public function restore($id)
+    {
+        $voucher = Voucher::withTrashed()->findOrFail($id);
+        $voucher->restore();
+        
+        return back()->with('success', 'Khôi phục voucher thành công');
+    }
+
+    // Add forceDelete method
+    public function forceDelete($id)
+    {
+        $voucher = Voucher::withTrashed()->findOrFail($id);
+        $voucher->forceDelete();
+        return back()->with('success', 'Xóa vĩnh viễn voucher thành công');
+    }
 
     public function destroy(Voucher $voucher)
     {
         $voucher->delete();
         return back()->with('success', 'Xóa voucher thành công');
     }
+
+    public function trash()
+{
+    $trashedVouchers = Voucher::onlyTrashed()
+        ->withCount(['appliedVouchers as used_count'])
+        ->latest()
+        ->paginate(10);
+    
+    return view('admin.vouchers.trash', compact('trashedVouchers'));
+}
+
+
 }

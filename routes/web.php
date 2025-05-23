@@ -36,6 +36,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/', [CategoryController::class, 'index'])->name('index');
     });
     // Route admin/vouchers
+    Route::prefix('vouchers')->name('vouchers.')->group(function () {
+        Route::get('/trash', [VoucherController::class, 'trash'])->name('trash');
+        Route::post('{id}/restore', [VoucherController::class, 'restore'])->name('restore');
+        Route::delete('{id}/force-delete', [VoucherController::class, 'forceDelete'])->name('force-delete');
+    });
     Route::resource('vouchers', VoucherController::class);
 
     // Route admin/users
