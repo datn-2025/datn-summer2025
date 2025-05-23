@@ -17,19 +17,23 @@ Route::get('/books/{categoryId?}', [BookController::class, 'index'])->name('book
 // Route nhóm admin
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/', function () {
-        return view('admin.dashboard');
+             return view('admin.dashboard');
+         });
+    Route::prefix('books')->name('books.')->group(function(){
+        Route::get('/', [BookController::class, 'index'])->name('index');
+        Route::get('/create', [BookController::class, 'create'])->name('create');
+        Route::post('/store', [BookController::class, 'store'])->name('store');
+        Route::get('/show/{id}/{slug}', [BookController::class, 'show'])->name('show');
+        Route::get('/edit/{id}/{slug}', [BookController::class, 'edit'])->name('edit');
+        Route::put('/update/{id}/{slug}', [BookController::class, 'update'])->name('update');
+        Route::delete('/delete/{id}', [BookController::class, 'destroy'])->name('destroy');
+        
+        // Trash routes
+        Route::get('/trash', [BookController::class, 'trash'])->name('trash');
+        Route::post('/restore/{id}', [BookController::class, 'restore'])->name('restore');
+        Route::delete('/force-delete/{id}', [BookController::class, 'forceDelete'])->name('force-delete');
     })->name('dashboard');
-
-    // Route admin/books
-    Route::prefix('books')->name('books.')->group(function () {
-        Route::get('/', [AdminBookController::class, 'index'])->name('index');
-        Route::get('/create', [AdminBookController::class, 'create'])->name('create');
-        Route::get('/show/{id}/{slug}', [AdminBookController::class, 'show'])->name('show');
-        Route::get('/edit/{id}/{slug}', [AdminBookController::class, 'edit'])->name('edit');
-        Route::put('/update/{id}/{slug}', [AdminBookController::class, 'update'])->name('update');
-        Route::delete('/delete/{id}', [AdminBookController::class, 'destroy'])->name('destroy');
-    });
-
+  
     // Route admin/categories
     Route::prefix('categories')->name('categories.')->group(function () {
         Route::get('/', [CategoryController::class, 'index'])->name('index');
