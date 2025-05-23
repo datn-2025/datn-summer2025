@@ -164,3 +164,27 @@ document.getElementById('images').addEventListener('change', function (e) {
         preview.appendChild(col);
     });
 });
+
+// xử lý thùng rác
+$(document).ready(function() {
+    // Handle delete confirmation
+    $('.delete-item').on('click', function(e) {
+        e.preventDefault();
+        var form = $(this).closest('form');
+        
+        Swal.fire({
+            title: 'Bạn có chắc chắn?',
+            text: 'Sách sẽ được chuyển vào thùng rác!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Xóa',
+            cancelButtonText: 'Hủy',
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
+    });
+});
