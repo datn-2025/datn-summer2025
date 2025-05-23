@@ -22,51 +22,48 @@
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box d-sm-flex align-items-center justify-content-between bg-galaxy-transparent">
-                    <h4 class="mb-sm-0">Quản Lý Tác Giả</h4>
+                    <h4 class="mb-sm-0">Quản Lý Danh Mục</h4>
 
                     <div class="page-title-right">
                         <ol class="breadcrumb m-0">
-                            <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="">Quản lý</a></li>
                             <li class="breadcrumb-item active">Tác Giả</li>
                         </ol>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- end page title --> <!-- Bắt đầu Form tìm kiếm -->
-        <div class="row mb-4">
-            <div class="col">
-                <form action="{{ route('admin.categories.authors.index') }}" method="GET">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <input type="text" name="search_name" class="form-control" placeholder="Tìm kiếm theo tên"
-                                value="{{ $searchName }}">
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-check">
-                                <input type="checkbox" name="show_deleted" class="form-check-input" id="showDeleted"
-                                    {{ $showDeleted ? 'checked' : '' }} onChange="this.form.submit()">
-                                <label class="form-check-label" for="showDeleted">
-                                    Hiển thị tác giả đã xóa
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <button type="submit" class="btn btn-primary">Tìm kiếm</button>
-                            <a href="{{ route('admin.categories.authors.index') }}" class="btn btn-secondary">Đặt lại</a>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-        <!-- Kết thúc Form tìm kiếm -->
-
+        <!-- end page title --> 
         <div class="row">
             <div class="col">
                 <div class="card">
-                    <div class="card-header align-items-center d-flex">
-                        <h4 class="card-title mb-0 flex-grow-1">Danh Sách Tác Giả</h4>
+                    <div class="card-header align-items-center d-flex justify-content-between">
+                        <h4 class="card-title mb-0">Danh Sách Tác Giả</h4>
+                        <div class="d-flex align-items-center gap-2">
+                            <a href="{{ route('admin.categories.authors.trash') }}" class="btn btn-danger btn-sm">
+                                <i class="ri-delete-bin-line me-1"></i> Thùng rác
+                                @if($trashCount > 0)
+                                    <span class="badge bg-light text-danger ms-1">{{ $trashCount }}</span>
+                                @endif
+                            </a>
+                        </div>
                     </div>
+                    <!-- Bắt đầu Form tìm kiếm -->
+                    <div class="row mb-4">
+                        <div class="d-flex justify-content-sm-end">
+                            <form action="{{ route('admin.categories.authors.index') }}" method="GET" class="d-flex gap-2">
+                                <div class="col-auto">
+                                    <input type="text" name="search_name" class="form-control" placeholder="Tìm kiếm theo tên"
+                                        value="{{ $searchName }}">
+                                </div>
+                                <div class="col-auto">
+                                    <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                                    <a href="{{ route('admin.categories.authors.index') }}" class="btn btn-secondary">Đặt lại</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- Kết thúc Form tìm kiếm -->
 
                     <div class="card-body">
                         <div class="table-responsive">
@@ -130,20 +127,20 @@
                                                         </form>
                                                     @else
                                                         <a href="#" class="btn btn-sm btn-light" title="Xem chi tiết">
-                                                            <i class="las la-eye"></i>
+                                                            <i class="ri-eye-fill align-bottom me-2 text-muted"></i>
                                                         </a>
                                                         <a href="#" class="btn btn-sm btn-light" title="Chỉnh sửa">
-                                                            <i class="las la-edit"></i>
+                                                            <i class="ri-pencil-fill align-bottom me-2 text-muted"></i>
                                                         </a>
                                                         <form
                                                             action="{{ route('admin.categories.authors.destroy', $author->id) }}"
                                                             method="POST" class="d-inline">
                                                             @csrf
                                                             @method('DELETE')
-                                                            <button type="submit" class="btn btn-sm btn-warning"
+                                                            <button type="submit" class="btn btn-sm"
                                                                 onclick="return confirm('Bạn có chắc muốn xóa tạm thời tác giả này?')"
                                                                 title="Xóa tạm thời">
-                                                                <i class="las la-trash-alt"></i>
+                                                                <i class="ri-delete-bin-fill align-bottom me-2"></i>
                                                             </button>
                                                         </form>
                                                     @endif

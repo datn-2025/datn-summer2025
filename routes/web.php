@@ -43,6 +43,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         // Route admin/authors
         Route::prefix('authors')->name('authors.')->group(function () {
             Route::get('/', [AuthorController::class, 'index'])->name('index');
+            Route::get('/trash', [AuthorController::class, 'trash'])->name('trash');
             Route::delete('/{author}', [AuthorController::class, 'destroy'])->name('destroy');
             Route::put('/{id}/restore', [AuthorController::class, 'restore'])->name('restore');
             Route::delete('/{id}/force', [AuthorController::class, 'forceDelete'])->name('force-delete');

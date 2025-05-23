@@ -17,31 +17,55 @@ class AuthorController extends Controller
                 $query->where('name', 'like', '%' . $request['search_name'] . '%');
             }
 
-            // Add option to show trashed authors
-            if ($request->has('show_deleted')) {
-                $query->withTrashed();
-            }
-
-            $authors = $query
-                ->withCount('books')
-                ->paginate(10);
+            $authors = $query->withCount('books')->paginate(10);
+            $trashCount = Author::onlyTrashed()->count();
 
             return view('admin.categories.authors', [
                 'authors' => $authors,
                 'searchName' => $request['search_name'] ?? '',
-                'showDeleted' => $request->has('show_deleted')
+                'trashCount' => $trashCount
             ]);
         } catch (\Throwable $e) {
             report($e);
-            return back()->with('error', 'Lỗi khi truy vấn tác giả. Vui lòng thử lại sau.');
+            toastr()->error('Lỗi khi truy vấn tác giả. Vui lòng thử lại sau.');
+            return back();
+        }
+    }
+
+    public function trash(Request $request)
+    {
+        try {
+            $query = Author::onlyTrashed();
+            
+            if (!empty($request['search_name'])) {
+                $query->where('name', 'like', '%' . $request['search_name'] . '%');
+            }
+
+            $deletedAuthors = $query->withCount('books')->paginate(10);
+
+            return view('admin.categories.authors-trash', [
+                'deletedAuthors' => $deletedAuthors,
+                'searchName' => $request['search_name'] ?? ''
+            ]);
+        } catch (\Throwable $e) {
+            report($e);
+            toastr()->error('Lỗi khi truy vấn tác giả đã xóa. Vui lòng thử lại sau.');
+            return back();
         }
     }
 
     public function destroy(Author $author)
     {
         try {
+            // Kiểm tra xem tác giả có sách nào không
+            if ($author->books()->count() > 0) {
+                toastr()->error('Không thể xóa tác giả đang có sách trong hệ thống.');
+                return back();
+            }
+            
             $author->delete();
-            return back()->with('success', 'Tác giả đã được xóa tạm thời.');
+            toastr()->success('Tác giả đã được xóa tạm thời thành công.');
+            return back();
         } catch (\Throwable $e) {
             report($e);
             return back()->with('error', 'Không thể xóa tác giả. Vui lòng thử lại sau.');
@@ -52,10 +76,12 @@ class AuthorController extends Controller
     {
         try {
             Author::withTrashed()->findOrFail($id)->restore();
-            return back()->with('success', 'Tác giả đã được khôi phục.');
+            toastr()->success('Tác giả đã được khôi phục thành công.');
+            return back();
         } catch (\Throwable $e) {
             report($e);
-            return back()->with('error', 'Không thể khôi phục tác giả. Vui lòng thử lại sau.');
+            toastr()->error('Không thể khôi phục tác giả. Vui lòng thử lại sau.');
+            return back();
         }
     }    public function forceDelete($id)
     {
