@@ -732,6 +732,12 @@
                         </li>
 
                         <li class="nav-item">
+                            <a class="nav-link menu-link" href="{{route('admin.orders.index')}}" >
+                                <i class="ri-pages-line"></i> <span data-key="t-pages">Quản lý đơn hàng</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
                             <a class="nav-link menu-link" href="#sidebarAdvanceUI" data-bs-toggle="collapse"
                                 role="button" aria-expanded="false" aria-controls="sidebarAdvanceUI">
                                 <i class="ri-stack-line"></i> <span data-key="t-advance-ui">Quản lý khuyến mãi toàn nền
