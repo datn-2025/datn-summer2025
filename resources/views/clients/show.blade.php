@@ -68,13 +68,22 @@
                     $finalPrice = $defaultPrice - ($defaultPrice * ($discount / 100));
                 @endphp
 
-                <!-- Tình trạng và tồn kho -->
-                <p class="text-gray-700">Tình trạng: <span class="font-semibold"
-                        id="bookStock">{{ $defaultStock > 0 ? 'Còn hàng' : 'Hết hàng' }}</span></p>
+                <!-- Tình trạng và tồn kho -->            
+                    <p class="text-gray-700">Tình trạng: 
+                    <span class="font-bold px-3 py-1.5 rounded text-white
+                        {{ $defaultStock === -1 ? 'bg-red-500' : 
+                           ($defaultStock === -2 ? 'bg-yellow-500' : 
+                           ($defaultStock === 0 ? 'bg-gray-900' : 'bg-green-500')) }}"
+                        id="bookStock">
+                        {{ $defaultStock === -1 ? 'Sắp Ra Mắt' : 
+                           ($defaultStock === -2 ? 'Ngưng Kinh Doanh' : 
+                           ($defaultStock === 0 ? 'Hết Hàng Tồn Kho' : 'Còn Hàng')) }}
+                    </span>
+                </p>
                 <div class="mt-2">
                     <p class="text-gray-700">Số lượng tồn kho: <span class="font-semibold"
-                            id="productQuantity">{{ $defaultStock }}</span></p>
-                </div>                <!-- Chọn định dạng -->
+                            id="productQuantity">{{ $defaultStock > 0 ? $defaultStock : 0 }}</span></p>
+                </div><!-- Chọn định dạng -->
                 @if($book->formats->count())                    <div class="mt-6">
                         <label for="bookFormatSelect" class="block text-sm font-medium text-gray-700 mb-2">Định dạng sách</label>
                         <select class="w-full border rounded-lg p-2.5 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
@@ -104,10 +113,14 @@
                                 <select name="attributes[{{ $attrVal->id }}]" 
                                         id="attribute_{{ $attrVal->id }}"
                                         class="w-full border rounded-lg p-2.5 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
-                                        onchange="updatePriceAndStock()">
-                                    @foreach ($attrVal->attribute->values as $value)
+                                        onchange="updatePriceAndStock()">                                    @foreach ($attrVal->attribute->values as $value)                                        @php
+                                            $bookAttrValue = \App\Models\BookAttributeValue::where('book_id', $book->id)
+                                                ->where('attribute_value_id', $value->id)
+                                                ->first();
+                                            $extraPrice = $bookAttrValue ? $bookAttrValue->extra_price : 0;
+                                        @endphp
                                         <option value="{{ $value->id }}" 
-                                                data-price="{{ $value->additional_price }}">
+                                                data-price="{{ $extraPrice }}">
                                             {{ $value->value }}
                                         </option>
                                     @endforeach
