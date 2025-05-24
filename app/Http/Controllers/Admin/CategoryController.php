@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Author;
+use App\Models\Brand;
 use App\Models\Category;
 use Illuminate\Http\Request;
 
@@ -32,5 +32,15 @@ class CategoryController extends Controller
         }
     }
 
-    
+    public function brand(Request $request)
+    {
+        $query = Brand::query();
+        if (!empty($request->search_name)) {
+            $query->where('name', 'like', '%' . $request->search_name . '%');
+        }
+        $brands = $query->withCount('books')->paginate(10);
+        return view('admin.categories.brand', [
+            'brands' => $brands
+        ]);
+    }
 }

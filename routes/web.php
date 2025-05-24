@@ -65,6 +65,16 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // Route admin/categories
     Route::prefix('categories')->name('categories.')->group(function () {
         Route::get('/', [CategoryController::class, 'index'])->name('index');
+        // Route admin/brand
+        Route::prefix('brands')->name('brands.')->group(function () {
+            Route::get('/', [CategoryController::class, 'brand'])->name('brand');
+            // Route::get('/create', [AuthorController::class, 'create'])->name('create');
+            // Route::post('/', [AuthorController::class, 'store'])->name('store');
+            // Route::get('/trash', [AuthorController::class, 'trash'])->name('trash');
+            // Route::delete('/{author}', [AuthorController::class, 'destroy'])->name('destroy');
+            // Route::put('/{id}/restore', [AuthorController::class, 'restore'])->name('restore');
+            // Route::delete('/{id}/force', [AuthorController::class, 'forceDelete'])->name('force-delete');
+        });
         // Route admin/authors
         Route::prefix('authors')->name('authors.')->group(function () {
             Route::get('/', [AuthorController::class, 'index'])->name('index');
