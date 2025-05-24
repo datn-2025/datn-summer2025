@@ -104,7 +104,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::put('/update/{id}', [AttributeController::class, 'update'])->name('update');
         Route::delete('/delete/{id}', [AttributeController::class, 'destroy'])->name('destroy');
     });
-    
     // Route admin/orders
     Route::prefix('orders')->name('orders.')->group(function () {
         Route::get('/', [OrderController::class, 'index'])->name('index');
