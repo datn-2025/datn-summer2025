@@ -237,7 +237,7 @@
                             <div class="card-body">
                                 <div class="mb-3">
                                     <label for="status" class="form-label">Trạng thái</label>
-                                    <select name="status" id="status" class="form-select">
+                                    <select name="status" class="form-select">
                                         <option value="Còn Hàng" {{ $book->status == 'Còn Hàng' ? 'selected' : '' }}>Còn Hàng</option>
                                         <option value="Hết Hàng Tồn Kho" {{ $book->status == 'Hết Hàng Tồn Kho' ? 'selected' : '' }}>Hết Hàng Tồn Kho</option>
                                         <option value="Sắp Ra Mắt" {{ $book->status == 'Sắp Ra Mắt' ? 'selected' : '' }}>Sắp Ra Mắt</option>
