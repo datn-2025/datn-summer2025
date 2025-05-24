@@ -40,6 +40,9 @@
                     <div class="card-header align-items-center d-flex justify-content-between">
                         <h4 class="card-title mb-0">Danh Sách Tác Giả</h4>
                         <div class="d-flex align-items-center gap-2">
+                            <a href="{{ route('admin.categories.authors.create') }}" class="btn btn-success btn-sm">
+                                <i class="ri-add-line me-1"></i> Thêm tác giả
+                            </a>
                             <a href="{{ route('admin.categories.authors.trash') }}" class="btn btn-danger btn-sm">
                                 <i class="ri-delete-bin-line me-1"></i> Thùng rác
                                 @if($trashCount > 0)
@@ -84,7 +87,7 @@
                                         <tr>
                                             <td>{{ $authors->firstItem() + $key }}</td>
                                             <td>
-                                                <img src="{{ $author->image }}" alt="{{ $author->name }}" class="rounded"
+                                                <img src="{{ $author->image ? asset($author->image) : asset('images/default-author.png') }}" alt="{{ $author->name }}" class="rounded"
                                                     style="width: 50px; height: 50px; object-fit: cover;">
                                             </td>
                                             <td>{{ $author->name }}</td>
@@ -126,9 +129,6 @@
                                                             </button>
                                                         </form>
                                                     @else
-                                                        <a href="#" class="btn btn-sm btn-light" title="Xem chi tiết">
-                                                            <i class="ri-eye-fill align-bottom me-2 text-muted"></i>
-                                                        </a>
                                                         <a href="#" class="btn btn-sm btn-light" title="Chỉnh sửa">
                                                             <i class="ri-pencil-fill align-bottom me-2 text-muted"></i>
                                                         </a>

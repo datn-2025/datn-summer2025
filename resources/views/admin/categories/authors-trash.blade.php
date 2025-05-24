@@ -24,7 +24,8 @@
                     <h4 class="mb-sm-0">Thùng Rác - Tác Giả</h4>
                     <div class="page-title-right">
                         <ol class="breadcrumb m-0">
-                            <li class="breadcrumb-item"><a href="{{ route('admin.categories.authors.index') }}">Quản lý tác giả</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('admin.categories.authors.index') }}">Quản lý tác giả</a>
+                            </li>
                             <li class="breadcrumb-item active">Thùng rác</li>
                         </ol>
                     </div>
@@ -41,6 +42,23 @@
                             <a href="{{ route('admin.categories.authors.index') }}" class="btn btn-primary btn-sm">
                                 <i class="las la-arrow-left"></i> Quay lại
                             </a>
+                        </div>
+                    </div>
+
+                    <!-- Thanh tìm kiếm tác giả đã xóa -->
+                    <div class="row mb-4 mt-2">
+                        <div class="d-flex justify-content-sm-end">
+                            <form action="{{ route('admin.categories.authors.trash') }}" method="GET" class="d-flex gap-2">
+                                <div class="col-auto">
+                                    <input type="text" name="search_name" class="form-control"
+                                        placeholder="Tìm kiếm theo tên tác giả đã xóa" value="{{ $searchName }}">
+                                </div>
+                                <div class="col-auto">
+                                    <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                                    <a href="{{ route('admin.categories.authors.trash') }}" class="btn btn-secondary">Đặt lại
+                                    </a>
+                                </div>
+                            </form>
                         </div>
                     </div>
 
