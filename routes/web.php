@@ -1,6 +1,7 @@
 <?php
 
 
+use App\Http\Controllers\Admin\AttributeController;
 use App\Http\Controllers\Admin\BookController as AdminBookController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\UserController;
@@ -32,7 +33,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/trash', [AdminBookController::class, 'trash'])->name('trash');
         Route::post('/restore/{id}', [AdminBookController::class, 'restore'])->name('restore');
         Route::delete('/force-delete/{id}', [AdminBookController::class, 'forceDelete'])->name('force-delete');
-    })->name('dashboard');
+    });
   
     // Route admin/categories
     Route::prefix('categories')->name('categories.')->group(function () {
@@ -45,5 +46,16 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/{id}', [UserController::class, 'show'])->name('show');
         Route::get('/{id}/edit', [UserController::class, 'edit'])->name('edit');
         Route::put('/{id}', [UserController::class, 'update'])->name('update');
+    });
+    
+    // Route admin/attributes
+    Route::prefix('attributes')->name('attributes.')->group(function () {
+        Route::get('/', [AttributeController::class, 'index'])->name('index');
+        Route::get('/create', [AttributeController::class, 'create'])->name('create');
+        Route::post('/store', [AttributeController::class, 'store'])->name('store');
+        Route::get('/show/{id}', [AttributeController::class, 'show'])->name('show');
+        Route::get('/edit/{id}', [AttributeController::class, 'edit'])->name('edit');
+        Route::put('/update/{id}', [AttributeController::class, 'update'])->name('update');
+        Route::delete('/delete/{id}', [AttributeController::class, 'destroy'])->name('destroy');
     });
 });
