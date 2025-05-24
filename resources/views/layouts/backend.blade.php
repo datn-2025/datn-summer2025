@@ -730,6 +730,23 @@
                                 </ul>
                             </div>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link menu-link" href="#sidebarCate" data-bs-toggle="collapse" role="button"
+                                aria-expanded="false" aria-controls="sidebarCate">
+                                <i class="ri-apps-2-line"></i> <span data-key="t-apps">Quản lý danh mục sản phẩm</span>
+                            </a>
+                            <div class="collapse menu-dropdown" id="sidebarCate">
+                                <ul class="nav nav-sm flex-column">
+                                    <li class="nav-item">
+                                        <a href="{{route('admin.categories.index')}}" class="nav-link" data-key="t-chat"> Loại sách </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{route('admin.categories.authors.index')}}" class="nav-link" data-key="t-chat"> Tác giả </a>
+                                    </li>
+                                    
+                                </ul>
+                            </div>
+                        </li>
 
                         <li class="nav-item">
                             <a class="nav-link menu-link" href="{{route('admin.orders.index')}}" >

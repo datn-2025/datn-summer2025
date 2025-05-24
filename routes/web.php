@@ -6,15 +6,27 @@ use App\Http\Controllers\Admin\BookController as AdminBookController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\AuthorController;
+use App\Http\Controllers\Login\LoginController;
+use App\Http\Controllers\Admin\VoucherController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\HomeController;
-use Illuminate\Support\Facades\Route;
 
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Contact\ContactController;
+use App\Http\Controllers\Article\NewsController;
 
 // Route public cho books (categoryId optional)
 Route::get('/', [HomeController::class, 'index']);
-Route::get('/books/{slug}', [HomeController::class, 'show'])->name('books.show');
+// Hiển thị danh sách và danh mục
+Route::get('/books/{slug?}', [BookController::class, 'index'])->name('books.index');
+// Hiển thị chi tiết sách
+Route::get('/book/{slug}', [HomeController::class, 'show'])->name('books.show');
 Route::get('/books/{categoryId?}', [BookController::class, 'index'])->name('books.index');
+Route::get('/contact', [ContactController::class, 'showForm'])->name('contact.form');
+Route::post('/contact', [ContactController::class, 'submitForm'])->name('contact.submit');
+Route::get('/news', [NewsController::class, 'index'])->name('news.index');
+Route::get('/news/{id}', [NewsController::class, 'show'])->name('news.show');
 
 // Test route for QR code generation
 Route::get('/test-qr-code/{id}', function($id) {
@@ -51,7 +63,26 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // Route admin/categories
     Route::prefix('categories')->name('categories.')->group(function () {
         Route::get('/', [CategoryController::class, 'index'])->name('index');
+        // Route admin/authors
+        Route::prefix('authors')->name('authors.')->group(function () {
+            Route::get('/', [AuthorController::class, 'index'])->name('index');
+            Route::get('/create', [AuthorController::class, 'create'])->name('create');
+            Route::post('/', [AuthorController::class, 'store'])->name('store');
+            Route::get('/trash', [AuthorController::class, 'trash'])->name('trash');
+            Route::delete('/{author}', [AuthorController::class, 'destroy'])->name('destroy');
+            Route::put('/{id}/restore', [AuthorController::class, 'restore'])->name('restore');
+            Route::delete('/{id}/force', [AuthorController::class, 'forceDelete'])->name('force-delete');
+        });
     });
+    // Route admin/vouchers
+    Route::prefix('vouchers')->name('vouchers.')->group(function () {
+        Route::get('/trash', [VoucherController::class, 'trash'])->name('trash');
+        Route::post('{id}/restore', [VoucherController::class, 'restore'])->name('restore');
+        Route::delete('{id}/force-delete', [VoucherController::class, 'forceDelete'])->name('force-delete');
+    });
+    Route::resource('vouchers', VoucherController::class);
+
+    
 
     // Route admin/users
     Route::prefix('users')->name('users.')->group(function () {
@@ -79,4 +110,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/edit/{id}', [OrderController::class, 'edit'])->name('edit');
         Route::put('/update/{id}', [OrderController::class, 'update'])->name('update');
     });
+});
+Route::prefix('account')->name('account.')->group(function () {
+    Route::get('/', [LoginController::class, 'index'])->name('index');
+    Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
+    Route::get('/register', [LoginController::class, 'register'])->name('register');
+    Route::post('/register', [LoginController::class, 'handleRegister'])->name('register.submit');
+    Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 });
