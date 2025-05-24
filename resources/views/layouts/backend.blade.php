@@ -743,6 +743,9 @@
                                     <li class="nav-item">
                                         <a href="{{route('admin.categories.authors.index')}}" class="nav-link" data-key="t-chat"> Tác giả </a>
                                     </li>
+                                    <li class="nav-item">
+                                        <a href="{{route('admin.categories.brands.index')}}" class="nav-link" data-key="t-chat"> Thương hiệu </a>
+                                    </li>
                                     
                                 </ul>
                             </div>
