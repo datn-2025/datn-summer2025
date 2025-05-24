@@ -724,25 +724,8 @@
                                             Danh sách </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="{{route('admin.books.create')}}" class="nav-link"> <span
-                                                data-key="t-file-manager">Thêm</span></a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link menu-link" href="#sidebarPages" data-bs-toggle="collapse" role="button"
-                                aria-expanded="false" aria-controls="sidebarPages">
-                                <i class="ri-pages-line"></i> <span data-key="t-pages">Quản lý đơn hàng</span>
-                            </a>
-                            <div class="collapse menu-dropdown" id="sidebarPages">
-                                <ul class="nav nav-sm flex-column">
-                                    <li class="nav-item">
-                                        <a href="" class="nav-link" data-key="t-starter"> Danh sách </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="" class="nav-link" data-key="t-profile"> Thêm </a>
+                                        <a href="{{route('admin.attributes.index')}}" class="nav-link"> <span
+                                                data-key="t-file-manager">Thuộc tính</span></a>
                                     </li>
                                 </ul>
                             </div>
@@ -1601,6 +1584,8 @@
         },
     });
     </script>
+    
+    @yield('scripts')
 </body>
 
 </html>
