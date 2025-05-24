@@ -23,7 +23,7 @@
                     <form action="" method="GET" class="d-flex gap-2">
                         <input type="text" name="search_name" class="form-control" placeholder="Tìm kiếm theo tên thương hiệu" value="{{ request('search_name') }}">
                         <button type="submit" class="btn btn-primary">Tìm kiếm</button>
-                        <a href="{{ route('admin.categories.brand.index') }}" class="btn btn-secondary">Đặt lại</a>
+                        <a href="{{ route('admin.categories.brands.brand') }}" class="btn btn-secondary">Đặt lại</a>
                     </form>
                 </div>
                 <div class="card-body">
@@ -33,15 +33,18 @@
                                 <tr>
                                     <th scope="col">ID</th>
                                     <th scope="col">Tên Thương Hiệu</th>
+                                    <th scope="col">Mô tả</th>
                                     <th scope="col">Ảnh/Logo</th>
                                     <th scope="col">Số Lượng Sách</th>
+                                    <th scope="col">Thao tác </th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse($brands as $brand)
+                                @forelse($brands as $key => $brand)
                                     <tr>
-                                        <td>{{ $brand->id }}</td>
+                                        <td>{{ $key+1 }}</td>
                                         <td>{{ $brand->name }}</td>
+                                        <td>{{ $brand->description }}</td>
                                         <td>
                                             @if($brand->image)
                                                 <img src="{{ asset($brand->image) }}" alt="{{ $brand->name }}" style="width: 50px; height: 50px; object-fit: cover;" class="rounded">
@@ -50,12 +53,33 @@
                                             @endif
                                         </td>
                                         <td>{{ $brand->books_count ?? 0 }}</td>
+                                        <td>
+                                                <div class="btn-group">
+                                                    
+                                                        <a href="#" class="btn btn-sm btn-light" title="Chỉnh sửa">
+                                                            <i class="ri-pencil-fill align-bottom me-2 text-muted"></i>
+                                                        </a>
+                                                        <form
+                                                            action=""
+                                                            method="POST" class="d-inline">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-sm"
+                                                                onclick="return confirm('Bạn có chắc muốn xóa tạm thời tác giả này?')"
+                                                                title="Xóa tạm thời">
+                                                                <i class="ri-delete-bin-fill align-bottom me-2"></i>
+                                                            </button>
+                                                        </form>
+                                                    
+                                                </div>
+                                            </td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="4" class="text-center">Không có thương hiệu nào</td>
+                                        <td colspan="6" class="text-center">Không có thương hiệu nào</td>
                                     </tr>
                                 @endforelse
+
                             </tbody>
                         </table>
                     </div>

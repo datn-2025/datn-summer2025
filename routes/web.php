@@ -51,7 +51,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/', [CategoryController::class, 'index'])->name('index');
         // Route admin/brand
         Route::prefix('brands')->name('brands.')->group(function () {
-            Route::get('/', [CategoryController::class, 'index'])->name('index');
+            Route::get('/', [CategoryController::class, 'brand'])->name('brand');
             // Route::get('/create', [AuthorController::class, 'create'])->name('create');
             // Route::post('/', [AuthorController::class, 'store'])->name('store');
             // Route::get('/trash', [AuthorController::class, 'trash'])->name('trash');
