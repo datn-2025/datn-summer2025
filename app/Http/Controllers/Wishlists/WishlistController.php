@@ -64,12 +64,16 @@ class WishlistController extends Controller
       $wishlist = DB::table('wishlists')
         ->join('books', 'wishlists.book_id', '=', 'books.id')
         ->join('authors', 'books.author_id', '=', 'authors.id')
+        ->leftJoin('brands', 'books.brand_id', '=', 'brands.id')
+        ->leftJoin('categories', 'books.category_id', '=', 'categories.id')
         ->where('wishlists.user_id', $userId)
         ->select(
           'books.id as book_id',
           'books.cover_image',
           'books.title',
           'authors.name as author_name',
+          'brands.name as brand_name',
+          'categories.name as category_name',
           'wishlists.created_at'
         )
         ->orderBy('wishlists.created_at', 'desc')
@@ -98,6 +102,7 @@ class WishlistController extends Controller
       ]);
     }
   }
+
 
   public function delete(Request $request)
   {
@@ -167,13 +172,14 @@ class WishlistController extends Controller
     $userId = "4710b22a-37bb-11f0-a680-067090e2bd86"; // userId cứng fix sẵn
 
     $bookId = $request->input('book_id');
-    $bookFormatId = $request->input('book_format_id'); // nếu có
-    Log::info("Add to cart called with bookId=$bookId, bookFormatId=$bookFormatId");
+    $bookFormatId = $request->input('book_format_id'); // có thể null
+    $attributes = $request->input('attributes'); // nhận attributes dạng mảng hoặc null
+
     if (!$bookId) {
       return response()->json(['success' => false, 'message' => 'Thiếu book_id']);
     }
 
-    // Kiểm tra trong wishlist
+    // Kiểm tra sản phẩm có trong wishlist không
     $existsInWishlist = DB::table('wishlists')
       ->where('user_id', $userId)
       ->where('book_id', $bookId)
@@ -183,16 +189,27 @@ class WishlistController extends Controller
       return response()->json(['success' => false, 'message' => 'Sản phẩm không có trong danh sách yêu thích']);
     }
 
-    // Kiểm tra trong carts
-    $existing = DB::table('carts')
+    // Tạo query kiểm tra trùng trong carts
+    $query = DB::table('carts')
       ->where('user_id', $userId)
       ->where('book_id', $bookId)
-      ->where('book_format_id', $bookFormatId)
-      ->first();
+      ->where('book_format_id', $bookFormatId);
+
+    if ($attributes) {
+      // So sánh JSON string hóa của attributes
+      $query->where('attributes', json_encode($attributes));
+    } else {
+      // Nếu không có attributes, kiểm tra null hoặc rỗng
+      $query->whereNull('attributes');
+    }
+
+    $existing = $query->first();
 
     if ($existing) {
+      // Nếu đã có trong giỏ, tăng số lượng lên 1
       DB::table('carts')->where('id', $existing->id)->increment('quantity');
     } else {
+      // Lấy giá
       $price = 0;
       if ($bookFormatId) {
         $price = DB::table('book_formats')->where('id', $bookFormatId)->value('price');
@@ -206,6 +223,7 @@ class WishlistController extends Controller
         'user_id' => $userId,
         'book_id' => $bookId,
         'book_format_id' => $bookFormatId,
+        'attributes' => $attributes ? json_encode($attributes) : null,
         'quantity' => 1,
         'price_at_addition' => $price,
         'created_at' => now(),

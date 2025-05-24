@@ -9,21 +9,32 @@ return new class extends Migration
     public function up()
     {
         Schema::create('carts', function (Blueprint $table) {
-            $table->uuid('id')->primary();                    // ID dạng UUID
-            $table->uuid('user_id')->nullable();               // user_id nullable (guest có thể dùng)
-            $table->uuid('book_id');                           // ID sản phẩm (sách)
-            $table->uuid('book_format_id')->nullable();       // ID định dạng sách (nếu có)
-            $table->integer('quantity')->default(1);          // Số lượng sản phẩm
-            $table->decimal('price_at_addition', 12, 2);      // Giá khi thêm vào giỏ
+            $table->uuid('id')->primary();
+
+            $table->uuid('user_id')->nullable();
+
+            $table->uuid('book_id');
+
+            $table->uuid('book_format_id')->nullable();
+
+            // Lưu attributes dưới dạng JSON (dễ mở rộng, lưu nhiều thuộc tính)
+            $table->json('attributes')->nullable();
+
+            $table->integer('quantity')->default(1);
+
+            $table->decimal('price_at_addition', 12, 2);
+
             $table->timestamps();
 
-            // Khóa ngoại (nếu có bảng users, books, book_formats)
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
             $table->foreign('book_id')->references('id')->on('books')->onDelete('cascade');
+
             $table->foreign('book_format_id')->references('id')->on('book_formats')->onDelete('cascade');
 
-            // Đảm bảo mỗi user không có sản phẩm trùng (book + định dạng)
-            $table->unique(['user_id', 'book_id', 'book_format_id']);
+            $table->unique(['user_id', 'book_id', 'book_format_id'], 'unique_cart_item');
+
+            // Chỉ cần lưu trùng đúng cả 4 trường mới coi là cùng sản phẩm
         });
     }
 

@@ -167,49 +167,59 @@
 
                                     <!-- Thông tin sách -->
                                     <div class="flex-1 flex flex-col justify-between">
-                                        <div>
-                                            <div class="flex items-start justify-between">
-                                                <h3 class="text-xl font-bold group-hover:text-red-500 
-                                                    transition-colors duration-200 line-clamp-2">
-                                                    {{ $item->title }}
-                                                </h3>
-                                                <button onclick="removeFromWishlist('{{ $item->book_id }}')"
-                                                    class="w-8 h-8 rounded-full bg-gray-50 hover:bg-red-50 
-                                                    flex items-center justify-center text-gray-400 
-                                                    hover:text-red-500 transition-all duration-200"
-                                                    title="Xóa khỏi danh sách yêu thích">
-                                                    <i class="fas fa-times"></i>
-                                                </button>
-                                            </div>
-                                            
-                                            <div class="mt-3 space-y-2">
-                                                <p class="flex items-center gap-2 text-gray-600">
-                                                    <i class="fas fa-user-edit text-red-400"></i>
-                                                    <span>{{ $item->author_name }}</span>
-                                                </p>
-                                                <p class="flex items-center gap-2 text-gray-500 text-sm">
-                                                    <i class="fas fa-clock text-blue-400"></i>
-                                                    <span>Đã thêm {{ \Carbon\Carbon::parse($item->created_at)->diffForHumans() }}</span>
-                                                </p>
-                                            </div>
+                                      <div>
+                                        <div class="flex items-start justify-between">
+                                          <h3 class="text-xl font-bold group-hover:text-red-500 
+                                                     transition-colors duration-200 line-clamp-2 max-w-[75%]">
+                                            {{ $item->title }}
+                                          </h3>
+                                          <button onclick="removeFromWishlist('{{ $item->book_id }}')"
+                                                  class="w-8 h-8 rounded-full bg-gray-50 hover:bg-red-50 
+                                                         flex items-center justify-center text-gray-400 
+                                                         hover:text-red-500 transition-all duration-200"
+                                                  title="Xóa khỏi danh sách yêu thích">
+                                            <i class="fas fa-times"></i>
+                                          </button>
                                         </div>
-
-                                        <div class="mt-6 flex items-center justify-end gap-4">
-                                            <a href="/book/{{ $item->book_id }}" 
-                                                class="flex items-center gap-2 px-4 py-2 text-gray-500 
-                                                hover:text-red-500 transition-colors duration-200">
-                                                <i class="fas fa-info-circle"></i>
-                                                <span>Chi tiết</span>
-                                            </a>
-                                            <button onclick="addToCart('{{ $item->book_id }}')"
+                                        
+                                        <div class="mt-3 grid grid-cols-2 gap-x-6 gap-y-2 text-gray-600">
+                                          <p class="flex items-center gap-2">
+                                            <i class="fas fa-user-edit text-red-400"></i>
+                                            <span>{{ $item->author_name }}</span>
+                                          </p>
+                                          <p class="flex items-center gap-2">
+                                            <i class="fas fa-book text-green-500"></i>
+                                            <span>Loại sách: {{ $item->category_name ?? 'Chưa cập nhật' }}</span>
+                                          </p>
+                                          <p class="flex items-center gap-2">
+                                            <i class="fas fa-building text-blue-500"></i>
+                                            <span>Nhà xuất bản: {{ $item->brand_name ?? 'Chưa cập nhật' }}</span>
+                                          </p>
+                                          <p class="flex items-center gap-2 text-sm text-gray-500">
+                                            <i class="fas fa-clock text-blue-400"></i>
+                                            <span>Đã thêm {{ \Carbon\Carbon::parse($item->created_at)->diffForHumans() }}</span>
+                                          </p>
+                                        </div>
+                                      </div>
+                                    
+                                      <div class="mt-6 flex items-center justify-end gap-4">
+                                        <a href="/book/{{ $item->book_id }}" 
+                                           class="flex items-center gap-2 px-4 py-2 text-gray-500 
+                                                  hover:text-red-500 transition-colors duration-200">
+                                          <i class="fas fa-info-circle"></i>
+                                          <span>Chi tiết</span>
+                                        </a>
+                                        <button onclick="addToCart('{{ $item->book_id }}')"
                                                 class="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r 
-                                                from-red-500 to-pink-500 text-white rounded-lg hover:shadow-lg 
-                                                transform hover:-translate-y-0.5 transition-all duration-200">
-                                                <i class="fas fa-shopping-cart"></i>
-                                                <span>Thêm vào giỏ</span>
-                                            </button>
-                                        </div>
+                                                       from-red-500 to-pink-500 text-white rounded-lg hover:shadow-lg 
+                                                       transform hover:-translate-y-0.5 transition-all duration-200">
+                                          <i class="fas fa-shopping-cart"></i>
+                                          <span>Thêm vào giỏ</span>
+                                        </button>
+                                      </div>
                                     </div>
+                                    
+                                  
                                 </div>
                             </div>
                         </div>
@@ -592,16 +602,19 @@ async function removeAllFromWishlist() {
         });
     }
 }
-
-async function addToCart(bookId) {
+async function addToCart(bookId, bookFormatId = null, attributes = null) {
     try {
+        const bodyData = { book_id: bookId };
+        if (bookFormatId) bodyData.book_format_id = bookFormatId;
+        if (attributes) bodyData.attributes = attributes;
+
         const response = await fetch('/wishlist/add-to-cart', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             },
-            body: JSON.stringify({ book_id: bookId })
+            body: JSON.stringify(bodyData)
         });
 
         const data = await response.json();
@@ -615,6 +628,7 @@ async function addToCart(bookId) {
         showNotification('Lỗi kết nối server', 'error');
     }
 }
+
 
 
 
