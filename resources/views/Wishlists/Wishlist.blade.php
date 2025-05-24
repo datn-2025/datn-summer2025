@@ -593,10 +593,30 @@ async function removeAllFromWishlist() {
     }
 }
 
-function addToCart(bookId) {
-    showNotification('Đã thêm sách vào giỏ hàng');
-    // Thêm logic thêm vào giỏ hàng ở đây
+async function addToCart(bookId) {
+    try {
+        const response = await fetch('/wishlist/add-to-cart', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify({ book_id: bookId })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            showNotification(data.message || 'Đã thêm sách vào giỏ hàng', 'success');
+        } else {
+            showNotification(data.message || 'Thêm giỏ hàng thất bại', 'error');
+        }
+    } catch (error) {
+        showNotification('Lỗi kết nối server', 'error');
+    }
 }
+
+
 
 function removeFromWishlist(bookId) {
     if (confirm('Bạn có chắc chắn muốn xóa sách này khỏi danh sách yêu thích?')) {

@@ -162,4 +162,57 @@ class WishlistController extends Controller
       ], 500);
     }
   }
+  public function addToCartFromWishlist(Request $request)
+  {
+    $userId = "4710b22a-37bb-11f0-a680-067090e2bd86"; // userId cứng fix sẵn
+
+    $bookId = $request->input('book_id');
+    $bookFormatId = $request->input('book_format_id'); // nếu có
+    Log::info("Add to cart called with bookId=$bookId, bookFormatId=$bookFormatId");
+    if (!$bookId) {
+      return response()->json(['success' => false, 'message' => 'Thiếu book_id']);
+    }
+
+    // Kiểm tra trong wishlist
+    $existsInWishlist = DB::table('wishlists')
+      ->where('user_id', $userId)
+      ->where('book_id', $bookId)
+      ->exists();
+
+    if (!$existsInWishlist) {
+      return response()->json(['success' => false, 'message' => 'Sản phẩm không có trong danh sách yêu thích']);
+    }
+
+    // Kiểm tra trong carts
+    $existing = DB::table('carts')
+      ->where('user_id', $userId)
+      ->where('book_id', $bookId)
+      ->where('book_format_id', $bookFormatId)
+      ->first();
+
+    if ($existing) {
+      DB::table('carts')->where('id', $existing->id)->increment('quantity');
+    } else {
+      $price = 0;
+      if ($bookFormatId) {
+        $price = DB::table('book_formats')->where('id', $bookFormatId)->value('price');
+      }
+      if (!$price) {
+        $price = DB::table('book_formats')->where('book_id', $bookId)->orderBy('price', 'asc')->value('price') ?? 0;
+      }
+
+      DB::table('carts')->insert([
+        'id' => (string) \Illuminate\Support\Str::uuid(),
+        'user_id' => $userId,
+        'book_id' => $bookId,
+        'book_format_id' => $bookFormatId,
+        'quantity' => 1,
+        'price_at_addition' => $price,
+        'created_at' => now(),
+        'updated_at' => now(),
+      ]);
+    }
+
+    return response()->json(['success' => true, 'message' => 'Đã thêm sản phẩm vào giỏ hàng']);
+  }
 }

@@ -57,3 +57,4 @@ Route::prefix('admin')->name('admin.')->group(function () {
 Route::get('/wishlist', [WishlistController::class, 'getWishlist'])->name('wishlist.index');
 Route::post('/wishlist/delete', [WishlistController::class, 'delete'])->name('wishlist.delete');
 Route::post('/wishlist/delete-all', [WishlistController::class, 'deleteAll'])->name('wishlist.delete-all');
+Route::post('/wishlist/add-to-cart', [WishlistController::class, 'addToCartFromWishlist'])->name('wishlist.addToCart');
