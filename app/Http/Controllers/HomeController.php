@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 class HomeController extends Controller
 {
     public function index()
-    //dau noi di
+    
     {
         $books = Book::with('category', 'formats', 'images')
             ->orderBy('publication_date', 'desc')
@@ -69,13 +69,8 @@ class HomeController extends Controller
 
     public function show($slug)
     {
-        $book = Book::with(['author', 'category', 'brand', 'formats', 'images', 'reviews.user'])
+        $book = Book::with(['author', 'category', 'brand', 'formats', 'images', 'reviews.user','attributeValues.attribute'])
             ->where('slug', $slug)->firstOrFail();
-
-
-
-
-
         $relatedBooks = Book::where('category_id', $book->category_id)
             ->where('id', '!=', $book->id)
             ->with(['images', 'author', 'formats'])
