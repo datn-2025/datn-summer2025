@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Author;
 use App\Models\Category;
 use Illuminate\Http\Request;
 
@@ -30,4 +31,6 @@ class CategoryController extends Controller
             return back()->with('error', 'Lỗi khi truy vấn danh mục. Vui lòng thử lại sau.');
         }
     }
+
+    
 }
