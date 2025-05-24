@@ -44,6 +44,15 @@
                  placeholder="Nhập email" value="{{ old('email') }}">
         </div>
       </div>
+      <div class="sm:col-span-2">
+        <label for="address" class="block text-sm font-semibold text-gray-900">địa chỉ </label>
+        <div class="mt-2.5">
+          <input type="text" name="address" id="address" autocomplete="address" required
+                 class="block w-full rounded-md bg-white px-3.5 py-2 text-base text-gray-900 outline-1 outline-gray-300 placeholder:text-gray-400
+                        focus:outline-2 focus:outline-indigo-600 focus:outline-offset-2"
+                 placeholder="Nhập email" value="{{ old('address') }}">
+        </div>
+      </div>
 
       <div class="sm:col-span-2">
         <label for="note" class="block text-sm font-semibold text-gray-900">Nội dung</label>

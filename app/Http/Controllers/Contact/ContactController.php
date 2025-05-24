@@ -28,14 +28,14 @@ class ContactController extends Controller
     ]);
 
     // Nếu bạn muốn lưu message vào note, gán như sau:
-    $note = $data['note'] ?? $data['message'] ?? null;
+    // $note = $data['note'] ?? $data['message'] ?? null;
 
     DB::table('contacts')->insert([
       'name' => $data['name'],
       'email' => $data['email'],
       'phone' => $data['phone'],
       'address' => $data['address'] ?? null,
-      'note' => $note,
+      'note' => $data['note'] ?? null,
       'created_at' => now(),
       'updated_at' => now(),
     ]);
