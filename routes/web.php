@@ -1,8 +1,10 @@
 <?php
 
 
+use App\Http\Controllers\Admin\AttributeController;
 use App\Http\Controllers\Admin\BookController as AdminBookController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AuthorController;
 use App\Http\Controllers\Login\LoginController;
@@ -25,6 +27,18 @@ Route::get('/contact', [ContactController::class, 'showForm'])->name('contact.fo
 Route::post('/contact', [ContactController::class, 'submitForm'])->name('contact.submit');
 Route::get('/news', [NewsController::class, 'index'])->name('news.index');
 Route::get('/news/{id}', [NewsController::class, 'show'])->name('news.show');
+
+// Test route for QR code generation
+Route::get('/test-qr-code/{id}', function($id) {
+    $order = \App\Models\Order::findOrFail($id);
+    $controller = new \App\Http\Controllers\Admin\OrderController();
+    $reflection = new \ReflectionClass($controller);
+    $method = $reflection->getMethod('generateQrCode');
+    $method->setAccessible(true);
+    $method->invoke($controller, $order);
+    
+    return redirect()->route('admin.orders.show', $order->id)->with('success', 'QR Code generated successfully!');
+});
 
 // Route nhóm admin
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -76,6 +90,25 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/{id}', [UserController::class, 'show'])->name('show');
         Route::get('/{id}/edit', [UserController::class, 'edit'])->name('edit');
         Route::put('/{id}', [UserController::class, 'update'])->name('update');
+    });
+    
+    // Route admin/attributes
+    Route::prefix('attributes')->name('attributes.')->group(function () {
+        Route::get('/', [AttributeController::class, 'index'])->name('index');
+        Route::get('/create', [AttributeController::class, 'create'])->name('create');
+        Route::post('/store', [AttributeController::class, 'store'])->name('store');
+        Route::get('/show/{id}', [AttributeController::class, 'show'])->name('show');
+        Route::get('/edit/{id}', [AttributeController::class, 'edit'])->name('edit');
+        Route::put('/update/{id}', [AttributeController::class, 'update'])->name('update');
+        Route::delete('/delete/{id}', [AttributeController::class, 'destroy'])->name('destroy');
+    });
+    
+    // Route admin/orders
+    Route::prefix('orders')->name('orders.')->group(function () {
+        Route::get('/', [OrderController::class, 'index'])->name('index');
+        Route::get('/show/{id}', [OrderController::class, 'show'])->name('show');
+        Route::get('/edit/{id}', [OrderController::class, 'edit'])->name('edit');
+        Route::put('/update/{id}', [OrderController::class, 'update'])->name('update');
     });
 });
 Route::prefix('account')->name('account.')->group(function () {

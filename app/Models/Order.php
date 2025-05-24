@@ -18,7 +18,8 @@ class Order extends Model
         'voucher_id',
         'total_amount',
         'order_status_id',
-        'payment_status_id'
+        'payment_status_id',
+        'qr_code'
     ];
 
     protected $casts = [
@@ -66,6 +67,11 @@ class Order extends Model
     public function appliedVoucher(): HasOne
     {
         return $this->hasOne(AppliedVoucher::class);
+    }
+    
+    public function orderItems(): HasMany
+    {
+        return $this->hasMany(OrderItem::class);
     }
 
     protected static function boot()
