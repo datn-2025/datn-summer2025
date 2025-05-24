@@ -4,24 +4,47 @@
 use App\Http\Controllers\Admin\AttributeController;
 use App\Http\Controllers\Admin\BookController as AdminBookController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AuthorController;
 use App\Http\Controllers\Login\LoginController;
 use App\Http\Controllers\Admin\VoucherController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\Login\ActivationController;
 use App\Http\Controllers\HomeController;
-
+use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\Contact\ContactController;
+use App\Http\Controllers\Article\NewsController;
 
 // Route public cho books (categoryId optional)
 Route::get('/', [HomeController::class, 'index']);
-Route::get('/books/{slug}', [HomeController::class, 'show'])->name('books.show');
+// Hiển thị danh sách và danh mục
+Route::get('/books/{slug?}', [BookController::class, 'index'])->name('books.index');
+// Hiển thị chi tiết sách
+Route::get('/book/{slug}', [HomeController::class, 'show'])->name('books.show');
 Route::get('/books/{categoryId?}', [BookController::class, 'index'])->name('books.index');
+Route::get('/contact', [ContactController::class, 'showForm'])->name('contact.form');
+Route::post('/contact', [ContactController::class, 'submitForm'])->name('contact.submit');
+Route::get('/news', [NewsController::class, 'index'])->name('news.index');
+Route::get('/news/{id}', [NewsController::class, 'show'])->name('news.show');
+
+// Test route for QR code generation
+Route::get('/test-qr-code/{id}', function($id) {
+    $order = \App\Models\Order::findOrFail($id);
+    $controller = new \App\Http\Controllers\Admin\OrderController();
+    $reflection = new \ReflectionClass($controller);
+    $method = $reflection->getMethod('generateQrCode');
+    $method->setAccessible(true);
+    $method->invoke($controller, $order);
+    
+    return redirect()->route('admin.orders.show', $order->id)->with('success', 'QR Code generated successfully!');
+});
 
 // Route nhóm admin
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/', function () {
+        Toastr::info('Chào mừng bạn đến với trang quản trị!', 'Thông báo');
              return view('admin.dashboard');
          });
     Route::prefix('books')->name('books.')->group(function(){
@@ -45,6 +68,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
         // Route admin/authors
         Route::prefix('authors')->name('authors.')->group(function () {
             Route::get('/', [AuthorController::class, 'index'])->name('index');
+            Route::get('/create', [AuthorController::class, 'create'])->name('create');
+            Route::post('/', [AuthorController::class, 'store'])->name('store');
             Route::get('/trash', [AuthorController::class, 'trash'])->name('trash');
             Route::delete('/{author}', [AuthorController::class, 'destroy'])->name('destroy');
             Route::put('/{id}/restore', [AuthorController::class, 'restore'])->name('restore');
@@ -79,6 +104,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::put('/update/{id}', [AttributeController::class, 'update'])->name('update');
         Route::delete('/delete/{id}', [AttributeController::class, 'destroy'])->name('destroy');
     });
+    // Route admin/orders
+    Route::prefix('orders')->name('orders.')->group(function () {
+        Route::get('/', [OrderController::class, 'index'])->name('index');
+        Route::get('/show/{id}', [OrderController::class, 'show'])->name('show');
+        Route::get('/edit/{id}', [OrderController::class, 'edit'])->name('edit');
+        Route::put('/update/{id}', [OrderController::class, 'update'])->name('update');
+    });
 });
 Route::prefix('account')->name('account.')->group(function () {
     Route::get('/', [LoginController::class, 'index'])->name('index');
@@ -87,4 +119,7 @@ Route::prefix('account')->name('account.')->group(function () {
     Route::get('/register', [LoginController::class, 'register'])->name('register');
     Route::post('/register', [LoginController::class, 'handleRegister'])->name('register.submit');
     Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
+    
+    // Activation routes
+    Route::get('/activate/{userId}', [ActivationController::class, 'activate'])->name('activate');
 });

@@ -29,7 +29,7 @@
                     <a href="{{ route('admin.books.index') }}" class="btn btn-secondary btn-sm">
                         <i class="ri-arrow-left-line"></i> Quay lại
                     </a>
-                    <a href="#" class="btn btn-primary btn-sm">
+                    <a href="{{ route('admin.books.edit', [$book->id, $book->slug]) }}" class="btn btn-primary btn-sm" style="background-color:#405189; border-color: #405189">
                         <i class="ri-pencil-line"></i> Chỉnh sửa
                     </a>
                 </div>
@@ -68,8 +68,22 @@
                                     <div class="col-md-6 mb-3">
                                         <p class="text-muted mb-1">Trạng thái:</p>
                                         <h6>
-                                            <span class="badge {{ $book->status === 'available' ? 'bg-success' : 'bg-danger' }}">
-                                                {{ $book->status === 'available' ? 'Có sẵn' : 'Không có sẵn' }}
+                                            <span class="badge 
+                                             @switch($book->status)
+                                                @case('Còn Hàng')
+                                                    bg-success
+                                                    @break
+                                                @case('Hết Hàng Tồn Kho')
+                                                    bg-danger
+                                                    @break
+                                                @case('Sắp Ra Mắt')
+                                                    bg-warning
+                                                    @break
+                                                @case('Ngừng Kinh Doanh')
+                                                    bg-secondary
+                                                    @break
+                                            @endswitch">
+                                                {{ $book->status  }}
                                             </span>
                                         </h6>
                                     </div>
@@ -93,9 +107,10 @@
                                 <div class="row mt-3">
                                     <div class="col-12">
                                         <p class="text-muted mb-1">Mô tả:</p>
-                                        <div class="border rounded p-3 bg-light">
+                                        <div id="mota" class="border rounded p-3 bg-light" style="max-height: 150px; overflow-y: hidden;">
                                             {!! $book->description ?? 'Không có mô tả' !!}
                                         </div>
+                                        <button id="toggleDescription" onclick="toggleDescription()" class="btn btn-sm mt-2 text-white"  style="background-color:#405189; border-color: #405189">Xem thêm</button>
                                     </div>
                                 </div>
                             </div>
@@ -249,7 +264,7 @@
                                                         <li class="list-group-item d-flex justify-content-between align-items-center">
                                                             {{ $value['value'] }}
                                                             @if($value['extra_price'] > 0)
-                                                                <span class="badge bg-primary rounded-pill">
+                                                                <span class="badge rounded-pill" style="background-color:#405189; border-color: #405189">
                                                                     +{{ number_format($value['extra_price']) }} đ
                                                                 </span>
                                                             @endif
@@ -358,7 +373,7 @@
                                 </table>
                             </div>
                         @else
-                            <div class="alert alert-info mb-0">
+                            <div class="alert mb-0">
                                 Sách này chưa có đánh giá nào.
                             </div>
                         @endif
