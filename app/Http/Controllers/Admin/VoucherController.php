@@ -77,16 +77,14 @@ class VoucherController extends Controller
             ->with('success', 'Thêm voucher thành công');
     }
     public function show(Voucher $voucher)
-{
-    $voucher->loadCount('appliedVouchers');
-    $recentUsage = $voucher->appliedVouchers()
-        ->with('order.user')
-        ->latest()
-        ->take(10)
-        ->get();
-        
-    return view('admin.vouchers.show', compact('voucher', 'recentUsage'));
-}
+    {
+        $recentUsage = $voucher->appliedVouchers()
+            ->with(['order.user'])
+            ->latest()
+            ->paginate(10);
+
+        return view('admin.vouchers.show', compact('voucher', 'recentUsage'));
+    }
     public function edit(Voucher $voucher)
     {
         return view('admin.vouchers.edit', compact('voucher'));

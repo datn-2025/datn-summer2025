@@ -17,9 +17,11 @@ Route::get('/books/{categoryId?}', [BookController::class, 'index'])->name('book
 
 // Route nhóm admin
 Route::prefix('admin')->name('admin.')->group(function () {
+    // Dashboard route
     Route::get('/', function () {
-             return view('admin.dashboard');
-         });
+        return view('admin.dashboard');
+    })->name('dashboard.index');
+
     Route::prefix('books')->name('books.')->group(function(){
         Route::get('/', [AdminBookController::class, 'index'])->name('index');
         Route::get('/create', [AdminBookController::class, 'create'])->name('create');
@@ -53,5 +55,21 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/{id}', [UserController::class, 'show'])->name('show');
         Route::get('/{id}/edit', [UserController::class, 'edit'])->name('edit');
         Route::put('/{id}', [UserController::class, 'update'])->name('update');
+    });
+
+    // Voucher routes  
+    Route::prefix('vouchers')->name('vouchers.')->group(function () {
+        Route::get('/', [VoucherController::class, 'index'])->name('index');
+        Route::get('/create', [VoucherController::class, 'create'])->name('create');
+        Route::post('/', [VoucherController::class, 'store'])->name('store');
+        Route::get('/{voucher}', [VoucherController::class, 'show'])->name('show');
+        Route::get('/{voucher}/edit', [VoucherController::class, 'edit'])->name('edit');
+        Route::put('/{voucher}', [VoucherController::class, 'update'])->name('update');
+        Route::delete('/{voucher}', [VoucherController::class, 'destroy'])->name('destroy');
+
+        // Trash routes
+        Route::get('/trash', [VoucherController::class, 'trash'])->name('trash');
+        Route::post('/{id}/restore', [VoucherController::class, 'restore'])->name('restore');
+        Route::delete('/{id}/force-delete', [VoucherController::class, 'forceDelete'])->name('force-delete');
     });
 });
