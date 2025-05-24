@@ -8,8 +8,9 @@ use App\Http\Controllers\Admin\AuthorController;
 use App\Http\Controllers\Login\LoginController;
 use App\Http\Controllers\Admin\VoucherController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\Login\ActivationController;
 use App\Http\Controllers\HomeController;
-
+use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Route;
 
 
@@ -21,6 +22,7 @@ Route::get('/books/{categoryId?}', [BookController::class, 'index'])->name('book
 // Route nhóm admin
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/', function () {
+        Toastr::info('Chào mừng bạn đến với trang quản trị!', 'Thông báo');
              return view('admin.dashboard');
          });
     Route::prefix('books')->name('books.')->group(function(){
@@ -75,4 +77,7 @@ Route::prefix('account')->name('account.')->group(function () {
     Route::get('/register', [LoginController::class, 'register'])->name('register');
     Route::post('/register', [LoginController::class, 'handleRegister'])->name('register.submit');
     Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
+    
+    // Activation routes
+    Route::get('/activate/{userId}', [ActivationController::class, 'activate'])->name('activate');
 });
