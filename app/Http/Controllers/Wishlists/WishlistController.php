@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-
 class WishlistController extends Controller
 {
   public function add(Request $request)
@@ -140,13 +139,20 @@ class WishlistController extends Controller
     try {
       $userId = "4710b22a-37bb-11f0-a680-067090e2bd86"; // giả định tạm thời
 
-      $deleted = DB::table('wishlists')
-        ->where('user_id', $userId)
-        ->delete();
+      $deleted = DB::table('wishlists')->where('user_id', $userId)->delete();
+
+      Log::info("Xóa tất cả wishlist user $userId, số bản ghi bị xóa: $deleted");
+      if ($deleted === 0) {
+        return response()->json([
+          'success' => false,
+          'message' => 'Không có sản phẩm nào trong danh sách yêu thích'
+        ]);
+      }
+      // Xóa tất cả wishlist của người dùng
 
       return response()->json([
-        'success' => true,
-        'message' => 'Đã xóa tất cả sách khỏi danh sách yêu thích'
+        'success' => $deleted > 0,
+        'message' => $deleted > 0 ? 'Đã xóa tất cả' : 'Không có sách nào để xóa'
       ]);
     } catch (\Exception $e) {
       Log::error('Lỗi khi xóa tất cả wishlist: ' . $e->getMessage());

@@ -735,4 +735,6 @@ function removeFromWishlist(bookId) {
     100% { background-position: -200% 0; }
 }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 @endsection
