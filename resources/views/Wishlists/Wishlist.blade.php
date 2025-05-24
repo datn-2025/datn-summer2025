@@ -343,432 +343,277 @@
         </div>
     </div>
 </div>
-
 <script>
-// View state management
+    // View state management
 let isGridView = localStorage.getItem('wishlistView') === 'grid';
 let currentSort = localStorage.getItem('wishlistSort') || 'date-desc';
 
-// Update view on load
 document.addEventListener('DOMContentLoaded', () => {
-    updateViewState();
-    initializeKeyboardShortcuts();
-    initializeSortingDropdown();
+  updateViewState();
+  initializeKeyboardShortcuts();
+  initializeSortingDropdown();
 });
 
 function updateViewState() {
-    const container = document.getElementById('books-container');
-    const icon = document.getElementById('view-icon');
-    const text = document.getElementById('view-text');
-    
-    container.style.opacity = '0';
-    
-    setTimeout(() => {
-        if (isGridView) {
-            container.classList.remove('grid-cols-1');
-            container.classList.add('grid-cols-2', 'md:grid-cols-3', 'lg:grid-cols-2');
-            icon.classList.remove('fa-th-large');
-            icon.classList.add('fa-list');
-            text.textContent = 'Dạng danh sách';
-        } else {
-            container.classList.remove('grid-cols-2', 'md:grid-cols-3', 'lg:grid-cols-2');
-            container.classList.add('grid-cols-1');
-            icon.classList.remove('fa-list');
-            icon.classList.add('fa-th-large');
-            text.textContent = 'Dạng lưới';
-        }
-        
-        container.style.opacity = '1';
-    }, 300);
+  const container = document.getElementById('books-container');
+  const icon = document.getElementById('view-icon');
+  const text = document.getElementById('view-text');
+
+  container.style.opacity = '0';
+
+  setTimeout(() => {
+    if (isGridView) {
+      container.classList.remove('grid-cols-1');
+      container.classList.add('grid-cols-2', 'md:grid-cols-3', 'lg:grid-cols-2');
+      icon.classList.remove('fa-th-large');
+      icon.classList.add('fa-list');
+      text.textContent = 'Dạng danh sách';
+    } else {
+      container.classList.remove('grid-cols-2', 'md:grid-cols-3', 'lg:grid-cols-2');
+      container.classList.add('grid-cols-1');
+      icon.classList.remove('fa-list');
+      icon.classList.add('fa-th-large');
+      text.textContent = 'Dạng lưới';
+    }
+
+    container.style.opacity = '1';
+  }, 300);
 }
 
 function toggleView() {
-    isGridView = !isGridView;
-    localStorage.setItem('wishlistView', isGridView ? 'grid' : 'list');
-    updateViewState();
+  isGridView = !isGridView;
+  localStorage.setItem('wishlistView', isGridView ? 'grid' : 'list');
+  updateViewState();
 }
 
 function initializeKeyboardShortcuts() {
-    document.addEventListener('keydown', (e) => {
-        // Toggle view mode with 'G' key
-        if (e.key.toLowerCase() === 'g') {
-            toggleView();
-        }
-        
-        // Show shortcuts modal with '?' key
-        if (e.key === '?') {
-            toggleShortcutsModal();
-        }
-        
-        // Delete all items with Ctrl+D
-        if (e.ctrlKey && e.key.toLowerCase() === 'd') {
-            e.preventDefault();
-            removeAllFromWishlist();
-        }
-        
-        // Open sort dropdown with 'S' key
-        if (e.key.toLowerCase() === 's') {
-            document.getElementById('sort-dropdown')?.click();
-        }
-    });
+  document.addEventListener('keydown', (e) => {
+    if (e.key.toLowerCase() === 'g') toggleView();
+    if (e.key === '?') toggleShortcutsModal();
+    if (e.ctrlKey && e.key.toLowerCase() === 'd') {
+      e.preventDefault();
+      removeAllFromWishlist();
+    }
+    if (e.key.toLowerCase() === 's') {
+      document.getElementById('sort-dropdown')?.click();
+    }
+  });
 }
 
 function initializeSortingDropdown() {
-    const sortSelect = document.getElementById('sort-select');
-    if (sortSelect) {
-        sortSelect.value = currentSort;
-        sortSelect.addEventListener('change', handleSort);
-    }
+  const sortSelect = document.getElementById('sort-select');
+  if (sortSelect) {
+    sortSelect.value = currentSort;
+    sortSelect.addEventListener('change', handleSort);
+  }
 }
 
 function handleSort(e) {
-    const sortBy = e.target.value;
-    currentSort = sortBy;
-    localStorage.setItem('wishlistSort', sortBy);
-    
-    const container = document.getElementById('books-container');
-    const items = Array.from(container.children);
-    
-    items.sort((a, b) => {
-        const dateA = new Date(a.dataset.date);
-        const dateB = new Date(b.dataset.date);
-        const titleA = a.dataset.title;
-        const titleB = b.dataset.title;
-        
-        switch(sortBy) {
-            case 'date-desc':
-                return dateB - dateA;
-            case 'date-asc':
-                return dateA - dateB;
-            case 'title-asc':
-                return titleA.localeCompare(titleB);
-            case 'title-desc':
-                return titleB.localeCompare(titleA);
-            default:
-                return 0;
-        }
-    });
-    
-    container.style.opacity = '0';
-    setTimeout(() => {
-        container.innerHTML = '';
-        items.forEach(item => container.appendChild(item));
-        container.style.opacity = '1';
-    }, 300);
+  const sortBy = e.target.value;
+  currentSort = sortBy;
+  localStorage.setItem('wishlistSort', sortBy);
+
+  const container = document.getElementById('books-container');
+  const items = Array.from(container.children);
+
+  items.sort((a, b) => {
+    const dateA = new Date(a.dataset.date);
+    const dateB = new Date(b.dataset.date);
+    const titleA = a.dataset.title;
+    const titleB = b.dataset.title;
+
+    switch (sortBy) {
+      case 'date-desc': return dateB - dateA;
+      case 'date-asc': return dateA - dateB;
+      case 'title-asc': return titleA.localeCompare(titleB);
+      case 'title-desc': return titleB.localeCompare(titleA);
+      default: return 0;
+    }
+  });
+
+  container.style.opacity = '0';
+  setTimeout(() => {
+    container.innerHTML = '';
+    items.forEach(item => container.appendChild(item));
+    container.style.opacity = '1';
+  }, 300);
 }
 
 function toggleShortcutsModal() {
-    const modal = document.getElementById('shortcuts-modal');
-    modal.classList.toggle('hidden');
+  const modal = document.getElementById('shortcuts-modal');
+  modal.classList.toggle('hidden');
 }
 
 function showLoading() {
-    document.getElementById('loading-overlay').classList.remove('hidden');
+  document.getElementById('loading-overlay').classList.remove('hidden');
 }
 
 function hideLoading() {
-    document.getElementById('loading-overlay').classList.add('hidden');
+  document.getElementById('loading-overlay').classList.add('hidden');
 }
 
-// Configure Toastr
+// Toastr options
 toastr.options = {
-    closeButton: true,
-    progressBar: true,
-    positionClass: "toast-top-right",
-    timeOut: 3000,
-    extendedTimeOut: 1000,
-    preventDuplicates: true,
-    newestOnTop: true,
-    showEasing: "swing",
-    hideEasing: "linear",
-    showMethod: "fadeIn",
-    hideMethod: "fadeOut"
+  closeButton: true,
+  progressBar: true,
+  positionClass: "toast-top-right",
+  timeOut: 3000,
+  extendedTimeOut: 1000,
+  preventDuplicates: true,
+  newestOnTop: true,
+  showEasing: "swing",
+  hideEasing: "linear",
+  showMethod: "fadeIn",
+  hideMethod: "fadeOut"
 };
 
 function showNotification(message, type = 'success') {
-    const icons = {
-        success: '<i class="fas fa-check-circle mr-2"></i>',
-        error: '<i class="fas fa-exclamation-circle mr-2"></i>',
-        warning: '<i class="fas fa-exclamation-triangle mr-2"></i>',
-        info: '<i class="fas fa-info-circle mr-2"></i>'
-    };
-
-    // Debounce notifications to prevent spamming
-    if (window.notificationTimeout) {
-        clearTimeout(window.notificationTimeout);
-    }
-
-    window.notificationTimeout = setTimeout(() => {
-        toastr[type](icons[type] + message);
-    }, 100);
+  const icons = {
+    success: '<i class="fas fa-check-circle mr-2"></i>',
+    error: '<i class="fas fa-exclamation-circle mr-2"></i>',
+    warning: '<i class="fas fa-exclamation-triangle mr-2"></i>',
+    info: '<i class="fas fa-info-circle mr-2"></i>'
+  };
+  if (window.notificationTimeout) clearTimeout(window.notificationTimeout);
+  window.notificationTimeout = setTimeout(() => toastr[type](icons[type] + message), 100);
 }
 
 function showLoadingNotification(message = 'Đang xử lý...') {
-    return toastr.info(
-        '<i class="fas fa-spinner fa-spin mr-2"></i>' + message,
-        null,
-        {
-            timeOut: 0,
-            extendedTimeOut: 0,
-            closeButton: false,
-            progressBar: false
-        }
-    );
+  return toastr.info(
+    '<i class="fas fa-spinner fa-spin mr-2"></i>' + message,
+    null,
+    {
+      timeOut: 0,
+      extendedTimeOut: 0,
+      closeButton: false,
+      progressBar: false
+    }
+  );
 }
 
-// Debounced function to prevent multiple rapid calls
 const debounce = (fn, delay) => {
-    let timeoutId;
-    return (...args) => {
-        if (timeoutId) {
-            clearTimeout(timeoutId);
-        }
-        timeoutId = setTimeout(() => fn(...args), delay);
-    };
+  let timeoutId;
+  return (...args) => {
+    if (timeoutId) clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => fn(...args), delay);
+  };
 };
 
-// Handle API calls with loading states
 async function handleApiCall(url, options = {}, loadingMsg = 'Đang xử lý...') {
-    const loadingToast = showLoadingNotification(loadingMsg);
-    
-    try {
-        const response = await fetch(url, {
-            ...options,
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                ...options.headers
-            }
-        });
-        
-        const data = await response.json();
-        toastr.clear(loadingToast);
-        
-        if (!response.ok) {
-            throw new Error(data.message || 'Có lỗi xảy ra');
-        }
-        
-        return data;
-    } catch (error) {
-        toastr.clear(loadingToast);
-        throw error;
-    }
-}
-
-// Remove all items with confirmation and animation
-async function removeAllFromWishlist() {
-    const confirmResult = await Swal.fire({
-        title: 'Xóa tất cả?',
-        text: 'Bạn có chắc chắn muốn xóa tất cả sách khỏi danh sách yêu thích?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Xóa tất cả',
-        cancelButtonText: 'Hủy',
-        confirmButtonColor: '#EF4444',
-        cancelButtonColor: '#6B7280'
+  const loadingToast = showLoadingNotification(loadingMsg);
+  try {
+    const response = await fetch(url, {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+        ...options.headers
+      }
     });
-
-    if (!confirmResult.isConfirmed) {
-        return;
-    }
-
-    try {
-        // Animate all items fading out
-        const items = document.querySelectorAll('.book-card');
-        items.forEach((item, index) => {
-            setTimeout(() => {
-                item.style.transform = 'scale(0.8)';
-                item.style.opacity = '0';
-            }, index * 100);
-        });
-
-        const data = await handleApiCall('/wishlist/delete-all', {
-            method: 'POST'
-        }, 'Đang xóa tất cả...');
-
-        if (data.success) {
-            showNotification('Đã xóa tất cả sách khỏi danh sách yêu thích', 'success');
-            setTimeout(() => location.reload(), 800);
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        showNotification(error.message || 'Đã có lỗi xảy ra', 'error');
-        
-        // Restore animations if error occurs
-        const items = document.querySelectorAll('.book-card');
-        items.forEach(item => {
-            item.style.transform = '';
-            item.style.opacity = '';
-        });
-    }
+    const data = await response.json();
+    toastr.clear(loadingToast);
+    if (!response.ok) throw new Error(data.message || 'Có lỗi xảy ra');
+    return data;
+  } catch (error) {
+    toastr.clear(loadingToast);
+    throw error;
+  }
 }
+
+async function removeAllFromWishlist() {
+  const confirmResult = await Swal.fire({
+    title: 'Xóa tất cả?',
+    text: 'Bạn có chắc chắn muốn xóa tất cả sách khỏi danh sách yêu thích?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Xóa tất cả',
+    cancelButtonText: 'Hủy',
+    confirmButtonColor: '#EF4444',
+    cancelButtonColor: '#6B7280'
+  });
+  if (!confirmResult.isConfirmed) return;
+
+  try {
+    const items = document.querySelectorAll('.book-card');
+    items.forEach((item, index) => {
+      setTimeout(() => {
+        item.style.transform = 'scale(0.8)';
+        item.style.opacity = '0';
+      }, index * 100);
+    });
+    const data = await handleApiCall('/wishlist/delete-all', { method: 'POST' }, 'Đang xóa tất cả...');
+    if (data.success) {
+      showNotification('Đã xóa tất cả sách khỏi danh sách yêu thích', 'success');
+      setTimeout(() => location.reload(), 800);
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    showNotification(error.message || 'Đã có lỗi xảy ra', 'error');
+    const items = document.querySelectorAll('.book-card');
+    items.forEach(item => {
+      item.style.transform = '';
+      item.style.opacity = '';
+    });
+  }
+}
+
 async function addToCart(bookId, bookFormatId = null, attributes = null) {
-    try {
-        const bodyData = { book_id: bookId };
-        if (bookFormatId) bodyData.book_format_id = bookFormatId;
-        if (attributes) bodyData.attributes = attributes;
+  try {
+    const bodyData = { book_id: bookId };
+    if (bookFormatId) bodyData.book_format_id = bookFormatId;
+    if (attributes) bodyData.attributes = attributes;
 
-        const response = await fetch('/wishlist/add-to-cart', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            },
-            body: JSON.stringify(bodyData)
-        });
-
-        const data = await response.json();
-
-        if (data.success) {
-            showNotification(data.message || 'Đã thêm sách vào giỏ hàng', 'success');
-        } else {
-            showNotification(data.message || 'Thêm giỏ hàng thất bại', 'error');
-        }
-    } catch (error) {
-        showNotification('Lỗi kết nối server', 'error');
+    const response = await fetch('/wishlist/add-to-cart', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+      },
+      body: JSON.stringify(bodyData)
+    });
+    const data = await response.json();
+    if (data.success) {
+      showNotification(data.message || 'Đã thêm sách vào giỏ hàng', 'success');
+    } else {
+      showNotification(data.message || 'Thêm giỏ hàng thất bại', 'error');
     }
+  } catch (error) {
+    showNotification('Lỗi kết nối server', 'error');
+  }
 }
-
-
-
 
 function removeFromWishlist(bookId) {
-    if (confirm('Bạn có chắc chắn muốn xóa sách này khỏi danh sách yêu thích?')) {
-        fetch('/wishlist/delete', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            body: JSON.stringify({ book_id: bookId })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                showNotification('Đã xóa sách khỏi danh sách yêu thích');
-                const bookElement = document.querySelector(`[data-book-id="${bookId}"]`);
-                if (bookElement) {
-                    bookElement.classList.add('fade-out');
-                    setTimeout(() => {
-                        location.reload();
-                    }, 500);
-                } else {
-                    location.reload();
-                }
-            } else {
-                showNotification(data.message, 'error');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            showNotification('Đã có lỗi xảy ra', 'error');
-        });
-    }
+  if (!confirm('Bạn có chắc chắn muốn xóa sách này khỏi danh sách yêu thích?')) return;
+
+  fetch('/wishlist/delete', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+    },
+    body: JSON.stringify({ book_id: bookId })
+  })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        showNotification('Đã xóa sách khỏi danh sách yêu thích');
+        const bookElement = document.querySelector(`[data-book-id="${bookId}"]`);
+        if (bookElement) {
+          bookElement.classList.add('fade-out');
+          setTimeout(() => location.reload(), 500);
+        } else {
+          location.reload();
+        }
+      } else {
+        showNotification(data.message, 'error');
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      showNotification('Đã có lỗi xảy ra', 'error');
+    });
 }
+
 </script>
-
-<style>
-@keyframes beat {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.2); }
-}
-
-.animate-beat {
-    animation: beat 1s ease-in-out infinite;
-}
-
-@keyframes pulse-slow {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
-}
-
-.animate-pulse-slow {
-    animation: pulse-slow 3s ease-in-out infinite;
-}
-
-.loader-heart {
-    width: 40px;
-    height: 40px;
-    background: 
-        radial-gradient(circle at 60% 65%, red 64%, transparent 65%) top left,
-        radial-gradient(circle at 40% 65%, red 64%, transparent 65%) top right,
-        linear-gradient(to bottom left, red 43%, transparent 43%) bottom right,
-        linear-gradient(to bottom right, red 43%, transparent 43%) bottom left;
-    background-size: 50% 50%;
-    background-repeat: no-repeat;
-    animation: rotate 1s linear infinite;
-}
-
-@keyframes rotate {
-    to { transform: rotate(360deg); }
-}
-
-.perspective {
-    perspective: 1000px;
-}
-
-.backface-hidden {
-    backface-visibility: hidden;
-}
-
-.preserve-3d {
-    transform-style: preserve-3d;
-}
-
-.hearts-bg {
-    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 30c-2-2-4-4-4-8 0-4 2-6 4-6s4 2 4 6c0 4-2 6-4 8zm0 0c2-2 4-4 4-8 0-4-2-6-4-6s-4 2-4 6c0 4 2 6 4 8z' fill='%23FF0000' fill-opacity='0.05'/%3E%3C/svg%3E");
-}
-
-.line-clamp-2 {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-/* Loaders */
-.loader {
-    width: 24px;
-    height: 24px;
-    border: 3px solid #FFF;
-    border-bottom-color: transparent;
-    border-radius: 50%;
-    display: inline-block;
-    box-sizing: border-box;
-    animation: rotation 1s linear infinite;
-}
-
-@keyframes rotation {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-/* Hover Effects */
-.hover-scale {
-    transition: transform 0.2s ease;
-}
-
-.hover-scale:hover {
-    transform: scale(1.05);
-}
-
-/* Shimmer Effect */
-.shimmer {
-    background: linear-gradient(
-        90deg,
-        rgba(255,255,255,0) 0%,
-        rgba(255,255,255,0.2) 50%,
-        rgba(255,255,255,0) 100%
-    );
-    background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
-}
-
-@keyframes shimmer {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
-}
-</style>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 @endsection
