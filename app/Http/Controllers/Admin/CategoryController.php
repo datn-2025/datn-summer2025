@@ -22,10 +22,12 @@ class CategoryController extends Controller
             }
 
             $categories = $query->orderBy('created_at', 'desc')->paginate(10);
+            $trashCount = Category::onlyTrashed()->count();
 
             return view('admin.categories.index', [
                 'categories' => $categories,
-                'searchName' => $request['search_name_category'] ?? ''
+                'searchName' => $request['search_name_category'] ?? '',
+                'trashCount' => $trashCount
             ]);
         } catch (\Throwable $e) {
             Log::error('Lỗi khi lấy danh sách danh mục: ' . $e->getMessage());
@@ -172,4 +174,105 @@ class CategoryController extends Controller
     //         ], 500);
     //     }
     // }
+
+    // public function trash(Request $request)
+    // {
+    //     try {
+    //         $query = Category::onlyTrashed();
+            
+    //         if (!empty($request['search_name'])) {
+    //             $query->where('name', 'like', '%' . $request['search_name'] . '%');
+    //         }
+
+    //         $deletedCategories = $query->withCount('books')->paginate(10);
+    //         // Giữ lại tham số tìm kiếm khi phân trang
+    //         $deletedCategories->appends(['search_name' => $request['search_name']]);
+
+    //         return view('admin.categories.categories-trash', [
+    //             'deletedCategories' => $deletedCategories,
+    //             'searchName' => $request['search_name'] ?? ''
+    //         ]);
+    //     } catch (\Throwable $e) {
+    //         report($e);
+    //         toastr()->error('Lỗi khi truy vấn danh mục đã xóa. Vui lòng thử lại sau.');
+    //         return back();
+    //     }
+    // }
+
+    public function trash(Request $request)
+    {
+        try {
+            \Log::info('Bắt đầu hàm trash');
+            $query = Category::onlyTrashed();
+            \Log::info('Sau onlyTrashed');
+            
+            if (!empty($request['search_name'])) {
+                $query->where('name', 'like', '%' . $request['search_name'] . '%');
+            }
+
+            $deletedCategories = $query->withCount('books')->paginate(10);
+            \Log::info('Sau withCount và paginate', ['count' => $deletedCategories->count()]);
+
+            return view('admin.categories.categories-trash', [
+                'deletedCategories' => $deletedCategories,
+                'searchName' => $request['search_name'] ?? ''
+            ]);
+        } catch (\Throwable $e) {
+            \Log::error('Lỗi trong hàm trash: ' . $e->getMessage(), [
+                'exception' => $e,
+                'trace' => $e->getTraceAsString()
+            ]);
+            report($e);
+            toastr()->error('Lỗi khi truy vấn danh mục đã xóa. Vui lòng thử lại sau: ' . $e->getMessage());
+            return back();
+        }
+    }
+
+    public function destroy(Category $category)
+    {
+        try {
+            // Kiểm tra xem tác giả có sách nào không
+            if ($category->books()->count() > 0) {
+                toastr()->error('Không thể xóa danh mục đang có sách trong hệ thống.');
+                return back();
+            }
+            
+            $category->delete();
+            toastr()->success('Danh mục đã được xóa tạm thời thành công.');
+            return back();
+        } catch (\Throwable $e) {
+            report($e);
+            return back()->with('error', 'Không thể xóa danh mục. Vui lòng thử lại sau.');
+        }
+    }
+
+    public function restore($id)
+    {
+        try {
+            Category::withTrashed()->findOrFail($id)->restore();
+            toastr()->success('Danh mục đã được khôi phục thành công.');
+            return back();
+        } catch (\Throwable $e) {
+            report($e);
+            toastr()->error('Không thể khôi phục danh mục. Vui lòng thử lại sau.');
+            return back();
+        }
+    }    
+    public function forceDelete($id)
+    {
+        try {
+            $category = Category::withTrashed()->findOrFail($id);
+            
+            // Kiểm tra xem danh mục có sách nào không
+            if ($category->books()->count() > 0) {
+                return back()->with('error', 'Không thể xóa vĩnh viễn danh mục đang có sách trong hệ thống. Vui lòng gán sách cho danh mục khác hoặc xóa mềm.');
+            }
+
+            $category->forceDelete();
+            return back()->with('success', 'Danh mục đã được xóa vĩnh viễn.');
+        } catch (\Throwable $e) {
+            report($e);
+            return back()->with('error', 'Không thể xóa vĩnh viễn danh mục. Vui lòng thử lại sau.');
+        }
+    }
 }

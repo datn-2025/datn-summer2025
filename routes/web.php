@@ -46,7 +46,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/', function () {
         Toastr::info('Chào mừng bạn đến với trang quản trị!', 'Thông báo');
              return view('admin.dashboard');
-         });
+         })->name('dashboard');
     Route::prefix('books')->name('books.')->group(function(){
         Route::get('/', [AdminBookController::class, 'index'])->name('index');
         Route::get('/create', [AdminBookController::class, 'create'])->name('create');
@@ -72,7 +72,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::put('/update/{id}', [CategoryController::class, 'update'])->name('update');
         // Route::delete('/soft-delete/{id}', [CategoryController::class, 'softDelete'])->name('soft-delete');
         // Route::delete('/force-delete/{id}', [CategoryController::class, 'forceDelete'])->name('force-delete');
-
+        Route::get('/trash', [CategoryController::class, 'trash'])->name('trash');
+        Route::delete('/{category}', [CategoryController::class, 'destroy'])->name('destroy');
+        Route::put('/{id}/restore', [CategoryController::class, 'restore'])->name('restore');
+        Route::delete('/{id}/force', [CategoryController::class, 'forceDelete'])->name('force-delete');
+    
         // Route admin/authors
         Route::prefix('authors')->name('authors.')->group(function () {
             Route::get('/', [AuthorController::class, 'index'])->name('index');

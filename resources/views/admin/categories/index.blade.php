@@ -25,8 +25,19 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="card">
-                    <div class="card-header">
+                    <div class="card-header align-items-center d-flex justify-content-between">
                         <h4 class="card-title mb-0">Quản lý loại sách</h4>
+                        <div class="d-flex align-items-center gap-2">
+                            <a href="{{ route('admin.categories.create') }}" class="btn btn-success btn-sm">
+                                <i class="ri-add-line me-1"></i> Thêm danh mục
+                            </a>
+                            <a href="{{ route('admin.categories.trash') }}" class="btn btn-danger btn-sm">
+                                <i class="ri-delete-bin-line me-1"></i> Thùng rác
+                                @if($trashCount > 0)
+                                    <span class="badge bg-light text-danger ms-1">{{ $trashCount }}</span>
+                                @endif
+                            </a>
+                        </div>
                     </div>
 
                     <div class="card-body">
@@ -39,12 +50,12 @@
                         <div class="listjs-table" id="categoryList">
                             <!-- Search and Add -->
                             <div class="row g-4 mb-3">
-                                <div class="col-sm-auto">
+                                <!-- <div class="col-sm-auto">
                                     <a href="{{ route('admin.categories.create') }}" class="btn btn-success"
                                         style="height: 36px;">
                                         <i class="ri-add-line align-bottom me-1"></i> Thêm mới
                                     </a>
-                                </div>
+                                </div> -->
                                 <div class="col-sm">
                                     <form method="GET" action="{{ route('admin.categories.index') }}"
                                         class="d-flex justify-content-sm-end">
@@ -93,19 +104,61 @@
                                                     </td>
                                                     <td class="text-center">{{ $category->books_count }}</td>
                                                     <td>{{ date('d/m/Y', strtotime($category->created_at)) }}</td>
-                                                    <td>
+                                                    <!-- <td>
                                                         <div class="d-flex gap-2">
                                                             <a href="{{ route('admin.categories.edit', $category->id) }}"
                                                                 class="btn btn-sm btn-warning">
                                                                 <i class="ri-edit-2-line"></i> Sửa
                                                             </a>
-                                                            <!-- <form action="" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn xóa danh mục này?')">
+                                                            <form action="" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn xóa danh mục này?')">
                                                                 @csrf
                                                                 @method('DELETE')
                                                                 <button type="submit" class="btn btn-sm btn-danger">
                                                                     <i class="ri-delete-bin-2-line"></i> Xóa
                                                                 </button>
-                                                            </form> -->
+                                                            </form>
+                                                        </div>
+                                                    </td> -->
+                                                    <td>
+                                                        <div class="btn-group">
+                                                            @if ($category->deleted_at)
+                                                                <form
+                                                                    action="{{ route('admin.categories.restore', $category->id) }}"
+                                                                    method="POST" class="d-inline">
+                                                                    @csrf
+                                                                    @method('PUT')
+                                                                    <button type="submit" class="btn btn-sm btn-success"
+                                                                        title="Khôi phục">
+                                                                        <i class="las la-undo"></i>
+                                                                    </button>
+                                                                </form>
+                                                                <form
+                                                                    action="{{ route('admin.categories.force-delete', $category->id) }}"
+                                                                    method="POST" class="d-inline">
+                                                                    @csrf
+                                                                    @method('DELETE')
+                                                                    <button type="submit" class="btn btn-sm btn-danger"
+                                                                        onclick="return confirm('Bạn có chắc muốn xóa vĩnh viễn danh mục này? Nếu danh mục có sách, bạn sẽ không thể xóa vĩnh viễn.')"
+                                                                        title="Xóa vĩnh viễn">
+                                                                        <i class="las la-trash"></i>
+                                                                    </button>
+                                                                </form>
+                                                            @else
+                                                                <a href="{{ route('admin.categories.edit', $category->id) }}" class="btn btn-sm btn-light" title="Chỉnh sửa">
+                                                                    <i class="ri-pencil-fill align-bottom me-2 text-muted"></i>
+                                                                </a>
+                                                                <form
+                                                                    action="{{ route('admin.categories.destroy', $category->id) }}"
+                                                                    method="POST" class="d-inline">
+                                                                    @csrf
+                                                                    @method('DELETE')
+                                                                    <button type="submit" class="btn btn-sm"
+                                                                        onclick="return confirm('Bạn có chắc muốn xóa tạm thời danh mục này?')"
+                                                                        title="Xóa tạm thời">
+                                                                        <i class="ri-delete-bin-fill align-bottom me-2"></i>
+                                                                    </button>
+                                                                </form>
+                                                            @endif
                                                         </div>
                                                     </td>
                                                 </tr>
