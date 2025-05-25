@@ -14,7 +14,7 @@
 
     <!-- jsvectormap css -->
     <link href="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/css/jsvectormap.min.css" rel="stylesheet" type="text/css" />
-
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <!-- Layout config Js -->
     <script src="{{ asset('assets/js/layout.js') }}"></script>
     <!-- Bootstrap Css -->
@@ -673,23 +673,20 @@
                     <ul class="navbar-nav" id="navbar-nav">
                         <li class="menu-title"><span data-key="t-menu">Menu</span></li>
                         <li class="nav-item">
-                            <a class="nav-link menu-link" href="#sidebarDashboards">
-                                <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Báo cáo tổng
-                                    quan</span>
+                            <a class="nav-link menu-link" href="{{ route('admin.dashboard.index') }}">
+                                <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Báo cáo tổng quan</span>
                             </a>
                         </li> <!-- end Dashboard Menu -->
 
                         <li class="nav-item">
                             <a class="nav-link menu-link" href="#sidebarAuth" data-bs-toggle="collapse" role="button"
                                 aria-expanded="false" aria-controls="sidebarAuth">
-                                <i class="ri-account-circle-line"></i> <span data-key="t-authentication">Quản lý người
-                                    dùng </span>
+                                <i class="ri-account-circle-line"></i> <span data-key="t-authentication">Quản lý người dùng</span>
                             </a>
                             <div class="collapse menu-dropdown" id="sidebarAuth">
                                 <ul class="nav nav-sm flex-column">
                                     <li class="nav-item">
-                                        <a href="{{ route('admin.users.index') }}" class="nav-link" data-key="t-signin"> Danh sách
-                                        </a>
+                                        <a href="{{ route('admin.users.index') }}" class="nav-link">Danh sách</a>
                                     </li>
                                 </ul>
                             </div>
@@ -720,12 +717,10 @@
                             <div class="collapse menu-dropdown" id="sidebarApps">
                                 <ul class="nav nav-sm flex-column">
                                     <li class="nav-item">
-                                        <a href="{{route('admin.books.index')}}" class="nav-link" data-key="t-chat">
-                                            Danh sách </a>
+                                        <a href="{{ route('admin.books.index') }}" class="nav-link">Danh sách</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="{{route('admin.books.create')}}" class="nav-link"> <span
-                                                data-key="t-file-manager">Thêm</span></a>
+                                        <a href="{{ route('admin.books.create') }}" class="nav-link">Thêm mới</a>
                                     </li>
                                 </ul>
                             </div>
@@ -751,18 +746,15 @@
                         <li class="nav-item">
                             <a class="nav-link menu-link" href="#sidebarAdvanceUI" data-bs-toggle="collapse"
                                 role="button" aria-expanded="false" aria-controls="sidebarAdvanceUI">
-                                <i class="ri-stack-line"></i> <span data-key="t-advance-ui">Quản lý khuyến mãi toàn nền
-                                    tảng</span>
+                                <i class="ri-stack-line"></i> <span data-key="t-advance-ui">Quản lý khuyến mãi</span>
                             </a>
                             <div class="collapse menu-dropdown" id="sidebarAdvanceUI">
                                 <ul class="nav nav-sm flex-column">
                                     <li class="nav-item">
-                                        <a href="{{ route('admin.vouchers.index') }}" class="nav-link"
-                                            data-key="t-sweet-alerts"> Danh sách</a>
+                                        <a href="{{ route('admin.vouchers.index') }}" class="nav-link">Danh sách</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="{{ route('admin.vouchers.create') }}" class="nav-link" data-key="t-nestable-list">
-                                            Thêm</a>
+                                        <a href="{{ route('admin.vouchers.create') }}" class="nav-link">Thêm mới</a>
                                     </li>
                                 </ul>
                             </div>
@@ -1536,7 +1528,6 @@
     </div>
 
     {{-- định dang sách from thêm sách --}}
-    <script src="{{ asset('assets/js/custom.js') }}"></script>
     <!-- JAVASCRIPT -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/simplebar@6.2.5/dist/simplebar.min.js"></script>
@@ -1566,7 +1557,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/list.pagination.js/0.1.1/list.pagination.min.js"></script>
 
     <!-- listjs init -->
-    <script src="{{ asset('assets/js/pages/listjs.init.js') }}"></script>
 
     <!-- Sweet Alerts js -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.5/dist/sweetalert2.all.min.js"></script>

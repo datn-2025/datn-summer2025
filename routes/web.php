@@ -22,7 +22,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         return view('admin.dashboard');
     })->name('dashboard.index');
 
-    Route::prefix('books')->name('books.')->group(function(){
+    Route::prefix('books')->name('books.')->group(function () {
         Route::get('/', [AdminBookController::class, 'index'])->name('index');
         Route::get('/create', [AdminBookController::class, 'create'])->name('create');
         Route::post('/store', [AdminBookController::class, 'store'])->name('store');
@@ -30,24 +30,18 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/edit/{id}/{slug}', [AdminBookController::class, 'edit'])->name('edit');
         Route::put('/update/{id}/{slug}', [AdminBookController::class, 'update'])->name('update');
         Route::delete('/delete/{id}', [AdminBookController::class, 'destroy'])->name('destroy');
-        
+
         // Trash routes
         Route::get('/trash', [AdminBookController::class, 'trash'])->name('trash');
         Route::post('/restore/{id}', [AdminBookController::class, 'restore'])->name('restore');
         Route::delete('/force-delete/{id}', [AdminBookController::class, 'forceDelete'])->name('force-delete');
     })->name('dashboard');
-  
+
     // Route admin/categories
     Route::prefix('categories')->name('categories.')->group(function () {
         Route::get('/', [CategoryController::class, 'index'])->name('index');
     });
-    // Route admin/vouchers
-    Route::prefix('vouchers')->name('vouchers.')->group(function () {
-        Route::get('/trash', [VoucherController::class, 'trash'])->name('trash');
-        Route::post('{id}/restore', [VoucherController::class, 'restore'])->name('restore');
-        Route::delete('{id}/force-delete', [VoucherController::class, 'forceDelete'])->name('force-delete');
-    });
-    Route::resource('vouchers', VoucherController::class);
+
 
     // Route admin/users
     Route::prefix('users')->name('users.')->group(function () {
@@ -57,8 +51,19 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::put('/{id}', [UserController::class, 'update'])->name('update');
     });
 
-    // Voucher routes  
+    // Voucher routes
     Route::prefix('vouchers')->name('vouchers.')->group(function () {
+        // Route để lấy danh sách đối tượng theo điều kiện
+        Route::get('/get-condition-options', [VoucherController::class, 'getConditionOptions'])
+            ->name('getConditionOptions');
+        Route::get('/search', [VoucherController::class, 'search'])->name('search');
+
+        // Trash routes - Đặt trước các route khác
+        Route::get('/trash', [VoucherController::class, 'trash'])->name('trash');
+        Route::post('/{id}/restore', [VoucherController::class, 'restore'])->name('restore');
+        Route::delete('/{id}/force-delete', [VoucherController::class, 'forceDelete'])->name('force-delete');
+
+        // Các route CRUD thông thường
         Route::get('/', [VoucherController::class, 'index'])->name('index');
         Route::get('/create', [VoucherController::class, 'create'])->name('create');
         Route::post('/', [VoucherController::class, 'store'])->name('store');
@@ -67,9 +72,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::put('/{voucher}', [VoucherController::class, 'update'])->name('update');
         Route::delete('/{voucher}', [VoucherController::class, 'destroy'])->name('destroy');
 
-        // Trash routes
-        Route::get('/trash', [VoucherController::class, 'trash'])->name('trash');
-        Route::post('/{id}/restore', [VoucherController::class, 'restore'])->name('restore');
-        Route::delete('/{id}/force-delete', [VoucherController::class, 'forceDelete'])->name('force-delete');
+        Route::get('/export', [VoucherController::class, 'export'])->name('export');
     });
 });
