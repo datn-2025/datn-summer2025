@@ -104,7 +104,13 @@
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="submit" class="btn btn-sm btn-danger"
-                                                            onclick="return confirm('Bạn có chắc muốn xóa vĩnh viễn danh mục này? Hành động này không thể hoàn tác.')"
+                                                            onclick="<?php
+                                                                if ($category->books_count > 0) {
+                                                                    echo "alert('Danh mục này có sách, bạn không thể xóa vĩnh viễn.'); return false;";
+                                                                } else {
+                                                                    echo "return confirm('Bạn có chắc muốn xóa vĩnh viễn danh mục này? Hành động này không thể hoàn tác.');";
+                                                                }
+                                                            ?>"
                                                             title="Xóa vĩnh viễn">
                                                             <!-- <i class="las la-times"></i> -->
                                                             <i class="fas fa-trash"></i>

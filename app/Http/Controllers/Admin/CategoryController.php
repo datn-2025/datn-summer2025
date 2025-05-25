@@ -232,10 +232,10 @@ class CategoryController extends Controller
     {
         try {
             // Kiểm tra xem tác giả có sách nào không
-            if ($category->books()->count() > 0) {
-                toastr()->error('Không thể xóa danh mục đang có sách trong hệ thống.');
-                return back();
-            }
+            // if ($category->books()->count() > 0) {
+            //     toastr()->error('Không thể xóa danh mục đang có sách trong hệ thống.');
+            //     return back();
+            // }
             
             $category->delete();
             toastr()->success('Danh mục đã được xóa tạm thời thành công.');

@@ -153,7 +153,7 @@
                                                                     @csrf
                                                                     @method('DELETE')
                                                                     <button type="submit" class="btn btn-sm"
-                                                                        onclick="return confirm('Bạn có chắc muốn xóa tạm thời danh mục này?')"
+                                                                        onclick="return confirm('<?php if ($category->books()->count() > 0) echo 'Danh mục này vẫn còn sách liên kết. ' ?>Bạn có chắc muốn xóa tạm thời danh mục này?')"
                                                                         title="Xóa tạm thời">
                                                                         <i class="ri-delete-bin-fill align-bottom me-2"></i>
                                                                     </button>
