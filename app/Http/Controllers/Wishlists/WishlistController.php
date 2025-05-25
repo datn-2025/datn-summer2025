@@ -69,11 +69,13 @@ class WishlistController extends Controller
         ->where('wishlists.user_id', $userId)
         ->select(
           'books.id as book_id',
+          'books.slug',
           'books.cover_image',
           'books.title',
           'authors.name as author_name',
           'brands.name as brand_name',
           'categories.name as category_name',
+          'categories.id as category_id',
           'wishlists.created_at'
         )
         ->orderBy('wishlists.created_at', 'desc')
@@ -169,6 +171,7 @@ class WishlistController extends Controller
   }
   public function addToCartFromWishlist(Request $request)
   {
+    /*
     $userId = "4710b22a-37bb-11f0-a680-067090e2bd86"; // userId cứng fix sẵn
 
     $bookId = $request->input('book_id');
@@ -232,5 +235,6 @@ class WishlistController extends Controller
     }
 
     return response()->json(['success' => true, 'message' => 'Đã thêm sản phẩm vào giỏ hàng']);
+    */
   }
 }

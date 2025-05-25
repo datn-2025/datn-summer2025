@@ -156,7 +156,7 @@
                                                 alt="{{ $item->title }}">
                                             <div class="absolute inset-0 w-full h-full bg-gradient-to-r from-black/60 to-transparent 
                                                 flex items-center justify-center backface-hidden rotate-y-180">
-                                                <a href="/book/{{ $item->book_id }}" 
+                                                <a href="{{ route('books.show', ['slug' => $item->slug]) }}" 
                                                     class="text-white hover:text-red-200 flex items-center gap-2">
                                                     <i class="fas fa-eye"></i>
                                                     <span>Xem chi tiết</span>
@@ -203,19 +203,19 @@
                                       </div>
                                     
                                       <div class="mt-6 flex items-center justify-end gap-4">
-                                        <a href="/book/{{ $item->book_id }}" 
+                                        <a href="{{ route('books.show', ['slug' => $item->slug]) }}" 
                                            class="flex items-center gap-2 px-4 py-2 text-gray-500 
                                                   hover:text-red-500 transition-colors duration-200">
                                           <i class="fas fa-info-circle"></i>
                                           <span>Chi tiết</span>
                                         </a>
-                                        <button onclick="addToCart('{{ $item->book_id }}')"
-                                                class="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r 
-                                                       from-red-500 to-pink-500 text-white rounded-lg hover:shadow-lg 
-                                                       transform hover:-translate-y-0.5 transition-all duration-200">
-                                          <i class="fas fa-shopping-cart"></i>
-                                          <span>Thêm vào giỏ</span>
-                                        </button>
+                                        <a href="{{ route('books.show', ['slug' => $item->slug]) }}"
+                                                  class="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r 
+                                                         from-red-500 to-pink-500 text-white rounded-lg hover:shadow-lg 
+                                                         transform hover:-translate-y-0.5 transition-all duration-200">
+                                          <i class="fas fa-eye"></i>
+                                          <span>Xem chi tiết</span>
+                                        </a>
                                       </div>
                                     </div>
                                     
