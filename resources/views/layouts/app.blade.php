@@ -10,63 +10,20 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 <!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <!-- Toastr CSS -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
 <!-- Toastr JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
-    <!-- Lazysizes -->
-    <script>
-        window.lazySizesConfig = window.lazySizesConfig || {};
-        lazySizesConfig.loadMode = 1; // Eager loading mode
-        lazySizesConfig.expFactor = 4; // Load images earlier
-        lazySizesConfig.expand = 500; // Expand the preload area
-    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.3.2/lazysizes.min.js" async></script>
-
-    <!-- Custom styles for lazy loading -->
-    <style>
-        .lazyload {
-            opacity: 0;
-            transition: opacity 0.3s ease-in-out;
-        }
-        
-        .lazyloaded {
-            opacity: 1;
-        }
-        
-        .lazyload-placeholder {
-            opacity: 1;
-            transition: opacity 0.3s ease-in-out;
-        }
-        
-        .lazyloaded + .lazyload-placeholder {
-            opacity: 0;
-        }
-        
-        .shimmer {
-            background: linear-gradient(
-                90deg,
-                rgba(255,255,255,0) 0%,
-                rgba(255,255,255,0.2) 50%,
-                rgba(255,255,255,0) 100%
-            );
-            background-size: 200% 100%;
-            animation: shimmer 1.5s infinite;
-        }
-        
-        @keyframes shimmer {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
-    </style>
-
     <!-- IntersectionObserver polyfill -->
     <script>
         if (!('IntersectionObserver' in window)) {
             document.write('<script src="https://polyfill.io/v3/polyfill.min.js?features=IntersectionObserver"><\/script>');
         }
     </script>
+
     <!-- Toastr CSS -->
 
 
