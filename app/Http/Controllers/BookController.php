@@ -7,15 +7,15 @@ use Illuminate\Support\Facades\DB;
 
 class BookController extends Controller
 {
-    public function index(Request $request, $categoryId = null)
+    public function index(Request $request, $categorySlug = null)
     {
         // Lấy tất cả danh mục dùng cho sidebar
         $categories = DB::table('categories')->get();
 
         // Lấy danh mục hiện tại nếu có
         $category = null;
-        if ($categoryId) {
-            $category = DB::table('categories')->where('id', $categoryId)->first();
+        if ($categorySlug) {
+            $category = DB::table('categories')->where('slug', $categorySlug)->first();
             if (!$category) {
                 abort(404, "Category not found");
             }
@@ -54,20 +54,17 @@ class BookController extends Controller
                 DB::raw('MAX(book_formats.price) as max_price'),
                 DB::raw('AVG(reviews.rating) as avg_rating')
             )
-            ->when($categoryId, fn($query) => $query->where('books.category_id', $categoryId))
+            ->when($category, fn($query) => $query->where('books.category_id', $category->id))
             ->groupBy('books.id', 'books.title', 'books.slug', 'books.cover_image', 'authors.name', 'brands.name');
 
-        // Áp dụng filter tác giả
         if (!empty($authorIds)) {
             $booksQuery->whereIn('books.author_id', $authorIds);
         }
 
-        // Áp dụng filter thương hiệu
         if (!empty($brandIds)) {
             $booksQuery->whereIn('books.brand_id', $brandIds);
         }
 
-        // Áp dụng filter giá min/max
         if ($minPrice !== null) {
             $booksQuery->havingRaw('MIN(book_formats.price) >= ?', [$minPrice]);
         }
@@ -75,7 +72,6 @@ class BookController extends Controller
             $booksQuery->havingRaw('MAX(book_formats.price) <= ?', [$maxPrice]);
         }
 
-        // Thêm logic để xử lý các khoảng giá cố định
         $priceRanges = [
             '1-10' => [1, 10],
             '10-50' => [10, 50],
@@ -94,18 +90,17 @@ class BookController extends Controller
             }
         }
 
-        // Áp dụng filter rating
         if ($minRating !== null) {
             $booksQuery->havingRaw('AVG(reviews.rating) >= ?', [$minRating]);
         }
 
-        // Add search functionality
-        if ($search = request('search')) {
-            $booksQuery->where('books.title', 'like', "%$search%")
-                       ->orWhere('authors.name', 'like', "%$search%");
+        if ($search = $request->input('search')) {
+            $booksQuery->where(function ($q) use ($search) {
+                $q->where('books.title', 'like', "%$search%")
+                    ->orWhere('authors.name', 'like', "%$search%");
+            });
         }
 
-        // Xử lý sắp xếp
         switch ($sort) {
             case 'price_asc':
                 $booksQuery->orderBy('min_price', 'asc');
@@ -125,26 +120,22 @@ class BookController extends Controller
                 break;
         }
 
-        // Phân trang, giữ query string
-        $books = $booksQuery->paginate(12)->withQueryString();
+        $books = $booksQuery->paginate(6)->withQueryString();
 
-        // Lấy bộ lọc tác giả
         $authors = DB::table('authors')
             ->join('books', 'authors.id', '=', 'books.author_id')
-            ->when($categoryId, fn($query) => $query->where('books.category_id', $categoryId))
+            ->when($category, fn($query) => $query->where('books.category_id', $category->id))
             ->select('authors.id', 'authors.name')
             ->distinct()
             ->get();
 
-        // Lấy bộ lọc thương hiệu
         $brands = DB::table('brands')
             ->join('books', 'brands.id', '=', 'books.brand_id')
-            ->when($categoryId, fn($query) => $query->where('books.category_id', $categoryId))
+            ->when($category, fn($query) => $query->where('books.category_id', $category->id))
             ->select('brands.id', 'brands.name')
             ->distinct()
             ->get();
 
-        // Trả về view với dữ liệu đầy đủ
         return view('books.index', [
             'categories' => $categories,
             'category' => $category,

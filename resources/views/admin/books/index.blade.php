@@ -24,7 +24,17 @@
     <div class="col-lg-12">
         <div class="card">
             <div class="card-header">
-                <h4 class="card-title mb-0">Danh Sách Sách</h4>
+                <div class="d-flex align-items-center justify-content-between">
+                    <h4 class="card-title mb-0">Danh Sách Sách</h4>
+                    <div>
+                        <a href="{{ route('admin.books.create') }}" class="btn btn-primary btn-sm me-2" style="background-color:#405189; border-color: #405189">
+                            <i class="ri-add-line me-1"></i> Thêm sách mới
+                        </a>
+                        <a href="{{ route('admin.books.trash') }}" class="btn btn-outline-danger btn-sm">
+                            <i class="ri-delete-bin-line me-1"></i> Thùng rác
+                        </a>
+                    </div>
+                </div>
             </div>
 
             <div class="card-body">
@@ -75,20 +85,19 @@
                             </div>
                         </div>
                         <div class="col-sm-3">
-                            <select name="status" class="form-select">                                <option value="">Tất cả trạng thái</option>
+                            <select name="status" class="form-select">
+                                <option value="">Tất cả trạng thái</option>
                                 <option value="Còn Hàng" {{ request('status') == 'Còn Hàng' ? 'selected' : '' }}>
                                     Còn Hàng</option>
-                                <option value="Sắp Hết Hàng" {{ request('status') == 'Sắp Hết Hàng' ? 'selected' : '' }}>
-                                    Sắp Hết Hàng</option>
                                 <option value="Hết Hàng Tồn Kho" {{ request('status') == 'Hết Hàng Tồn Kho' ? 'selected' : '' }}>
                                     Hết Hàng Tồn Kho</option>
-                                <option value="Chỉ bản Ebook" {{ request('status') == 'Chỉ bản Ebook' ? 'selected' : '' }}>
-                                    Chỉ bản Ebook</option>
+                                <option value="Sắp Ra Mắt" {{ request('status') == 'Sắp Ra Mắt' ? 'selected' : '' }}>
+                                    Sắp Ra Mắt</option>
                                 <option value="Ngừng Kinh Doanh" {{ request('status') == 'Ngừng Kinh Doanh' ? 'selected' : '' }}>
                                     Ngừng Kinh Doanh</option>
                             </select>
                         </div>
-                        <div class="col-lg-4">
+                        <div class="col-lg-3">
                             <div class="input-group mb-3">
                                 <span class="input-group-text">Số trang</span>
                                 <input type="number" name="min_pages" class="form-control" placeholder="Từ..."
@@ -96,6 +105,8 @@
                                 <input type="number" name="max_pages" class="form-control" placeholder="Đến..."
                                     value="{{ request('max_pages') }}">
                             </div>
+                        </div>
+                        <div class="col-lg-3">
                             <div class="input-group">
                                 <span class="input-group-text">Khoảng giá</span>
                                 <input type="number" name="min_price" class="form-control" placeholder="Từ..."
@@ -104,8 +115,8 @@
                                     value="{{ request('max_price') }}">
                             </div>
                         </div>
-                        <div class="col-lg-2">
-                            <button type="submit" class="btn btn-primary me-2">
+                        <div class="col-lg-3">
+                            <button type="submit" class="btn btn-primary me-2" style="background-color:#405189; border-color: #405189">
                                 <i class="ri-search-2-line"></i> Tìm kiếm
                             </button>
                             <a href="{{ route('admin.books.index') }}" class="btn btn-light me-2">
@@ -117,7 +128,7 @@
 
                 <div class="table-responsive">
                     <table class="table table-hover align-middle table-nowrap mb-0">
-                        <thead>
+                        <thead class="text-muted table-light">
                             <tr>
                                 <th class="text-center" style="width: 50px;">#</th>
                                 <th class="text-center">ISBN</th>
@@ -132,24 +143,23 @@
                         </thead>
                         <tbody>
                             @foreach ($books as $key => $book)                            @php
-                                $physicalFormats = $book->formats->whereIn('format_name', ['Bìa mềm', 'Bìa cứng']);
-                                $totalStock = $physicalFormats->sum('stock');
-                                
-                                if ($physicalFormats->isEmpty() && $book->formats->where('format_name', 'Ebook')->isEmpty()) {
-                                    $status = 'Ngừng Kinh Doanh';
-                                    $statusClass = 'badge bg-dark';
-                                } elseif ($physicalFormats->isEmpty() && $book->formats->where('format_name', 'Ebook')->isNotEmpty()) {
-                                    $status = 'Chỉ bản Ebook';
-                                    $statusClass = 'badge bg-info';
-                                } elseif ($totalStock > 50) {
-                                    $status = 'Còn Hàng';
-                                    $statusClass = 'badge bg-success';
-                                } elseif ($totalStock > 0) {
-                                    $status = 'Sắp Hết Hàng';
-                                    $statusClass = 'badge bg-warning';
-                                } else {
-                                    $status = 'Hết Hàng Tồn Kho';
-                                    $statusClass = 'badge bg-danger';
+                                // Get status badge class based on book status
+                                switch($book->status) {
+                                    case 'Còn Hàng':
+                                        $statusText = 'Còn Hàng';
+                                        $statusClass = 'badge bg-success';
+                                        break;
+                                    case 'Hết Hàng Tồn Kho':
+                                        $statusText = 'Hết Hàng Tồn Kho';
+                                        $statusClass = 'badge bg-dark';
+                                        break;
+                                    case 'Ngừng Kinh Doanh':
+                                        $statusText = 'Ngừng Kinh Doanh';
+                                        $statusClass = 'badge bg-warning';
+                                        break;
+                                    default:
+                                        $statusText = $book->status;
+                                        $statusClass = 'badge bg-danger';
                                 }
                             @endphp
                             <tr>
@@ -196,7 +206,7 @@
                                     @endforeach
                                     @endif
                                 </td>
-                                <td><span class="{{ $statusClass }}">{{ $status }}</span></td>
+                                <td><span class="{{ $statusClass }}">{{ $statusText }}</span></td>
 
                                 <td class="text-center">
                                     <div class="dropdown d-inline-block">
@@ -219,7 +229,7 @@
                                                     method="post" class="delete-form">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="button" class="dropdown-item text-danger delete-item">
+                                                    <button type="submit" class="dropdown-item text-danger delete-item">
                                                         <i class="ri-delete-bin-fill align-bottom me-2"></i> Xóa
                                                     </button>
                                                 </form>

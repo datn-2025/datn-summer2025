@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             AuthorSeeder::class,
             AttributeSeeder::class,
             AttributeValueSeeder::class,
+            NewsArticleSeeder::class,
             BookSeeder::class,            // Book sẽ tự tạo Format, Image và Attribute Values
             // Bỏ 3 seeder này vì đã được xử lý trong BookSeeder
             // BookFormatSeeder::class,
