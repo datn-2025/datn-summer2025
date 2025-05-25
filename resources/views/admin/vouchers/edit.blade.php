@@ -132,33 +132,34 @@
                                     <select class="form-control @error('condition_type') is-invalid @enderror"
                                             id="condition_type" name="condition_type" required>
                                         <option value="">-- Chọn --</option>
-                                        <option value="all" {{ old('condition_type', $voucher->conditions->first()->type ?? '') == 'all' ? 'selected' : '' }}>Tất cả sản phẩm</option>
-                                        <option value="category" {{ old('condition_type', $voucher->conditions->first()->type ?? '') == 'category' ? 'selected' : '' }}>Theo danh mục</option>
-                                        <option value="author" {{ old('condition_type', $voucher->conditions->first()->type ?? '') == 'author' ? 'selected' : '' }}>Theo tác giả</option>
-                                        <option value="brand" {{ old('condition_type', $voucher->conditions->first()->type ?? '') == 'brand' ? 'selected' : '' }}>Theo thương hiệu</option>
-                                        <option value="book" {{ old('condition_type', $voucher->conditions->first()->type ?? '') == 'book' ? 'selected' : '' }}>Theo sách</option>
+                                        <option value="all" {{ old('condition_type') == 'all' ? 'selected' : '' }}>Tất cả sản phẩm</option>
+                                        <option value="category" {{ old('condition_type') == 'category' ? 'selected' : '' }}>Theo danh mục</option>
+                                        <option value="author" {{ old('condition_type') == 'author' ? 'selected' : '' }}>Theo tác giả</option>
+                                        <option value="brand" {{ old('condition_type') == 'brand' ? 'selected' : '' }}>Theo thương hiệu</option>
+                                        <option value="book" {{ old('condition_type') == 'book' ? 'selected' : '' }}>Theo sách</option>
                                     </select>
                                     @error('condition_type')
                                         <span class="invalid-feedback">{{ $message }}</span>
                                     @enderror
                                 </div>
-                                {{-- Select2 dropdown for specific conditions --}}
-                                <div class="form-group" id="condition_ids_group" style="{{ old('condition_type', $voucher->conditions->first()->type ?? '') && old('condition_type', $voucher->conditions->first()->type ?? '') !== 'all' ? '' : 'display: none;' }}">
-                                    <label for="condition_ids">Chọn đối tượng áp dụng <span class="text-danger">*</span></label>
-                                     <select class="form-control @error('condition_ids') is-invalid @enderror"
-                                            id="condition_ids" name="condition_ids[]" multiple="multiple" style="width: 100%;">
-                                        {{-- Existing selected options will be pre-populated by the script --}}
-                                        {{-- You might need to add options here if old() or $voucher->conditions exist on load --}}
-                                    </select>
-                                    @error('condition_ids')
-                                        <span class="invalid-feedback">{{ $message }}</span>
-                                    @enderror
+
+                                <!-- Thêm container cho danh sách đối tượng -->
+                                <div id="condition_options_container" style="display: none;">
+                                    <div class="form-group">
+                                        <label>Chọn đối tượng áp dụng <span class="text-danger">*</span></label>
+                                        <div id="condition_options_list" class="mt-2">
+                                            <!-- Danh sách đối tượng sẽ được thêm vào đây bởi JavaScript -->
+                                        </div>
+                                        <div id="condition_error" class="invalid-feedback" style="display: none;">
+                                            Vui lòng chọn ít nhất một đối tượng áp dụng
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
                         <div class="form-group mt-3">
-                            <button type="submit" class="btn btn-primary">Cập nhật</button>
+                            <button type="submit" class="btn btn-primary">Lưu</button>
                             <a href="{{ route('admin.vouchers.index') }}" class="btn btn-secondary">Hủy</a>
                         </div>
                     </form>
@@ -167,103 +168,75 @@
         </div>
     </div>
 </div>
-@endsection
-
-@push('scripts')
 <script>
+    // Mã JavaScript cho trang create
+    console.log("Script cho trang tạo voucher đang chạy.");
+
     $(document).ready(function() {
-        var $conditionTypeSelect = $('#condition_type');
-        var $conditionIdsGroup = $('#condition_ids_group');
-        var $conditionIdsSelect = $('#condition_ids');
+        console.log("Document is ready, script is running.");
 
-        // Initialize Select2
-        $conditionIdsSelect.select2({
-            placeholder: "-- Chọn đối tượng áp dụng --",
-            allowClear: true,
-            ajax: {
-                url: '{{ route('admin.vouchers.conditions') }}',
-                dataType: 'json',
-                delay: 250,
-                data: function (params) {
-                    var query = {
-                        search: params.term, // search term
-                        type: $conditionTypeSelect.val()
-                    };
-                    return query;
-                },
-                processResults: function (data) {
-                    // data format is expected to be [{id: ..., text: ...}, ...]
-                    return {
-                        results: data
-                    };
-                },
-                cache: true
+        // Thêm validation trước khi submit form
+        $('form').on('submit', function(e) {
+            var conditionType = $('#condition_type').val();
+            if (conditionType !== 'all' && conditionType !== '') {
+                var selectedOptions = $('input[name="condition_ids[]"]:checked').length;
+                if (selectedOptions === 0) {
+                    e.preventDefault();
+                    $('#condition_error').show();
+                    return false;
+                }
             }
         });
 
-        // Function to toggle visibility of the Select2 dropdown
-        function toggleConditionIdsVisibility() {
-            var selectedType = $conditionTypeSelect.val();
-            if (selectedType && selectedType !== 'all') {
-                $conditionIdsGroup.show();
-                // No need to clear on type change if we handle initial load
-            } else {
-                $conditionIdsGroup.hide();
-                 // Clear current selections and data when hidden
-                $conditionIdsSelect.val(null).trigger('change');
-            }
-        }
+        $('#condition_type').on('change', function() {
+            var selectedCondition = $(this).val();
+            $('#condition_error').hide();
 
-        // Handle change event on condition type
-        $conditionTypeSelect.on('change', function() {
-            toggleConditionIdsVisibility();
-        });
+            if (selectedCondition === 'book' || selectedCondition === 'category' || selectedCondition === 'author' || selectedCondition === 'brand') {
+                $('#condition_options_container').show();
 
-        // Trigger visibility check on page load
-        toggleConditionIdsVisibility();
-
-        // --- Load existing conditions for the edit page ---
-        var existingConditions = @json(old('condition_ids', $voucher->conditions->pluck('condition_id')->toArray()));
-        var selectedTypeOnLoad = $conditionTypeSelect.val();
-
-        if (existingConditions.length > 0 && selectedTypeOnLoad && selectedTypeOnLoad !== 'all') {
-             // We need to fetch the full data for the existing conditions
-             // This requires another AJAX call or passing the full objects from backend
-
-             // Simpler approach: if backend passed full condition objects to the view
-             // For example, if $voucher->conditions loaded with related models (book, category, etc.)
-             var preselectedOptions = [];
-             @if($voucher->conditions->isNotEmpty())
-                @foreach($voucher->conditions as $condition)
-                    @php
-                        $text = '';
-                        switch($condition->type) {
-                            case 'category': $text = 'Danh mục: ' . ($condition->categoryCondition->name ?? 'Không xác định'); break;
-                            case 'author': $text = 'Tác giả: ' . ($condition->authorCondition->name ?? 'Không xác định'); break;
-                            case 'brand': $text = 'NXB: ' . ($condition->brandCondition->name ?? 'Không xác định'); break;
-                            case 'book': $text = 'Sách: ' . ($condition->bookCondition->title ?? 'Không xác định') . ' - ' . ($condition->bookCondition->author->name ?? ''); break;
+                $.ajax({
+                    url: '{{ route("admin.vouchers.getConditionOptions") }}',
+                    method: 'GET',
+                    data: { condition_type: selectedCondition, voucher_id: '{{ $voucher->id }}' },
+                    success: function(response) {
+                        var optionsHtml = '';
+                        if (response.options && response.options.length > 0) {
+                            response.options.forEach(function(option) {
+                                // Nếu option.id nằm trong danh sách đã chọn thì checked
+                                var checked = '';
+                                if (response.selected_ids && response.selected_ids.includes(option.id)) {
+                                    checked = 'checked';
+                                }
+                                optionsHtml += `<div class="form-check">
+                                    <input class="form-check-input" type="checkbox"
+                                           name="condition_ids[]"
+                                           value="${option.id}"
+                                           id="option_${option.id}" ${checked}>
+                                    <label class="form-check-label" for="option_${option.id}">
+                                        ${option.name}
+                                    </label>
+                                </div>`;
+                            });
+                        } else {
+                            optionsHtml = '<p>Không tìm thấy đối tượng nào.</p>';
                         }
-                    @endphp
-                    preselectedOptions.push({
-                         id: '{{ $condition->condition_id }}',
-                         text: '{{ $text }}'
-                    });
-                @endforeach
-             @endif
+                        $('#condition_options_list').html(optionsHtml);
+                    },
+                    error: function(xhr, status, error) {
+                        $('#condition_options_list').html('<p>Lỗi khi tải danh sách.</p>');
+                    }
+                });
+            } else {
+                $('#condition_options_container').hide();
+                $('#condition_options_list').empty();
+            }
+        });
 
-             if(preselectedOptions.length > 0){
-                 // Use the Select2 add option method to add pre-selected items
-                 preselectedOptions.forEach(function(option) {
-                      // Check if option already exists (might happen with old() values)
-                      if ($conditionIdsSelect.find('option[value="' + option.id + '"]').length === 0) {
-                          var newOption = new Option(option.text, option.id, true, true);
-                          $conditionIdsSelect.append(newOption).trigger('change');
-                      }
-                 });
-             }
+        // Kích hoạt sự kiện change khi tải trang nếu có giá trị mặc định
+        if($('#condition_type').val() !== '') {
+            $('#condition_type').trigger('change');
         }
-        // --- End Load existing conditions ---
-
     });
 </script>
-@endpush
+@endsection

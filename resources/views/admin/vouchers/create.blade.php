@@ -13,6 +13,16 @@
                     <h3 class="card-title">Thêm Voucher Mới</h3>
                 </div>
                 <div class="card-body">
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <h5>Có lỗi xảy ra:</h5>
+                            <ul class="mb-0">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
                     <form action="{{ route('admin.vouchers.store') }}" method="POST">
                         @csrf
                         <div class="row">
@@ -143,6 +153,9 @@
                                         <div id="condition_options_list" class="mt-2">
                                             <!-- Danh sách đối tượng sẽ được thêm vào đây bởi JavaScript -->
                                         </div>
+                                        <div id="condition_error" class="invalid-feedback" style="display: none;">
+                                            Vui lòng chọn ít nhất một đối tượng áp dụng
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -163,29 +176,50 @@
     console.log("Script cho trang tạo voucher đang chạy.");
 
     $(document).ready(function() {
+        // Xử lý alert messages
+        $('.alert').each(function() {
+            $(this).delay(5000).fadeOut(500);
+        });
+
+        // Xử lý nút đóng alert
+        $('.alert .close').on('click', function() {
+            $(this).closest('.alert').fadeOut(500);
+        });
+
+        // Code JavaScript hiện tại
         console.log("Document is ready, script is running.");
 
-        $('#condition_type').on('change', function() {
-            console.log("Condition type changed.");
-            var selectedCondition = $(this).val();
-            console.log("Selected condition:", selectedCondition);
+        // Thêm validation trước khi submit form
+        $('form').on('submit', function(e) {
+            var conditionType = $('#condition_type').val();
+            if (conditionType !== 'all' && conditionType !== '') {
+                var selectedOptions = $('input[name="condition_ids[]"]:checked').length;
+                if (selectedOptions === 0) {
+                    e.preventDefault();
+                    $('#condition_error').show();
+                    return false;
+                }
+            }
+        });
 
-            if (selectedCondition === 'book' || selectedCondition === 'category' || selectedCondition === 'author') {
+        $('#condition_type').on('change', function() {
+            var selectedCondition = $(this).val();
+            $('#condition_error').hide();
+
+            if (selectedCondition === 'book' || selectedCondition === 'category' || selectedCondition === 'author' || selectedCondition === 'brand') {
                 $('#condition_options_container').show();
-                console.log("Fetching condition options...");
 
                 $.ajax({
                     url: '{{ route("admin.vouchers.getConditionOptions") }}',
                     method: 'GET',
                     data: { condition_type: selectedCondition },
                     success: function(response) {
-                        console.log("Fetch success:", response);
                         var optionsHtml = '';
                         if (response.options && response.options.length > 0) {
                             response.options.forEach(function(option) {
                                 optionsHtml += `<div class="form-check">
                                     <input class="form-check-input" type="checkbox"
-                                           name="condition_objects[]"
+                                           name="condition_ids[]"
                                            value="${option.id}"
                                            id="option_${option.id}">
                                     <label class="form-check-label" for="option_${option.id}">
@@ -199,8 +233,6 @@
                         $('#condition_options_list').html(optionsHtml);
                     },
                     error: function(xhr, status, error) {
-                        console.error("Fetch error:", status, error);
-                        console.log("Response text:", xhr.responseText);
                         $('#condition_options_list').html('<p>Lỗi khi tải danh sách.</p>');
                     }
                 });

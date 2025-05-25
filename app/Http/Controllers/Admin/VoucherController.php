@@ -136,7 +136,8 @@ class VoucherController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Voucher creation error: ' . $e->getMessage());
-            return back()->with('error', 'Có lỗi xảy ra khi tạo voucher');
+            return back()->with('error', 'Có lỗi xảy ra khi tạo voucher')
+                         ->withInput();
         }
     }
 
