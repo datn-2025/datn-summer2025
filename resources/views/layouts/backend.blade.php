@@ -1603,6 +1603,17 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     {!! Toastr::message() !!}
+    <script>
+        // Nếu trang được tải từ bộ nhớ cache (back/forward)
+        if (performance.getEntriesByType('navigation')[0]?.type === 'back_forward') {
+            // Xóa Toastr message hiện lại từ session cũ
+            const toastrContainer = document.querySelector('#toast-container');
+            if (toastrContainer) {
+                toastrContainer.remove();
+            }
+        }
+    </script>
+
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
     <script>
