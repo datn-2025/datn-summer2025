@@ -13,12 +13,14 @@
     <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico') }}">
 
     <!-- jsvectormap css -->
-    <link href="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/css/jsvectormap.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/css/jsvectormap.min.css" rel="stylesheet"
+        type="text/css" />
 
     <!-- Layout config Js -->
     <script src="{{ asset('assets/js/layout.js') }}"></script>
     <!-- Bootstrap Css -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        type="text/css" />
     <!-- Icons Css -->
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/@mdi/font@7.3.67/css/materialdesignicons.min.css" rel="stylesheet">
@@ -36,19 +38,17 @@
     <link href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" rel="stylesheet" type="text/css" />
 
     <style>
-
-.collapse.show + a .toggle-icon,
-.nav-link[aria-expanded="true"] .toggle-icon {
-    transform: rotate(180deg);
-    transition: transform 0.3s ease;
-}
-
+        .collapse.show+a .toggle-icon,
+        .nav-link[aria-expanded="true"] .toggle-icon {
+            transform: rotate(180deg);
+            transition: transform 0.3s ease;
+        }
     </style>
     {{-- TinyMCE --}}
     <script src="https://cdn.jsdelivr.net/npm/tinymce@6/tinymce.min.js"></script>
     <script>
         tinymce.init({
-            selector: '#description',
+            selector: '#description, #content',
             height: 300,
             menubar: false,
             plugins: 'lists link image preview code fullscreen',
@@ -688,7 +688,8 @@
                             <div class="collapse menu-dropdown" id="sidebarAuth">
                                 <ul class="nav nav-sm flex-column">
                                     <li class="nav-item">
-                                        <a href="{{ route('admin.users.index') }}" class="nav-link" data-key="t-signin"> Danh sách
+                                        <a href="{{ route('admin.users.index') }}" class="nav-link" data-key="t-signin">
+                                            Danh sách
                                         </a>
                                     </li>
                                 </ul>
@@ -738,34 +739,38 @@
                             <div class="collapse menu-dropdown" id="sidebarCate">
                                 <ul class="nav nav-sm flex-column">
                                     <li class="nav-item">
-                                        <a href="{{route('admin.categories.index')}}" class="nav-link" data-key="t-chat"> Loại sách </a>
+                                        <a href="{{route('admin.categories.index')}}" class="nav-link"
+                                            data-key="t-chat"> Loại sách </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="{{route('admin.categories.authors.index')}}" class="nav-link" data-key="t-chat"> Tác giả </a>
+                                        <a href="{{route('admin.categories.authors.index')}}" class="nav-link"
+                                            data-key="t-chat"> Tác giả </a>
                                     </li>
-                                    
+
                                 </ul>
                             </div>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link menu-link" href="{{route('admin.orders.index')}}" >
+                            <a class="nav-link menu-link" href="{{route('admin.orders.index')}}">
                                 <i class="ri-pages-line"></i> <span data-key="t-pages">Quản lý đơn hàng</span>
                             </a>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link menu-link" href="#sidebarNews" data-bs-toggle="collapse"
-                                role="button" aria-expanded="false" aria-controls="sidebarNews">
+                            <a class="nav-link menu-link" href="#sidebarNews" data-bs-toggle="collapse" role="button"
+                                aria-expanded="false" aria-controls="sidebarNews">
                                 <i class="ri-newspaper-line"></i> <span data-key="t-news">Quản lý tin tức</span>
                             </a>
                             <div class="collapse menu-dropdown" id="sidebarNews">
                                 <ul class="nav nav-sm flex-column">
                                     <li class="nav-item">
-                                        <a href="{{ route('admin.news.index') }}" class="nav-link" data-key="t-news-list">Danh sách</a>
+                                        <a href="{{ route('admin.news.index') }}" class="nav-link"
+                                            data-key="t-news-list">Danh sách</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="{{ route('admin.news.create') }}" class="nav-link" data-key="t-news-create">Thêm mới</a>
+                                        <a href="{{ route('admin.news.create') }}" class="nav-link"
+                                            data-key="t-news-create">Thêm mới</a>
                                     </li>
                                 </ul>
                             </div>
@@ -1602,29 +1607,29 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
     <script>
         const thumbnailSlider = new Swiper(".thumbnail-slider", {
-        spaceBetween: 10,
-        slidesPerView: 4,
-        freeMode: true,
-        watchSlidesProgress: true,
-        breakpoints: {
-            640: { slidesPerView: 4 },
-            768: { slidesPerView: 5 },
-            1024: { slidesPerView: 6 },
-        },
-    });
+            spaceBetween: 10,
+            slidesPerView: 4,
+            freeMode: true,
+            watchSlidesProgress: true,
+            breakpoints: {
+                640: { slidesPerView: 4 },
+                768: { slidesPerView: 5 },
+                1024: { slidesPerView: 6 },
+            },
+        });
 
-    const mainSlider = new Swiper(".main-slider", {
-        spaceBetween: 10,
-        navigation: {
-            nextEl: ".swiper-button-next",
-            prevEl: ".swiper-button-prev"
-        },
-        thumbs: {
-            swiper: thumbnailSlider,
-        },
-    });
+        const mainSlider = new Swiper(".main-slider", {
+            spaceBetween: 10,
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev"
+            },
+            thumbs: {
+                swiper: thumbnailSlider,
+            },
+        });
     </script>
-    
+
     @yield('scripts')
 </body>
 
