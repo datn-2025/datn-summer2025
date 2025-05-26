@@ -74,6 +74,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::delete('/{author}', [AuthorController::class, 'destroy'])->name('destroy');
             Route::put('/{id}/restore', [AuthorController::class, 'restore'])->name('restore');
             Route::delete('/{id}/force', [AuthorController::class, 'forceDelete'])->name('force-delete');
+            Route::get('/{id}/edit', [AuthorController::class, 'edit'])->name('edit');
+            Route::put('/{id}', [AuthorController::class, 'update'])->name('update');
         });
     });
     // Route admin/vouchers
