@@ -11,6 +11,8 @@ use App\Models\Role;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ActivationMail;
+use App\Mail\ResetPasswordMail;
+use Illuminate\Support\Str;
 
 class LoginController extends Controller
 {
@@ -163,5 +165,79 @@ class LoginController extends Controller
         Toastr::success('Đăng xuất thành công!', 'Thành công');
         
         return redirect('/');
+    }
+
+    // Hiển thị form quên mật khẩu
+    public function showForgotPasswordForm()
+    {
+        return view('account.resetpass');
+    }
+
+    // Gửi email đặt lại mật khẩu
+    public function sendResetLinkEmail(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users',
+        ], [
+            'email.exists' => 'Không tìm thấy địa chỉ email này trong hệ thống.',
+            'email.required' => 'Vui lòng nhập email.',
+            'email.email' => 'Email không đúng định dạng.'
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+        $resetToken = Str::random(64);
+        $user->update(['reset_token' => $resetToken]);
+
+        $resetLink = route('account.password.reset', ['token' => $resetToken]);
+        
+        try {
+            Mail::to($request->email)->send(new ResetPasswordMail($resetLink));
+            Toastr::success('Chúng tôi đã gửi email chứa liên kết đặt lại mật khẩu của bạn!', 'Thành công');
+        } catch (\Exception $e) {
+            Toastr::error('Không thể gửi email đặt lại mật khẩu. Vui lòng thử lại sau.', 'Lỗi');
+            return back()->withInput();
+        }
+
+        return back();
+    }
+
+    // Hiển thị form đặt lại mật khẩu
+    public function showResetPasswordForm($token)
+    {
+        return view('account.reset-password-form', ['token' => $token]);
+    }
+
+    // Xử lý đặt lại mật khẩu
+    public function handleResetPassword(Request $request)
+    {
+        $request->validate([
+            'token' => 'required',
+            'email' => 'required|email|exists:users',
+            'password' => 'required|string|min:8|confirmed',
+        ], [
+            'email.required' => 'Vui lòng nhập email.',
+            'email.email' => 'Email không đúng định dạng.',
+            'email.exists' => 'Email không tồn tại trong hệ thống.',
+            'password.required' => 'Vui lòng nhập mật khẩu mới.',
+            'password.min' => 'Mật khẩu phải có ít nhất 8 ký tự.',
+            'password.confirmed' => 'Xác nhận mật khẩu không khớp.'
+        ]);
+
+        $user = User::where('email', $request->email)
+                   ->where('reset_token', $request->token)
+                   ->first();
+
+        if (!$user) {
+            Toastr::error('Mã token không hợp lệ!', 'Lỗi');
+            return back()->withErrors(['email' => 'Mã token không hợp lệ!']);
+        }
+
+        $user->update([
+            'password' => Hash::make($request->password),
+            'reset_token' => null
+        ]);
+
+        Toastr::success('Mật khẩu của bạn đã được thay đổi!', 'Thành công');
+        return redirect()->route('account.login');
     }
 }
