@@ -755,6 +755,23 @@
                         </li>
 
                         <li class="nav-item">
+                            <a class="nav-link menu-link" href="#sidebarNews" data-bs-toggle="collapse"
+                                role="button" aria-expanded="false" aria-controls="sidebarNews">
+                                <i class="ri-newspaper-line"></i> <span data-key="t-news">Quản lý tin tức</span>
+                            </a>
+                            <div class="collapse menu-dropdown" id="sidebarNews">
+                                <ul class="nav nav-sm flex-column">
+                                    <li class="nav-item">
+                                        <a href="{{ route('admin.news.index') }}" class="nav-link" data-key="t-news-list">Danh sách</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{ route('admin.news.create') }}" class="nav-link" data-key="t-news-create">Thêm mới</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+
+                        <li class="nav-item">
                             <a class="nav-link menu-link" href="#sidebarAdvanceUI" data-bs-toggle="collapse"
                                 role="button" aria-expanded="false" aria-controls="sidebarAdvanceUI">
                                 <i class="ri-stack-line"></i> <span data-key="t-advance-ui">Quản lý khuyến mãi toàn nền
