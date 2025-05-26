@@ -783,11 +783,11 @@
                             <div class="collapse menu-dropdown" id="sidebarForms">
                                 <ul class="nav nav-sm flex-column">
                                     <li class="nav-item">
-                                        <a href="forms-elements.html" class="nav-link" data-key="t-basic-elements">Danh
+                                        <a href="{{route('admin.payment-methods.index')}}" class="nav-link" data-key="t-basic-elements">Danh
                                             sách</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="forms-select.html" class="nav-link" data-key="t-form-select"> Thêm </a>
+                                        <a href="{{route('admin.payment-methods.create')}}" class="nav-link" data-key="t-form-select"> Thêm </a>
                                     </li>
                                 </ul>
                             </div>
