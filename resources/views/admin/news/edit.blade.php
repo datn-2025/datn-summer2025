@@ -2,10 +2,6 @@
 
 @section('title', 'Chỉnh Sửa Tin Tức')
 
-@push('css')
-<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
-@endpush
-
 @section('content')
 <div class="container-fluid">
     <!-- start page title -->
@@ -118,37 +114,3 @@
     </div>
 </div>
 @endsection
-
-@push('js')
-<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
-<script>
-    $(document).ready(function() {
-        // Initialize Summernote editor
-        $('#content').summernote({
-            height: 500,
-            toolbar: [
-                ['style', ['style']],
-                ['font', ['bold', 'underline', 'clear']],
-                ['color', ['color']],
-                ['para', ['ul', 'ol', 'paragraph']],
-                ['table', ['table']],
-                ['insert', ['link', 'picture']],
-                ['view', ['fullscreen', 'codeview', 'help']]
-            ]
-        });
-
-        // Thumbnail preview
-        $('#thumbnail').change(function() {
-            const file = this.files[0];
-            if (file) {
-                let reader = new FileReader();
-                reader.onload = function(event) {
-                    $('#thumbnail-preview')
-                        .attr('src', event.target.result);
-                }
-                reader.readAsDataURL(file);
-            }
-        });
-    });
-</script>
-@endpush
