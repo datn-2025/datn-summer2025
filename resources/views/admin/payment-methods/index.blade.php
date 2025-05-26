@@ -43,6 +43,12 @@
                             <a href="{{ route('admin.payment-methods.create') }}" class="btn btn-success btn-sm">
                                 <i class="ri-add-line me-1"></i> Thêm mới
                             </a>
+                            <a href="{{ route('admin.payment-methods.trash') }}" class="btn btn-danger btn-sm">
+                                <i class="ri-delete-bin-line me-1"></i> Thùng rác
+                                @if($trashCount > 0)
+                                    <span class="badge bg-light text-danger ms-1">{{ $trashCount }}</span>
+                                @endif
+                            </a>
                         </div>
                     </div>
                     <!-- Form tìm kiếm -->
@@ -92,7 +98,7 @@
                                                        class="btn btn-sm btn-light" title="Chỉnh sửa">
                                                         <i class="ri-pencil-fill align-bottom me-2 text-muted"></i>
                                                     </a>
-                                                    <form action="{{ route('admin.payment-methods.destroy', $method) }}" 
+                                                    <form action="{{ route('admin.payment-methods.force-delete', $method) }}" 
                                                           method="POST" class="d-inline">
                                                         @csrf
                                                         @method('DELETE')
