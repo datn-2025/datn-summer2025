@@ -16,7 +16,7 @@ return new class extends Migration
     $table->uuid('product_id');
 
     $table->foreign('voucher_id')->references('id')->on('vouchers')->onDelete('cascade');
-    $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+    $table->foreign('product_id')->references('id')->on('books')->onDelete('cascade');
 });
 
     }
