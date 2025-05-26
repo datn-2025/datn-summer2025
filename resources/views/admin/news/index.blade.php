@@ -1,8 +1,6 @@
 @extends('layouts.backend')
 
-@section('title')
-    Quản lý tin tức
-@endsection
+@section('title' , 'Quản lý tin tức')
 
 @section('content')
 
