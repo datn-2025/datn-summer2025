@@ -759,27 +759,35 @@
                                         <a href="{{ route('admin.books.index') }}" class="nav-link">Danh sách</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="{{ route('admin.books.create') }}" class="nav-link">Thêm mới</a>
+
+                                        <a href="{{route('admin.attributes.index')}}" class="nav-link"> <span
+                                                data-key="t-file-manager">Thuộc tính</span></a>
                                     </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link menu-link" href="#sidebarCate" data-bs-toggle="collapse" role="button"
+                                aria-expanded="false" aria-controls="sidebarCate">
+                                <i class="ri-apps-2-line"></i> <span data-key="t-apps">Quản lý danh mục sản phẩm</span>
+                            </a>
+                            <div class="collapse menu-dropdown" id="sidebarCate">
+                                <ul class="nav nav-sm flex-column">
+                                    <li class="nav-item">
+                                        <a href="{{route('admin.categories.index')}}" class="nav-link" data-key="t-chat"> Loại sách </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{route('admin.categories.authors.index')}}" class="nav-link" data-key="t-chat"> Tác giả </a>
+                                    </li>
+                                    
                                 </ul>
                             </div>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link menu-link" href="#sidebarPages" data-bs-toggle="collapse" role="button"
-                                aria-expanded="false" aria-controls="sidebarPages">
+                            <a class="nav-link menu-link" href="{{route('admin.orders.index')}}" >
                                 <i class="ri-pages-line"></i> <span data-key="t-pages">Quản lý đơn hàng</span>
                             </a>
-                            <div class="collapse menu-dropdown" id="sidebarPages">
-                                <ul class="nav nav-sm flex-column">
-                                    <li class="nav-item">
-                                        <a href="" class="nav-link" data-key="t-starter"> Danh sách </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="" class="nav-link" data-key="t-profile"> Thêm </a>
-                                    </li>
-                                </ul>
-                            </div>
                         </li>
 
                         <li class="nav-item">
@@ -1630,6 +1638,8 @@
         },
     });
     </script>
+    
+    @yield('scripts')
 </body>
 
 </html>
