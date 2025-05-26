@@ -56,4 +56,30 @@ class PaymentMethodController extends Controller
             ->with('success', 'Phương thức thanh toán đã được thêm thành công');
     }
 
+    public function edit(PaymentMethod $paymentMethod)
+    {
+        return view('admin.payment-methods.edit', compact('paymentMethod'));
+    }
+
+    public function update(Request $request, PaymentMethod $paymentMethod)
+    {
+        $validated = $request->validate([
+            'name' => [
+                'required',
+                'string',
+                'max:100',
+                Rule::unique('payment_methods')->ignore($paymentMethod->id)
+            ],
+            'description' => 'nullable|string',
+            'is_active' => 'sometimes|boolean'
+        ]);
+        $validated['is_active'] = $request->has('is_active');
+
+        $paymentMethod->update($validated);
+
+        return redirect()->route('admin.payment-methods.index')
+            ->with('success', 'Phương thức thanh toán đã được cập nhật');
+    }
+
+    
 }
