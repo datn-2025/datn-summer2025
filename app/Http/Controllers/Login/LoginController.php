@@ -150,7 +150,7 @@ class LoginController extends Controller
             return back()->withInput();
         }
 
-        return redirect()->route('home');
+        return redirect()->route('account.index');
     }
 
     // Đăng xuất
