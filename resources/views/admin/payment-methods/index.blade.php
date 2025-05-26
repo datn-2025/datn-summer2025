@@ -88,9 +88,17 @@
                                         <tr>
                                             <td>{{ $paymentMethods->firstItem() + $key }}</td>
                                             <td>{{ $method->name }}</td>
+                                            <td class="text-truncate" style="max-width: 300px;" title="{{ $method->description }}">
+                                                <!-- {{ $method->description ?: 'Không có mô tả' }} -->
+                                                {!! $method->description ?: '<span class="text-muted">Không có mô tả</span>' !!}
+                                            </td>
                                             <td>{{ $method->created_at->format('d/m/Y H:i') }}</td>
                                             <td>
-                                                <span class="badge bg-success">Đang hoạt động</span>
+                                                @if($method->is_active)
+                                                    <span class="badge bg-success">Đang hoạt động</span>
+                                                @else
+                                                    <span class="badge bg-secondary">Ngừng hoạt động</span>
+                                                @endif
                                             </td>
                                             <td>
                                                 <div class="btn-group">

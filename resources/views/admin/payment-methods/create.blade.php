@@ -1,54 +1,75 @@
 @extends('layouts.backend')
 
-@section('title', 'Thêm phương thức thanh toán')
+@section('title', 'Thêm Phương Thức Thanh Toán Mới')
 
 @section('content')
-<div class="container mx-auto px-4 py-6">
-    <h1 class="text-2xl font-semibold mb-6">Thêm phương thức thanh toán mới</h1>
-    
-    <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-        <form action="{{ route('admin.payment-methods.store') }}" method="POST">
-            @csrf
-            
-            <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="name">
-                    Tên phương thức <span class="text-red-500">*</span>
-                </label>
-                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('name') border-red-500 @enderror" 
-                       id="name" name="name" type="text" value="{{ old('name') }}">
-                @error('name')
-                    <p class="text-red-500 text-xs italic">{{ $message }}</p>
-                @enderror
-            </div>
+    <div class="container-fluid">
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box d-sm-flex align-items-center justify-content-between bg-galaxy-transparent">
+                    <h4 class="mb-sm-0">Thêm Phương Thức Thanh Toán Mới</h4>
 
-            <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="is_active">
-                    Trạng thái
-                </label>
-                <div class="form-check form-switch">
-                    <input type="checkbox" class="form-check-input" id="is_active" name="is_active" value="1" checked>
-                    <label class="form-check-label" for="is_active">Kích hoạt</label>
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="{{ route('admin.payment-methods.index') }}">Quản lý thanh toán</a></li>
+                            <li class="breadcrumb-item active">Thêm mới</li>
+                        </ol>
+                    </div>
                 </div>
             </div>
+        </div>
+        <!-- end page title -->
 
-            <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="description">
-                    Mô tả
-                </label>
-                <textarea class="form-control" id="description" name="description" rows="3">{{ old('description') }}</textarea>
-            </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <form action="{{ route('admin.payment-methods.store') }}" method="POST">
+                            @csrf
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Tên phương thức <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control @error('name') is-invalid @enderror" 
+                                       id="name" name="name" value="{{ old('name') }}" required>
+                                @error('name')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
 
-            <div class="flex items-center justify-between mt-6">
-                <a href="{{ route('admin.payment-methods.index') }}" 
-                   class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                    Quay lại
-                </a>
-                <button type="submit" 
-                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                    Lưu
-                </button>
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Mô tả</label>
+                                <textarea class="form-control @error('description') is-invalid @enderror" 
+                                          id="description" name="description" rows="3">{{ old('description') }}</textarea>
+                                @error('description')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="form-check form-switch">
+                                    <input type="checkbox" class="form-check-input @error('is_active') is-invalid @enderror" 
+                                           id="is_active" name="is_active" value="1" {{ old('is_active', true) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="is_active">Kích hoạt</label>
+                                    @error('is_active')
+                                        <div class="invalid-feedback d-block">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="text-end">
+                                <a href="{{ route('admin.payment-methods.index') }}" class="btn btn-secondary me-2">Hủy</a>
+                                <button type="submit" class="btn btn-primary">Thêm mới</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
-        </form>
+        </div>
     </div>
-</div>
 @endsection
