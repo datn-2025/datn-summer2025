@@ -71,6 +71,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/{paymentMethod}/edit', [PaymentMethodController::class, 'edit'])->name('edit');
         Route::put('/{paymentMethod}', [PaymentMethodController::class, 'update'])->name('update');
         Route::delete('/{paymentMethod}', [PaymentMethodController::class, 'destroy'])->name('destroy');
+        // Thêm các route mới
+        Route::get('/trash', [PaymentMethodController::class, 'trash'])->name('trash');
+        Route::put('/{paymentMethod}/restore', [PaymentMethodController::class, 'restore'])->name('restore');
+        Route::delete('/{paymentMethod}/force-delete', [PaymentMethodController::class, 'forceDelete'])->name('force-delete');
     });
   
     // Route admin/categories

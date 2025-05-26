@@ -106,7 +106,7 @@
                                                        class="btn btn-sm btn-light" title="Chỉnh sửa">
                                                         <i class="ri-pencil-fill align-bottom me-2 text-muted"></i>
                                                     </a>
-                                                    <form action="{{ route('admin.payment-methods.force-delete', $method) }}" 
+                                                    <form action="{{ route('admin.payment-methods.destroy', $method) }}" 
                                                           method="POST" class="d-inline">
                                                         @csrf
                                                         @method('DELETE')
