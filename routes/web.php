@@ -18,7 +18,7 @@ use App\Http\Controllers\Contact\ContactController;
 use App\Http\Controllers\Article\NewsController;
 
 // Route public cho books (categoryId optional)
-Route::get('/', [HomeController::class, 'index']);
+Route::get('/', [HomeController::class, 'index'])->name('home');
 // Hiển thị danh sách và danh mục
 Route::get('/books/{slug?}', [BookController::class, 'index'])->name('books.index');
 // Hiển thị chi tiết sách
@@ -122,4 +122,8 @@ Route::prefix('account')->name('account.')->group(function () {
     
     // Activation routes
     Route::get('/activate/{userId}', [ActivationController::class, 'activate'])->name('activate');
+
+    // profile
+    Route::get('/showUser', [LoginController::class, 'showUser'])->name('showUser');
+    Route::put('/profile/update', [LoginController::class, 'updateProfile'])->name('profile.update');
 });
