@@ -94,7 +94,6 @@
                                         <th scope="col" style="width: 30%">Tiêu đề</th>
                                         <th scope="col">Danh mục</th>
                                         <th scope="col">Trạng thái</th>
-                                        <th scope="col">Ngày tạo</th>
                                         <th scope="col" style="width: 150px;">Thao tác</th>
                                     </tr>
                                 </thead>
@@ -106,7 +105,7 @@
                                                 <img src="{{ Storage::url($article->thumbnail) }}" alt="{{ $article->title }}"
                                                     class="avatar-sm rounded object-fit-cover">
                                             </td>
-                                            <td>
+                                           <td style="max-width: 250px; white-space: normal; word-break: break-word;">
                                                 <h6 class="mb-0">{{ $article->title }}</h6>
                                             </td>
                                             <td>{{ $article->category }}</td>
@@ -117,7 +116,6 @@
                                                     <span class="badge bg-secondary">Bài thường</span>
                                                 @endif
                                             </td>
-                                            <td>{{ $article->created_at->format('d/m/Y') }}</td>
                                             <td>
                                                 <div class="d-flex gap-2">
                                                     <a href="{{ route('admin.news.show', $article->id) }}"
