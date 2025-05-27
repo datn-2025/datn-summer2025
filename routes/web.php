@@ -16,6 +16,7 @@ use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Contact\ContactController;
 use App\Http\Controllers\Article\NewsController;
+use App\Http\Controllers\Admin\PaymentMethodController;
 
 // Route public cho books (categoryId optional)
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -61,6 +62,20 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/restore/{id}', [AdminBookController::class, 'restore'])->name('restore');
         Route::delete('/force-delete/{id}', [AdminBookController::class, 'forceDelete'])->name('force-delete');
     });
+
+    // Admin Payment Methods
+    Route::prefix('payment-methods')->name('payment-methods.')->group(function () {
+        Route::get('/', [PaymentMethodController::class, 'index'])->name('index');
+        Route::get('/create', [PaymentMethodController::class, 'create'])->name('create');
+        Route::post('/', [PaymentMethodController::class, 'store'])->name('store');
+        Route::get('/{paymentMethod}/edit', [PaymentMethodController::class, 'edit'])->name('edit');
+        Route::put('/{paymentMethod}', [PaymentMethodController::class, 'update'])->name('update');
+        Route::delete('/{paymentMethod}', [PaymentMethodController::class, 'destroy'])->name('destroy');
+        // Thêm các route mới
+        Route::get('/trash', [PaymentMethodController::class, 'trash'])->name('trash');
+        Route::put('/{paymentMethod}/restore', [PaymentMethodController::class, 'restore'])->name('restore');
+        Route::delete('/{paymentMethod}/force-delete', [PaymentMethodController::class, 'forceDelete'])->name('force-delete');
+    });
   
     // Route admin/categories
     Route::prefix('categories')->name('categories.')->group(function () {
@@ -79,12 +94,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
         // Route admin/brand
         Route::prefix('brands')->name('brands.')->group(function () {
             Route::get('/', [CategoryController::class, 'brand'])->name('brand');
-            // Route::get('/create', [AuthorController::class, 'create'])->name('create');
-            // Route::post('/', [AuthorController::class, 'store'])->name('store');
-            // Route::get('/trash', [AuthorController::class, 'trash'])->name('trash');
-            // Route::delete('/{author}', [AuthorController::class, 'destroy'])->name('destroy');
-            // Route::put('/{id}/restore', [AuthorController::class, 'restore'])->name('restore');
-            // Route::delete('/{id}/force', [AuthorController::class, 'forceDelete'])->name('force-delete');
+            Route::get('/create', [CategoryController::class, 'BrandCreate'])->name('create');
+            Route::post('/', [CategoryController::class, 'BrandStore'])->name('store');
+            Route::get('/trash', [CategoryController::class, 'BrandTrash'])->name('trash');
+            Route::delete('/{author}', [CategoryController::class, 'BrandDestroy'])->name('destroy');
+            Route::put('/{id}/restore', [CategoryController::class, 'BrandRestore'])->name('restore');
+            Route::delete('/{id}/force', [CategoryController::class, 'BrandForceDelete'])->name('force-delete');
+            Route::get('/{id}/edit', [CategoryController::class, 'BrandEdit'])->name('edit');
+            Route::put('/{id}', [CategoryController::class, 'BrandUpdate'])->name('update');
         });
       
         // Route admin/authors
@@ -143,6 +160,12 @@ Route::prefix('account')->name('account.')->group(function () {
     Route::get('/register', [LoginController::class, 'register'])->name('register');
     Route::post('/register', [LoginController::class, 'handleRegister'])->name('register.submit');
     Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
+    
+    // Password Reset Routes
+    Route::get('/forgot-password', [\App\Http\Controllers\Login\LoginController::class, 'showForgotPasswordForm'])->name('password.request');
+    Route::post('/forgot-password', [\App\Http\Controllers\Login\LoginController::class, 'sendResetLinkEmail'])->name('password.email');
+    Route::get('/reset-password/{token}', [\App\Http\Controllers\Login\LoginController::class, 'showResetPasswordForm'])->name('password.reset');
+    Route::post('/reset-password', [\App\Http\Controllers\Login\LoginController::class, 'handleResetPassword'])->name('password.update');
     
     // Activation routes
     Route::get('/activate/{userId}', [ActivationController::class, 'activate'])->name('activate');
