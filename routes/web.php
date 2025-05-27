@@ -149,6 +149,12 @@ Route::prefix('account')->name('account.')->group(function () {
     Route::post('/register', [LoginController::class, 'handleRegister'])->name('register.submit');
     Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
     
+    // Password Reset Routes
+    Route::get('/forgot-password', [\App\Http\Controllers\Login\LoginController::class, 'showForgotPasswordForm'])->name('password.request');
+    Route::post('/forgot-password', [\App\Http\Controllers\Login\LoginController::class, 'sendResetLinkEmail'])->name('password.email');
+    Route::get('/reset-password/{token}', [\App\Http\Controllers\Login\LoginController::class, 'showResetPasswordForm'])->name('password.reset');
+    Route::post('/reset-password', [\App\Http\Controllers\Login\LoginController::class, 'handleResetPassword'])->name('password.update');
+    
     // Activation routes
     Route::get('/activate/{userId}', [ActivationController::class, 'activate'])->name('activate');
 
