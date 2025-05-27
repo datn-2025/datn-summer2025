@@ -15,7 +15,8 @@ class Review extends Model
         'book_id',
         'rating',
         'comment',
-        'status'
+        'status',
+        'admin_response'
     ];
 
     protected $casts = [

@@ -88,6 +88,20 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::put('/{id}', [AuthorController::class, 'update'])->name('update');
         });
     });
+
+    // routes admin/reviews
+    Route::prefix('reviews')->name('reviews.')->group(function () {
+        // Review routes
+        Route::get('/', [\App\Http\Controllers\Admin\ReviewController::class, 'index'])
+            ->name('index');
+        Route::patch('/{review}/status', [\App\Http\Controllers\Admin\ReviewController::class, 'updateStatus'])
+            ->name('update-status');
+        Route::post('/{review}/response', [\App\Http\Controllers\Admin\ReviewController::class, 'updateResponse'])
+            ->name('response');
+        Route::delete('/{review}', [\App\Http\Controllers\Admin\ReviewController::class, 'destroy'])
+            ->name('destroy');
+    });
+
     // Route admin/vouchers
     Route::prefix('vouchers')->name('vouchers.')->group(function () {
         Route::get('/trash', [VoucherController::class, 'trash'])->name('trash');
