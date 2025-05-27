@@ -37,21 +37,20 @@
                                     <input type="text" name="search_name" class="form-control"
                                         placeholder="Tìm kiếm theo tên thương hiệu" value="{{ request('search_name') }}">
                                     <button type="submit" class="btn btn-primary">Tìm kiếm</button>
-                                    <a href="{{ route('admin.categories.brands.brand') }}" class="btn btn-secondary">Đặt lại</a>
+                                    <a href="{{ route('admin.categories.brands.brand') }}" class="btn btn-secondary">Đặt
+                                        lại</a>
                                 </div>
                             </form>
                         </div>
                     </div>
                     <!-- Kết thúc Form tìm kiếm -->
                     <div class="card-body">
-
                         <div class="table-responsive">
                             <table class="table table-striped table-nowrap align-middle mb-0">
                                 <thead>
                                     <tr>
                                         <th scope="col">ID</th>
                                         <th scope="col">Tên Thương Hiệu</th>
-                                        <th scope="col">Mô tả</th>
                                         <th scope="col">Ảnh/Logo</th>
                                         <th scope="col">Số Lượng Sách</th>
                                         <th scope="col">Thao tác </th>
@@ -62,7 +61,6 @@
                                         <tr>
                                             <td>{{ $key + 1 }}</td>
                                             <td>{{ $brand->name }}</td>
-                                            <td>{{ $brand->description }}</td>
                                             <td>
                                                 @if ($brand->image)
                                                     <img src="{{ asset($brand->image) }}" alt="{{ $brand->name }}"
@@ -76,10 +74,13 @@
                                             <td>
                                                 <div class="btn-group">
 
-                                                    <a href="{{ route('admin.categories.brands.edit', $brand->id) }}" class="btn btn-sm btn-light" title="Chỉnh sửa">
+                                                    <a href="{{ route('admin.categories.brands.edit', $brand->id) }}"
+                                                        class="btn btn-sm btn-light" title="Chỉnh sửa">
                                                         <i class="ri-pencil-fill align-bottom me-2 text-muted"></i>
                                                     </a>
-                                                    <form action="{{ route('admin.categories.brands.destroy', $brand->id) }}" method="POST" class="d-inline">
+                                                    <form
+                                                        action="{{ route('admin.categories.brands.destroy', $brand->id) }}"
+                                                        method="POST" class="d-inline">
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="submit" class="btn btn-sm"
