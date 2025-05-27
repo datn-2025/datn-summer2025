@@ -3,6 +3,7 @@
 
 use App\Http\Controllers\Admin\AttributeController;
 use App\Http\Controllers\Admin\BookController as AdminBookController;
+use App\Http\Controllers\Admin\ContactController as AdminContactController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\UserController;
@@ -47,9 +48,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         return view('admin.dashboard');
     });
 
-    // Route admin/contacts
-    Route::resource('contacts', \App\Http\Controllers\Admin\ContactController::class);
-    Route::post('contacts/{contact}/reply', [\App\Http\Controllers\Admin\ContactController::class, 'sendReply'])->name('contacts.reply');
+
     Route::prefix('books')->name('books.')->group(function () {
         Route::get('/', [AdminBookController::class, 'index'])->name('index');
         Route::get('/create', [AdminBookController::class, 'create'])->name('create');
@@ -106,6 +105,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/edit/{id}', [AttributeController::class, 'edit'])->name('edit');
         Route::put('/update/{id}', [AttributeController::class, 'update'])->name('update');
         Route::delete('/delete/{id}', [AttributeController::class, 'destroy'])->name('destroy');
+    });
+    // Route admin/contacts
+    Route::prefix('contacts')->name('contacts.')->group(function () {
+        Route::get('/', [AdminContactController::class, 'index'])->name('index');
+        Route::get('/show/{id}', [AdminContactController::class, 'show'])->name('show');
+        Route::put('/update/{id}', [AdminContactController::class, 'update'])->name('update'); // Cập nhật trạng thái
+        Route::delete('/delete/{id}', [AdminContactController::class, 'destroy'])->name('destroy'); // Xóa liên hệ
     });
     // Route admin/news
     Route::prefix('news')->name('news.')->group(function () {
