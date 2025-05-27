@@ -8,15 +8,27 @@ use Illuminate\Http\Request;
 
 class ReviewController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $reviews = Review::with(['book', 'user'])
-            ->latest()
-            ->paginate(10);
-            
+        $query = Review::with(['book', 'user'])
+            ->when($request->filled('status'), function($q) use ($request) {
+                $q->where('status', $request->status);
+            })
+            ->when($request->filled('customer_name'), function($q) use ($request) {
+                $q->whereHas('user', function($q) use ($request) {
+                    $q->where('name', 'like', '%' . $request->customer_name . '%');
+                });
+            })
+            ->when($request->filled('product_name'), function($q) use ($request) {
+                $q->whereHas('book', function($q) use ($request) {
+                    $q->where('title', 'like', '%' . $request->product_name . '%');
+                });
+            });
+
+        $reviews = $query->latest()->paginate(10);
+
         return view('admin.reviews.index', compact('reviews'));
     }
-
     // public function updateStatus(Review $review, $status)
     // {
     //     $review->update(['status' => $status]);

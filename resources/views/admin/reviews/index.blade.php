@@ -5,6 +5,21 @@
 
 @section('content')
 <div class="container-fluid">
+    <!-- Page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                <h4 class="mb-sm-0">Quản lý đánh giá</h4>
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="javascript: void(0);">Quản lý</a></li>
+                        <li class="breadcrumb-item active">Đánh giá</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End page title -->
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -12,13 +27,49 @@
                     <h3 class="card-title">Quản lý đánh giá</h3>
                 </div>
                 <div class="card-body">
+                    <form action="" method="GET" class="row g-3 mb-4">
+                        <!-- <div class="col-md-3">
+                            <label for="status" class="form-label">Trạng thái</label>
+                            <select name="status" id="status" class="form-select">
+                                <option value="">Tất cả</option>
+                                <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Chờ duyệt</option>
+                                <option value="approved" {{ request('status') == 'approved' ? 'selected' : '' }}>Đã duyệt</option>
+                            </select>
+                        </div> -->
+                        <div class="col-sm-3">
+                            <label for="status" class="form-label">Trạng thái</label>
+                            <select name="status" class="form-select">
+                                <option value="">Tất cả trạng thái</option>
+                                <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Chờ duyệt</option>
+                                <option value="approved" {{ request('status') == 'approved' ? 'selected' : '' }}>Đã duyệt</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="customer_name" class="form-label">Tên khách hàng</label>
+                            <input type="text" class="form-control" id="customer_name" name="customer_name" 
+                                value="{{ request('customer_name') }}" placeholder="Nhập tên khách hàng">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="product_name" class="form-label">Tên sản phẩm</label>
+                            <input type="text" class="form-control" id="product_name" name="product_name"
+                                value="{{ request('product_name') }}" placeholder="Nhập tên sản phẩm">
+                        </div>
+                        <div class="col-md-3 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary me-2">
+                                <i class="fas fa-search me-1"></i> Tìm kiếm
+                            </button>
+                            <a href="{{ route('admin.reviews.index') }}" class="btn btn-secondary">
+                                <i class="fas fa-undo me-1"></i> Làm mới
+                            </a>
+                        </div>
+                    </form>
                     <div class="table-responsive">
-                        <table class="table table-bordered table-hover">
+                        <table class="table align-middle table-nowrap">
                             <thead>
                                 <tr>
                                     <th>#</th>
                                     <th>Sản phẩm</th>
-                                    <th>Chủ sở hữu</th>
+                                    <th>Tác giả</th>
                                     <th>Khách hàng</th>
                                     <th>Bình luận</th>
                                     <th>Phản hồi Admin</th>
@@ -103,8 +154,14 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="d-flex justify-content-end mt-3">
-                        {{ $reviews->links(('layouts.pagination')) }}
+                    <div class="d-flex justify-content-between align-items-center mt-3 px-3">
+                        <div class="text-muted">
+                            Hiển thị <strong>{{ $reviews->firstItem() }}</strong> đến <strong>{{ $reviews->lastItem() }}</strong> trong tổng số <strong>{{ $reviews->total() }}</strong> đánh giá
+                        </div>
+                        <div>
+                            <!-- {{ $reviews->links('pagination::bootstrap-4') }} -->
+                            {{ $reviews->appends(request()->query())->links('pagination::bootstrap-4') }}
+                        </div>
                     </div>
                 </div>
             </div>
