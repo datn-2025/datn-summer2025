@@ -19,7 +19,7 @@ use App\Http\Controllers\Article\NewsController;
 use App\Http\Controllers\Admin\PaymentMethodController;
 
 // Route public cho books (categoryId optional)
-Route::get('/', [HomeController::class, 'index']);
+Route::get('/', [HomeController::class, 'index'])->name('home');
 // Hiển thị danh sách và danh mục
 Route::get('/books/{slug?}', [BookController::class, 'index'])->name('books.index');
 // Hiển thị chi tiết sách
@@ -80,6 +80,16 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // Route admin/categories
     Route::prefix('categories')->name('categories.')->group(function () {
         Route::get('/', [CategoryController::class, 'index'])->name('index');
+        // Route admin/brand
+        Route::prefix('brands')->name('brands.')->group(function () {
+            Route::get('/', [CategoryController::class, 'brand'])->name('brand');
+            // Route::get('/create', [AuthorController::class, 'create'])->name('create');
+            // Route::post('/', [AuthorController::class, 'store'])->name('store');
+            // Route::get('/trash', [AuthorController::class, 'trash'])->name('trash');
+            // Route::delete('/{author}', [AuthorController::class, 'destroy'])->name('destroy');
+            // Route::put('/{id}/restore', [AuthorController::class, 'restore'])->name('restore');
+            // Route::delete('/{id}/force', [AuthorController::class, 'forceDelete'])->name('force-delete');
+        });
         // Route admin/authors
         Route::prefix('authors')->name('authors.')->group(function () {
             Route::get('/', [AuthorController::class, 'index'])->name('index');
@@ -89,6 +99,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::delete('/{author}', [AuthorController::class, 'destroy'])->name('destroy');
             Route::put('/{id}/restore', [AuthorController::class, 'restore'])->name('restore');
             Route::delete('/{id}/force', [AuthorController::class, 'forceDelete'])->name('force-delete');
+            Route::get('/{id}/edit', [AuthorController::class, 'edit'])->name('edit');
+            Route::put('/{id}', [AuthorController::class, 'update'])->name('update');
         });
     });
     // Route admin/vouchers
@@ -137,4 +149,8 @@ Route::prefix('account')->name('account.')->group(function () {
     
     // Activation routes
     Route::get('/activate/{userId}', [ActivationController::class, 'activate'])->name('activate');
+
+    // profile
+    Route::get('/showUser', [LoginController::class, 'showUser'])->name('showUser');
+    Route::put('/profile/update', [LoginController::class, 'updateProfile'])->name('profile.update');
 });
