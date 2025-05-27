@@ -7,13 +7,22 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
+use Brian2694\Toastr\Facades\Toastr;
+
 class WishlistController extends Controller
 {
   public function add(Request $request)
   {
     try {
-      $userId = "4710b22a-37bb-11f0-a680-067090e2bd86"; // giả định tạm thời
+      if (!Auth::check()) {
+        return response()->json([
+          'success' => false,
+          'message' => 'Bạn cần đăng nhập để thực hiện chức năng này'
+        ], 401);
+      }
 
+      $user = Auth::user();
       $bookId = $request->input('book_id');
       if (!$bookId) {
         return response()->json([
@@ -24,7 +33,7 @@ class WishlistController extends Controller
 
       // Kiểm tra xem đã có sản phẩm trong wishlist chưa
       $exists = DB::table('wishlists')
-        ->where('user_id', $userId)
+        ->where('user_id', $user->id)
         ->where('book_id', $bookId)
         ->exists();
 
@@ -40,7 +49,7 @@ class WishlistController extends Controller
 
       DB::table('wishlists')->insert([
         'id' => $uuid,
-        'user_id' => $userId,
+        'user_id' => $user->id,
         'book_id' => $bookId,
         'created_at' => now(),
         'updated_at' => now(),
@@ -59,14 +68,19 @@ class WishlistController extends Controller
   public function getWishlist(Request $request)
   {
     try {
-      $userId = "4710b22a-37bb-11f0-a680-067090e2bd86"; // giả định tạm thời
+      if (!Auth::check()) {
+        Toastr::error('Bạn cần đăng nhập để xem danh sách yêu thích.', 'Lỗi');
+        return redirect()->route('account.login');
+      }
+
+      $user = Auth::user();
 
       $wishlist = DB::table('wishlists')
         ->join('books', 'wishlists.book_id', '=', 'books.id')
         ->join('authors', 'books.author_id', '=', 'authors.id')
         ->leftJoin('brands', 'books.brand_id', '=', 'brands.id')
         ->leftJoin('categories', 'books.category_id', '=', 'categories.id')
-        ->where('wishlists.user_id', $userId)
+        ->where('wishlists.user_id', $user->id)
         ->select(
           'books.id as book_id',
           'books.slug',
@@ -109,9 +123,16 @@ class WishlistController extends Controller
   public function delete(Request $request)
   {
     try {
-      $userId = "4710b22a-37bb-11f0-a680-067090e2bd86"; // giả định tạm thời
+      if (!Auth::check()) {
+        return response()->json([
+          'success' => false,
+          'message' => 'Bạn cần đăng nhập để thực hiện chức năng này'
+        ], 401);
+      }
 
+      $user = Auth::user();
       $bookId = $request->input('book_id');
+      
       if (!$bookId) {
         return response()->json([
           'success' => false,
@@ -120,7 +141,7 @@ class WishlistController extends Controller
       }
 
       $deleted = DB::table('wishlists')
-        ->where('user_id', $userId)
+        ->where('user_id', $user->id)
         ->where('book_id', $bookId)
         ->delete();
 
@@ -144,11 +165,17 @@ class WishlistController extends Controller
   public function deleteAll(Request $request)
   {
     try {
-      $userId = "4710b22a-37bb-11f0-a680-067090e2bd86"; // giả định tạm thời
+      if (!Auth::check()) {
+        return response()->json([
+          'success' => false,
+          'message' => 'Bạn cần đăng nhập để thực hiện chức năng này'
+        ], 401);
+      }
 
-      $deleted = DB::table('wishlists')->where('user_id', $userId)->delete();
+      $user = Auth::user();
+      $deleted = DB::table('wishlists')->where('user_id', $user->id)->delete();
 
-      Log::info("Xóa tất cả wishlist user $userId, số bản ghi bị xóa: $deleted");
+      Log::info("Xóa tất cả wishlist user {$user->id}, số bản ghi bị xóa: $deleted");
       if ($deleted === 0) {
         return response()->json([
           'success' => false,
