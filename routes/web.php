@@ -60,8 +60,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // Trash routes - Đặt trước các route khác
         Route::get('/trash', [VoucherController::class, 'trash'])->name('trash');
-        Route::post('/{id}/restore', [VoucherController::class, 'restore'])->name('restore');
-        Route::delete('/{id}/force-delete', [VoucherController::class, 'forceDelete'])->name('force-delete');
+        Route::post('/restore/{id}', [VoucherController::class, 'restore'])->name('restore');
+        Route::delete('/force-delete/{id}', [VoucherController::class, 'forceDelete'])->name('force-delete');
 
         // Các route CRUD thông thường
         Route::get('/', [VoucherController::class, 'index'])->name('index');

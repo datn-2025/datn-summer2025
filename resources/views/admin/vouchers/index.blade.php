@@ -78,19 +78,6 @@
                         <a href="{{ route('admin.vouchers.trash') }}" class="btn btn-secondary">
                             <i class="fas fa-trash"></i> Thùng rác
                         </a>
-                        <div class="btn-group ml-2">
-                            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
-                                <i class="fas fa-file-export"></i> Xuất báo cáo
-                            </button>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item" href="{{ route('admin.vouchers.export', ['type' => 'excel']) }}">
-                                    <i class="fas fa-file-excel"></i> Excel
-                                </a>
-                                <a class="dropdown-item" href="{{ route('admin.vouchers.export', ['type' => 'pdf']) }}">
-                                    <i class="fas fa-file-pdf"></i> PDF
-                                </a>
-                            </div>
-                        </div>
                     </div>
                 </div>
                 <div class="card-body">
@@ -244,7 +231,7 @@
 
                     <!-- Pagination -->
                     <div class="mt-3">
-                        {{ $vouchers->withQueryString()->links() }}
+                        {{ $vouchers->links('layouts.pagination') }}
                     </div>
                 </div>
             </div>
