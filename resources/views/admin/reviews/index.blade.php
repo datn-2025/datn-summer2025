@@ -42,7 +42,7 @@
                                 <option value="">Tất cả</option>
                                 @for($i = 5; $i >= 1; $i--)
                                     <option value="{{ $i }}" {{ request('rating') == $i ? 'selected' : '' }}>
-                                        {{ str_repeat('★', $i) }} ({{ $i }} sao)
+                                        {{ str_repeat('★', $i) }}{{ str_repeat('☆', 5 - $i) }} ({{ $i }} sao)
                                     </option>
                                 @endfor
                             </select>
@@ -78,7 +78,7 @@
                                     <th>Phản hồi Admin</th>
                                     <th>Đánh giá</th>
                                     <th>Trạng thái</th>
-                                    <th>Ngày tạo</th>
+                                    <th>Ngày đăng</th>
                                     <th>Tùy chọn</th>
                                 </tr>
                             </thead>
