@@ -23,6 +23,9 @@ class ReviewController extends Controller
                 $q->whereHas('book', function($q) use ($request) {
                     $q->where('title', 'like', '%' . $request->product_name . '%');
                 });
+            })
+            ->when($request->filled('rating'), function($q) use ($request) {
+                $q->where('rating', $request->rating);
             });
 
         $reviews = $query->latest()->paginate(10);

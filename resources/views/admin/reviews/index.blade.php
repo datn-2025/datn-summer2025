@@ -28,15 +28,7 @@
                 </div>
                 <div class="card-body">
                     <form action="" method="GET" class="row g-3 mb-4">
-                        <!-- <div class="col-md-3">
-                            <label for="status" class="form-label">Trạng thái</label>
-                            <select name="status" id="status" class="form-select">
-                                <option value="">Tất cả</option>
-                                <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Chờ duyệt</option>
-                                <option value="approved" {{ request('status') == 'approved' ? 'selected' : '' }}>Đã duyệt</option>
-                            </select>
-                        </div> -->
-                        <div class="col-sm-3">
+                        <div class="col-md-2">
                             <label for="status" class="form-label">Trạng thái</label>
                             <select name="status" class="form-select">
                                 <option value="">Tất cả trạng thái</option>
@@ -44,12 +36,23 @@
                                 <option value="approved" {{ request('status') == 'approved' ? 'selected' : '' }}>Đã duyệt</option>
                             </select>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
+                            <label for="rating" class="form-label">Số sao</label>
+                            <select name="rating" id="rating" class="form-select">
+                                <option value="">Tất cả</option>
+                                @for($i = 5; $i >= 1; $i--)
+                                    <option value="{{ $i }}" {{ request('rating') == $i ? 'selected' : '' }}>
+                                        {{ str_repeat('★', $i) }} ({{ $i }} sao)
+                                    </option>
+                                @endfor
+                            </select>
+                        </div>
+                        <div class="col-md-2">
                             <label for="customer_name" class="form-label">Tên khách hàng</label>
                             <input type="text" class="form-control" id="customer_name" name="customer_name" 
                                 value="{{ request('customer_name') }}" placeholder="Nhập tên khách hàng">
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <label for="product_name" class="form-label">Tên sản phẩm</label>
                             <input type="text" class="form-control" id="product_name" name="product_name"
                                 value="{{ request('product_name') }}" placeholder="Nhập tên sản phẩm">
