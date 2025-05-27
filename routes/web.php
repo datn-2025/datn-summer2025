@@ -16,6 +16,7 @@ use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Contact\ContactController;
 use App\Http\Controllers\Article\NewsController;
+use App\Http\Controllers\Admin\ReviewController;
 
 // Route public cho books (categoryId optional)
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -92,14 +93,18 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // routes admin/reviews
     Route::prefix('reviews')->name('reviews.')->group(function () {
         // Review routes
-        Route::get('/', [\App\Http\Controllers\Admin\ReviewController::class, 'index'])
+        Route::get('/', [ReviewController::class, 'index'])
             ->name('index');
-        Route::patch('/{review}/status', [\App\Http\Controllers\Admin\ReviewController::class, 'updateStatus'])
+        Route::patch('/{review}/status', [ReviewController::class, 'updateStatus'])
             ->name('update-status');
-        Route::post('/{review}/response', [\App\Http\Controllers\Admin\ReviewController::class, 'updateResponse'])
+        Route::post('/{review}/response', [ReviewController::class, 'updateResponse'])
             ->name('response');
-        Route::delete('/{review}', [\App\Http\Controllers\Admin\ReviewController::class, 'destroy'])
+        Route::delete('/{review}', [ReviewController::class, 'destroy'])
             ->name('destroy');
+        Route::get('/{review}/response', [ReviewController::class, 'showResponseForm'])
+            ->name('response');
+        Route::post('/{review}/response', [ReviewController::class, 'storeResponse'])
+            ->name('response.store');
     });
 
     // Route admin/vouchers

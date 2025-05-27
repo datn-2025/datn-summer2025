@@ -17,28 +17,64 @@ class ReviewController extends Controller
         return view('admin.reviews.index', compact('reviews'));
     }
 
-    public function updateStatus(Review $review, $status)
+    // public function updateStatus(Review $review, $status)
+    // {
+    //     $review->update(['status' => $status]);
+    //     return back()->with('success', 'Cập nhật trạng thái thành công');
+    // }
+
+    // public function updateResponse(Review $review, Request $request)
+    // {
+    //     $request->validate([
+    //         'admin_response' => 'nullable|string|max:1000'
+    //     ]);
+
+    //     $review->update([
+    //         'admin_response' => $request->admin_response
+    //     ]);
+
+    //     return back()->with('success', 'Cập nhật phản hồi thành công');
+    // }
+
+    // public function destroy(Review $review)
+    // {
+    //     $review->delete();
+    //     return back()->with('success', 'Xóa đánh giá thành công');
+    // }
+
+    public function showResponseForm(Review $review)
     {
-        $review->update(['status' => $status]);
-        return back()->with('success', 'Cập nhật trạng thái thành công');
+        $review->load(['book', 'user', 'book.author']);
+        
+        // Lấy các đánh giá khác của cùng sản phẩm
+        $otherReviews = Review::where('book_id', $review->book_id)
+            ->where('id', '!=', $review->id)
+            ->with(['user' => function($query) {
+                $query->withTrashed();
+            }])
+            ->latest()
+            ->paginate(5);
+        
+        return view('admin.reviews.response', compact('review', 'otherReviews'));
     }
 
-    public function updateResponse(Review $review, Request $request)
+    public function storeResponse(Request $request, Review $review)
     {
+        if ($review->admin_response) {
+            return redirect()->back()
+                ->with('error', 'Đã có phản hồi cho đánh giá này');
+        }
+
         $request->validate([
-            'admin_response' => 'nullable|string|max:1000'
+            'admin_response' => 'required|string|max:1000'
         ]);
 
         $review->update([
-            'admin_response' => $request->admin_response
+            'admin_response' => $request->admin_response,
+            'status' => 'approved'
         ]);
 
-        return back()->with('success', 'Cập nhật phản hồi thành công');
-    }
-
-    public function destroy(Review $review)
-    {
-        $review->delete();
-        return back()->with('success', 'Xóa đánh giá thành công');
+        return redirect()->route('admin.reviews.response', $review)
+            ->with('success', 'Đã gửi phản hồi thành công');
     }
 }

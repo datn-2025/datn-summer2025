@@ -80,7 +80,7 @@
                                         </form>
                                     </td>
                                     <td>{{ $review->created_at->format('d/m/Y H:i') }}</td>
-                                    <td>
+                                    <!-- <td>
                                         <form action="{{ route('admin.reviews.destroy', $review) }}" 
                                               method="POST" 
                                               onsubmit="return confirm('Bạn có chắc chắn muốn xóa?')">
@@ -90,6 +90,13 @@
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </form>
+                                    </td> -->
+                                    <td class="text-center">
+                                        <a href="{{ route('admin.reviews.response', $review) }}" 
+                                        class="btn btn-sm btn-outline-primary" 
+                                        title="Xem và phản hồi">
+                                            <i class="fas fa-reply"></i>
+                                        </a>
                                     </td>
                                 </tr>
                                 @endforeach
