@@ -78,7 +78,7 @@ class LoginController extends Controller
                 session()->forget('login_attempts_' . $user->id);
             }
             Toastr::success('Đăng nhập thành công!', 'Thành công');
-            return redirect()->intended('/admin');
+            return redirect()->route('home');
         }
 
         // Tăng số lần đăng nhập sai
@@ -152,7 +152,7 @@ class LoginController extends Controller
             return back()->withInput();
         }
 
-        return redirect()->route('account.login');
+        return redirect()->route('account.index');
     }
 
     // Đăng xuất
@@ -240,4 +240,56 @@ class LoginController extends Controller
         Toastr::success('Mật khẩu của bạn đã được thay đổi!', 'Thành công');
         return redirect()->route('account.login');
     }
+
+    // hiển thị thông tin người dùng khi đang đăng nhập
+    public function showUser(Request $request)
+    {
+        if (!Auth::check()) {
+            Toastr::error('Bạn cần đăng nhập để xem thông tin tài khoản.', 'Lỗi');
+            return redirect()->route('account.login');
+        }
+
+        $user = Auth::user();
+        return view('profile.client', compact('user'));
+    }
+    public function updateProfile(Request $request)
+{
+    $user = Auth::user();
+
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:users,email,' . Auth::id(), // cho phép email cũ
+        'phone' => 'nullable|string|max:20',
+        'avatar' => 'nullable|image|mimes:jpeg,png,jpg|max:1024',
+    ]);
+
+    $user->name = $request->name;
+    $user->email = $request->email;
+    $user->phone = $request->phone;
+
+    if ($request->hasFile('avatar')) {
+    $filename = time() . '.' . $request->avatar->extension();
+
+    // Xóa file cũ nếu có
+    if ($user->avatar && file_exists(public_path('storage/' . $user->avatar))) {
+        unlink(public_path('storage/' . $user->avatar));
+    }
+
+    // Lưu file vào storage/app/public/avatars
+    $request->avatar->storeAs('avatars', $filename, 'public');
+
+    // ✅ Gán đúng: chỉ lưu 'avatars/filename.jpg'
+    $user->avatar = 'avatars/' . $filename;
+}
+
+
+
+
+    $user->save();
+
+    Toastr::success('Cập nhật hồ sơ thành công!', 'Thành công');
+    return back();
+}
+
+
 }
