@@ -32,6 +32,7 @@ Route::get('/news/{id}', [NewsController::class, 'show'])->name('news.show');
 
 
 
+// cart
 Route::prefix('cart')->group(function () {
     Route::get('/', [CartController::class, 'index'])->name('cart.index');
     Route::post('/add', [CartController::class, 'addToCart'])->name('cart.add');
@@ -39,6 +40,7 @@ Route::prefix('cart')->group(function () {
     Route::post('/remove', [CartController::class, 'removeFromCart'])->name('cart.remove');
     Route::post('/apply-voucher', [CartController::class, 'applyVoucher'])->name('cart.apply-voucher');
 });
+
 // Test route for QR code generation
 Route::get('/test-qr-code/{id}', function($id) {
     $order = \App\Models\Order::findOrFail($id);
