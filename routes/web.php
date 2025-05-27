@@ -141,6 +141,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/show/{id}', [AdminContactController::class, 'show'])->name('show');
         Route::put('/update/{id}', [AdminContactController::class, 'update'])->name('update'); // Cập nhật trạng thái
         Route::delete('/delete/{id}', [AdminContactController::class, 'destroy'])->name('destroy'); // Xóa liên hệ
+        Route::post('/reply/{contact}', [AdminContactController::class, 'sendReply'])->name('reply'); // Gửi phản hồi
     });
     // Route admin/news
     Route::prefix('news')->name('news.')->group(function () {
