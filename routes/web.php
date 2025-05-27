@@ -16,6 +16,7 @@ use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Contact\ContactController;
 use App\Http\Controllers\Article\NewsController;
+use App\Http\Controllers\Admin\NewsArticleController;
 
 // Route public cho books (categoryId optional)
 Route::get('/', [HomeController::class, 'index']);
@@ -30,24 +31,26 @@ Route::get('/news', [NewsController::class, 'index'])->name('news.index');
 Route::get('/news/{id}', [NewsController::class, 'show'])->name('news.show');
 
 // Test route for QR code generation
-Route::get('/test-qr-code/{id}', function($id) {
+Route::get('/test-qr-code/{id}', function ($id) {
     $order = \App\Models\Order::findOrFail($id);
     $controller = new \App\Http\Controllers\Admin\OrderController();
     $reflection = new \ReflectionClass($controller);
     $method = $reflection->getMethod('generateQrCode');
     $method->setAccessible(true);
     $method->invoke($controller, $order);
-    
-    return redirect()->route('admin.orders.show', $order->id)->with('success', 'QR Code generated successfully!');
-});
 
-// Route nhóm admin
+    return redirect()->route('admin.orders.show', $order->id)->with('success', 'QR Code generated successfully!');
+});    // Route nhóm admin
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/', function () {
         Toastr::info('Chào mừng bạn đến với trang quản trị!', 'Thông báo');
-             return view('admin.dashboard');
-         });
-    Route::prefix('books')->name('books.')->group(function(){
+        return view('admin.dashboard');
+    });
+
+    // Route admin/contacts
+    Route::resource('contacts', \App\Http\Controllers\Admin\ContactController::class);
+    Route::post('contacts/{contact}/reply', [\App\Http\Controllers\Admin\ContactController::class, 'sendReply'])->name('contacts.reply');
+    Route::prefix('books')->name('books.')->group(function () {
         Route::get('/', [AdminBookController::class, 'index'])->name('index');
         Route::get('/create', [AdminBookController::class, 'create'])->name('create');
         Route::post('/store', [AdminBookController::class, 'store'])->name('store');
@@ -55,13 +58,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/edit/{id}/{slug}', [AdminBookController::class, 'edit'])->name('edit');
         Route::put('/update/{id}/{slug}', [AdminBookController::class, 'update'])->name('update');
         Route::delete('/delete/{id}', [AdminBookController::class, 'destroy'])->name('destroy');
-        
+
         // Trash routes
         Route::get('/trash', [AdminBookController::class, 'trash'])->name('trash');
         Route::post('/restore/{id}', [AdminBookController::class, 'restore'])->name('restore');
         Route::delete('/force-delete/{id}', [AdminBookController::class, 'forceDelete'])->name('force-delete');
     });
-  
+
     // Route admin/categories
     Route::prefix('categories')->name('categories.')->group(function () {
         Route::get('/', [CategoryController::class, 'index'])->name('index');
@@ -84,7 +87,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     });
     Route::resource('vouchers', VoucherController::class);
 
-    
+
 
     // Route admin/users
     Route::prefix('users')->name('users.')->group(function () {
@@ -93,7 +96,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/{id}/edit', [UserController::class, 'edit'])->name('edit');
         Route::put('/{id}', [UserController::class, 'update'])->name('update');
     });
-    
+
     // Route admin/attributes
     Route::prefix('attributes')->name('attributes.')->group(function () {
         Route::get('/', [AttributeController::class, 'index'])->name('index');
@@ -104,6 +107,17 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::put('/update/{id}', [AttributeController::class, 'update'])->name('update');
         Route::delete('/delete/{id}', [AttributeController::class, 'destroy'])->name('destroy');
     });
+    // Route admin/news
+    Route::prefix('news')->name('news.')->group(function () {
+        Route::get('/', [NewsArticleController::class, 'index'])->name('index');
+        Route::get('/create', [NewsArticleController::class, 'create'])->name('create');
+        Route::post('/', [NewsArticleController::class, 'store'])->name('store');
+        Route::get('/{article}', [NewsArticleController::class, 'show'])->name('show');
+        Route::get('/{article}/edit', [NewsArticleController::class, 'edit'])->name('edit');
+        Route::put('/{article}', [NewsArticleController::class, 'update'])->name('update');
+        Route::delete('/{article}', [NewsArticleController::class, 'destroy'])->name('destroy');
+    });
+
     // Route admin/orders
     Route::prefix('orders')->name('orders.')->group(function () {
         Route::get('/', [OrderController::class, 'index'])->name('index');
@@ -119,7 +133,7 @@ Route::prefix('account')->name('account.')->group(function () {
     Route::get('/register', [LoginController::class, 'register'])->name('register');
     Route::post('/register', [LoginController::class, 'handleRegister'])->name('register.submit');
     Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
-    
+
     // Activation routes
     Route::get('/activate/{userId}', [ActivationController::class, 'activate'])->name('activate');
 });
