@@ -12,13 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('contacts', function (Blueprint $table) {
-           $table->uuid('id'); // Khóa chính tự tăng
-            $table->string('name'); // Tên người liên hệ
-            $table->string('email')->unique(); // Email, cần unique
-            $table->string('phone')->nullable(); // Số điện thoại, có thể null
-            $table->text('address')->nullable(); // Địa chỉ, có thể null
-            $table->text('note')->nullable(); // Ghi chú, có thể null
-            $table->timestamps(); // Thời gian tạo và cập nhật
+            $table->uuid('id')->primary();
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->string('phone')->nullable();
+            $table->text('address')->nullable();
+            $table->text('note')->nullable();
+            $table->string('status')->default('new'); // Thêm trạng thái: new, processing, replied, closed
+            $table->timestamps();
         });
     }
 
