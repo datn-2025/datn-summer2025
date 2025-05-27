@@ -129,7 +129,7 @@
                                                             </button>
                                                         </form>
                                                     @else
-                                                        <a href="#" class="btn btn-sm btn-light" title="Chỉnh sửa">
+                                                        <a href="{{ route('admin.categories.authors.edit', $author->id) }}" class="btn btn-sm btn-light" title="Chỉnh sửa">
                                                             <i class="ri-pencil-fill align-bottom me-2 text-muted"></i>
                                                         </a>
                                                         <form

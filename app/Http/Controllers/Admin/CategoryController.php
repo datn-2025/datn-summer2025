@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Author;
+use App\Models\Brand;
 use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -34,7 +34,7 @@ class CategoryController extends Controller
             return back()->with('error', 'Lỗi khi truy vấn danh mục. Vui lòng thử lại sau.');
         }
     }
-
+  
     public function create()
     {
         return view('admin.categories.create');
@@ -274,5 +274,16 @@ class CategoryController extends Controller
             report($e);
             return back()->with('error', 'Không thể xóa vĩnh viễn danh mục. Vui lòng thử lại sau.');
         }
+      
+    public function brand(Request $request)
+    {
+        $query = Brand::query();
+        if (!empty($request->search_name)) {
+            $query->where('name', 'like', '%' . $request->search_name . '%');
+        }
+        $brands = $query->withCount('books')->paginate(10);
+        return view('admin.categories.brand', [
+            'brands' => $brands
+        ]);
     }
 }
