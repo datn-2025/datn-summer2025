@@ -12,6 +12,7 @@
     @stack('styles')
     @vite('resources/css/app.css')
     @vite('resources/js/app.js')
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 {{-- @include('clients.layouts.partials.navbar') --}}
 <body style="margin:0; min-height:100vh;">
