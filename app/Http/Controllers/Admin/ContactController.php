@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Mail\ContactReplyMail;
 use App\Models\Contact;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class ContactController extends Controller
 {
@@ -35,7 +37,7 @@ class ContactController extends Controller
     {
         $contact = Contact::findOrFail($id);
         return view('admin.contacts.show', compact('contact'));
-    }   
+    }
     // Cập nhật trạng thái và ghi chú
     public function update(Request $request, $id)
     {
@@ -52,6 +54,22 @@ class ContactController extends Controller
         Toastr::success('Cập nhật trạng thái thành công!');
 
         return redirect()->route('admin.contacts.index', $contact->id)->with('success', 'Cập nhật trạng thái thành công');
+    }
+    public function sendReply(Request $request, Contact $contact)
+    {
+        $request->validate([
+            'message' => 'required|string',
+        ]);
+
+        // Gửi mail
+        Mail::to($contact->email)->send(new ContactReplyMail($contact, $request->message));
+
+        // Cập nhật trạng thái là đã phản hồi
+        $contact->status = 'replied';
+        $contact->note = $request->message;
+        $contact->save();
+
+        return redirect()->route('admin.contacts.index')->with('success', 'Đã gửi email phản hồi thành công.');
     }
 
     // Xóa liên hệ
