@@ -38,7 +38,10 @@ Route::prefix('cart')->group(function () {
     Route::post('/add', [CartController::class, 'addToCart'])->name('cart.add');
     Route::post('/update', [CartController::class, 'updateCart'])->name('cart.update');
     Route::post('/remove', [CartController::class, 'removeFromCart'])->name('cart.remove');
+    Route::post('/clear', [CartController::class, 'clearCart'])->name('cart.clear');
+    Route::post('/add-wishlist', [CartController::class, 'addAllWishlistToCart'])->name('cart.add-wishlist');
     Route::post('/apply-voucher', [CartController::class, 'applyVoucher'])->name('cart.apply-voucher');
+    Route::post('/remove-voucher', [CartController::class, 'removeVoucher'])->name('cart.remove-voucher');
 });
 
 // Test route for QR code generation
@@ -100,16 +103,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::put('/{id}', [AuthorController::class, 'update'])->name('update');
         });
     });
-    // Route admin/vouchers
-    Route::prefix('vouchers')->name('vouchers.')->group(function () {
-        Route::get('/trash', [VoucherController::class, 'trash'])->name('trash');
-        Route::post('{id}/restore', [VoucherController::class, 'restore'])->name('restore');
-        Route::delete('{id}/force-delete', [VoucherController::class, 'forceDelete'])->name('force-delete');
-    });
-    Route::resource('vouchers', VoucherController::class);
-
-    
-
     // Route admin/users
     Route::prefix('users')->name('users.')->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('index');
