@@ -4,8 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Illuminate\Support\Facades\Str;
-
+use Illuminate\Support\Str;
 
 class Contact extends Model
 {
