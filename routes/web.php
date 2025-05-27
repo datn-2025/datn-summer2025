@@ -68,12 +68,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
         // Route admin/brand
         Route::prefix('brands')->name('brands.')->group(function () {
             Route::get('/', [CategoryController::class, 'brand'])->name('brand');
-            // Route::get('/create', [AuthorController::class, 'create'])->name('create');
-            // Route::post('/', [AuthorController::class, 'store'])->name('store');
-            // Route::get('/trash', [AuthorController::class, 'trash'])->name('trash');
-            // Route::delete('/{author}', [AuthorController::class, 'destroy'])->name('destroy');
-            // Route::put('/{id}/restore', [AuthorController::class, 'restore'])->name('restore');
-            // Route::delete('/{id}/force', [AuthorController::class, 'forceDelete'])->name('force-delete');
+            Route::get('/create', [CategoryController::class, 'BrandCreate'])->name('create');
+            Route::post('/', [CategoryController::class, 'BrandStore'])->name('store');
+            Route::get('/trash', [CategoryController::class, 'BrandTrash'])->name('trash');
+            Route::delete('/{author}', [CategoryController::class, 'BrandDestroy'])->name('destroy');
+            Route::put('/{id}/restore', [CategoryController::class, 'BrandRestore'])->name('restore');
+            Route::delete('/{id}/force', [CategoryController::class, 'BrandForceDelete'])->name('force-delete');
+            Route::get('/{id}/edit', [CategoryController::class, 'BrandEdit'])->name('edit');
+            Route::put('/{id}', [CategoryController::class, 'BrandUpdate'])->name('update');
         });
         // Route admin/authors
         Route::prefix('authors')->name('authors.')->group(function () {
