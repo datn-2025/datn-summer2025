@@ -154,4 +154,46 @@ class AuthorController extends Controller
             return back()->withInput();
         }
     }
+
+    public function edit($id)
+    {
+        $author = Author::findOrFail($id);
+        return view('admin.categories.authors-edit', compact('author'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $author = Author::findOrFail($id);
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255|unique:authors,name,' . $author->id,
+            'biography' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ], [
+            'name.required' => 'Vui lòng nhập tên tác giả',
+            'name.unique' => 'Tên tác giả đã tồn tại trong hệ thống',
+            'name.max' => 'Tên tác giả không được vượt quá 255 ký tự',
+            'biography.string' => 'Tiểu sử phải là chuỗi ký tự',
+            'image.image' => 'File phải là hình ảnh',
+            'image.mimes' => 'Hình ảnh phải có định dạng: jpeg, png, jpg, gif',
+            'image.max' => 'Kích thước hình ảnh không được vượt quá 2MB'
+        ]);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+
+        $data = $validator->validated();
+
+        // Xử lý upload ảnh nếu có
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $filename = time() . '_' . $image->getClientOriginalName();
+            $image->storeAs('authors', $filename, 'public');
+            $data['image'] = '/storage/authors/' . $filename;
+        }
+
+        $author->update($data);
+        toastr()->success('Cập nhật tác giả thành công');
+        return redirect()->route('admin.categories.authors.index');
+    }
 }
