@@ -61,7 +61,7 @@ class LoginController extends Controller
             // Kiểm tra số lần đăng nhập sai
             $attempts = session('login_attempts_' . $user->id, 0);
             if ($attempts >= 3) {
-               
+
                 $user->status = 'Bị Khóa';
                 $user->save();
                 Toastr::error('Tài khoản đã bị khóa do đăng nhập sai quá nhiều lần. Vui lòng liên hệ quản trị viên.', 'Lỗi');
@@ -86,7 +86,7 @@ class LoginController extends Controller
             // dd(($user));
             session(['login_attempts_' . $user->id => $attempts + 1]);
         }
-        
+
         Toastr::error('Thông tin đăng nhập không chính xác.', 'Lỗi');
         return back()->withErrors([
             'email' => 'Thông tin đăng nhập không chính xác.',
@@ -157,13 +157,13 @@ class LoginController extends Controller
 
     // Đăng xuất
     public function logout(Request $request)
-    { 
+    {
         Auth::logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         Toastr::success('Đăng xuất thành công!', 'Thành công');
-        
+
         return redirect('/');
     }
 
@@ -189,7 +189,7 @@ class LoginController extends Controller
         $user->update(['reset_token' => $resetToken]);
 
         $resetLink = route('account.password.reset', ['token' => $resetToken]);
-        
+
         try {
             Mail::to($request->email)->send(new ResetPasswordMail($resetLink));
             Toastr::success('Chúng tôi đã gửi email chứa liên kết đặt lại mật khẩu của bạn!', 'Thành công');
@@ -224,8 +224,8 @@ class LoginController extends Controller
         ]);
 
         $user = User::where('email', $request->email)
-                   ->where('reset_token', $request->token)
-                   ->first();
+            ->where('reset_token', $request->token)
+            ->first();
 
         if (!$user) {
             Toastr::error('Mã token không hợp lệ!', 'Lỗi');
