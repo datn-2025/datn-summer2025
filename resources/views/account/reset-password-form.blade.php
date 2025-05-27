@@ -4,20 +4,19 @@
 <div class="auth-container">
     <div class="left-section">
         <div class="content-wrapper">
-            <h1>Chào mừng trở lại!</h1>
-            <p>Để giữ kết nối với chúng tôi, vui lòng đăng nhập bằng thông tin của bạn</p>
+            <h1>Đặt lại mật khẩu</h1>
+            <p>Nhập mật khẩu mới của bạn</p>
             <a href="{{ route('account.login') }}" class="btn btn-outline">ĐĂNG NHẬP</a>
         </div>
     </div>
     <div class="right-section">
         <div class="form-container">
-            <h2>Tạo tài khoản</h2>
-            <div class="social-buttons">
-                <a href="#" class="social-button google">
-                    <i class="fab fa-google"></i>
-                </a>
-            </div>
-            <div class="divider">hoặc sử dụng email để đăng ký</div>
+            <h2>Đặt lại mật khẩu</h2>
+            @if (session('status'))
+                <div class="alert alert-success">
+                    {{ session('status') }}
+                </div>
+            @endif
             @if ($errors->any())
                 <div class="alert alert-danger">
                     <ul class="mb-0">
@@ -27,26 +26,28 @@
                     </ul>
                 </div>
             @endif
-            <form method="POST" action="{{ route('account.register.submit') }}">
+            <form method="POST" action="{{ route('account.password.update') }}">
                 @csrf
-                <div class="form-group">
-                    <input type="text" name="name" class="form-control" placeholder="Họ và tên" required value="{{ old('name') }}" />
-                </div>
+                <input type="hidden" name="token" value="{{ $token }}">
+                
                 <div class="form-group">
                     <input type="email" name="email" class="form-control" placeholder="Email" required value="{{ old('email') }}" />
                 </div>
+                
                 <div class="form-group">
-                    <input type="password" name="password" class="form-control" placeholder="Mật khẩu" required />
+                    <input type="password" name="password" class="form-control" placeholder="Mật khẩu mới" required />
                 </div>
+                
                 <div class="form-group">
-                    <input type="password" name="password_confirmation" class="form-control" placeholder="Xác nhận mật khẩu" required />
+                    <input type="password" name="password_confirmation" class="form-control" placeholder="Xác nhận mật khẩu mới" required />
                 </div>
-                <button type="submit" class="btn btn-primary">ĐĂNG KÝ</button>
+
+                <button type="submit" class="btn btn-primary">ĐẶT LẠI MẬT KHẨU</button>
             </form>
         </div>
     </div>
 </div>
-@push('styles')
+
 <style>
     body {
         margin: 0;
@@ -114,72 +115,6 @@
         font-weight: bold;
     }
 
-    .social-buttons {
-        display: flex;
-        justify-content: center;
-        margin-bottom: 20px;
-        gap: 10px;
-    }
-
-    .social-button {
-        border: 1px solid #ddd;
-        border-radius: 50%;
-        display: inline-flex;
-        justify-content: center;
-        align-items: center;
-        margin: 0 5px;
-        height: 40px;
-        width: 40px;
-        color: #333;
-        text-decoration: none;
-        transition: all 0.3s ease;
-    }
-
-    .social-button:hover {
-        color: #fff;
-    }
-
-    .social-button.facebook:hover {
-        background: #3b5998;
-        border-color: #3b5998;
-    }
-
-    .social-button.google:hover {
-        background: #db4437;
-        border-color: #db4437;
-    }
-
-    .social-button.linkedin:hover {
-        background: #0077b5;
-        border-color: #0077b5;
-    }
-
-    .divider {
-        text-align: center;
-        margin: 20px 0;
-        position: relative;
-        color: #777;
-        font-size: 14px;
-    }
-
-    .divider::before,
-    .divider::after {
-        content: '';
-        position: absolute;
-        top: 50%;
-        width: 45%;
-        height: 1px;
-        background: #ddd;
-    }
-
-    .divider::before {
-        left: 0;
-    }
-
-    .divider::after {
-        right: 0;
-    }
-
     .form-group {
         margin-bottom: 20px;
     }
@@ -233,21 +168,28 @@
         background: linear-gradient(to right, #6dd5ed, #2193b0);
         transform: translateY(-2px);
     }
-</style>
-</style>
-@endpush
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const slides = document.querySelectorAll('.slide');
-    let currentSlide = 0;
 
-    function nextSlide() {
-        slides[currentSlide].classList.remove('active');
-        currentSlide = (currentSlide + 1) % slides.length;
-        slides[currentSlide].classList.add('active');
+    .alert {
+        margin-bottom: 20px;
+        padding: 15px;
+        border-radius: 5px;
     }
 
-    setInterval(nextSlide, 3000); // Chuyển ảnh mỗi 3 giây
-});
-</script>
+    .alert-success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+
+    .alert-danger {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+
+    .alert ul {
+        margin: 0;
+        padding-left: 20px;
+    }
+</style>
 @endsection
