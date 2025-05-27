@@ -47,19 +47,46 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Toastr::info('Chào mừng bạn đến với trang quản trị!', 'Thông báo');
             return view('admin.dashboard');
         })->name('dashboard');
-
-        Route::prefix('books')->name('books.')->group(function () {
-            Route::get('/', [AdminBookController::class, 'index'])->name('index');
-            Route::get('/create', [AdminBookController::class, 'create'])->name('create');
-            Route::post('/store', [AdminBookController::class, 'store'])->name('store');
-            Route::get('/show/{id}/{slug}', [AdminBookController::class, 'show'])->name('show');
-            Route::get('/edit/{id}/{slug}', [AdminBookController::class, 'edit'])->name('edit');
-            Route::put('/update/{id}/{slug}', [AdminBookController::class, 'update'])->name('update');
-            Route::delete('/delete/{id}', [AdminBookController::class, 'destroy'])->name('destroy');
-
-            Route::get('/trash', [AdminBookController::class, 'trash'])->name('trash');
-            Route::post('/restore/{id}', [AdminBookController::class, 'restore'])->name('restore');
-            Route::delete('/force-delete/{id}', [AdminBookController::class, 'forceDelete'])->name('force-delete');
+      
+       Route::prefix('books')->name('books.')->group(function(){
+        Route::get('/', [AdminBookController::class, 'index'])->name('index');
+        Route::get('/create', [AdminBookController::class, 'create'])->name('create');
+        Route::post('/store', [AdminBookController::class, 'store'])->name('store');
+        Route::get('/show/{id}/{slug}', [AdminBookController::class, 'show'])->name('show');
+        Route::get('/edit/{id}/{slug}', [AdminBookController::class, 'edit'])->name('edit');
+        Route::put('/update/{id}/{slug}', [AdminBookController::class, 'update'])->name('update');
+        Route::delete('/delete/{id}', [AdminBookController::class, 'destroy'])->name('destroy');
+        
+        // Trash routes
+        Route::get('/trash', [AdminBookController::class, 'trash'])->name('trash');
+        Route::post('/restore/{id}', [AdminBookController::class, 'restore'])->name('restore');
+        Route::delete('/force-delete/{id}', [AdminBookController::class, 'forceDelete'])->name('force-delete');
+    });
+  
+    // Route admin/categories
+    Route::prefix('categories')->name('categories.')->group(function () {
+        Route::get('/', [CategoryController::class, 'index'])->name('index');
+        // Route admin/brand
+        Route::prefix('brands')->name('brands.')->group(function () {
+            Route::get('/', [CategoryController::class, 'brand'])->name('brand');
+            // Route::get('/create', [AuthorController::class, 'create'])->name('create');
+            // Route::post('/', [AuthorController::class, 'store'])->name('store');
+            // Route::get('/trash', [AuthorController::class, 'trash'])->name('trash');
+            // Route::delete('/{author}', [AuthorController::class, 'destroy'])->name('destroy');
+            // Route::put('/{id}/restore', [AuthorController::class, 'restore'])->name('restore');
+            // Route::delete('/{id}/force', [AuthorController::class, 'forceDelete'])->name('force-delete');
+        });
+        // Route admin/authors
+        Route::prefix('authors')->name('authors.')->group(function () {
+            Route::get('/', [AuthorController::class, 'index'])->name('index');
+            Route::get('/create', [AuthorController::class, 'create'])->name('create');
+            Route::post('/', [AuthorController::class, 'store'])->name('store');
+            Route::get('/trash', [AuthorController::class, 'trash'])->name('trash');
+            Route::delete('/{author}', [AuthorController::class, 'destroy'])->name('destroy');
+            Route::put('/{id}/restore', [AuthorController::class, 'restore'])->name('restore');
+            Route::delete('/{id}/force', [AuthorController::class, 'forceDelete'])->name('force-delete');
+            Route::get('/{id}/edit', [AuthorController::class, 'edit'])->name('edit');
+            Route::put('/{id}', [AuthorController::class, 'update'])->name('update');
         });
 
         Route::prefix('categories')->name('categories.')->group(function () {
@@ -116,4 +143,8 @@ Route::prefix('account')->name('account.')->group(function () {
     Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
     Route::get('/activate/{userId}', [ActivationController::class, 'activate'])->name('activate');
+
+    // profile
+    Route::get('/showUser', [LoginController::class, 'showUser'])->name('showUser');
+    Route::put('/profile/update', [LoginController::class, 'updateProfile'])->name('profile.update');
 });
