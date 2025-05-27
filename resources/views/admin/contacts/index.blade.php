@@ -33,7 +33,7 @@
                                 <!-- Tìm kiếm -->
                                 <div class="col-lg-4">
                                     <input type="text" name="search" class="form-control ps-4"
-                                           placeholder="🔍 Tìm kiếm liên hệ..." value="{{ request('search') }}">
+                                        placeholder="🔍 Tìm kiếm liên hệ..." value="{{ request('search') }}">
                                 </div>
 
                                 <!-- Trạng thái -->
@@ -41,9 +41,12 @@
                                     <select class="form-select" name="status">
                                         <option value="">📁 Tất cả trạng thái</option>
                                         <option value="new" {{ request('status') == 'new' ? 'selected' : '' }}>Mới</option>
-                                        <option value="processing" {{ request('status') == 'processing' ? 'selected' : '' }}>Đang xử lý</option>
-                                        <option value="replied" {{ request('status') == 'replied' ? 'selected' : '' }}>Đã phản hồi</option>
-                                        <option value="closed" {{ request('status') == 'closed' ? 'selected' : '' }}>Đã đóng</option>
+                                        <option value="processing" {{ request('status') == 'processing' ? 'selected' : '' }}>
+                                            Đang xử lý</option>
+                                        <option value="replied" {{ request('status') == 'replied' ? 'selected' : '' }}>Đã phản
+                                            hồi</option>
+                                        <option value="closed" {{ request('status') == 'closed' ? 'selected' : '' }}>Đã đóng
+                                        </option>
                                     </select>
                                 </div>
 
@@ -53,7 +56,7 @@
                                         <i class="ri-filter-3-line me-1"></i> Lọc
                                     </button>
                                     <a href="{{ route('admin.contacts.index') }}" class="btn btn-outline-secondary px-4"
-                                       style="min-width: 130px;">
+                                        style="min-width: 130px;">
                                         <i class="ri-refresh-line me-1"></i> Đặt lại
                                     </a>
                                 </div>
@@ -78,92 +81,138 @@
                                 </thead>
                                 <tbody>
                                     @foreach($contacts as $index => $contact)
-                                        <tr>
-                                            <td class="text-center">{{ $contacts->firstItem() + $index }}</td>
-                                            <td class="fw-semibold">{{ $contact->name }}</td>
-                                            <td>{{ $contact->email }}</td>
-                                            <td>
-                                                <div class="text-truncate" style="max-width: 200px;">
-                                                    {{ $contact->note ?? 'Không có ghi chú' }}
-                                                </div>
-                                            <td>
-                                                @php
-                                                    // Ánh xạ trạng thái sang tiếng Việt
-                                                    $statusTranslations = [
-                                                        'new' => 'Mới',
-                                                        'processing' => 'Đang xử lý',
-                                                        'replied' => 'Đã phản hồi',
-                                                        'closed' => 'Đã đóng',
-                                                    ];
-                                                @endphp
-                                                <span class="badge {{ 
-                                                    $contact->status == 'new' ? 'bg-primary' :
-                                                    ($contact->status == 'processing' ? 'bg-warning text-dark' :
-                                                    ($contact->status == 'replied' ? 'bg-success' : 'bg-secondary'))
-                                                 }}">
-                                                    {{ $statusTranslations[$contact->status] ?? ucfirst($contact->status) }}
-                                                </span>
-                                            </td>
-                                            <td>{{ $contact->created_at->format('d/m/Y H:i') }}</td>
-                                            <td>
-                                                <div class="d-flex gap-2">
-                                                    <a href="{{ route('admin.contacts.show', $contact->id) }}" class="btn btn-sm btn-info" title="Xem">
-                                                        <i class="ri-eye-line"></i>
-                                                    </a>
+                                                                <tr>
+                                                                    <td class="text-center">{{ $contacts->firstItem() + $index }}</td>
+                                                                    <td class="fw-semibold">{{ $contact->name }}</td>
+                                                                    <td>{{ $contact->email }}</td>
+                                                                    <td>
+                                                                        <div class="text-truncate" style="max-width: 200px;">
+                                                                            {{ $contact->note ?? 'Không có ghi chú' }}
+                                                                        </div>
+                                                                    <td>
+                                                                        @php
+                                                                            // Ánh xạ trạng thái sang tiếng Việt
+                                                                            $statusTranslations = [
+                                                                                'new' => 'Mới',
+                                                                                'processing' => 'Đang xử lý',
+                                                                                'replied' => 'Đã phản hồi',
+                                                                                'closed' => 'Đã đóng',
+                                                                            ];
+                                                                        @endphp
+                                                                        <span class="badge {{ 
+                                                                                    $contact->status == 'new' ? 'bg-primary' :
+                                        ($contact->status == 'processing' ? 'bg-warning text-dark' :
+                                            ($contact->status == 'replied' ? 'bg-success' : 'bg-secondary'))
+                                                                                 }}">
+                                                                            {{ $statusTranslations[$contact->status] ?? ucfirst($contact->status) }}
+                                                                        </span>
+                                                                    </td>
+                                                                    <td>{{ $contact->created_at->format('d/m/Y H:i') }}</td>
+                                                                    <td>
+                                                                        <div class="d-flex gap-2">
+                                                                            <a href="{{ route('admin.contacts.show', $contact->id) }}"
+                                                                                class="btn btn-sm btn-info" title="Xem">
+                                                                                <i class="ri-eye-line"></i>
+                                                                            </a>
 
-                                                    <!-- Button to trigger modal -->
-                                                    <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editStatusModal{{ $contact->id }}" title="Sửa">
-                                                        <i class="ri-pencil-line"></i>
-                                                    </button>
+                                                                            <!-- Button to trigger modal -->
+                                                                            <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
+                                                                                data-bs-target="#editStatusModal{{ $contact->id }}" title="Sửa">
+                                                                                <i class="ri-pencil-line"></i>
+                                                                            </button>
+                                                                            <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
+                                                                                data-bs-target="#replyModal{{ $contact->id }}" title="Gửi phản hồi">
+                                                                                <i class="ri-mail-send-line"></i>
+                                                                            </button>
 
-                                                    <form action="{{ route('admin.contacts.destroy', $contact->id) }}" method="POST" style="display:inline-block;">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc muốn xóa liên hệ này?')" title="Xóa">
-                                                            <i class="ri-delete-bin-line"></i>
-                                                        </button>
-                                                    </form>
-                                                </div>
-                                            </td>
-                                        </tr>
+                                                                            <form action="{{ route('admin.contacts.destroy', $contact->id) }}"
+                                                                                method="POST" style="display:inline-block;">
+                                                                                @csrf
+                                                                                @method('DELETE')
+                                                                                <button type="submit" class="btn btn-sm btn-danger"
+                                                                                    onclick="return confirm('Bạn có chắc muốn xóa liên hệ này?')"
+                                                                                    title="Xóa">
+                                                                                    <i class="ri-delete-bin-line"></i>
+                                                                                </button>
+                                                                            </form>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
 
-                                        <!-- Modal chỉnh sửa trạng thái -->
-                                        <div class="modal fade" id="editStatusModal{{ $contact->id }}" tabindex="-1" aria-labelledby="editStatusModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="editStatusModalLabel">Chỉnh sửa trạng thái liên hệ</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <form action="{{ route('admin.contacts.update', $contact->id) }}" method="POST">
-                                                        @csrf
-                                                        @method('PUT')
+                                                                <!-- Modal chỉnh sửa trạng thái -->
+                                                                <div class="modal fade" id="editStatusModal{{ $contact->id }}" tabindex="-1"
+                                                                    aria-labelledby="editStatusModalLabel" aria-hidden="true">
+                                                                    <div class="modal-dialog">
+                                                                        <div class="modal-content">
+                                                                            <div class="modal-header">
+                                                                                <h5 class="modal-title" id="editStatusModalLabel">Chỉnh sửa trạng thái
+                                                                                    liên hệ</h5>
+                                                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                                    aria-label="Close"></button>
+                                                                            </div>
+                                                                            <form action="{{ route('admin.contacts.update', $contact->id) }}"
+                                                                                method="POST">
+                                                                                @csrf
+                                                                                @method('PUT')
 
-                                                        <div class="modal-body">
-                                                            <div class="mb-3">
-                                                                <label for="status" class="form-label">Trạng thái</label>
-                                                                <select class="form-select" name="status" required>
-                                                                    <option value="new" {{ $contact->status == 'new' ? 'selected' : '' }}>Mới</option>
-                                                                    <option value="processing" {{ $contact->status == 'processing' ? 'selected' : '' }}>Đang xử lý</option>
-                                                                    <option value="replied" {{ $contact->status == 'replied' ? 'selected' : '' }}>Đã phản hồi</option>
-                                                                    <option value="closed" {{ $contact->status == 'closed' ? 'selected' : '' }}>Đã đóng</option>
-                                                                </select>
-                                                            </div>
+                                                                                <div class="modal-body">
+                                                                                    <div class="mb-3">
+                                                                                        <label for="status" class="form-label">Trạng thái</label>
+                                                                                        <select class="form-select" name="status" required>
+                                                                                            <option value="new" {{ $contact->status == 'new' ? 'selected' : '' }}>Mới</option>
+                                                                                            <option value="processing" {{ $contact->status == 'processing' ? 'selected' : '' }}>Đang xử lý</option>
+                                                                                            <option value="replied" {{ $contact->status == 'replied' ? 'selected' : '' }}>Đã phản hồi</option>
+                                                                                            <option value="closed" {{ $contact->status == 'closed' ? 'selected' : '' }}>Đã đóng</option>
+                                                                                        </select>
+                                                                                    </div>
 
-                                                            <div class="mb-3">
-                                                                <label for="note" class="form-label">Ghi chú</label>
-                                                                <textarea name="note" id="note" class="form-control" rows="5">{{ $contact->note }}</textarea>
-                                                            </div>
-                                                        </div>
+                                                                                    <div class="mb-3">
+                                                                                        <label for="note" class="form-label">Ghi chú</label>
+                                                                                        <textarea name="note" id="note" class="form-control"
+                                                                                            rows="5">{{ $contact->note }}</textarea>
+                                                                                    </div>
+                                                                                </div>
 
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                                                            <button type="submit" class="btn btn-success">Lưu thay đổi</button>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
+                                                                                <div class="modal-footer">
+                                                                                    <button type="button" class="btn btn-secondary"
+                                                                                        data-bs-dismiss="modal">Hủy</button>
+                                                                                    <button type="submit" class="btn btn-success">Lưu thay đổi</button>
+                                                                                </div>
+                                                                            </form>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <!-- Modal gửi email phản hồi -->
+<div class="modal fade" id="replyModal{{ $contact->id }}" tabindex="-1" aria-labelledby="replyModalLabel{{ $contact->id }}" aria-hidden="true">
+    <div class="modal-dialog">
+        <form action="{{ route('admin.contacts.reply', $contact->id) }}" method="POST">
+            @csrf
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Gửi email phản hồi</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label>Email người nhận</label>
+                        <input type="email" class="form-control" name="email" value="{{ $contact->email }}" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label>Nội dung phản hồi</label>
+                        <textarea name="message" class="form-control" rows="5" required>{{ old('message') }}</textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Gửi</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+                                                                
                                     @endforeach
                                 </tbody>
                             </table>
