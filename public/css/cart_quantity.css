@@ -1,75 +1,84 @@
-/* Cart Quantity Controls - Quantity input and buttons */
+/* Enhanced Cart Quantity Controls - Modern UX Design */
 
 /* Quantity Controls Wrapper */
 .quantity-controls-wrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 8px;
-}
-
-/* Quantity Control Container */
-.quantity-controls {
-    display: flex;
-    align-items: center;
-    background: white;
-    border: 2px solid #e2e8f0;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    transition: all 0.3s ease;
+    gap: 0.75rem;
     position: relative;
 }
 
-.quantity-controls:hover {
-    border-color: #667eea;
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
-}
-
-.quantity-controls:focus-within {
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-}
-
-/* Support for both naming conventions */
+/* Enhanced Quantity Control Container */
+.quantity-controls,
 .quantity-control {
     display: flex;
     align-items: center;
-    background: white;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
     border: 2px solid #e2e8f0;
-    border-radius: 12px;
+    border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    transition: all 0.3s ease;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.08),
+        0 2px 4px rgba(0, 0, 0, 0.04);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
+    backdrop-filter: blur(10px);
 }
 
+.quantity-controls::before,
+.quantity-control::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.quantity-controls:hover,
 .quantity-control:hover {
     border-color: #667eea;
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+    box-shadow: 
+        0 8px 20px rgba(102, 126, 234, 0.2),
+        0 4px 8px rgba(102, 126, 234, 0.1);
+    transform: translateY(-2px);
 }
 
+.quantity-controls:hover::before,
+.quantity-control:hover::before {
+    opacity: 1;
+}
+
+.quantity-controls:focus-within,
 .quantity-control:focus-within {
     border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    box-shadow: 
+        0 0 0 4px rgba(102, 126, 234, 0.15),
+        0 8px 20px rgba(102, 126, 234, 0.2);
 }
 
-/* Quantity Buttons */
+/* Enhanced Quantity Buttons */
 .quantity-btn {
-    background: #f7fafc;
+    width: 44px;
+    height: 44px;
     border: none;
-    width: 36px;
-    height: 36px;
+    background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+    color: #4a5568;
+    font-size: 1.25rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #4a5568;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
     position: relative;
     overflow: hidden;
+    z-index: 1;
 }
 
 .quantity-btn::before {
@@ -79,316 +88,339 @@
     left: 50%;
     width: 0;
     height: 0;
-    background: rgba(102, 126, 234, 0.1);
-    border-radius: 50%;
+    background: radial-gradient(circle, rgba(102, 126, 234, 0.2) 0%, transparent 70%);
     transition: all 0.3s ease;
     transform: translate(-50%, -50%);
+    border-radius: 50%;
 }
 
 .quantity-btn:hover::before {
-    width: 100%;
-    height: 100%;
+    width: 100px;
+    height: 100px;
 }
 
 .quantity-btn:hover {
-    background: #edf2f7;
-    color: #667eea;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
     transform: scale(1.05);
+    z-index: 2;
 }
 
 .quantity-btn:active {
     transform: scale(0.95);
+    transition: transform 0.1s ease;
 }
 
 .quantity-btn:disabled {
     background: #f1f5f9;
-    color: #cbd5e0;
+    color: #a0aec0;
     cursor: not-allowed;
-    opacity: 0.6;
+    transform: none;
 }
 
 .quantity-btn:disabled:hover {
-    transform: none;
     background: #f1f5f9;
-    color: #cbd5e0;
+    color: #a0aec0;
+    transform: none;
 }
 
-.quantity-btn:disabled::before {
-    display: none;
+.quantity-btn.decrease {
+    border-radius: 16px 0 0 16px;
+    border-right: 1px solid #e2e8f0;
 }
 
-/* Quantity Input */
+.quantity-btn.increase {
+    border-radius: 0 16px 16px 0;
+    border-left: 1px solid #e2e8f0;
+}
+
+/* Enhanced Quantity Input */
 .quantity-input {
+    width: 80px;
+    height: 44px;
     border: none;
     background: transparent;
     text-align: center;
-    width: 50px;
-    height: 36px;
-    font-size: 1rem;
-    font-weight: 600;
+    font-size: 1.1rem;
+    font-weight: 700;
     color: #2d3748;
     outline: none;
-    padding: 0;
-    margin: 0;
-    -moz-appearance: textfield;
-}
-
-.quantity-input::-webkit-outer-spin-button,
-.quantity-input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 1;
 }
 
 .quantity-input:focus {
-    background: rgba(102, 126, 234, 0.05);
     color: #667eea;
+    transform: scale(1.1);
 }
 
-/* Quantity Status Indicators */
-.quantity-status {
-    position: absolute;
-    top: -8px;
-    right: -8px;
-    background: #e53e3e;
-    color: white;
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    font-size: 0.7rem;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transform: scale(0);
-    transition: all 0.3s ease;
-}
-
-.quantity-control.max-quantity .quantity-status {
-    background: #f56565;
-    opacity: 1;
-    transform: scale(1);
-}
-
-.quantity-control.low-stock .quantity-status {
-    background: #ed8936;
-    opacity: 1;
-    transform: scale(1);
-}
-
-/* Enhanced Quantity Controls */
-.quantity-control-enhanced {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: linear-gradient(135deg, #f7fafc, #ffffff);
-    padding: 8px;
-    border-radius: 16px;
-    border: 2px solid #e2e8f0;
-    transition: all 0.3s ease;
-    position: relative;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-}
-
-.quantity-control-enhanced:hover {
-    border-color: #667eea;
-    box-shadow: 0 4px 16px rgba(102, 126, 234, 0.15);
-    transform: translateY(-1px);
-}
-
-.quantity-control-enhanced .quantity-btn {
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    border: 1px solid #e2e8f0;
-}
-
-.quantity-control-enhanced .quantity-btn:hover {
-    background: #667eea;
-    color: white;
-    border-color: #667eea;
-    box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
-}
-
-.quantity-control-enhanced .quantity-input {
-    background: white;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    width: 60px;
-    height: 40px;
-    font-size: 1.1rem;
-    font-weight: 700;
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.quantity-control-enhanced .quantity-input:focus {
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-}
-
-/* Stock Information */
-.stock-info {
+/* Quantity Label/Info */
+.quantity-info {
     font-size: 0.8rem;
     color: #718096;
-    margin-top: 4px;
-    text-align: center;
     font-weight: 500;
+    text-align: center;
+    margin-top: 0.25rem;
 }
 
-.stock-info.low-stock {
+.quantity-info.stock-low {
     color: #ed8936;
     font-weight: 600;
 }
 
-.stock-info.out-of-stock {
+.quantity-info.stock-out {
     color: #e53e3e;
-    font-weight: 600;
+    font-weight: 700;
 }
 
-.stock-info.in-stock {
-    color: #48bb78;
-    font-weight: 600;
-}
-
-/* Quantity Labels */
-.quantity-label {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: #4a5568;
-    margin-bottom: 8px;
-    display: block;
-}
-
-/* Bulk Actions */
-.bulk-quantity-actions {
+/* Enhanced Stock Indicators */
+.stock-indicator {
     display: flex;
-    gap: 8px;
-    margin-top: 8px;
-}
-
-.bulk-action-btn {
-    background: #edf2f7;
-    border: 1px solid #e2e8f0;
-    border-radius: 6px;
-    padding: 4px 8px;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
     font-size: 0.75rem;
     font-weight: 600;
-    color: #4a5568;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    margin-top: 0.5rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    transition: all 0.3s ease;
 }
 
-.bulk-action-btn:hover {
+.stock-indicator.in-stock {
+    background: rgba(56, 161, 105, 0.1);
+    color: #38a169;
+    border: 1px solid rgba(56, 161, 105, 0.2);
+}
+
+.stock-indicator.low-stock {
+    background: rgba(237, 137, 54, 0.1);
+    color: #ed8936;
+    border: 1px solid rgba(237, 137, 54, 0.2);
+    animation: pulse-warning 2s infinite;
+}
+
+.stock-indicator.out-of-stock {
+    background: rgba(229, 62, 62, 0.1);
+    color: #e53e3e;
+    border: 1px solid rgba(229, 62, 62, 0.2);
+}
+
+@keyframes pulse-warning {
+    0%, 100% { 
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% { 
+        opacity: 0.7;
+        transform: scale(1.05);
+    }
+}
+
+.stock-indicator i {
+    font-size: 0.7rem;
+}
+
+/* Quick Quantity Buttons */
+.quick-quantity-buttons {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.quick-qty-btn {
+    padding: 0.375rem 0.75rem;
+    border: 1px solid #e2e8f0;
+    background: white;
+    color: #4a5568;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 40px;
+    text-align: center;
+}
+
+.quick-qty-btn:hover {
+    border-color: #667eea;
     background: #667eea;
     color: white;
-    border-color: #667eea;
     transform: translateY(-1px);
 }
 
-/* Quantity Animation */
-@keyframes quantityUpdate {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-    100% { transform: scale(1); }
+.quick-qty-btn.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-color: #667eea;
 }
 
-.quantity-updated {
-    animation: quantityUpdate 0.3s ease;
+/* Quantity Animation Effects */
+.quantity-update-animation {
+    position: relative;
 }
 
-/* Total Price Display */
-.item-total-price {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #2d3748;
-    text-align: right;
-    margin-top: 8px;
-    padding: 8px 12px;
-    background: linear-gradient(135deg, #f0fff4, #e6fffa);
-    border-radius: 8px;
-    border-left: 4px solid #48bb78;
-}
-
-.item-total-price .price-label {
+.quantity-update-animation::after {
+    content: attr(data-change);
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
     font-size: 0.8rem;
-    font-weight: 500;
-    color: #718096;
-    display: block;
-    margin-bottom: 2px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.item-total-price .price-value {
-    font-size: 1.2rem;
     font-weight: 700;
-    color: #48bb78;
+    color: #38a169;
+    opacity: 0;
+    animation: quantity-change 1s ease-out forwards;
+    pointer-events: none;
 }
 
-/* Responsive Design for Quantity Controls */
-@media (max-width: 768px) {
-    .quantity-control,
-    .quantity-control-enhanced {
-        gap: 6px;
-        padding: 6px;
+.quantity-update-animation.decrease::after {
+    color: #e53e3e;
+}
+
+@keyframes quantity-change {
+    0% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(10px);
     }
-    
-    .quantity-btn {
-        width: 32px;
-        height: 32px;
-        font-size: 0.9rem;
+    50% {
+        opacity: 1;
+        transform: translateX(-50%) translateY(-10px);
     }
-    
-    .quantity-input {
-        width: 45px;
-        height: 32px;
-        font-size: 0.9rem;
-    }
-    
-    .quantity-control-enhanced .quantity-input {
-        width: 50px;
-        height: 36px;
-        font-size: 1rem;
-    }
-    
-    .item-total-price {
-        font-size: 1rem;
-        padding: 6px 10px;
-    }
-    
-    .item-total-price .price-value {
-        font-size: 1.1rem;
+    100% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-30px);
     }
 }
 
+/* Bulk Quantity Controls */
+.bulk-quantity-controls {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: rgba(102, 126, 234, 0.05);
+    border-radius: 12px;
+    border: 1px solid rgba(102, 126, 234, 0.1);
+}
+
+.bulk-quantity-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #4a5568;
+    margin-bottom: 0.75rem;
+    text-align: center;
+}
+
+.bulk-quantity-options {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.bulk-qty-option {
+    padding: 0.5rem 1rem;
+    border: 1px solid #e2e8f0;
+    background: white;
+    color: #4a5568;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    min-width: 60px;
+}
+
+.bulk-qty-option:hover {
+    border-color: #667eea;
+    background: #667eea;
+    color: white;
+    transform: translateY(-1px);
+}
+
+.bulk-qty-option.discount {
+    border-color: #38a169;
+    color: #38a169;
+}
+
+.bulk-qty-option.discount:hover {
+    background: #38a169;
+    color: white;
+}
+
+.bulk-qty-option .discount-text {
+    font-size: 0.7rem;
+    opacity: 0.8;
+    display: block;
+    margin-top: 0.25rem;
+}
+
+/* Loading State for Quantity */
+.quantity-loading {
+    position: relative;
+    pointer-events: none;
+}
+
+.quantity-loading::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 16px;
+    z-index: 10;
+}
+
+.quantity-loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #e2e8f0;
+    border-top: 2px solid #667eea;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    transform: translate(-50%, -50%);
+    z-index: 11;
+}
+
+@keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Responsive Design */
 @media (max-width: 576px) {
-    .quantity-control,
-    .quantity-control-enhanced {
-        gap: 4px;
-        padding: 4px;
+    .quantity-controls,
+    .quantity-control {
+        width: 100%;
+        max-width: 200px;
     }
     
     .quantity-btn {
-        width: 28px;
-        height: 28px;
-        font-size: 0.8rem;
+        width: 48px;
+        height: 48px;
+        font-size: 1.3rem;
     }
     
     .quantity-input {
-        width: 40px;
-        height: 28px;
-        font-size: 0.8rem;
+        width: 100px;
+        height: 48px;
+        font-size: 1.2rem;
     }
     
-    .bulk-quantity-actions {
-        gap: 4px;
-        margin-top: 4px;
+    .quick-quantity-buttons {
+        grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
     }
     
-    .bulk-action-btn {
-        padding: 3px 6px;
-        font-size: 0.7rem;
+    .bulk-quantity-options {
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
     }
 }
