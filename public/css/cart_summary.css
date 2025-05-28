@@ -1,0 +1,504 @@
+/* Cart Summary - Order summary, pricing and checkout */
+
+/* Summary Container */
+.cart-summary {
+    background: white;
+    border-radius: 20px;
+    padding: 32px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    position: sticky;
+    top: 120px;
+    transition: all 0.3s ease;
+}
+
+.cart-summary:hover {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+/* Summary Header */
+.summary-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid #f7fafc;
+}
+
+.summary-icon {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 16px;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.summary-icon i {
+    color: white;
+    font-size: 1.5rem;
+}
+
+.summary-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin: 0;
+}
+
+/* Price Breakdown */
+.price-breakdown {
+    margin-bottom: 24px;
+}
+
+.price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #f1f5f9;
+    transition: all 0.3s ease;
+}
+
+.price-row:hover {
+    background: #f8fafc;
+    padding-left: 8px;
+    padding-right: 8px;
+    border-radius: 8px;
+    border-bottom: 1px solid transparent;
+}
+
+.price-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.price-label {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #4a5568;
+    display: flex;
+    align-items: center;
+}
+
+.price-label i {
+    margin-right: 8px;
+    color: #718096;
+}
+
+.price-value {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #2d3748;
+}
+
+/* Special Price Rows */
+.price-row.subtotal {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.price-row.discount {
+    color: #e53e3e;
+}
+
+.price-row.discount .price-value {
+    color: #e53e3e;
+    position: relative;
+}
+
+.price-row.discount .price-value::before {
+    content: '-';
+    position: absolute;
+    left: -8px;
+}
+
+.price-row.shipping {
+    color: #667eea;
+}
+
+.price-row.shipping .price-value {
+    color: #667eea;
+}
+
+.price-row.shipping .free-shipping {
+    background: linear-gradient(135deg, #48bb78, #38a169);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Total Price */
+.total-price-section {
+    background: linear-gradient(135deg, #f7fafc, #edf2f7);
+    border-radius: 16px;
+    padding: 20px;
+    margin: 24px 0;
+    border: 2px solid #e2e8f0;
+    position: relative;
+    overflow: hidden;
+}
+
+.total-price-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+}
+
+.total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.total-row:last-child {
+    margin-bottom: 0;
+}
+
+.total-label {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #2d3748;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.total-value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #e53e3e;
+    text-align: right;
+}
+
+.original-total {
+    font-size: 1rem;
+    color: #a0aec0;
+    text-decoration: line-through;
+    margin-bottom: 4px;
+}
+
+.savings-amount {
+    background: linear-gradient(135deg, #48bb78, #38a169);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-block;
+    margin-top: 8px;
+}
+
+/* Checkout Button */
+.checkout-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    border-radius: 16px;
+    padding: 20px 24px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    text-decoration: none;
+    display: block;
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+.checkout-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.5s;
+}
+
+.checkout-btn:hover::before {
+    left: 100%;
+}
+
+.checkout-btn:hover {
+    background: linear-gradient(135deg, #5a67d8, #6b46c1);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+    color: white;
+    text-decoration: none;
+}
+
+.checkout-btn:active {
+    transform: translateY(-1px);
+}
+
+.checkout-btn:disabled {
+    background: #a0aec0;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.checkout-btn .btn-text {
+    position: relative;
+    z-index: 2;
+}
+
+.checkout-btn .btn-icon {
+    margin-left: 12px;
+    font-size: 1.1rem;
+    transition: transform 0.3s ease;
+}
+
+.checkout-btn:hover .btn-icon {
+    transform: translateX(4px);
+}
+
+/* Continue Shopping */
+.continue-shopping {
+    width: 100%;
+    background: white;
+    color: #667eea;
+    border: 2px solid #667eea;
+    border-radius: 12px;
+    padding: 14px 24px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: block;
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+.continue-shopping:hover {
+    background: #667eea;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2);
+    text-decoration: none;
+}
+
+/* Security Badge */
+.security-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px;
+    background: linear-gradient(135deg, #f0fff4, #e6fffa);
+    border-radius: 8px;
+    border-left: 4px solid #48bb78;
+    font-size: 0.9rem;
+    color: #2f855a;
+    font-weight: 600;
+    margin-top: 16px;
+}
+
+.security-badge i {
+    color: #48bb78;
+    font-size: 1.1rem;
+}
+
+/* Payment Methods */
+.payment-methods {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.payment-methods-title {
+    font-size: 0.9rem;
+    color: #718096;
+    margin-bottom: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.payment-icons {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.payment-icon {
+    width: 40px;
+    height: 28px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    filter: grayscale(100%);
+}
+
+.payment-icon:hover {
+    filter: grayscale(0%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.payment-icon img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+/* Delivery Information */
+.delivery-info {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 16px;
+    margin-top: 20px;
+    border-left: 4px solid #667eea;
+}
+
+.delivery-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+}
+
+.delivery-title i {
+    margin-right: 8px;
+    color: #667eea;
+}
+
+.delivery-options {
+    font-size: 0.9rem;
+    color: #4a5568;
+    line-height: 1.5;
+}
+
+.delivery-option {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+}
+
+.delivery-option:last-child {
+    margin-bottom: 0;
+}
+
+.delivery-price {
+    font-weight: 600;
+    color: #2d3748;
+}
+
+.delivery-price.free {
+    color: #48bb78;
+    font-weight: 700;
+}
+
+/* Loading State */
+.summary-loading {
+    opacity: 0.6;
+    pointer-events: none;
+    position: relative;
+}
+
+.summary-loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 32px;
+    height: 32px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #667eea;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    transform: translate(-50%, -50%);
+}
+
+/* Responsive Design for Summary */
+@media (max-width: 768px) {
+    .cart-summary {
+        padding: 24px;
+        position: static;
+        margin-top: 32px;
+    }
+    
+    .summary-header {
+        flex-direction: column;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    
+    .summary-icon {
+        margin: 0 auto 12px;
+    }
+    
+    .checkout-btn {
+        padding: 18px 20px;
+        font-size: 1.1rem;
+    }
+    
+    .total-value {
+        font-size: 1.3rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .cart-summary {
+        padding: 20px;
+        border-radius: 16px;
+    }
+    
+    .total-price-section {
+        padding: 16px;
+        margin: 20px 0;
+    }
+    
+    .checkout-btn {
+        padding: 16px 18px;
+        font-size: 1rem;
+    }
+    
+    .price-row {
+        padding: 10px 0;
+    }
+    
+    .price-label,
+    .price-value {
+        font-size: 0.9rem;
+    }
+    
+    .total-label {
+        font-size: 1.1rem;
+    }
+    
+    .total-value {
+        font-size: 1.2rem;
+    }
+}
