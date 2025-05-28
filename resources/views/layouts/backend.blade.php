@@ -788,7 +788,25 @@
                                 </ul>
                             </div>
                         </li>
-
+                        
+                        <li class="nav-item">
+                            <a class="nav-link menu-link" href="#sidebarContacts" data-bs-toggle="collapse"
+                                role="button" aria-expanded="false" aria-controls="sidebarContacts">
+                                <i class="ri-mail-line"></i> <!-- icon thư, bạn có thể đổi icon khác -->
+                                <span data-key="t-contacts">Quản lý liên hệ</span>
+                            </a>
+                            <div class="collapse menu-dropdown" id="sidebarContacts">
+                                <ul class="nav nav-sm flex-column">
+                                    <li class="nav-item">
+                                        <a href="{{ route('admin.contacts.index') }}" class="nav-link"
+                                            data-key="t-contacts-list">
+                                            Danh sách liên hệ
+                                        </a>
+                                    </li>
+                                   
+                                </ul>
+                            </div>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link menu-link" href="#sidebarAdvanceUI" data-bs-toggle="collapse"
                                 role="button" aria-expanded="false" aria-controls="sidebarAdvanceUI">
