@@ -64,7 +64,7 @@
                     $defaultPrice = $defaultFormat->price ?? $book->price;
                     $defaultStock = $defaultFormat->stock ?? $book->stock;
                     $discount = $defaultFormat->discount ?? 0;
-                    $finalPrice = $defaultPrice - $defaultPrice * ($discount / 100);
+                    $finalPrice = $defaultPrice - ($defaultPrice * ($discount / 100));
                 @endphp
 
                 <!-- Tình trạng và tồn kho -->
