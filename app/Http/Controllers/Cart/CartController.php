@@ -15,30 +15,9 @@ use Carbon\Carbon;
 
 class CartController extends Controller
 {
-    private $validVouchers = [
-        'WELCOME10' => [
-            'code' => 'WELCOME10',
-            'description' => 'Giảm 10% cho đơn hàng đầu tiên',
-            'discount_percent' => 10,
-            'max_discount' => 50000,
-            'min_order_value' => 100000
-        ],
-        'SUMMER20' => [
-            'code' => 'SUMMER20',
-            'description' => 'Giảm 20% cho mùa hè',
-            'discount_percent' => 20,
-            'max_discount' => 100000,
-            'min_order_value' => 200000
-        ],
-        'SPECIAL25' => [
-            'code' => 'SPECIAL25',
-            'description' => 'Giảm 25% cho khách hàng VIP',
-            'discount_percent' => 25,
-            'max_discount' => 200000,
-            'min_order_value' => 500000
-        ]
-    ];
-
+    /**
+     * Hiển thị giỏ hàng của người dùng
+     */
     public function index()
     {
         if (!Auth::check()) {
@@ -342,7 +321,7 @@ class CartController extends Controller
 
         $voucherCode = strtoupper($request->code);
         
-        // Debug: Kiểm tra voucher có tồn tại không
+        // Kiểm tra voucher có tồn tại không
         $basicVoucher = DB::table('vouchers')
             ->where('code', $voucherCode)
             ->first();
@@ -358,19 +337,13 @@ class CartController extends Controller
         Log::info("Chi tiết voucher:", [
             'code' => $basicVoucher->code,
             'status' => $basicVoucher->status,
-            'all_data' => (array)$basicVoucher
+            'valid_from' => $basicVoucher->valid_from,
+            'valid_to' => $basicVoucher->valid_to,
+            'quantity' => $basicVoucher->quantity,
+            'deleted_at' => $basicVoucher->deleted_at
         ]);
 
-        // Kiểm tra status với giá trị "active"
-        if ($basicVoucher->status !== 'active') {
-            Log::info("Voucher không active, giá trị status: ", [
-                'status' => $basicVoucher->status
-            ]);
-            return response()->json([
-                'error' => 'Mã giảm giá đã bị vô hiệu hóa'
-            ], 404);
-        }
-
+        // 1. Kiểm tra voucher đã bị xóa mềm (deleted_at)
         if ($basicVoucher->deleted_at !== null) {
             Log::info("Voucher đã bị xóa: " . $voucherCode);
             return response()->json([
@@ -378,77 +351,181 @@ class CartController extends Controller
             ], 404);
         }
 
-        $now = Carbon::now();
-        $validFrom = Carbon::parse($basicVoucher->valid_from);
-        $validTo = Carbon::parse($basicVoucher->valid_to);
-        
-        $isValidTime = ($basicVoucher->valid_from === null && $basicVoucher->valid_to === null) ||
-                      ($validFrom <= $now && $validTo >= $now);
-
-        if (!$isValidTime) {
-            // Kiểm tra chi tiết lý do không hợp lệ về thời gian
-            $errorMessage = $now < $validFrom 
-                ? sprintf('Mã giảm giá này sẽ có hiệu lực từ %s', $validFrom->format('d/m/Y'))
-                : 'Mã giảm giá đã hết hạn';
-
-            Log::info("Voucher ngoài thời gian hiệu lực: " . $voucherCode, [
-                'now' => $now,
-                'valid_from' => $basicVoucher->valid_from,
-                'valid_to' => $basicVoucher->valid_to,
-                'is_future' => $now < $validFrom
-            ]);
-            
-            return response()->json([
-                'error' => $errorMessage
-            ], 404);
+        // 2. Kiểm tra trạng thái voucher
+        switch (strtolower($basicVoucher->status)) {
+            case 'inactive':
+            case 'locked':
+            case 'disabled':
+                Log::info("Voucher bị khóa hoặc vô hiệu hóa: " . $voucherCode, [
+                    'status' => $basicVoucher->status
+                ]);
+                return response()->json([
+                    'error' => 'Mã giảm giá đã bị vô hiệu hóa hoặc bị khóa'
+                ], 400);
+                
+            case 'expired':
+                Log::info("Voucher đã hết hạn theo status: " . $voucherCode);
+                return response()->json([
+                    'error' => 'Mã giảm giá đã hết hạn'
+                ], 400);
+                
+            case 'used':
+            case 'exhausted':
+                Log::info("Voucher đã được sử dụng hết: " . $voucherCode);
+                return response()->json([
+                    'error' => 'Mã giảm giá đã hết lượt sử dụng'
+                ], 400);
+                
+            case 'pending':
+            case 'scheduled':
+                Log::info("Voucher chưa được kích hoạt: " . $voucherCode);
+                return response()->json([
+                    'error' => 'Mã giảm giá chưa được kích hoạt'
+                ], 400);
+                
+            case 'active':
+                // Trạng thái hợp lệ, tiếp tục kiểm tra
+                break;
+                
+            default:
+                Log::info("Voucher có trạng thái không xác định: " . $voucherCode, [
+                    'status' => $basicVoucher->status
+                ]);
+                return response()->json([
+                    'error' => 'Mã giảm giá không hợp lệ'
+                ], 400);
         }
 
-        $isValidQuantity = $basicVoucher->quantity === null || $basicVoucher->quantity > 0;
-        if (!$isValidQuantity) {
-            Log::info("Voucher hết số lượng: " . $voucherCode);
+        // 3. Kiểm tra thời gian hiệu lực
+        $now = Carbon::now();
+        
+        if ($basicVoucher->valid_from !== null || $basicVoucher->valid_to !== null) {
+            $validFrom = $basicVoucher->valid_from ? Carbon::parse($basicVoucher->valid_from) : null;
+            $validTo = $basicVoucher->valid_to ? Carbon::parse($basicVoucher->valid_to) : null;
+            
+            // Kiểm tra chưa tới thời gian hiệu lực
+            if ($validFrom && $now < $validFrom) {
+                Log::info("Voucher chưa tới thời gian hiệu lực: " . $voucherCode, [
+                    'now' => $now->format('Y-m-d H:i:s'),
+                    'valid_from' => $validFrom->format('Y-m-d H:i:s')
+                ]);
+                return response()->json([
+                    'error' => sprintf('Mã giảm giá này sẽ có hiệu lực từ %s', 
+                        $validFrom->format('d/m/Y H:i'))
+                ], 400);
+            }
+            
+            // Kiểm tra đã hết hạn
+            if ($validTo && $now > $validTo) {
+                Log::info("Voucher đã hết hạn: " . $voucherCode, [
+                    'now' => $now->format('Y-m-d H:i:s'),
+                    'valid_to' => $validTo->format('Y-m-d H:i:s')
+                ]);
+                return response()->json([
+                    'error' => sprintf('Mã giảm giá đã hết hạn vào %s', 
+                        $validTo->format('d/m/Y H:i'))
+                ], 400);
+            }
+        }
+
+        // 4. Kiểm tra số lượng còn lại
+        if ($basicVoucher->quantity !== null && $basicVoucher->quantity <= 0) {
+            Log::info("Voucher hết số lượng: " . $voucherCode, [
+                'quantity' => $basicVoucher->quantity
+            ]);
             return response()->json([
                 'error' => 'Mã giảm giá đã hết lượt sử dụng'
-            ], 404);
+            ], 400);
         }
 
-        // Kiểm tra giá trị đơn hàng tối thiểu
-        if ($request->total < $basicVoucher->min_order_value) {
+        // 5. Kiểm tra giá trị đơn hàng tối thiểu
+        if ($basicVoucher->min_order_value && $request->total < $basicVoucher->min_order_value) {
+            Log::info("Đơn hàng không đạt giá trị tối thiểu: " . $voucherCode, [
+                'order_total' => $request->total,
+                'min_order_value' => $basicVoucher->min_order_value
+            ]);
             return response()->json([
                 'error' => sprintf('Giá trị đơn hàng tối thiểu phải từ %s để sử dụng mã giảm giá này', 
                     number_format($basicVoucher->min_order_value) . 'đ')
             ], 400);
         }
 
-        // Tính toán số tiền giảm
+        // 6. Kiểm tra xem user đã sử dụng voucher này chưa (nếu cần)
+        if (Auth::check()) {
+            $userUsedVoucher = session('applied_voucher');
+            if ($userUsedVoucher && $userUsedVoucher['code'] === $basicVoucher->code) {
+                return response()->json([
+                    'error' => 'Bạn đã áp dụng mã giảm giá này rồi'
+                ], 400);
+            }
+        }
+
+        // 7. Tính toán số tiền giảm
         $discountAmount = ($request->total * $basicVoucher->discount_percent) / 100;
-        if ($discountAmount > $basicVoucher->max_discount) {
+        if ($basicVoucher->max_discount && $discountAmount > $basicVoucher->max_discount) {
             $discountAmount = $basicVoucher->max_discount;
         }
 
-        // Giảm số lượng voucher nếu có giới hạn số lượng
-        if ($basicVoucher->quantity !== null) {
-            DB::table('vouchers')
-                ->where('code', $voucherCode)
-                ->decrement('quantity');
+        // Đảm bảo số tiền giảm không vượt quá tổng đơn hàng
+        if ($discountAmount > $request->total) {
+            $discountAmount = $request->total;
         }
 
-        // Lưu voucher vào session
-        session(['applied_voucher' => [
-            'code' => $basicVoucher->code,
-            'discount_amount' => $discountAmount
-        ]]);
+        // 8. Áp dụng voucher thành công - cập nhật số lượng và lưu session
+        try {
+            DB::beginTransaction();
+            
+            // Giảm số lượng voucher nếu có giới hạn số lượng
+            if ($basicVoucher->quantity !== null) {
+                $updated = DB::table('vouchers')
+                    ->where('code', $voucherCode)
+                    ->where('quantity', '>', 0) // Đảm bảo vẫn còn số lượng
+                    ->decrement('quantity');
+                    
+                if (!$updated) {
+                    DB::rollBack();
+                    return response()->json([
+                        'error' => 'Mã giảm giá đã hết lượt sử dụng'
+                    ], 400);
+                }
+            }
 
-        return response()->json([
-            'success' => 'Áp dụng mã giảm giá thành công',
-            'discount' => $discountAmount,
-            'voucher' => [
+            // Lưu voucher vào session
+            session(['applied_voucher' => [
                 'code' => $basicVoucher->code,
-                'description' => $basicVoucher->description,
-                'discount_percent' => $basicVoucher->discount_percent,
-                'max_discount' => $basicVoucher->max_discount,
-                'min_order_value' => $basicVoucher->min_order_value
-            ]
-        ]);
+                'discount_amount' => $discountAmount,
+                'applied_at' => now()->toDateTimeString()
+            ]]);
+            
+            DB::commit();
+            
+            Log::info("Áp dụng voucher thành công: " . $voucherCode, [
+                'discount_amount' => $discountAmount,
+                'order_total' => $request->total
+            ]);
+
+            return response()->json([
+                'success' => 'Áp dụng mã giảm giá thành công',
+                'discount' => $discountAmount,
+                'voucher' => [
+                    'code' => $basicVoucher->code,
+                    'description' => $basicVoucher->description,
+                    'discount_percent' => $basicVoucher->discount_percent,
+                    'max_discount' => $basicVoucher->max_discount,
+                    'min_order_value' => $basicVoucher->min_order_value
+                ]
+            ]);
+            
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Lỗi khi áp dụng voucher: ' . $voucherCode, [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            return response()->json([
+                'error' => 'Có lỗi xảy ra khi áp dụng mã giảm giá'
+            ], 500);
+        }
     }
 
     public function removeVoucher()
