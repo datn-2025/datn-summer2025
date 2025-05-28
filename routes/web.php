@@ -18,7 +18,7 @@ use App\Http\Controllers\Contact\ContactController;
 use App\Http\Controllers\Article\NewsController;
 use App\Http\Controllers\Admin\PaymentMethodController;
 
-Route::get('/', [HomeController::class, 'index'])->name('client.home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/books/{slug?}', [BookController::class, 'index'])->name('books.index');
 Route::get('/book/{slug}', [HomeController::class, 'show'])->name('books.show');
 Route::get('/books/{categoryId?}', [BookController::class, 'index'])->name('books.index');
@@ -40,12 +40,12 @@ Route::get('/test-qr-code/{id}', function ($id) {
 
 
 Route::prefix('account')->name('account.')->group(function () {
-    Route::get('/', [LoginController::class, 'index'])->name('index');
-    Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
+    // Route::get('/', [LoginController::class, 'index'])->name('index');
+    // Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+    // Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
     Route::get('/register', [LoginController::class, 'register'])->name('register');
     Route::post('/register', [LoginController::class, 'handleRegister'])->name('register.submit');
-    Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
+    // Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
     // Password Reset Routes
     Route::get('/forgot-password', [\App\Http\Controllers\Login\LoginController::class, 'showForgotPasswordForm'])->name('password.request');
@@ -59,6 +59,19 @@ Route::prefix('account')->name('account.')->group(function () {
     // profile
     Route::get('/showUser', [LoginController::class, 'showUser'])->name('showUser');
     Route::put('/profile/update', [LoginController::class, 'updateProfile'])->name('profile.update');
+});
+
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
+
+Route::middleware('auth')->group(function () {
+    // Đăng xuất
+    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+    
+    // Trang tài khoản
+    Route::prefix('account')->name('account.')->group(function () {
+        Route::get('/', [LoginController::class, 'index'])->name('index');
+    });
 });
 
 Route::prefix('admin')->name('admin.')->group(function () {

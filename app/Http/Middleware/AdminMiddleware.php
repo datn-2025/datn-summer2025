@@ -25,7 +25,7 @@ class AdminMiddleware
             return redirect()->route('admin.login')
                 ->with('error', 'Bạn không có quyền truy cập vào trang quản trị');
         }
-        
+
         if (!Auth::user()->isActive()) {
             Auth::logout();
             return redirect()->route('admin.login')
@@ -34,5 +34,4 @@ class AdminMiddleware
 
         return $next($request);
     }
-
 }
