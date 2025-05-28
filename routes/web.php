@@ -81,6 +81,17 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // Route admin/categories
     Route::prefix('categories')->name('categories.')->group(function () {
         Route::get('/', [CategoryController::class, 'index'])->name('index');
+        Route::get('/create', [CategoryController::class, 'create'])->name('create');
+        Route::post('/store', [CategoryController::class, 'store'])->name('store');
+        Route::get('/edit/{id}', [CategoryController::class, 'edit'])->name('edit');
+        Route::put('/update/{id}', [CategoryController::class, 'update'])->name('update');
+        // Route::delete('/soft-delete/{id}', [CategoryController::class, 'softDelete'])->name('soft-delete');
+        // Route::delete('/force-delete/{id}', [CategoryController::class, 'forceDelete'])->name('force-delete');
+        Route::get('/trash', [CategoryController::class, 'trash'])->name('trash');
+        Route::delete('/{category}', [CategoryController::class, 'destroy'])->name('destroy');
+        Route::put('/{id}/restore', [CategoryController::class, 'restore'])->name('restore');
+        Route::delete('/{id}/force', [CategoryController::class, 'forceDelete'])->name('force-delete');
+
         // Route admin/brand
         Route::prefix('brands')->name('brands.')->group(function () {
             Route::get('/', [CategoryController::class, 'brand'])->name('brand');
@@ -93,6 +104,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/{id}/edit', [CategoryController::class, 'BrandEdit'])->name('edit');
             Route::put('/{id}', [CategoryController::class, 'BrandUpdate'])->name('update');
         });
+      
         // Route admin/authors
         Route::prefix('authors')->name('authors.')->group(function () {
             Route::get('/', [AuthorController::class, 'index'])->name('index');
