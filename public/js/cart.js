@@ -19,11 +19,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Format số tiền
     function formatCurrency(amount) {
-        return new Intl.NumberFormat('vi-VN').format(amount) + 'đ';
+        // Ensure amount is a valid number
+        const numAmount = parseFloat(amount) || 0;
+        return new Intl.NumberFormat('vi-VN').format(numAmount) + 'đ';
     }
 
-    // Cập nhật hiển thị giá
-    function updatePriceDisplay(cartItem, quantity) {
+    // Cập nhật hiển thị giá cho từng item
+    function updateItemPriceDisplay(cartItem, quantity) {
         if (!cartItem) return;
 
         const price = parseFloat(cartItem.dataset.price) || 0;
@@ -44,26 +46,53 @@ document.addEventListener('DOMContentLoaded', function() {
         let cartTotal = 0;
         const cartItems = document.querySelectorAll('.cart-item');
         
-        if (cartItems.length === 0) return;
+        if (cartItems.length === 0) {
+            console.log('No cart items found');
+            return;
+        }
 
         cartItems.forEach(item => {
             const price = parseFloat(item.dataset.price) || 0;
             const quantityInput = item.querySelector('.quantity-input');
             const quantity = quantityInput ? (parseInt(quantityInput.value) || 0) : 0;
             cartTotal += price * quantity;
+            
+            console.log('Item:', {
+                price: price,
+                quantity: quantity,
+                subtotal: price * quantity
+            });
         });
+
+        console.log('Cart total calculated:', cartTotal);
 
         // Cập nhật hiển thị tổng tiền
         const subtotalElement = document.getElementById('subtotal');
         const totalElement = document.getElementById('total-amount');
         const discountElement = document.getElementById('discount-amount');
         
-        const discount = discountElement && discountElement.textContent 
-            ? (parseFloat(discountElement.textContent.replace(/[^\d.-]/g, '')) || 0)
-            : 0;
+        // Parse discount amount more carefully
+        let discount = 0;
+        if (discountElement && discountElement.textContent) {
+            const discountText = discountElement.textContent.trim();
+            if (discountText !== '0đ' && discountText !== '') {
+                // Remove "- " prefix and "đ" suffix, then parse
+                const cleanText = discountText.replace(/^-\s*/, '').replace(/[^\d]/g, '');
+                discount = parseFloat(cleanText) || 0;
+            }
+        }
 
-        if (subtotalElement) subtotalElement.textContent = formatCurrency(cartTotal);
-        if (totalElement) totalElement.textContent = formatCurrency(cartTotal - discount);
+        console.log('Discount amount:', discount);
+
+        if (subtotalElement) {
+            subtotalElement.textContent = formatCurrency(cartTotal);
+            console.log('Updated subtotal:', subtotalElement.textContent);
+        }
+        if (totalElement) {
+            const finalTotal = Math.max(0, cartTotal - discount);
+            totalElement.textContent = formatCurrency(finalTotal);
+            console.log('Updated total:', totalElement.textContent);
+        }
     }
 
     // Debounce function
@@ -100,10 +129,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         // Thêm loading state
-        cartItem.classList.add('loading');
-
-        // Cập nhật UI trước
-        updatePriceDisplay(cartItem, newQuantity);
+        cartItem.classList.add('loading');                // Cập nhật UI trước
+                updateItemPriceDisplay(cartItem, newQuantity);
 
         // Gọi API cập nhật
         $.ajax({
@@ -143,7 +170,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
 
                         // Cập nhật giá và tổng tiền
-                        updatePriceDisplay(cartItem, newQuantity);
+                        updateItemPriceDisplay(cartItem, newQuantity);
                     }
                 } else if (response.error) {
                     toastr.error(response.error);
@@ -163,7 +190,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             stockAmount.textContent = response.available_stock;
                         }
                         cartItem.dataset.stock = response.available_stock;
-                        updatePriceDisplay(cartItem, Math.min(response.available_stock, oldQuantity));
+                        updateItemPriceDisplay(cartItem, Math.min(response.available_stock, oldQuantity));
                     } else {
                         toastr.error(response.error);
                         resetToOldValue(cartItem, oldQuantity);
@@ -191,7 +218,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (quantityInput) {
             quantityInput.value = oldQuantity;
         }
-        updatePriceDisplay(cartItem, oldQuantity);
+        updateItemPriceDisplay(cartItem, oldQuantity);
     }
 
     // Xử lý sự kiện cho mỗi cart item
@@ -377,7 +404,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     switchToRemoveMode(voucherCode);
                     
                     // Cập nhật giá
-                    updatePriceDisplay(response.discount || 0);
+                    updateVoucherPriceDisplay(response.discount || 0);
                     
                     // Hiển thị success indicator
                     showVoucherSuccess();
@@ -415,7 +442,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     switchToApplyMode();
                     
                     // Reset giá
-                    resetPriceDisplay();
+                    resetVoucherPriceDisplay();
                     
                     // Ẩn success indicator
                     hideVoucherSuccess();
@@ -479,35 +506,43 @@ document.addEventListener('DOMContentLoaded', function() {
         removeBtn.html('<i class="fas fa-times me-1"></i><span class="btn-text">Xóa</span>');
     }
 
-    function updatePriceDisplay(discountAmount) {
+    function updateVoucherPriceDisplay(discountAmount) {
         const discountElement = $('#discount-amount');
         const totalElement = $('#total-amount');
         const subtotalElement = $('#subtotal');
         
         if (discountElement.length) {
-            discountElement.text(discountAmount > 0 ? '- ' + formatCurrency(discountAmount) : '0đ');
-            discountElement.addClass('text-success fw-medium');
+            if (discountAmount > 0) {
+                discountElement.text('- ' + formatCurrency(discountAmount));
+                discountElement.css('color', '#dc3545');
+            } else {
+                discountElement.text('0đ');
+                discountElement.css('color', '');
+            }
         }
         
         if (totalElement.length && subtotalElement.length) {
-            const subtotal = parseFloat(subtotalElement.text().replace(/[^\d]/g, '')) || 0;
-            const newTotal = subtotal - discountAmount;
+            const subtotalText = subtotalElement.text().replace(/[^\d]/g, '');
+            const subtotal = parseFloat(subtotalText) || 0;
+            const newTotal = Math.max(0, subtotal - discountAmount);
             totalElement.text(formatCurrency(newTotal));
         }
     }
 
-    function resetPriceDisplay() {
+    function resetVoucherPriceDisplay() {
         const discountElement = $('#discount-amount');
         const totalElement = $('#total-amount');
         const subtotalElement = $('#subtotal');
         
         if (discountElement.length) {
             discountElement.text('0đ');
-            discountElement.removeClass('text-success fw-medium');
+            discountElement.css('color', '');
         }
         
         if (totalElement.length && subtotalElement.length) {
-            totalElement.text(subtotalElement.text());
+            const subtotalText = subtotalElement.text().replace(/[^\d]/g, '');
+            const subtotal = parseFloat(subtotalText) || 0;
+            totalElement.text(formatCurrency(subtotal));
         }
     }
 
@@ -534,6 +569,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Khởi tạo voucher system
     initVoucherSystem();
+
+    // Cập nhật tổng giỏ hàng khi trang load
+    updateCartTotal();
 
     // Xóa tất cả sản phẩm trong giỏ hàng
     const clearCartBtn = document.getElementById('clear-cart-btn');
