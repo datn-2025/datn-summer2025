@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@php
+    use Illuminate\Support\Facades\Log;
+@endphp
+
 @section('title', 'Giỏ hàng')
 
 @push('styles')
@@ -97,33 +101,36 @@
                                                                 <i class="fas fa-bookmark me-1"></i>{{ $item->format_name ?? 'Chưa cập nhật' }}
                                                             </span>
                                                         </div>
-                                                        
-                                                        @if($item->attribute_value_ids && $item->attribute_value_ids !== '[]')
-                                                            @php
-                                                                $attributeIds = json_decode($item->attribute_value_ids, true);
-                                                                if ($attributeIds && is_array($attributeIds) && count($attributeIds) > 0) {
-                                                                    $attributes = DB::table('attribute_values')
-                                                                        ->join('attributes', 'attribute_values.attribute_id', '=', 'attributes.id')
-                                                                        ->whereIn('attribute_values.id', $attributeIds)
-                                                                        ->select('attributes.name as attr_name', 'attribute_values.value as attr_value')
-                                                                        ->get();
-                                                                }
-                                                            @endphp
-                                                            @if(isset($attributes) && $attributes->count() > 0)
-                                                                <div class="attributes-section mb-2">
-                                                                    <small class="text-muted fw-medium mb-1 d-block">
-                                                                        <i class="fas fa-tags me-1"></i>Thuộc tính:
-                                                                    </small>
-                                                                    <div class="d-flex flex-wrap gap-1">
-                                                                        @foreach($attributes as $attr)
-                                                                            <span class="badge bg-light text-primary border small">
-                                                                                {{ $attr->attr_name }}: {{ $attr->attr_value }}
-                                                                            </span>
-                                                                        @endforeach
-                                                                    </div>
-                                                                </div>
-                                                            @endif
-                                                        @endif
+                                                                         @if($item->attribute_value_ids && $item->attribute_value_ids !== '[]')
+                                            @php
+                                                $attributeIds = json_decode($item->attribute_value_ids, true);
+                                                $attributes = collect();
+                                                
+                                                if ($attributeIds && is_array($attributeIds) && count($attributeIds) > 0) {
+                                                    // Query attributes - now all data is in UUID format
+                                                    $attributes = DB::table('attribute_values')
+                                                        ->join('attributes', 'attribute_values.attribute_id', '=', 'attributes.id')
+                                                        ->whereIn('attribute_values.id', $attributeIds)
+                                                        ->select('attributes.name as attr_name', 'attribute_values.value as attr_value')
+                                                        ->get();
+                                                }
+                                            @endphp
+                                            <!-- Hiển thị thuộc tính nếu có -->
+                                            @if($attributes->count() > 0)
+                                                <div class="attributes-section mb-2">
+                                                    <small class="text-muted fw-medium mb-1 d-block">
+                                                        <i class="fas fa-tags me-1"></i>Thuộc tính:
+                                                    </small>
+                                                    <div class="d-flex flex-wrap gap-1">
+                                                        @foreach($attributes->unique(function($attr) { return $attr->attr_name . ':' . $attr->attr_value; }) as $attr)
+                                                            <span class="badge bg-light text-primary border small">
+                                                                {{ $attr->attr_name }}: {{ $attr->attr_value }}
+                                                            </span>
+                                                        @endforeach
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        @endif
                                                     </div>
                                                     
                                                     <!-- Nút xóa -->
