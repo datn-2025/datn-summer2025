@@ -105,9 +105,24 @@ class CartController extends Controller
                 }
             }
             
+            // Validation: Chỉ giữ lại những UUID hợp lệ và tồn tại trong database
+            $validAttributeIds = [];
+            if (!empty($attributeValueIds)) {
+                $validAttributeIds = DB::table('attribute_values')
+                    ->whereIn('id', $attributeValueIds)
+                    ->pluck('id')
+                    ->toArray();
+                
+                // Log để debug
+                Log::info('Cart addToCart - Attribute validation:', [
+                    'requested_ids' => $attributeValueIds,
+                    'valid_ids' => $validAttributeIds
+                ]);
+            }
+            
             // Loại bỏ duplicate và chuyển thành JSON string
-            $attributeValueIds = array_unique($attributeValueIds);
-            $attributeJson = json_encode(array_values($attributeValueIds));
+            $validAttributeIds = array_unique($validAttributeIds);
+            $attributeJson = json_encode(array_values($validAttributeIds));
 
             // Kiểm tra sách và lấy format có giá thấp nhất
             $bookInfo = DB::table('books')
@@ -123,6 +138,25 @@ class CartController extends Controller
                     'book_formats.stock'
                 )
                 ->first();
+
+            // Tính giá cuối cùng bao gồm thuộc tính
+            $finalPrice = $bookInfo->price;
+            if (!empty($validAttributeIds)) {
+                $attributeExtraCosts = DB::table('book_attribute_values')
+                    ->where('book_id', $bookId)
+                    ->whereIn('attribute_value_id', $validAttributeIds)
+                    ->sum('extra_price');
+                
+                $finalPrice += $attributeExtraCosts;
+                
+                // Log để debug
+                Log::info('Cart addToCart - Price calculation:', [
+                    'base_price' => $bookInfo->price,
+                    'attribute_extra_costs' => $attributeExtraCosts,
+                    'final_price' => $finalPrice,
+                    'attribute_ids' => $validAttributeIds
+                ]);
+            }
 
             if (!$bookInfo) {
                 return response()->json(['error' => 'Không tìm thấy sách'], 404);
@@ -177,7 +211,7 @@ class CartController extends Controller
                     'book_format_id' => $bookFormatId ?? $bookInfo->format_id,
                     'quantity' => $quantity,
                     'attribute_value_ids' => $attributeJson,
-                    'price' => $bookInfo->price,
+                    'price' => $finalPrice,
                     'created_at' => now(),
                     'updated_at' => now()
                 ]);
