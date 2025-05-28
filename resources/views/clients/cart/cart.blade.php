@@ -169,7 +169,7 @@
                                                                     </button>
                                                                 </div>
                                                                 <small class="text-muted mt-1">
-                                                                    <i class="fas fa-boxes me-1"></i>Còn <span class="stock-amount text-success">{{ $item->stock ?? 0 }}</span> sp
+                                                                    <i class="fas fa-boxes me-1"></i>Còn <span class="stock-amount text-success">{{ $item->stock ?? 0 }}</span> Sản Phẩm 
                                                                 </small>
                                                             </div>
                                                         </div>
