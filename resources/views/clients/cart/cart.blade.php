@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="{{ asset('css/cart_quantity.css') }}">
     <link rel="stylesheet" href="{{ asset('css/cart_voucher.css') }}">
     <link rel="stylesheet" href="{{ asset('css/cart_summary.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/cart_mobile.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/cart_accessibility.css') }}">
 @endpush
 
 @section('content')
@@ -373,4 +375,6 @@
     <script src="{{ asset('js/cart_quantity.js') }}"></script>
     <script src="{{ asset('js/cart_products.js') }}"></script>
     <script src="{{ asset('js/cart_voucher.js') }}"></script>
+    <script src="{{ asset('js/cart_enhanced_ux.js') }}"></script>
+    <script src="{{ asset('js/cart_smart_ux.js') }}"></script>
 @endpush
