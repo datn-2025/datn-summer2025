@@ -55,6 +55,8 @@ class LoginController extends Controller
 
         // Kiểm tra trạng thái tài khoản trước khi đăng nhập
         $user = User::where('email', $request->email)->first();
+        // dd($user);
+        
 
         if ($user) {
             // Kiểm tra nếu tài khoản bị khóa
@@ -83,10 +85,10 @@ class LoginController extends Controller
 
         // Thực hiện đăng nhập
         $credentials = $request->only('email', 'password');
+        // dd($credentials);
 
         if (Auth::attempt($credentials, $request->has('remember'))) {
             $request->session()->regenerate();
-
             // Xóa đếm số lần đăng nhập sai
             if (isset($user)) {
                 session()->forget('login_attempts_' . $user->id);
@@ -96,7 +98,6 @@ class LoginController extends Controller
             if (Auth::user()->isAdmin()) {
                 return redirect()->intended(route('admin.dashboard'));
             }
-
             Toastr::success('Đăng nhập thành công!', 'Thành công');
             return redirect()->intended(route('home'));
         }
