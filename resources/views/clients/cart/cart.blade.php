@@ -9,13 +9,13 @@
 @push('styles')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <!-- Modular Cart CSS Files -->
-    <link rel="stylesheet" href="{{ asset('css/cart_base.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/cart_products.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/cart_quantity.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/cart_voucher.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/cart_summary.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/cart_mobile.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/cart_accessibility.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/cart/cart_base.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/cart/cart_products.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/cart/cart_quantity.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/cart/cart_voucher.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/cart/cart_summary.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/cart/cart_mobile.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/cart/cart_accessibility.css') }}">
 @endpush
 
 @section('content')
@@ -377,11 +377,11 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <!-- Modular Cart JavaScript Files -->
-    <script src="{{ asset('js/cart_base.js') }}"></script>
-    <script src="{{ asset('js/cart_summary.js') }}"></script>
-    <script src="{{ asset('js/cart_quantity.js') }}"></script>
-    <script src="{{ asset('js/cart_products.js') }}"></script>
-    <script src="{{ asset('js/cart_voucher.js') }}"></script>
-    <script src="{{ asset('js/cart_enhanced_ux.js') }}"></script>
-    <script src="{{ asset('js/cart_smart_ux.js') }}"></script>
+    <script src="{{ asset('js/cart/cart_base.js') }}"></script>
+    <script src="{{ asset('js/cart/cart_summary.js') }}"></script>
+    <script src="{{ asset('js/cart/cart_quantity.js') }}"></script>
+    <script src="{{ asset('js/cart/cart_products.js') }}"></script>
+    <script src="{{ asset('js/cart/cart_voucher.js') }}"></script>
+    <script src="{{ asset('js/cart/cart_enhanced_ux.js') }}"></script>
+    <script src="{{ asset('js/cart/cart_smart_ux.js') }}"></script>
 @endpush
