@@ -7,10 +7,11 @@ use App\Models\Brand;
 use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\FacadesLog;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Toastr;
 
 class CategoryController extends Controller
@@ -37,7 +38,7 @@ class CategoryController extends Controller
             return back()->with('error', 'Lỗi khi truy vấn danh mục. Vui lòng thử lại sau.');
         }
     }
-  
+
     public function create()
     {
         return view('admin.categories.create');
@@ -182,7 +183,7 @@ class CategoryController extends Controller
     // {
     //     try {
     //         $query = Category::onlyTrashed();
-            
+
     //         if (!empty($request['search_name'])) {
     //             $query->where('name', 'like', '%' . $request['search_name'] . '%');
     //         }
@@ -205,23 +206,23 @@ class CategoryController extends Controller
     public function trash(Request $request)
     {
         try {
-            \Log::info('Bắt đầu hàm trash');
+            Log::info('Bắt đầu hàm trash');
             $query = Category::onlyTrashed();
-            \Log::info('Sau onlyTrashed');
-            
+            Log::info('Sau onlyTrashed');
+
             if (!empty($request['search_name'])) {
                 $query->where('name', 'like', '%' . $request['search_name'] . '%');
             }
 
             $deletedCategories = $query->withCount('books')->paginate(10);
-            \Log::info('Sau withCount và paginate', ['count' => $deletedCategories->count()]);
+            Log::info('Sau withCount và paginate', ['count' => $deletedCategories->count()]);
 
             return view('admin.categories.categories-trash', [
                 'deletedCategories' => $deletedCategories,
                 'searchName' => $request['search_name'] ?? ''
             ]);
         } catch (\Throwable $e) {
-            \Log::error('Lỗi trong hàm trash: ' . $e->getMessage(), [
+            Log::error('Lỗi trong hàm trash: ' . $e->getMessage(), [
                 'exception' => $e,
                 'trace' => $e->getTraceAsString()
             ]);
@@ -239,7 +240,7 @@ class CategoryController extends Controller
             //     toastr()->error('Không thể xóa danh mục đang có sách trong hệ thống.');
             //     return back();
             // }
-            
+
             $category->delete();
             toastr()->success('Danh mục đã được xóa tạm thời thành công.');
             return back();
@@ -260,12 +261,13 @@ class CategoryController extends Controller
             toastr()->error('Không thể khôi phục danh mục. Vui lòng thử lại sau.');
             return back();
         }
-    }    
+    }
+
     public function forceDelete($id)
     {
         try {
             $category = Category::withTrashed()->findOrFail($id);
-            
+
             // Kiểm tra xem danh mục có sách nào không
             if ($category->books()->count() > 0) {
                 return back()->with('error', 'Không thể xóa vĩnh viễn danh mục đang có sách trong hệ thống. Vui lòng gán sách cho danh mục khác hoặc xóa mềm.');
@@ -277,7 +279,8 @@ class CategoryController extends Controller
             report($e);
             return back()->with('error', 'Không thể xóa vĩnh viễn danh mục. Vui lòng thử lại sau.');
         }
-      
+    }
+
     public function brand(Request $request)
     {
         $query = Brand::query();
@@ -296,41 +299,41 @@ class CategoryController extends Controller
     }
 
 
-public function BrandStore(Request $request)
-{
-    $validator = Validator::make($request->all(), [
-        'name' => 'required|string|max:255|unique:brands,name',
-        'description' => 'nullable|string',
-        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
-    ], [
-        'name.required' => 'Vui lòng nhập tên thương hiệu',
-        'name.unique' => 'Tên thương hiệu đã tồn tại',
-        'name.max' => 'Tên thương hiệu không được vượt quá 255 ký tự',
-        'image.image' => 'File phải là hình ảnh',
-        'image.mimes' => 'Hình ảnh phải có định dạng: jpeg, png, jpg, gif',
-        'image.max' => 'Kích thước hình ảnh không được vượt quá 2MB'
-    ]);
+    public function BrandStore(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255|unique:brands,name',
+            'description' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ], [
+            'name.required' => 'Vui lòng nhập tên thương hiệu',
+            'name.unique' => 'Tên thương hiệu đã tồn tại',
+            'name.max' => 'Tên thương hiệu không được vượt quá 255 ký tự',
+            'image.image' => 'File phải là hình ảnh',
+            'image.mimes' => 'Hình ảnh phải có định dạng: jpeg, png, jpg, gif',
+            'image.max' => 'Kích thước hình ảnh không được vượt quá 2MB'
+        ]);
 
-    if ($validator->fails()) {
-        return back()->withErrors($validator)->withInput();
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+
+        $data = $validator->validated();
+        $data['description'] = strip_tags($data['description']);
+
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $filename = time() . '_' . $image->getClientOriginalName();
+            $image->storeAs('brands', $filename, 'public');
+            $data['image'] = '/storage/brands/' . $filename;
+        }
+
+
+        Brand::create($data);
+
+        toastr()->success('Thêm thương hiệu mới thành công');
+        return redirect()->route('admin.categories.brands.brand');
     }
-
-    $data = $validator->validated();
-    $data['description'] = strip_tags($data['description']);
-
-    if ($request->hasFile('image')) {
-        $image = $request->file('image');
-        $filename = time() . '_' . $image->getClientOriginalName();
-        $image->storeAs('brands', $filename, 'public');
-        $data['image'] = '/storage/brands/' . $filename;
-    }
-   
-
-    Brand::create($data);
-
-    toastr()->success('Thêm thương hiệu mới thành công');
-    return redirect()->route('admin.categories.brands.brand');
-}
 
     public function BrandDestroy($id)
     {
@@ -424,5 +427,4 @@ public function BrandStore(Request $request)
         toastr()->success('Cập nhật thương hiệu thành công!');
         return redirect()->route('admin.categories.brands.brand');
     }
-
 }
