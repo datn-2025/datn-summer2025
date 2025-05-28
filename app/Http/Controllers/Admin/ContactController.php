@@ -66,7 +66,7 @@ class ContactController extends Controller
 
         // Cập nhật trạng thái là đã phản hồi
         $contact->status = 'replied';
-        $contact->note = $request->message;
+        $contact->admin_reply = $request->message;
         $contact->save();
 
         return redirect()->route('admin.contacts.index')->with('success', 'Đã gửi email phản hồi thành công.');
