@@ -15,8 +15,8 @@ class User extends Authenticatable
     
     protected $table = 'users';
 
-    // const ROLE_ADMIN = 'Admin';
-    // const ROLE_USER = 'User';
+    const ROLE_ADMIN = 'Admin';
+    const ROLE_USER = 'User';
 
     /**
      * The attributes that are mass assignable.
@@ -31,7 +31,7 @@ class User extends Authenticatable
         'status',
         'role_id',
 
-        'reset_token'
+        'reset_token',
 
         'avatar'
 
@@ -60,19 +60,19 @@ class User extends Authenticatable
         ];
     }
 
-    // public function isAdmin()
-    // {
-    //     // return $this->role === self::ROLE_ADMIN;
-    //     return $this->role && $this->role->name === 'Admin';
+    public function isAdmin()
+    {
+        // return $this->role === self::ROLE_ADMIN;
+        return $this->role && $this->role->name === 'Admin';
 
-    //     // return $this->role_id === 'bddabc45-3a65-3311-aa0b-9d95effef61c'; 
-    //     // return $this->role()->where('name', 'Admin')->exists(); 
-    // }
+        // return $this->role_id === 'bddabc45-3a65-3311-aa0b-9d95effef61c'; 
+        // return $this->role()->where('name', 'Admin')->exists(); 
+    }
 
-    // public function isActive()
-    // {
-    //     return $this->status === 'Hoạt Động';
-    // }
+    public function isActive()
+    {
+        return $this->status === 'Hoạt Động';
+    }
 
     public $incrementing = false;
     protected $keyType = 'string';
