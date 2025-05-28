@@ -7,10 +7,11 @@ use App\Models\Brand;
 use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\FacadesLog;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Toastr;
 
 class CategoryController extends Controller
@@ -205,23 +206,23 @@ class CategoryController extends Controller
     public function trash(Request $request)
     {
         try {
-            \Log::info('Bắt đầu hàm trash');
+            Log::info('Bắt đầu hàm trash');
             $query = Category::onlyTrashed();
-            \Log::info('Sau onlyTrashed');
+            Log::info('Sau onlyTrashed');
 
             if (!empty($request['search_name'])) {
                 $query->where('name', 'like', '%' . $request['search_name'] . '%');
             }
 
             $deletedCategories = $query->withCount('books')->paginate(10);
-            \Log::info('Sau withCount và paginate', ['count' => $deletedCategories->count()]);
+            Log::info('Sau withCount và paginate', ['count' => $deletedCategories->count()]);
 
             return view('admin.categories.categories-trash', [
                 'deletedCategories' => $deletedCategories,
                 'searchName' => $request['search_name'] ?? ''
             ]);
         } catch (\Throwable $e) {
-            \Log::error('Lỗi trong hàm trash: ' . $e->getMessage(), [
+            Log::error('Lỗi trong hàm trash: ' . $e->getMessage(), [
                 'exception' => $e,
                 'trace' => $e->getTraceAsString()
             ]);
