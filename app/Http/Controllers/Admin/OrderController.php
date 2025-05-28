@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use App\Jobs\SendOrderStatusUpdatedMail;
 
 class OrderController extends Controller
 {
@@ -27,7 +28,7 @@ class OrderController extends Controller
         $paymentStatuses = PaymentStatus::query()->get();
         // tìm kiếm đơn hàng
         // dd($request->all());
-        if ($request->has('search')) {
+        if ($request->has('search') ) {
             $query->whereHas('user', function ($q) use ($request) {
                 $q->where('name', 'like', '%' . $request->search . '%');
             });
@@ -136,6 +137,9 @@ class OrderController extends Controller
             Log::info("Order {$order->id} status changed from {$currentStatus} to {$newStatus} by admin");
 
             DB::commit();
+
+            // Gửi mail thông báo cập nhật trạng thái đơn hàng qua queue
+            dispatch(new SendOrderStatusUpdatedMail($order, $newStatus));
 
             Toastr::success('Cập nhật trạng thái đơn hàng thành công', 'Thành công');
             return redirect()->route('admin.orders.show', $order->id);
