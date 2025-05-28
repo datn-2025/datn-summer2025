@@ -696,8 +696,8 @@
                             <div class="collapse menu-dropdown" id="sidebarAuth">
                                 <ul class="nav nav-sm flex-column">
                                     <li class="nav-item">
-                                        <a href="{{ route('admin.users.index') }}" class="nav-link"
-                                            data-key="t-signin"> Danh sách
+                                        <a href="{{ route('admin.users.index') }}" class="nav-link" data-key="t-signin">
+                                            Danh sách
                                         </a>
                                     </li>
                                 </ul>
@@ -765,7 +765,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link menu-link" href="{{ route('admin.orders.index') }}">
+                            <a class="nav-link menu-link" href="{{route('admin.orders.index')}}">
                                 <i class="ri-pages-line"></i> <span data-key="t-pages">Quản lý đơn hàng</span>
                             </a>
                         </li>
@@ -788,6 +788,7 @@
                                 </ul>
                             </div>
                         </li>
+                        
                         <li class="nav-item">
                             <a class="nav-link menu-link" href="#sidebarContacts" data-bs-toggle="collapse"
                                 role="button" aria-expanded="false" aria-controls="sidebarContacts">
@@ -806,8 +807,6 @@
                                 </ul>
                             </div>
                         </li>
-
-
                         <li class="nav-item">
                             <a class="nav-link menu-link" href="#sidebarAdvanceUI" data-bs-toggle="collapse"
                                 role="button" aria-expanded="false" aria-controls="sidebarAdvanceUI">
