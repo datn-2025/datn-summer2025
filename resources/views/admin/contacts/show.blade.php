@@ -135,8 +135,8 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="note" class="form-label">Ghi chú</label>
-                                <textarea name="note" id="note" class="form-control"
+                                <label for="note" class="form-label">Nội dung</label>
+                                <textarea readonly name="note" id="note" class="form-control"
                                     rows="5">{{ $contact->note }}</textarea>
                             </div>
                         </div>
