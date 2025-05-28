@@ -569,11 +569,14 @@
                                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="d-flex align-items-center">
                                     <img class="rounded-circle header-profile-user"
-                                        src="{{ asset('assets/images/users/avatar-1.jpg') }}" alt="Header Avatar">
+                                            src="{{ Auth::user()->avatar ? asset('storage/' . Auth::user()->avatar) : asset('assets/images/users/default-avatar.jpg') }}"
+                                           width="100" alt="Avatar">
                                     <span class="text-start ms-xl-2">
-                                        <span class="d-none d-xl-inline-block ms-1 fw-medium user-name-text">Anna
-                                            Adame</span>
-                                        <span class="d-none d-xl-block ms-1 fs-12 user-name-sub-text">Founder</span>
+                                        <span class="d-none d-xl-inline-block ms-1 fw-medium user-name-text">
+                                            {{ Auth::user()->name }}</span>
+                                        <span class="d-none d-xl-block ms-1 fs-12 user-name-sub-text">
+                                            {{ Auth::user()->role->name }}
+                                        </span>
                                     </span>
                                 </span>
                             </button>
