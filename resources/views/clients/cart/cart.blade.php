@@ -4,11 +4,16 @@
 
 @push('styles')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-    <link rel="stylesheet" href="{{ asset('css/cart.css') }}">
+    <!-- Modular Cart CSS Files -->
+    <link rel="stylesheet" href="{{ asset('css/cart_base.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/cart_products.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/cart_quantity.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/cart_voucher.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/cart_summary.css') }}">
 @endpush
 
 @section('content')
-<div class="container py-5">
+<div class="container cart-page py-5">
     <!-- Modern Page Header -->
     <div class="page-header mb-5">
         <div class="row align-items-center">
@@ -191,7 +196,7 @@
 
             <!-- Tổng kết đơn hàng -->
             <div class="col-lg-4">
-                <div class="cart-container sticky-top" style="top: 2rem;">
+                <div class="summary-container" style="top: 2rem;">
                     <div class="p-4">
                         <div class="d-flex align-items-center mb-4">
                             <i class="fas fa-calculator text-success me-3 fs-4"></i>
@@ -362,5 +367,10 @@
 @push('scripts')
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-    <script src="{{ asset('js/cart.js') }}"></script>
+    <!-- Modular Cart JavaScript Files -->
+    <script src="{{ asset('js/cart_base.js') }}"></script>
+    <script src="{{ asset('js/cart_summary.js') }}"></script>
+    <script src="{{ asset('js/cart_quantity.js') }}"></script>
+    <script src="{{ asset('js/cart_products.js') }}"></script>
+    <script src="{{ asset('js/cart_voucher.js') }}"></script>
 @endpush
