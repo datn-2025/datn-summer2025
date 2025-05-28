@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -12,9 +13,9 @@
     @vite(['resources/js/app.js' , 'resources/css/app.css'])
     @stack('styles')
 </head>
+
 <body style="margin:0; min-height:100vh;">
     @include('layouts.partials.navbar')
-    
     @yield('content')
     {!! Toastr::message() !!}
     <!-- Bootstrap JS Bundle -->
