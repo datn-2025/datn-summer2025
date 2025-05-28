@@ -52,12 +52,13 @@
                         </div>
                         
                         @foreach($cart as $item)
-                            <div class="cart-item-card cart-item" 
+                            <div class="cart-item-card cart-item mb-3" 
                                 data-book-id="{{ $item->book_id }}"
                                 data-price="{{ $item->price ?? 0 }}"
                                 data-stock="{{ $item->stock ?? 0 }}">
                                 <div class="row g-0">
-                                    <div class="col-md-3">
+                                    <!-- Hình ảnh sản phẩm -->
+                                    <div class="col-md-3 col-sm-4">
                                         <div class="product-image-container">
                                             @if($item->image)
                                                 <img src="{{ asset($item->image) }}" 
@@ -65,91 +66,115 @@
                                                      class="product-image">
                                                 <div class="image-overlay"></div>
                                             @else
-                                                <div class="product-image d-flex align-items-center justify-content-center" style="background: linear-gradient(135deg, #f8f9fa, #e9ecef);">
+                                                <div class="product-image d-flex align-items-center justify-content-center" style="background: linear-gradient(135deg, #f8f9fa, #e9ecef); min-height: 160px;">
                                                     <i class="fas fa-book fa-3x text-muted"></i>
                                                 </div>
                                             @endif
                                         </div>
                                     </div>
-                                    <div class="col-md-9">
-                                        <div class="product-info">
-                                            <div class="d-flex justify-content-between align-items-start mb-3">
-                                                <div class="flex-grow-1">
-                                                    <h5 class="product-title">{{ $item->title ?? 'Không có tiêu đề' }}</h5>
-                                                    
-                                                    <div class="product-meta">
-                                                        <span class="meta-badge">
-                                                            <i class="fas fa-user me-1"></i>{{ $item->author_name ?? 'Chưa cập nhật' }}
-                                                        </span>
-                                                        <span class="meta-badge">
-                                                            <i class="fas fa-bookmark me-1"></i>{{ $item->format_name ?? 'Chưa cập nhật' }}
-                                                        </span>
-                                                    </div>
-                                                    
-                                                    @if($item->attribute_value_ids && $item->attribute_value_ids !== '[]')
-                                                        @php
-                                                            $attributeIds = json_decode($item->attribute_value_ids, true);
-                                                            if ($attributeIds && is_array($attributeIds) && count($attributeIds) > 0) {
-                                                                $attributes = DB::table('attribute_values')
-                                                                    ->join('attributes', 'attribute_values.attribute_id', '=', 'attributes.id')
-                                                                    ->whereIn('attribute_values.id', $attributeIds)
-                                                                    ->select('attributes.name as attr_name', 'attribute_values.value as attr_value')
-                                                                    ->get();
-                                                            }
-                                                        @endphp
-                                                        @if(isset($attributes) && $attributes->count() > 0)
-                                                            <div class="mb-3">
-                                                                <small class="text-muted fw-medium mb-2 d-block">
-                                                                    <i class="fas fa-tags me-1"></i>Thuộc tính đã chọn:
-                                                                </small>
-                                                                <div class="d-flex flex-wrap gap-2">
-                                                                    @foreach($attributes as $attr)
-                                                                        <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25">
-                                                                            {{ $attr->attr_name }}: {{ $attr->attr_value }}
-                                                                        </span>
-                                                                    @endforeach
-                                                                </div>
-                                                            </div>
-                                                        @endif
-                                                    @endif
-                                                </div>
-                                                
-                                                <button class="btn remove-item ms-3" data-book-id="{{ $item->book_id }}" title="Xóa sản phẩm">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </div>
-                                            
-                                            <div class="row align-items-center">
-                                                <div class="col-md-6">
-                                                    <div class="price-display">
-                                                        <i class="fas fa-tag me-2"></i>{{ number_format($item->price ?? 0) }}đ
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="d-flex align-items-center justify-content-end">
-                                                        <div class="quantity-wrapper me-3">
-                                                            <div class="input-group quantity-controls">
-                                                                <button class="btn decrease-quantity" type="button">
-                                                                    <i class="fas fa-minus"></i>
-                                                                </button>
-                                                                <input type="number" 
-                                                                       class="form-control quantity-input" 
-                                                                       value="{{ $item->quantity }}" 
-                                                                       min="1" 
-                                                                       max="{{ $item->stock ?? 1 }}">
-                                                                <button class="btn increase-quantity" type="button">
-                                                                    <i class="fas fa-plus"></i>
-                                                                </button>
-                                                            </div>
+                                    
+                                    <!-- Thông tin sản phẩm -->
+                                    <div class="col-md-9 col-sm-8">
+                                        <div class="product-info-wrapper">
+                                            <!-- Header: Tiêu đề và nút xóa -->
+                                            <div class="product-header">
+                                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                                    <div class="product-details flex-grow-1">
+                                                        <h5 class="product-title mb-2">{{ $item->title ?? 'Không có tiêu đề' }}</h5>
+                                                        
+                                                        <div class="product-meta mb-2">
+                                                            <span class="meta-badge me-2">
+                                                                <i class="fas fa-user me-1"></i>{{ $item->author_name ?? 'Chưa cập nhật' }}
+                                                            </span>
+                                                            <span class="meta-badge">
+                                                                <i class="fas fa-bookmark me-1"></i>{{ $item->format_name ?? 'Chưa cập nhật' }}
+                                                            </span>
                                                         </div>
                                                         
-                                                        <div class="text-end">
+                                                        @if($item->attribute_value_ids && $item->attribute_value_ids !== '[]')
+                                                            @php
+                                                                $attributeIds = json_decode($item->attribute_value_ids, true);
+                                                                if ($attributeIds && is_array($attributeIds) && count($attributeIds) > 0) {
+                                                                    $attributes = DB::table('attribute_values')
+                                                                        ->join('attributes', 'attribute_values.attribute_id', '=', 'attributes.id')
+                                                                        ->whereIn('attribute_values.id', $attributeIds)
+                                                                        ->select('attributes.name as attr_name', 'attribute_values.value as attr_value')
+                                                                        ->get();
+                                                                }
+                                                            @endphp
+                                                            @if(isset($attributes) && $attributes->count() > 0)
+                                                                <div class="attributes-section mb-2">
+                                                                    <small class="text-muted fw-medium mb-1 d-block">
+                                                                        <i class="fas fa-tags me-1"></i>Thuộc tính:
+                                                                    </small>
+                                                                    <div class="d-flex flex-wrap gap-1">
+                                                                        @foreach($attributes as $attr)
+                                                                            <span class="badge bg-light text-primary border small">
+                                                                                {{ $attr->attr_name }}: {{ $attr->attr_value }}
+                                                                            </span>
+                                                                        @endforeach
+                                                                    </div>
+                                                                </div>
+                                                            @endif
+                                                        @endif
+                                                    </div>
+                                                    
+                                                    <!-- Nút xóa -->
+                                                    <div class="delete-action">
+                                                        <button class="btn btn-outline-danger btn-sm remove-item" 
+                                                                data-book-id="{{ $item->book_id }}" 
+                                                                title="Xóa sản phẩm">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Footer: Giá, số lượng, tổng tiền -->
+                                            <div class="product-footer">
+                                                <div class="row align-items-center g-3">
+                                                    <!-- Giá sản phẩm -->
+                                                    <div class="col-lg-4 col-md-12 col-6">
+                                                        <div class="price-section">
+                                                            <small class="text-muted d-block mb-1">Đơn giá</small>
+                                                            <div class="price-display fw-bold text-primary">
+                                                                <i class="fas fa-tag me-1"></i>{{ number_format($item->price ?? 0) }}đ
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <!-- Điều khiển số lượng -->
+                                                    <div class="col-lg-4 col-md-6 col-6">
+                                                        <div class="quantity-section">
+                                                            <small class="text-muted d-block mb-1">Số lượng</small>
+                                                            <div class="quantity-controls-wrapper">
+                                                                <div class="quantity-controls d-flex align-items-center">
+                                                                    <button class="btn btn-outline-secondary btn-sm quantity-btn decrease-quantity" type="button">
+                                                                        <i class="fas fa-minus"></i>
+                                                                    </button>
+                                                                    <input type="number" 
+                                                                           class="form-control quantity-input text-center mx-1" 
+                                                                           value="{{ $item->quantity }}" 
+                                                                           min="1" 
+                                                                           max="{{ $item->stock ?? 1 }}">
+                                                                    <button class="btn btn-outline-secondary btn-sm quantity-btn increase-quantity" type="button">
+                                                                        <i class="fas fa-plus"></i>
+                                                                    </button>
+                                                                </div>
+                                                                <small class="text-muted mt-1">
+                                                                    <i class="fas fa-boxes me-1"></i>Còn <span class="stock-amount text-success">{{ $item->stock ?? 0 }}</span> sp
+                                                                </small>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <!-- Tổng tiền -->
+                                                    <div class="col-lg-4 col-md-6 col-12">
+                                                        <div class="total-section text-end">
+                                                            <small class="text-muted d-block mb-1">Thành tiền</small>
                                                             <div class="fw-bold text-success fs-5 item-total">
                                                                 {{ number_format(($item->price ?? 0) * $item->quantity) }}đ
                                                             </div>
-                                                            <small class="text-muted">
-                                                                <i class="fas fa-boxes me-1"></i>Còn <span class="stock-amount">{{ $item->stock ?? 0 }}</span> sản phẩm
-                                                            </small>
                                                         </div>
                                                     </div>
                                                 </div>
