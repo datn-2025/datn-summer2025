@@ -1,3 +1,7 @@
+@extends('layouts.app') 
+
+@section('content')
+
 <!DOCTYPE html>
 <html lang="vi" data-theme="light">
 <head>
@@ -569,6 +573,7 @@
     }
   </style>
 </head>
+
 <body>
   <div class="progress-bar" style="width: 0%"></div>
   
@@ -582,6 +587,7 @@
       </div>
     </div>
   </nav>
+
 
   <div class="container">
     <div class="row g-4">
@@ -645,7 +651,6 @@
             </form>
         </div>
         </div>
-
     </div>
   </div>
 
@@ -830,3 +835,4 @@
 
 </body>
 </html>
+@endsection
