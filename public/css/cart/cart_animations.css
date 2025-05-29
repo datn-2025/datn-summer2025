@@ -4,7 +4,7 @@
 @keyframes luxuryFadeIn {
     0% {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(10px);
     }
     100% {
         opacity: 1;
@@ -21,30 +21,31 @@
     }
 }
 
-@keyframes pulseGlow {
+@keyframes subtlePulse {
     0%, 100% {
-        box-shadow: 0 0 5px rgba(99, 102, 241, 0.3);
+        opacity: 1;
     }
     50% {
-        box-shadow: 0 0 20px rgba(99, 102, 241, 0.6), 0 0 30px rgba(99, 102, 241, 0.4);
+        opacity: 0.8;
     }
 }
 
-@keyframes iconRotate {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+@keyframes gentleIconMove {
+    0% { transform: translateX(0); }
+    50% { transform: translateX(1px); }
+    100% { transform: translateX(0); }
 }
 
-@keyframes minimalistHover {
+@keyframes subtleHover {
     0% {
         transform: translateY(0);
     }
     100% {
-        transform: translateY(-2px);
+        transform: translateY(-0.5px);
     }
 }
 
-@keyframes luxuryGradientShift {
+@keyframes softGradientShift {
     0%, 100% {
         background-position: 0% 50%;
     }
@@ -53,12 +54,12 @@
     }
 }
 
-@keyframes quantityPulse {
+@keyframes gentleScale {
     0%, 100% {
         transform: scale(1);
     }
     50% {
-        transform: scale(1.05);
+        transform: scale(1.01);
     }
 }
 
@@ -81,21 +82,21 @@
 
 /* ===== PAGE ENTRANCE ANIMATIONS ===== */
 .cart-page {
-    animation: luxuryFadeIn 0.6s ease-out;
+    animation: luxuryFadeIn 0.4s ease-out;
 }
 
 .cart-item-card {
-    animation: luxuryFadeIn 0.8s ease-out;
+    animation: luxuryFadeIn 0.5s ease-out;
     animation-fill-mode: both;
 }
 
-.cart-item-card:nth-child(1) { animation-delay: 0.1s; }
-.cart-item-card:nth-child(2) { animation-delay: 0.2s; }
-.cart-item-card:nth-child(3) { animation-delay: 0.3s; }
-.cart-item-card:nth-child(4) { animation-delay: 0.4s; }
+.cart-item-card:nth-child(1) { animation-delay: 0.05s; }
+.cart-item-card:nth-child(2) { animation-delay: 0.1s; }
+.cart-item-card:nth-child(3) { animation-delay: 0.15s; }
+.cart-item-card:nth-child(4) { animation-delay: 0.2s; }
 
 .summary-container {
-    animation: luxuryFadeIn 0.8s ease-out 0.3s both;
+    animation: luxuryFadeIn 0.5s ease-out 0.1s both;
 }
 
 /* ===== HOVER ANIMATIONS ===== */
@@ -104,21 +105,19 @@
 }
 
 .cart-item-card:hover {
-    animation: minimalistHover 0.3s ease-out forwards;
-    box-shadow: var(--shadow-lg);
+    animation: subtleHover 0.2s ease-out forwards;
+    box-shadow: var(--shadow-md);
 }
 
 .modern-checkout-btn {
     background-size: 200% 200%;
-    background-image: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 50%, var(--accent-color) 100%);
-    animation: luxuryGradientShift 3s ease infinite;
+    background-image: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
     transition: all var(--transition-normal);
 }
 
 .modern-checkout-btn:hover {
-    animation-play-state: paused;
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-xl);
+    transform: translateY(-0.5px);
+    box-shadow: var(--shadow-md);
 }
 
 /* ===== QUANTITY CONTROLS ANIMATIONS ===== */
@@ -127,11 +126,11 @@
 }
 
 .quantity-btn:hover {
-    animation: quantityPulse 0.3s ease-out;
+    animation: gentleScale 0.2s ease-out;
 }
 
 .quantity-btn:active {
-    transform: scale(0.95);
+    transform: scale(0.99);
 }
 
 /* ===== VOUCHER ANIMATIONS ===== */
@@ -140,11 +139,11 @@
 }
 
 .voucher-success {
-    animation: pulseGlow 1.5s ease-in-out;
+    animation: subtlePulse 1s ease-in-out;
 }
 
 .apply-voucher-btn:hover .fa-tag {
-    animation: iconRotate 0.6s ease-in-out;
+    animation: gentleIconMove 0.4s ease-in-out;
 }
 
 /* ===== REMOVE ITEM ANIMATIONS ===== */
@@ -153,7 +152,7 @@
 }
 
 .remove-item:hover {
-    animation: quantityPulse 0.3s ease-out;
+    animation: gentleScale 0.2s ease-out;
     color: var(--danger-color);
 }
 
@@ -188,11 +187,11 @@
 
 /* ===== SUCCESS/ERROR STATE ANIMATIONS ===== */
 .cart-success {
-    animation: luxuryFadeIn 0.5s ease-out, pulseGlow 1s ease-in-out 0.5s;
+    animation: luxuryFadeIn 0.3s ease-out;
 }
 
 .cart-error {
-    animation: luxuryFadeIn 0.5s ease-out;
+    animation: luxuryFadeIn 0.3s ease-out;
 }
 
 /* ===== SCROLL ANIMATIONS ===== */

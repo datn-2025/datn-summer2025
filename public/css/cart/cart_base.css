@@ -3,16 +3,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
-    --primary-color: #6366f1;
-    --primary-light: #818cf8;
-    --primary-dark: #4f46e5;
-    --secondary-color: #ec4899;
-    --secondary-light: #f472b6;
-    --accent-color: #06b6d4;
-    --success-color: #10b981;
-    --danger-color: #ef4444;
-    --warning-color: #f59e0b;
-    --info-color: #3b82f6;
+    --primary-color: #8b94d6;
+    --primary-light: #a5aedd;
+    --primary-dark: #7280c7;
+    --secondary-color: #d19bb8;
+    --secondary-light: #dbacc5;
+    --accent-color: #6cb3cc;
+    --success-color: #7dbfa0;
+    --danger-color: #d47979;
+    --warning-color: #e5b866;
+    --info-color: #7da3d9;
     
     --gray-50: #f8fafc;
     --gray-100: #f1f5f9;

@@ -110,7 +110,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+    background: linear-gradient(90deg, var(--primary-color) 0%, var(--primary-light) 100%);
     opacity: 0;
     transition: opacity 0.3s ease;
     z-index: -1;
@@ -122,8 +122,8 @@
 
 .modern-input-group:focus-within {
     border-color: transparent;
-    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
-    transform: translateY(-1px);
+    box-shadow: 0 0 0 3px rgba(139, 148, 214, 0.15);
+    transform: translateY(-0.5px);
 }
 
 .modern-input-group input {

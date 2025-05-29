@@ -2,9 +2,9 @@
 
 /* ===== MAIN SUMMARY CONTAINER ===== */
 .summary-container {
-    background: linear-gradient(145deg, var(--white) 0%, var(--gray-50) 100%);
+    background: linear-gradient(145deg, var(--white) 0%, var(--gray-50) 70%);
     border-radius: var(--border-radius-xl);
-    box-shadow: var(--shadow-xl);
+    box-shadow: var(--shadow-lg);
     border: 1px solid var(--gray-200);
     position: sticky;
     overflow: hidden;
@@ -17,13 +17,14 @@
     top: 0;
     left: 0;
     right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+    height: 2px;
+    background: linear-gradient(90deg, var(--primary-color) 0%, var(--primary-light) 100%);
+    opacity: 0.7;
 }
 
 .summary-container:hover {
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
-    transform: translateY(-2px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+    transform: translateY(-1px);
 }
 
 /* ===== SUMMARY HEADER ===== */
@@ -43,7 +44,7 @@
 
 /* ===== VOUCHER SECTION - LUXURY STYLE ===== */
 .voucher-section {
-    background: linear-gradient(135deg, var(--gray-50) 0%, var(--white) 100%);
+    background: linear-gradient(135deg, var(--gray-50) 0%, var(--white) 80%);
     border-radius: var(--border-radius-lg);
     padding: 1.5rem;
     margin-bottom: 2rem;
@@ -160,7 +161,7 @@
 
 /* ===== PAYMENT BREAKDOWN - LUXURY STYLE ===== */
 .payment-breakdown {
-    background: linear-gradient(145deg, var(--white) 0%, var(--gray-50) 100%);
+    background: linear-gradient(145deg, var(--white) 0%, var(--gray-50) 60%);
     border-radius: var(--border-radius-lg);
     padding: 1.5rem;
     border: 1px solid var(--gray-200);
@@ -217,7 +218,7 @@
 
 /* ===== TOTAL SECTION - ELEGANT ===== */
 .breakdown-total {
-    background: linear-gradient(135deg, var(--gray-50) 0%, var(--white) 100%);
+    background: linear-gradient(135deg, var(--gray-50) 0%, var(--white) 80%);
     border-radius: var(--border-radius-md);
     padding: 1rem;
     border: 1px solid var(--gray-200);
@@ -240,7 +241,7 @@
 
 /* ===== CHECKOUT BUTTON - LUXURY STYLE ===== */
 .modern-checkout-btn {
-    background: linear-gradient(135deg, var(--success-color) 0%, #059669 100%);
+    background: linear-gradient(135deg, var(--success-color) 0%, var(--primary-color) 100%);
     color: var(--white);
     border: none;
     border-radius: var(--border-radius-md);
