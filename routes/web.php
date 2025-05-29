@@ -18,6 +18,7 @@ use App\Http\Controllers\Contact\ContactController;
 use App\Http\Controllers\Article\NewsController;
 use App\Http\Controllers\Admin\ReviewController;
 use App\Http\Controllers\Admin\PaymentMethodController;
+use App\Http\Controllers\Client\UserClientController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/books/{slug?}', [BookController::class, 'index'])->name('books.index');
@@ -71,6 +72,8 @@ Route::middleware('auth')->group(function () {
     // Trang tài khoản
     Route::prefix('account')->name('account.')->group(function () {
         Route::get('/', [LoginController::class, 'index'])->name('index');
+        Route::get('/purchase', [UserClientController::class, 'index'])->name('purchase');
+        Route::post('/review', [UserClientController::class, 'storeReview'])->name('review.store');
     });
 });
 

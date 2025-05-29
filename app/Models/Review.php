@@ -13,6 +13,7 @@ class Review extends Model
     protected $fillable = [
         'user_id',
         'book_id',
+        'order_id',
         'rating',
         'comment',
         'status',
@@ -45,5 +46,9 @@ class Review extends Model
                 $model->id = (string) Str::uuid();
             }
         });
+    }
+    public function order(): BelongsTo
+    {
+        return $this->belongsTo(Order::class);
     }
 }

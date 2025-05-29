@@ -84,4 +84,8 @@ class Order extends Model
             }
         });
     }
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(Review::class);
+    }
 }
