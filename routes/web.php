@@ -77,8 +77,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/trash', [PaymentMethodController::class, 'trash'])->name('trash');
         Route::put('/{paymentMethod}/restore', [PaymentMethodController::class, 'restore'])->name('restore');
         Route::delete('/{paymentMethod}/force-delete', [PaymentMethodController::class, 'forceDelete'])->name('force-delete');
+
+        Route::get('/history', [PaymentMethodController::class, 'history'])->name('history');
+        Route::put('/{id}/status', [PaymentMethodController::class, 'updateStatus'])
+            ->name('updateStatus');
     });
-  
+
     // Route admin/categories
     Route::prefix('categories')->name('categories.')->group(function () {
         Route::get('/', [CategoryController::class, 'index'])->name('index');
