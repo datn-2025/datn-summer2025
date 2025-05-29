@@ -1,14 +1,12 @@
 @extends('layouts.app')
 @section('title', 'Liên hệ')
 
-@push('styles')
 <!-- Google Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <!-- Font Awesome Icons (minimal) -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <!-- Minimal Contact Form CSS -->
 <link rel="stylesheet" href="{{ asset('css/contact/contact-minimal.css') }}">
-@endpush
 
 @section('content')
 <div class="contact-container">
@@ -133,9 +131,45 @@
     </div>
   </div>
 </div>
-@endsection
 
-@push('scripts')
 <!-- Minimal JavaScript -->
-<script src="{{ asset('js/contact/contact-minimal.js') }}"></script>
-@endpush
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const form = document.getElementById('contactForm');
+  const submitBtn = document.getElementById('submitBtn');
+  
+  // Simple form validation
+  form.addEventListener('submit', function(e) {
+    const inputs = form.querySelectorAll('input[required], textarea[required]');
+    let isValid = true;
+    
+    inputs.forEach(input => {
+      if (!input.value.trim()) {
+        input.classList.add('error');
+        isValid = false;
+      } else {
+        input.classList.remove('error');
+        input.classList.add('success');
+      }
+    });
+    
+    if (isValid) {
+      submitBtn.classList.add('loading');
+      submitBtn.disabled = true;
+    }
+  });
+  
+  // Remove error state on input
+  form.querySelectorAll('input, textarea').forEach(input => {
+    input.addEventListener('input', function() {
+      this.classList.remove('error');
+      if (this.value.trim()) {
+        this.classList.add('success');
+      } else {
+        this.classList.remove('success');
+      }
+    });
+  });
+});
+</script>
+@endsection
