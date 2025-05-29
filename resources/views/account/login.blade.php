@@ -1,165 +1,277 @@
-@extends('layouts.app')
+<!DOCTYPE html>
 
-@section('content')
-<div class="container-form">
-    <h2 class="mb-4">Đăng nhập</h2>
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul class="mb-0">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-    <form method="POST" action="{{ route('account.login.submit') }}">
-        @csrf
-        <div class="mb-3 position-relative">
-            <i class="fa fa-user"></i>
-            <input type="email" name="email" class="form-control" placeholder="Vui lòng nhập email" required autofocus value="{{ old('email') }}" />
-        </div>
-        <div class="mb-3 position-relative">
-            <i class="fa fa-lock"></i>
-            <input type="password" name="password" class="form-control" placeholder="Mật khẩu" required />
-        </div>
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <div class="form-check text-start">
-                <input class="form-check-input" type="checkbox" name="remember" id="rememberMe" {{ old('remember') ? 'checked' : '' }} />
-                <label class="form-check-label" for="rememberMe">Ghi nhớ đăng nhập</label>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@yield('title', 'Trang tài khoản')</title>
+    <!-- Bootstrap CSS -->
+    {{-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" /> --}}
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+    @stack('styles')
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(to right, #2193b0, #6dd5ed);
+        }
+
+        .auth-container {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+            position: relative;
+            overflow: hidden;
+            width: 768px;
+            max-width: 100%;
+            min-height: 480px;
+            display: flex;
+        }
+
+        .left-section {
+            background: linear-gradient(to right, #2193b0, #6dd5ed);
+            color: #fff;
+            width: 40%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .content-wrapper {
+            max-width: 300px;
+        }
+
+        .left-section h1 {
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .left-section p {
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .right-section {
+            width: 60%;
+            background: #fff;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-container {
+            padding: 40px;
+            width: 100%;
+        }
+
+        .form-container h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: bold;
+        }
+
+        .social-buttons {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            gap: 10px;
+        }
+
+        .social-button {
+            border: 1px solid #ddd;
+            border-radius: 50%;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 5px;
+            height: 40px;
+            width: 40px;
+            color: #333;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-button:hover {
+            color: #fff;
+        }
+
+        .social-button.facebook:hover {
+            background: #3b5998;
+            border-color: #3b5998;
+        }
+
+        .social-button.google:hover {
+            background: #db4437;
+            border-color: #db4437;
+        }
+
+        .social-button.linkedin:hover {
+            background: #0077b5;
+            border-color: #0077b5;
+        }
+
+        .divider {
+            text-align: center;
+            margin: 20px 0;
+            position: relative;
+            color: #777;
+            font-size: 14px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 45%;
+            height: 1px;
+            background: #ddd;
+        }
+
+        .divider::before {
+            left: 0;
+        }
+
+        .divider::after {
+            right: 0;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-control {
+            background: #eee;
+            border: none;
+            padding: 12px 15px;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        .form-control:focus {
+            outline: none;
+            background: #fff;
+            box-shadow: 0 0 5px rgba(255, 75, 43, 0.2);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #fff;
+            color: #fff;
+            padding: 12px 45px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline:hover {
+            background: #fff;
+            color: #2193b0;
+        }
+
+        .btn-primary {
+            background: linear-gradient(to right, #2193b0, #6dd5ed);
+            border: none;
+            color: #fff;
+            padding: 12px 45px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            font-weight: bold;
+            width: 100%;
+            margin-top: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(to right, #6dd5ed, #2193b0);
+            transform: translateY(-2px);
+        }
+
+        .forgot-password {
+            text-decoration: none;
+            color: #777;
+            font-size: 14px;
+            display: block;
+            text-align: center;
+            margin: 15px 0;
+            transition: color 0.3s ease;
+        }
+
+        .forgot-password:hover {
+            color: #2193b0;
+        }
+    </style>
+</head>
+
+<body style="margin:0; min-height:100vh;">
+    <div class="auth-container">
+        <div class="left-section">
+            <div class="content-wrapper">
+                <h1>Xin chào!</h1>
+                <p>Nhập thông tin của bạn và bắt đầu hành trình với chúng tôi</p>
+                <a href="{{ route('account.register') }}" class="btn btn-outline">ĐĂNG KÝ</a>
             </div>
-            <a href="#">Quên mật khẩu?</a>
         </div>
-        <button type="submit" class="btn btn-login w-100 mb-3 text-white">Đăng nhập</button>
-        <a href="{{ route('account.register') }}" class="btn btn-register">Đăng ký tài khoản</a>
-        <div class="my-3">hoặc</div>
-        <div class="social-container">
-            <button type="button" class="social-btn btn-google">
-                <i class="fab fa-google"></i> Google
-            </button>
+        <div class="right-section">
+            <div class="form-container">
+                <h2>Đăng nhập</h2>
+                <div class="social-buttons">
+                    <a href="#" class="social-button google">
+                        <i class="fab fa-google"></i>
+                    </a>
+                </div>
+                <div class="divider">hoặc sử dụng tài khoản của bạn</div>
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul class="mb-0">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+                <form method="POST" action="{{ route('login.submit') }}">
+                    @csrf
+                    <div class="form-group">
+                        <input type="email" name="email" class="form-control" placeholder="Email" required autofocus
+                            value="{{ old('email') }}" />
+                    </div>
+                    <div class="form-group">
+                        <input type="password" name="password" class="form-control" placeholder="Mật khẩu" required />
+                    </div>
+                    <a href="{{ route('account.password.request') }}" class="forgot-password">Quên mật khẩu?</a>
+                    <button type="submit" class="btn btn-primary">ĐĂNG NHẬP</button>
+                </form>
+            </div>
         </div>
-        <div class="mt-4" style="font-size: 0.8rem; opacity: 0.7;">
-            © 2025 BookBee store.
-        </div>
-    </form>
-</div>
-<!-- Bootstrap CSS & FontAwesome -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
-<style>
-    body {
-        background: url('/images/background1.jpg') no-repeat center center fixed;
-        background-size: cover;
-        height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #f8f9fa;
-        margin: 0;
-        font-family: 'Segoe UI', sans-serif;
-        background: linear-gradient(to right, #f5d9e2, #dff1f7);
-    }
-    .container-form {
-        background: rgba(51, 51, 51, 0.75);
-        padding: 2rem;
-        border-radius: 10px;
-        width: 100%;
-        max-width: 400px;
-        text-align: center;
-        box-shadow: 0 0 15px rgba(111, 162, 219, 0.7);
-    }
-    input.form-control {
-        padding-left: 45px !important;
-        background: transparent;
-        border: none;
-        border-bottom: 1.5px solid #ced4da;
-        color: #f8f9fa;
-        font-size: 1rem;
-        transition: border-color 0.3s ease;
-    }
-    input.form-control::placeholder {
-        color: #adb5bd;
-    }
-    input.form-control:focus {
-        outline: none;
-        border-color: #4a90e2;
-        box-shadow: none;
-        background: transparent;
-        color: #f8f9fa;
-    }
-    .position-relative i {
-        position: absolute;
-        left: 15px;
-        top: 50%;
-        transform: translateY(-50%);
-        font-size: 1.2rem;
-        color: #ced4da;
-        pointer-events: none;
-        z-index: 2;
-    }
-    a {
-        color: #4a90e2;
-        text-decoration: none;
-    }
-    a:hover {
-        color: #357ABD;
-        text-decoration: underline;
-    }
-    .form-check-label {
-        color: #ced4da;
-    }
-    .btn-login {
-        background-color: #4a90e2;
-        border: none;
-        transition: background-color 0.3s ease;
-    }
-    .btn-login:hover {
-        background-color: #357ABD;
-    }
-    .btn-register {
-        background-color: transparent;
-        border: 2px solid #4a90e2;
-        color: #4a90e2;
-        width: 100%;
-        margin-top: 10px;
-        transition: background-color 0.3s ease, color 0.3s ease;
-    }
-    .btn-register:hover {
-        background-color: #357ABD;
-        color: white;
-    }
-    .social-btn {
-        flex: 1;
-        margin: 0 5px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        color: white;
-        border-radius: 5px;
-        cursor: pointer;
-        font-weight: 600;
-        font-size: 0.9rem;
-        border: none;
-        padding: 8px 0;
-        transition: background-color 0.3s ease;
-    }
-    .social-container {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 15px;
-    }
-    .btn-google {
-        background-color: #db4437;
-    }
-    .btn-google:hover {
-        background-color: #a83228;
-    }
-</style>
-<!-- Toastr -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    </div>
+    {!! Toastr::message() !!}
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    @stack('scripts')
+    <!-- Bootstrap CSS & FontAwesome -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+    <!-- Bootstrap CSS & FontAwesome -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
 
-{!! Toastr::message() !!}
+    <!-- Toastr -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+</body>
 
-@endsection
+</html>
