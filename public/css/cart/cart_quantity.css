@@ -1,159 +1,90 @@
-/* Enhanced Cart Quantity Controls - Modern UX Design */
+/* ===== CART QUANTITY - MINIMALIST CONTROLS ===== */
 
-/* Quantity Controls Wrapper */
+/* ===== QUANTITY CONTROLS WRAPPER ===== */
 .quantity-controls-wrapper {
     display: flex;
     flex-direction: column;
+    gap: 0.5rem;
     align-items: center;
-    gap: 0.75rem;
-    position: relative;
 }
 
-/* Enhanced Quantity Control Container */
-.quantity-controls,
-.quantity-control {
+/* ===== MAIN QUANTITY CONTROLS ===== */
+.quantity-controls {
     display: flex;
     align-items: center;
-    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-    border: 2px solid #e2e8f0;
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 
-        0 4px 12px rgba(0, 0, 0, 0.08),
-        0 2px 4px rgba(0, 0, 0, 0.04);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    backdrop-filter: blur(10px);
+    gap: 0.25rem;
+    background: var(--white);
+    border: 1px solid var(--gray-300);
+    border-radius: var(--border-radius-sm);
+    padding: 0.125rem;
+    transition: var(--transition-fast);
 }
 
-.quantity-controls::before,
-.quantity-control::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), transparent);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    pointer-events: none;
+.quantity-controls:hover {
+    border-color: var(--gray-400);
+    box-shadow: var(--shadow-sm);
 }
 
-.quantity-controls:hover,
-.quantity-control:hover {
-    border-color: #667eea;
-    box-shadow: 
-        0 8px 20px rgba(102, 126, 234, 0.2),
-        0 4px 8px rgba(102, 126, 234, 0.1);
-    transform: translateY(-2px);
-}
-
-.quantity-controls:hover::before,
-.quantity-control:hover::before {
-    opacity: 1;
-}
-
-.quantity-controls:focus-within,
-.quantity-control:focus-within {
-    border-color: #667eea;
-    box-shadow: 
-        0 0 0 4px rgba(102, 126, 234, 0.15),
-        0 8px 20px rgba(102, 126, 234, 0.2);
-}
-
-/* Enhanced Quantity Buttons */
+/* ===== QUANTITY BUTTONS - MINIMAL STYLE ===== */
 .quantity-btn {
-    width: 44px;
-    height: 44px;
+    background: transparent;
     border: none;
-    background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
-    color: #4a5568;
-    font-size: 1.25rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    color: var(--gray-600);
+    padding: 0.375rem;
+    border-radius: var(--border-radius-sm);
+    transition: var(--transition-fast);
+    width: 28px;
+    height: 28px;
     display: flex;
     align-items: center;
     justify-content: center;
-    position: relative;
-    overflow: hidden;
-    z-index: 1;
+    cursor: pointer;
+    font-size: 0.75rem;
 }
 
-.quantity-btn::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    background: radial-gradient(circle, rgba(102, 126, 234, 0.2) 0%, transparent 70%);
-    transition: all 0.3s ease;
-    transform: translate(-50%, -50%);
-    border-radius: 50%;
+.quantity-btn:hover:not(:disabled) {
+    background: var(--gray-100);
+    color: var(--gray-800);
 }
 
-.quantity-btn:hover::before {
-    width: 100px;
-    height: 100px;
-}
-
-.quantity-btn:hover {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    transform: scale(1.05);
-    z-index: 2;
-}
-
-.quantity-btn:active {
+.quantity-btn:active:not(:disabled) {
+    background: var(--gray-200);
     transform: scale(0.95);
-    transition: transform 0.1s ease;
 }
 
 .quantity-btn:disabled {
-    background: #f1f5f9;
-    color: #a0aec0;
+    opacity: 0.4;
     cursor: not-allowed;
-    transform: none;
+    color: var(--gray-400);
 }
 
-.quantity-btn:disabled:hover {
-    background: #f1f5f9;
-    color: #a0aec0;
-    transform: none;
+.quantity-btn.decrease-quantity:hover:not(:disabled) {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--danger-color);
 }
 
-.quantity-btn.decrease {
-    border-radius: 16px 0 0 16px;
-    border-right: 1px solid #e2e8f0;
+.quantity-btn.increase-quantity:hover:not(:disabled) {
+    background: rgba(99, 102, 241, 0.1);
+    color: var(--primary-color);
 }
 
-.quantity-btn.increase {
-    border-radius: 0 16px 16px 0;
-    border-left: 1px solid #e2e8f0;
-}
-
-/* Enhanced Quantity Input */
+/* ===== QUANTITY INPUT - CLEAN STYLE ===== */
 .quantity-input {
-    width: 80px;
-    height: 44px;
     border: none;
     background: transparent;
     text-align: center;
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #2d3748;
-    outline: none;
-    transition: all 0.3s ease;
-    position: relative;
-    z-index: 1;
-    appearance: textfield; /* Standard */
-    -moz-appearance: textfield; /* Firefox */
-    -webkit-appearance: textfield; /* WebKit */
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--gray-900);
+    width: 48px;
+    height: 28px;
+    padding: 0 0.25rem;
+    margin: 0 0.125rem;
+    border-radius: var(--border-radius-sm);
+    transition: var(--transition-fast);
+    -moz-appearance: textfield;
 }
 
-/* Hide spin buttons in WebKit browsers */
 .quantity-input::-webkit-outer-spin-button,
 .quantity-input::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -161,405 +92,46 @@
 }
 
 .quantity-input:focus {
-    background: rgba(102, 126, 234, 0.05);
-    color: #667eea;
+    outline: none;
+    background: var(--gray-50);
+    box-shadow: 0 0 0 1px var(--primary-color);
 }
 
-.quantity-input::placeholder {
-    color: #a0aec0;
-    font-weight: 400;
+.quantity-input:hover {
+    background: var(--gray-50);
 }
 
-/* Loading state for quantity controls */
-.quantity-controls.loading {
-    position: relative;
-    pointer-events: none;
-    opacity: 0.7;
-}
-
-.quantity-controls.loading::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 20px;
-    height: 20px;
-    margin: -10px 0 0 -10px;
-    border: 2px solid #f3f3f3;
-    border-top: 2px solid #667eea;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    z-index: 10;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-/* Enhanced stock feedback */
+/* ===== QUANTITY FEEDBACK - MINIMAL ===== */
 .quantity-feedback {
-    min-height: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-}
-
-.stock-amount {
-    font-weight: 600;
-    padding: 0 4px;
-    border-radius: 4px;
-    background: rgba(72, 187, 120, 0.1);
-    color: #38a169;
-}
-
-/* Error states */
-.quantity-controls.error {
-    border-color: #e53e3e;
-    background: rgba(229, 62, 62, 0.05);
-}
-
-.quantity-input.error {
-    color: #e53e3e;
-}
-
-/* Success states */
-.quantity-controls.success {
-    border-color: #38a169;
-    background: rgba(72, 187, 120, 0.05);
-}
-
-/* Quantity section improvements */
-.quantity-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.quantity-section small {
-    font-size: 0.875rem;
-    font-weight: 500;
-    text-align: center;
-}
-
-/* Better button spacing and alignment */
-.quantity-controls .quantity-btn:first-child {
-    border-radius: 12px 0 0 12px;
-}
-
-.quantity-controls .quantity-btn:last-child {
-    border-radius: 0 12px 12px 0;
-}
-
-/* Hover effects for better UX */
-.quantity-controls:hover .quantity-btn:not(:disabled) {
-    background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e0 100%);
-}
-
-.quantity-controls:hover .quantity-input {
-    background: rgba(102, 126, 234, 0.02);
-}
-
-/* Focus trap for accessibility */
-.quantity-controls:focus-within .quantity-btn:focus {
-    outline: 2px solid #667eea;
-    outline-offset: 2px;
-    z-index: 3;
-}
-
-/* Mobile optimizations */
-@media (max-width: 768px) {
-    .quantity-controls {
-        min-width: 140px;
-        height: 48px;
-    }
-    
-    .quantity-btn {
-        width: 48px;
-        height: 48px;
-        font-size: 1.1rem;
-    }
-    
-    .quantity-input {
-        width: 60px;
-        height: 48px;
-        font-size: 1rem;
-    }
-    
-    .quantity-section {
-        width: 100%;
-        max-width: 160px;
-        margin: 0 auto;
-    }
-}
-
-/* Shake animation for error feedback */
-@keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-    20%, 40%, 60%, 80% { transform: translateX(5px); }
-}
-
-/* Button active state */
-.quantity-btn.active {
-    transform: scale(0.95);
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-}
-
-/* Improved transitions */
-.quantity-controls * {
-    transition: all 0.2s ease;
-}
-
-/* Better disabled state visibility */
-.quantity-btn:disabled {
-    opacity: 0.5;
-    background: #e2e8f0;
-    color: #a0aec0;
-    cursor: not-allowed;
-    transform: none !important;
-}
-
-.quantity-btn:disabled:hover {
-    background: #e2e8f0 !important;
-    color: #a0aec0 !important;
-    transform: none !important;
-}
-
-/* Loading overlay for quantity controls */
-.quantity-controls.loading .quantity-btn,
-.quantity-controls.loading .quantity-input {
-    pointer-events: none;
-    opacity: 0.6;
-}
-
-.quantity-input:focus {
-    color: #667eea;
-    transform: scale(1.1);
-}
-
-/* Quantity Label/Info */
-.quantity-info {
-    font-size: 0.8rem;
-    color: #718096;
-    font-weight: 500;
-    text-align: center;
-    margin-top: 0.25rem;
-}
-
-.quantity-info.stock-low {
-    color: #ed8936;
-    font-weight: 600;
-}
-
-.quantity-info.stock-out {
-    color: #e53e3e;
-    font-weight: 700;
-}
-
-/* Enhanced Stock Indicators */
-.stock-indicator {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.25rem;
-    font-size: 0.75rem;
-    font-weight: 600;
     margin-top: 0.5rem;
-    padding: 0.25rem 0.75rem;
-    border-radius: 12px;
-    transition: all 0.3s ease;
+    text-align: center;
 }
 
-.stock-indicator.in-stock {
-    background: rgba(56, 161, 105, 0.1);
-    color: #38a169;
-    border: 1px solid rgba(56, 161, 105, 0.2);
-}
-
-.stock-indicator.low-stock {
-    background: rgba(237, 137, 54, 0.1);
-    color: #ed8936;
-    border: 1px solid rgba(237, 137, 54, 0.2);
-    animation: pulse-warning 2s infinite;
-}
-
-.stock-indicator.out-of-stock {
-    background: rgba(229, 62, 62, 0.1);
-    color: #e53e3e;
-    border: 1px solid rgba(229, 62, 62, 0.2);
-}
-
-@keyframes pulse-warning {
-    0%, 100% { 
-        opacity: 1;
-        transform: scale(1);
-    }
-    50% { 
-        opacity: 0.7;
-        transform: scale(1.05);
-    }
-}
-
-.stock-indicator i {
+.quantity-feedback small {
     font-size: 0.7rem;
+    color: var(--gray-500);
+    font-weight: 500;
 }
 
-/* Quick Quantity Buttons */
-.quick-quantity-buttons {
-    display: flex;
-    gap: 0.5rem;
-    margin-top: 0.75rem;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-.quick-qty-btn {
-    padding: 0.375rem 0.75rem;
-    border: 1px solid #e2e8f0;
-    background: white;
-    color: #4a5568;
-    border-radius: 8px;
-    font-size: 0.8rem;
+.stock-warning {
+    color: var(--warning-color) !important;
     font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    min-width: 40px;
-    text-align: center;
 }
 
-.quick-qty-btn:hover {
-    border-color: #667eea;
-    background: #667eea;
-    color: white;
-    transform: translateY(-1px);
-}
-
-.quick-qty-btn.active {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border-color: #667eea;
-}
-
-/* Quantity Animation Effects */
-.quantity-update-animation {
-    position: relative;
-}
-
-.quantity-update-animation::after {
-    content: attr(data-change);
-    position: absolute;
-    top: -20px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 0.8rem;
-    font-weight: 700;
-    color: #38a169;
-    opacity: 0;
-    animation: quantity-change 1s ease-out forwards;
-    pointer-events: none;
-}
-
-.quantity-update-animation.decrease::after {
-    color: #e53e3e;
-}
-
-@keyframes quantity-change {
-    0% {
-        opacity: 0;
-        transform: translateX(-50%) translateY(10px);
-    }
-    50% {
-        opacity: 1;
-        transform: translateX(-50%) translateY(-10px);
-    }
-    100% {
-        opacity: 0;
-        transform: translateX(-50%) translateY(-30px);
-    }
-}
-
-/* Bulk Quantity Controls */
-.bulk-quantity-controls {
-    margin-top: 1rem;
-    padding: 1rem;
-    background: rgba(102, 126, 234, 0.05);
-    border-radius: 12px;
-    border: 1px solid rgba(102, 126, 234, 0.1);
-}
-
-.bulk-quantity-title {
-    font-size: 0.9rem;
+.stock-error {
+    color: var(--danger-color) !important;
     font-weight: 600;
-    color: #4a5568;
-    margin-bottom: 0.75rem;
-    text-align: center;
 }
 
-.bulk-quantity-options {
-    display: flex;
-    gap: 0.5rem;
-    justify-content: center;
-    flex-wrap: wrap;
+.stock-available {
+    color: var(--success-color) !important;
 }
 
-.bulk-qty-option {
-    padding: 0.5rem 1rem;
-    border: 1px solid #e2e8f0;
-    background: white;
-    color: #4a5568;
-    border-radius: 10px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-align: center;
-    min-width: 60px;
-}
-
-.bulk-qty-option:hover {
-    border-color: #667eea;
-    background: #667eea;
-    color: white;
-    transform: translateY(-1px);
-}
-
-.bulk-qty-option.discount {
-    border-color: #38a169;
-    color: #38a169;
-}
-
-.bulk-qty-option.discount:hover {
-    background: #38a169;
-    color: white;
-}
-
-.bulk-qty-option .discount-text {
-    font-size: 0.7rem;
-    opacity: 0.8;
-    display: block;
-    margin-top: 0.25rem;
-}
-
-/* Loading State for Quantity */
+/* ===== LOADING STATE ===== */
 .quantity-loading {
-    position: relative;
+    opacity: 0.6;
     pointer-events: none;
-}
-
-.quantity-loading::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(255, 255, 255, 0.8);
-    border-radius: 16px;
-    z-index: 10;
+    position: relative;
 }
 
 .quantity-loading::after {
@@ -567,46 +139,98 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 20px;
-    height: 20px;
-    border: 2px solid #e2e8f0;
-    border-top: 2px solid #667eea;
+    width: 16px;
+    height: 16px;
+    margin: -8px 0 0 -8px;
+    border: 2px solid var(--gray-300);
+    border-top: 2px solid var(--primary-color);
     border-radius: 50%;
-    animation: spin 1s linear infinite;
-    transform: translate(-50%, -50%);
-    z-index: 11;
+    animation: spin 0.8s linear infinite;
 }
 
 @keyframes spin {
-    0% { transform: translate(-50%, -50%) rotate(0deg); }
-    100% { transform: translate(-50%, -50%) rotate(360deg); }
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
-/* Responsive Design */
-@media (max-width: 576px) {
-    .quantity-controls,
-    .quantity-control {
-        width: 100%;
-        max-width: 200px;
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+    .quantity-controls {
+        gap: 0.125rem;
     }
     
     .quantity-btn {
-        width: 48px;
-        height: 48px;
-        font-size: 1.3rem;
+        width: 32px;
+        height: 32px;
+        font-size: 0.8rem;
     }
     
     .quantity-input {
-        width: 100px;
-        height: 48px;
-        font-size: 1.2rem;
+        width: 52px;
+        height: 32px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .quantity-controls-wrapper {
+        align-items: stretch;
     }
     
-    .quick-quantity-buttons {
-        grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+    .quantity-controls {
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.25rem;
     }
     
-    .bulk-quantity-options {
-        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    .quantity-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 0.875rem;
     }
+    
+    .quantity-input {
+        width: 60px;
+        height: 36px;
+        font-size: 1rem;
+        margin: 0 0.25rem;
+    }
+}
+
+/* ===== ACCESSIBILITY ===== */
+.quantity-btn:focus,
+.quantity-input:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+/* ===== ANIMATION STATES ===== */
+.quantity-updated {
+    animation: quantityPulse 0.3s ease;
+}
+
+@keyframes quantityPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* ===== ERROR STATES ===== */
+.quantity-error {
+    border-color: var(--danger-color) !important;
+    box-shadow: 0 0 0 1px var(--danger-color) !important;
+}
+
+.quantity-error .quantity-input {
+    color: var(--danger-color);
+}
+
+/* ===== SUCCESS STATES ===== */
+.quantity-success {
+    border-color: var(--success-color) !important;
+    box-shadow: 0 0 0 1px var(--success-color) !important;
+}
+
+.quantity-success .quantity-input {
+    color: var(--success-color);
 }

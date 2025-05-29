@@ -1,16 +1,21 @@
-/* Cart Mobile Responsive Styles */
+/* ===== CART MOBILE - LUXURY & MINIMALIST RESPONSIVE ===== */
 
-/* Mobile-first approach with enhanced UX */
+/* Mobile-first approach with luxury touches and minimalist product sections */
 @media (max-width: 768px) {
     /* Container adjustments */
     .cart-page {
-        padding: 1rem 0.5rem !important;
+        padding: 1rem 0.75rem !important;
+        background: var(--white);
     }
 
-    /* Page Header Mobile */
+    /* Page Header Mobile - Luxury Style */
     .page-header {
         margin-bottom: 2rem !important;
         text-align: center;
+        background: linear-gradient(135deg, var(--white) 0%, var(--gray-50) 100%);
+        padding: 1.5rem;
+        border-radius: var(--border-radius-lg);
+        box-shadow: var(--shadow-sm);
     }
 
     .page-header .row {
@@ -19,37 +24,53 @@
     }
 
     .header-icon-wrapper {
-        width: 60px;
-        height: 60px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        width: 64px;
+        height: 64px;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         margin: 0 auto 1rem;
-        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        box-shadow: var(--shadow-lg);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .header-icon-wrapper::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
     }
 
     .header-icon-wrapper i {
-        color: white;
+        color: var(--white);
         font-size: 1.5rem;
+        position: relative;
+        z-index: 1;
     }
 
     .page-title {
-        font-size: 1.8rem !important;
+        font-size: 1.75rem !important;
         font-weight: 700;
-        color: #2d3748;
+        color: var(--gray-900);
         margin-bottom: 0.5rem !important;
+        letter-spacing: -0.02em;
     }
 
     .page-subtitle {
-        font-size: 0.95rem;
-        color: #718096;
+        font-size: 0.9rem;
+        color: var(--gray-600);
+        font-weight: 500;
     }
 
-    /* Action buttons mobile */
+    /* Action buttons mobile - Luxury Style */
     .action-buttons-container {
-        margin-top: 1rem;
+        margin-top: 1.5rem;
     }
 
     .action-buttons-container .d-flex {
@@ -59,11 +80,19 @@
 
     .modern-action-btn {
         width: 100%;
-        padding: 0.75rem 1rem;
-        border-radius: 12px;
+        padding: 0.875rem 1.25rem;
+        border-radius: var(--border-radius-md);
         font-weight: 600;
-        border: 2px solid;
-        transition: all 0.3s ease;
+        border: 2px solid transparent;
+        transition: var(--transition-normal);
+        background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+        color: var(--white);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .modern-action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
     }
 
     /* Mobile cart layout - stack vertically */
@@ -76,6 +105,50 @@
         width: 100%;
         max-width: 100%;
         flex: none;
+        margin-bottom: 1.5rem;
+    }
+
+    /* ===== PRODUCT CARDS MOBILE - MINIMALIST ===== */
+    .cart-item-card {
+        padding: 1rem !important;
+        margin-bottom: 1rem !important;
+        border-radius: var(--border-radius-md) !important;
+        border: 1px solid var(--gray-200) !important;
+        background: var(--white) !important;
+        box-shadow: var(--shadow-xs) !important;
+    }
+
+    .cart-item-card .row {
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .cart-item-image {
+        width: 80px !important;
+        height: 100px !important;
+        border-radius: var(--border-radius-sm) !important;
+        object-fit: cover;
+        border: 1px solid var(--gray-200);
+    }
+
+    .item-details-mobile {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .item-title {
+        font-size: 0.95rem !important;
+        font-weight: 600 !important;
+        color: var(--gray-900) !important;
+        line-height: 1.4 !important;
+        margin-bottom: 0.5rem !important;
+    }
+
+    .item-price {
+        font-size: 1.1rem !important;
+        font-weight: 700 !important;
+        color: var(--primary-color) !important;
+        margin-bottom: 0.75rem !important;
     }
 
     /* Cart container mobile */
