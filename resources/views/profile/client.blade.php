@@ -577,6 +577,17 @@
 <body>
   <div class="progress-bar" style="width: 0%"></div>
   
+  <nav class="navbar navbar-expand-lg navbar-custom mb-4">
+    <div class="container-fluid px-5">
+      <a class="navbar-brand" href="#">BookBee</a>
+      <div class="collapse navbar-collapse justify-content-end">
+        <ul class="navbar-nav mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" href="#">Tài Khoản</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
 
   <div class="container">
     <div class="row g-4">
@@ -585,9 +596,7 @@
           <a href="#"><i class="fas fa-user"></i>Tài Khoản Của Tôi</a>
           <a href="#"><i class="fas fa-address-card"></i>Hồ Sơ</a>
           <a href="#"><i class="fas fa-map-marker-alt"></i>Địa Chỉ</a>
-          <a href="#"><i class="fas fa-key"></i>Đổi Mật Khẩu</a>
-          <a href="#"><i class="fas fa-heart"></i>Sản phẩm yêu thích</a>
-          <a href="#"><i class="fas fa-shopping-bag"></i>Đơn Mua</a>
+          <a href="{{ url('/account/password/change') }}"><i class="fas fa-key"></i>Đổi Mật Khẩu</a>
         </div>
       </div>
       <div class="col-md-9">
@@ -787,7 +796,6 @@
     // Smooth scroll with enhanced behavior
     document.querySelectorAll('.sidebar a').forEach(anchor => {
       anchor.addEventListener('click', function(e) {
-        e.preventDefault();
         const targetId = this.getAttribute('href').substring(1);
         const target = document.getElementById(targetId);
         
