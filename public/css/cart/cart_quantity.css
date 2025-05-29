@@ -148,6 +148,192 @@
     transition: all 0.3s ease;
     position: relative;
     z-index: 1;
+    appearance: textfield; /* Standard */
+    -moz-appearance: textfield; /* Firefox */
+    -webkit-appearance: textfield; /* WebKit */
+}
+
+/* Hide spin buttons in WebKit browsers */
+.quantity-input::-webkit-outer-spin-button,
+.quantity-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.quantity-input:focus {
+    background: rgba(102, 126, 234, 0.05);
+    color: #667eea;
+}
+
+.quantity-input::placeholder {
+    color: #a0aec0;
+    font-weight: 400;
+}
+
+/* Loading state for quantity controls */
+.quantity-controls.loading {
+    position: relative;
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.quantity-controls.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #667eea;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    z-index: 10;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Enhanced stock feedback */
+.quantity-feedback {
+    min-height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.stock-amount {
+    font-weight: 600;
+    padding: 0 4px;
+    border-radius: 4px;
+    background: rgba(72, 187, 120, 0.1);
+    color: #38a169;
+}
+
+/* Error states */
+.quantity-controls.error {
+    border-color: #e53e3e;
+    background: rgba(229, 62, 62, 0.05);
+}
+
+.quantity-input.error {
+    color: #e53e3e;
+}
+
+/* Success states */
+.quantity-controls.success {
+    border-color: #38a169;
+    background: rgba(72, 187, 120, 0.05);
+}
+
+/* Quantity section improvements */
+.quantity-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.quantity-section small {
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-align: center;
+}
+
+/* Better button spacing and alignment */
+.quantity-controls .quantity-btn:first-child {
+    border-radius: 12px 0 0 12px;
+}
+
+.quantity-controls .quantity-btn:last-child {
+    border-radius: 0 12px 12px 0;
+}
+
+/* Hover effects for better UX */
+.quantity-controls:hover .quantity-btn:not(:disabled) {
+    background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e0 100%);
+}
+
+.quantity-controls:hover .quantity-input {
+    background: rgba(102, 126, 234, 0.02);
+}
+
+/* Focus trap for accessibility */
+.quantity-controls:focus-within .quantity-btn:focus {
+    outline: 2px solid #667eea;
+    outline-offset: 2px;
+    z-index: 3;
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+    .quantity-controls {
+        min-width: 140px;
+        height: 48px;
+    }
+    
+    .quantity-btn {
+        width: 48px;
+        height: 48px;
+        font-size: 1.1rem;
+    }
+    
+    .quantity-input {
+        width: 60px;
+        height: 48px;
+        font-size: 1rem;
+    }
+    
+    .quantity-section {
+        width: 100%;
+        max-width: 160px;
+        margin: 0 auto;
+    }
+}
+
+/* Shake animation for error feedback */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+/* Button active state */
+.quantity-btn.active {
+    transform: scale(0.95);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+/* Improved transitions */
+.quantity-controls * {
+    transition: all 0.2s ease;
+}
+
+/* Better disabled state visibility */
+.quantity-btn:disabled {
+    opacity: 0.5;
+    background: #e2e8f0;
+    color: #a0aec0;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+.quantity-btn:disabled:hover {
+    background: #e2e8f0 !important;
+    color: #a0aec0 !important;
+    transform: none !important;
+}
+
+/* Loading overlay for quantity controls */
+.quantity-controls.loading .quantity-btn,
+.quantity-controls.loading .quantity-input {
+    pointer-events: none;
+    opacity: 0.6;
 }
 
 .quantity-input:focus {
