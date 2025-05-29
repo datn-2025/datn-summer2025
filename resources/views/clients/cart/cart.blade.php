@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="{{ asset('css/cart/cart_summary.css') }}">
     <link rel="stylesheet" href="{{ asset('css/cart/cart_mobile.css') }}">
     <link rel="stylesheet" href="{{ asset('css/cart/cart_accessibility.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/cart/cart_animations.css') }}">
 @endpush
 
 @section('content')
@@ -160,24 +161,51 @@
                                                     <!-- Điều khiển số lượng -->
                                                     <div class="col-lg-4 col-md-6 col-6">
                                                         <div class="quantity-section">
-                                                            <small class="text-muted d-block mb-1">Số lượng</small>
+                                                            <small class="text-muted d-block mb-1">
+                                                                <i class="fas fa-calculator me-1"></i>Số lượng
+                                                            </small>
                                                             <div class="quantity-controls-wrapper">
-                                                                <div class="quantity-controls d-flex align-items-center">
-                                                                    <button class="btn btn-outline-secondary btn-sm quantity-btn decrease-quantity" type="button">
-                                                                        <i class="fas fa-minus"></i>
+                                                                <div class="quantity-controls d-flex align-items-center" data-book-id="{{ $item->book_id }}">
+                                                                    <button class="btn btn-outline-secondary btn-sm quantity-btn decrease-quantity" 
+                                                                            type="button"
+                                                                            data-action="decrease"
+                                                                            title="Giảm số lượng"
+                                                                            aria-label="Giảm số lượng sản phẩm {{ $item->title ?? 'Sách' }}"
+                                                                            {{ $item->quantity <= 1 ? 'disabled' : '' }}>
+                                                                        <i class="fas fa-minus" aria-hidden="true"></i>
+                                                                        <span class="sr-only">Giảm</span>
                                                                     </button>
                                                                     <input type="number" 
                                                                            class="form-control quantity-input text-center mx-1" 
                                                                            value="{{ $item->quantity }}" 
                                                                            min="1" 
-                                                                           max="{{ $item->stock ?? 1 }}">
-                                                                    <button class="btn btn-outline-secondary btn-sm quantity-btn increase-quantity" type="button">
-                                                                        <i class="fas fa-plus"></i>
+                                                                           max="{{ $item->stock ?? 1 }}"
+                                                                           data-book-id="{{ $item->book_id }}"
+                                                                           data-original-value="{{ $item->quantity }}"
+                                                                           aria-label="Số lượng sản phẩm {{ $item->title ?? 'Sách' }}"
+                                                                           autocomplete="off">
+                                                                    <button class="btn btn-outline-secondary btn-sm quantity-btn increase-quantity" 
+                                                                            type="button"
+                                                                            data-action="increase"
+                                                                            title="Tăng số lượng"
+                                                                            aria-label="Tăng số lượng sản phẩm {{ $item->title ?? 'Sách' }}"
+                                                                            {{ $item->quantity >= ($item->stock ?? 1) ? 'disabled' : '' }}>
+                                                                        <i class="fas fa-plus" aria-hidden="true"></i>
+                                                                        <span class="sr-only">Tăng</span>
                                                                     </button>
                                                                 </div>
-                                                                <small class="text-muted mt-1">
-                                                                    <i class="fas fa-boxes me-1"></i>Còn <span class="stock-amount text-success">{{ $item->stock ?? 0 }}</span> Sản Phẩm 
-                                                                </small>
+                                                                <div class="quantity-feedback mt-2">
+                                                                    <small class="text-muted d-flex align-items-center justify-content-between">
+                                                                        <span>
+                                                                            <i class="fas fa-boxes me-1"></i>Còn <span class="stock-amount text-success fw-semibold">{{ $item->stock ?? 0 }}</span> sản phẩm
+                                                                        </span>
+                                                                        @if($item->quantity >= ($item->stock ?? 1))
+                                                                            <span class="text-warning">
+                                                                                <i class="fas fa-exclamation-triangle me-1"></i>Đã đạt tối đa
+                                                                            </span>
+                                                                        @endif
+                                                                    </small>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
