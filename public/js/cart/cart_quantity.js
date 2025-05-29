@@ -65,30 +65,74 @@ const CartQuantity = {
 
     // Setup increase button
     setupIncreaseButton(button, input, cartItem) {
-        CartBase.dom.on(button, 'click', () => {
-            if (!input) return;
+        CartBase.dom.on(button, 'click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            if (!input || button.disabled) return;
             
             const currentValue = parseInt(input.value) || 1;
             const max = parseInt(input.max) || parseInt(cartItem.dataset.stock) || 1;
             
             if (currentValue < max) {
-                input.value = currentValue + 1;
-                this.updateQuantity(cartItem, currentValue + 1);
+                const newValue = currentValue + 1;
+                input.value = newValue;
+                
+                // Add visual feedback
+                CartBase.dom.addClass(button, 'active');
+                setTimeout(() => CartBase.dom.removeClass(button, 'active'), 150);
+                
+                this.updateQuantity(cartItem, newValue);
+                this.updateButtonStates(cartItem);
+            } else {
+                // Show feedback when max reached
+                CartBase.utils.showWarning(`Số lượng tối đa là ${max} sản phẩm`);
+                this.addErrorFeedback(cartItem);
+            }
+        });
+
+        // Add keyboard support
+        CartBase.dom.on(button, 'keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                button.click();
             }
         });
     },
 
     // Setup decrease button
     setupDecreaseButton(button, input, cartItem) {
-        CartBase.dom.on(button, 'click', () => {
-            if (!input) return;
+        CartBase.dom.on(button, 'click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            if (!input || button.disabled) return;
             
             const currentValue = parseInt(input.value) || 1;
             const min = parseInt(input.min) || 1;
             
             if (currentValue > min) {
-                input.value = currentValue - 1;
-                this.updateQuantity(cartItem, currentValue - 1);
+                const newValue = currentValue - 1;
+                input.value = newValue;
+                
+                // Add visual feedback
+                CartBase.dom.addClass(button, 'active');
+                setTimeout(() => CartBase.dom.removeClass(button, 'active'), 150);
+                
+                this.updateQuantity(cartItem, newValue);
+                this.updateButtonStates(cartItem);
+            } else {
+                // Show feedback when min reached
+                CartBase.utils.showWarning(`Số lượng tối thiểu là ${min} sản phẩm`);
+                this.addErrorFeedback(cartItem);
+            }
+        });
+
+        // Add keyboard support
+        CartBase.dom.on(button, 'keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                button.click();
             }
         });
     },
@@ -132,6 +176,7 @@ const CartQuantity = {
         const increaseBtn = cartItem.querySelector('.increase-quantity');
         const decreaseBtn = cartItem.querySelector('.decrease-quantity');
         const itemData = CartBase.utils.getCartItemData(cartItem);
+        const quantityControls = cartItem.querySelector('.quantity-controls');
 
         if (!quantityInput || !itemData) return;
 
@@ -141,12 +186,78 @@ const CartQuantity = {
 
         // Update increase button
         if (increaseBtn) {
-            increaseBtn.disabled = currentValue >= max;
+            const shouldDisable = currentValue >= max;
+            increaseBtn.disabled = shouldDisable;
+            increaseBtn.setAttribute('aria-disabled', shouldDisable);
+            
+            if (shouldDisable) {
+                increaseBtn.title = `Đã đạt số lượng tối đa (${max})`;
+            } else {
+                increaseBtn.title = 'Tăng số lượng';
+            }
         }
 
         // Update decrease button
         if (decreaseBtn) {
-            decreaseBtn.disabled = currentValue <= min;
+            const shouldDisable = currentValue <= min;
+            decreaseBtn.disabled = shouldDisable;
+            decreaseBtn.setAttribute('aria-disabled', shouldDisable);
+            
+            if (shouldDisable) {
+                decreaseBtn.title = `Đã đạt số lượng tối thiểu (${min})`;
+            } else {
+                decreaseBtn.title = 'Giảm số lượng';
+            }
+        }
+
+        // Update quantity feedback
+        this.updateQuantityFeedback(cartItem, currentValue, max);
+        
+        // Remove error states
+        if (quantityControls) {
+            CartBase.dom.removeClass(quantityControls, 'error');
+        }
+    },
+
+    // Update quantity feedback display
+    updateQuantityFeedback(cartItem, currentValue, maxValue) {
+        const feedbackEl = cartItem.querySelector('.quantity-feedback small');
+        const stockAmount = cartItem.querySelector('.stock-amount');
+        
+        if (stockAmount) {
+            stockAmount.textContent = maxValue;
+        }
+        
+        // Add warning if near maximum
+        if (feedbackEl && currentValue >= maxValue) {
+            const warningSpan = feedbackEl.querySelector('.text-warning') || document.createElement('span');
+            if (!feedbackEl.querySelector('.text-warning')) {
+                warningSpan.className = 'text-warning';
+                warningSpan.innerHTML = '<i class="fas fa-exclamation-triangle me-1"></i>Đã đạt tối đa';
+                feedbackEl.appendChild(warningSpan);
+            }
+        } else {
+            // Remove warning if exists
+            const warningSpan = feedbackEl?.querySelector('.text-warning');
+            if (warningSpan) {
+                warningSpan.remove();
+            }
+        }
+    },
+
+    // Add error feedback animation
+    addErrorFeedback(cartItem) {
+        const quantityControls = cartItem.querySelector('.quantity-controls');
+        if (quantityControls) {
+            CartBase.dom.addClass(quantityControls, 'error');
+            
+            // Shake animation
+            quantityControls.style.animation = 'shake 0.5s ease-in-out';
+            
+            setTimeout(() => {
+                CartBase.dom.removeClass(quantityControls, 'error');
+                quantityControls.style.animation = '';
+            }, 2000);
         }
     },
 
