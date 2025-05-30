@@ -45,7 +45,7 @@
                 Họ tên
               </label>
               <div class="input-wrapper">
-                <input type="text" name="name" id="name" required
+                <input type="text" name="name" id="name" 
                        class="form-input"
                        placeholder="Nhập họ tên của bạn" value="{{ old('name') }}">
               </div>
@@ -57,7 +57,7 @@
                 Số điện thoại
               </label>
               <div class="input-wrapper">
-                <input type="tel" name="phone" id="phone" required
+                <input type="tel" name="phone" id="phone" 
                        class="form-input"
                        placeholder="Nhập số điện thoại" value="{{ old('phone') }}">
               </div>
@@ -81,7 +81,7 @@
                 Email
               </label>
               <div class="input-wrapper">
-                <input type="email" name="email" id="email" required
+                <input type="email" name="email" id="email" 
                        class="form-input"
                        placeholder="Nhập địa chỉ email" value="{{ old('email') }}">
               </div>
@@ -117,7 +117,7 @@
                 Tin nhắn
               </label>
               <div class="input-wrapper">
-                <textarea name="message" id="message" required
+                <textarea name="message" id="message" 
                           class="form-textarea"
                           placeholder="Nhập nội dung tin nhắn...">{{ old('message') }}</textarea>
               </div>
