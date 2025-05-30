@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
+<!-- Add CSS -->
+<link rel="stylesheet" href="{{ asset('css/purchases.css') }}">
+
 <div class="container py-4">
     <div class="row justify-content-center">
         <div class="col-md-12">
@@ -140,61 +143,8 @@
     </div>
 </div>
 
-<style>
-/* Style cho phần đánh giá sao */
-.rating-input {
-    display: inline-block;
-    font-size: 24px;
-    line-height: 1;
-    margin: 5px 0;
-    direction: rtl;
-    unicode-bidi: bidi-override;
-}
-
-.rating-input input {
-    display: none;
-}
-
-.rating-input label {
-    color: #ddd;
-    cursor: pointer;
-    padding: 0 2px;
-    transition: color 0.2s;
-}
-
-.rating-input label:before {
-    content: "★";
-}
-
-.rating-input input:checked ~ label,
-.rating-input:not(:checked) > label:hover,
-.rating-input:not(:checked) > label:hover ~ label {
-    color: #ffc107;
-}
-
-.rating-input input:checked + label:hover,
-.rating-input input:checked ~ label:hover,
-.rating-input label:hover ~ input:checked ~ label,
-.rating-input input:checked ~ label:hover ~ label {
-    color: #ffed85;
-}
-</style>
 @endsection
 
 @push('scripts')
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Xử lý khi submit form đánh giá
-    document.querySelectorAll('.review-form').forEach(form => {
-        form.addEventListener('submit', function(e) {
-            // Thêm loading state nếu cần
-            const submitBtn = this.querySelector('button[type="submit"]');
-            if (submitBtn) {
-                submitBtn.disabled = true;
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Đang gửi...';
-            }
-        });
-    });
-});
-</script>
+<script src="{{ asset('js/purchases.js') }}"></script>
 @endpush

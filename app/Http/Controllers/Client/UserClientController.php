@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Toastr;
+use Illuminate\Support\Facades\Log;
 
 class UserClientController extends Controller
 {
@@ -46,7 +47,7 @@ class UserClientController extends Controller
         
         $orders = $query->latest()->paginate(10);
         
-        return view('clients.purchases', [
+        return view('clients.account.purchases', [
             'orders' => $orders,
             'currentType' => $type,
         ]);
@@ -54,14 +55,22 @@ class UserClientController extends Controller
     
     public function storeReview(Request $request)
     {
-        \Log::info('Review data:', $request->all());
-        \Log::info('User ID:', ['user_id' => Auth::id()]);
+        Log::info('Review data:', $request->all());
+        Log::info('User ID:', ['user_id' => Auth::id()]);
         
         $request->validate([
             'order_id' => 'required|exists:orders,id',
             'book_id' => 'required|exists:books,id',
             'rating' => 'required|integer|min:1|max:5',
             'comment' => 'required|string|max:1000',
+        ], [
+            'order_id.required' => 'Đơn hàng không hợp lệ',
+            'book_id.required' => 'Sách không hợp lệ',
+            'rating.required' => 'Đánh giá không hợp lệ',
+            'comment.required' => 'Nội dung đánh giá không hợp lệ',
+            'rating.min' => 'Đánh giá phải từ 1 đến 5',
+            'rating.max' => 'Đánh giá phải từ 1 đến 5',
+            'comment.max' => 'Nội dung đánh giá không hợp lệ'
         ]);
         
         $user = Auth::user();
@@ -80,7 +89,7 @@ class UserClientController extends Controller
             ->firstOrFail();
         
         // Check if review already exists
-        $existingReview = \App\Models\Review::where('user_id', $user->id)
+        $existingReview = Review::where('user_id', $user->id)
             ->where('book_id', $request->book_id)
             ->where('order_id', $order->id)
             ->exists();
