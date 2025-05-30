@@ -15,13 +15,23 @@ use App\Http\Controllers\Login\ActivationController;
 use App\Http\Controllers\HomeController;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Wishlists\WishlistController;
 use App\Http\Controllers\Contact\ContactController;
 use App\Http\Controllers\Article\NewsController;
 use App\Http\Controllers\Admin\NewsArticleController;
 use App\Http\Controllers\Admin\PaymentMethodController;
 
+// danh sach yeu thich 
+Route::get('/wishlist', [WishlistController::class, 'getWishlist'])->name('wishlist.index');
+Route::post('/wishlist/add', [WishlistController::class, 'add'])->name('wishlist.add');
+Route::post('/wishlist/delete', [WishlistController::class, 'delete'])->name('wishlist.delete');
+Route::post('/wishlist/delete-all', [WishlistController::class, 'deleteAll'])->name('wishlist.delete-all');
+Route::post('/wishlist/add-to-cart', [WishlistController::class, 'addToCartFromWishlist'])->name('wishlist.addToCart');
+// Hiển thị danh sách và danh mục
+
 // Route public cho books (categoryId optional)
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
 Route::get('/books/{slug?}', [BookController::class, 'index'])->name('books.index');
 Route::get('/book/{slug}', [HomeController::class, 'show'])->name('books.show');
 Route::get('/books/{categoryId?}', [BookController::class, 'index'])->name('books.index');
@@ -184,6 +194,10 @@ Route::prefix('account')->name('account.')->group(function () {
     Route::put('/profile/update', [LoginController::class, 'updateProfile'])->name('profile.update');
 });
 
+
+
+
+// Login và tài khoản
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
 
@@ -196,6 +210,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [LoginController::class, 'index'])->name('index');
     });
 });
+
 
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/login', [AdminAuthController::class, 'showLoginForm'])->name('login');
@@ -309,3 +324,4 @@ Route::prefix('admin')->name('admin.')->group(function () {
         });
     });
 });
+
