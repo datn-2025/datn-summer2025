@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AttributeController;
 use App\Http\Controllers\Admin\Auth\AdminAuthController;
 use App\Http\Controllers\Admin\BookController as AdminBookController;
+use App\Http\Controllers\Admin\ContactController as AdminContactController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\UserController;
@@ -17,9 +18,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Contact\ContactController;
 use App\Http\Controllers\Article\NewsController;
 use App\Http\Controllers\Admin\ReviewController;
+use App\Http\Controllers\Admin\NewsArticleController;
 use App\Http\Controllers\Admin\PaymentMethodController;
 use App\Http\Controllers\Client\UserClientController;
 
+// Route public cho books (categoryId optional)
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/books/{slug?}', [BookController::class, 'index'])->name('books.index');
 Route::get('/book/{slug}', [HomeController::class, 'show'])->name('books.show');
@@ -29,6 +32,8 @@ Route::post('/contact', [ContactController::class, 'submitForm'])->name('contact
 Route::get('/news', [NewsController::class, 'index'])->name('news.index');
 Route::get('/news/{id}', [NewsController::class, 'show'])->name('news.show');
 
+
+// Test route for QR code generation
 Route::get('/test-qr-code/{id}', function ($id) {
     $order = \App\Models\Order::findOrFail($id);
     $controller = new \App\Http\Controllers\Admin\OrderController();
@@ -36,7 +41,6 @@ Route::get('/test-qr-code/{id}', function ($id) {
     $method = $reflection->getMethod('generateQrCode');
     $method->setAccessible(true);
     $method->invoke($controller, $order);
-
     return redirect()->route('admin.orders.show', $order->id)->with('success', 'QR Code generated successfully!');
 });
 
@@ -46,7 +50,9 @@ Route::prefix('account')->name('account.')->group(function () {
     // Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
     Route::get('/register', [LoginController::class, 'register'])->name('register');
     Route::post('/register', [LoginController::class, 'handleRegister'])->name('register.submit');
+    Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
     // Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
+
 
     // Password Reset Routes
     Route::get('/forgot-password', [\App\Http\Controllers\Login\LoginController::class, 'showForgotPasswordForm'])->name('password.request');
@@ -190,6 +196,26 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/edit/{id}', [AttributeController::class, 'edit'])->name('edit');
             Route::put('/update/{id}', [AttributeController::class, 'update'])->name('update');
             Route::delete('/delete/{id}', [AttributeController::class, 'destroy'])->name('destroy');
+        });
+
+
+        // Route admin/contacts
+        Route::prefix('contacts')->name('contacts.')->group(function () {
+            Route::get('/', [AdminContactController::class, 'index'])->name('index');
+            Route::get('/show/{id}', [AdminContactController::class, 'show'])->name('show');
+            Route::put('/update/{id}', [AdminContactController::class, 'update'])->name('update'); // Cập nhật trạng thái
+            Route::delete('/delete/{id}', [AdminContactController::class, 'destroy'])->name('destroy'); // Xóa liên hệ
+            Route::post('/reply/{contact}', [AdminContactController::class, 'sendReply'])->name('reply'); // Gửi phản hồi
+        });
+        // Route admin/news
+        Route::prefix('news')->name('news.')->group(function () {
+            Route::get('/', [NewsArticleController::class, 'index'])->name('index');
+            Route::get('/create', [NewsArticleController::class, 'create'])->name('create');
+            Route::post('/', [NewsArticleController::class, 'store'])->name('store');
+            Route::get('/{article}', [NewsArticleController::class, 'show'])->name('show');
+            Route::get('/{article}/edit', [NewsArticleController::class, 'edit'])->name('edit');
+            Route::put('/{article}', [NewsArticleController::class, 'update'])->name('update');
+            Route::delete('/{article}', [NewsArticleController::class, 'destroy'])->name('destroy');
         });
 
         Route::prefix('orders')->name('orders.')->group(function () {

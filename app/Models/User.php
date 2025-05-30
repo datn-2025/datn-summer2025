@@ -30,9 +30,7 @@ class User extends Authenticatable
         'phone',
         'status',
         'role_id',
-
         'reset_token',
-
         'avatar'
 
     ];

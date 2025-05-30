@@ -49,7 +49,7 @@
     <script src="https://cdn.jsdelivr.net/npm/tinymce@6/tinymce.min.js"></script>
     <script>
         tinymce.init({
-            selector: '#description',
+            selector: '#description, #content',
             height: 300,
             menubar: false,
             plugins: 'lists link image preview code fullscreen',
@@ -749,13 +749,14 @@
                             <div class="collapse menu-dropdown" id="sidebarCate">
                                 <ul class="nav nav-sm flex-column">
                                     <li class="nav-item">
-                                        <a href="{{ route('admin.categories.index') }}" class="nav-link"
+                                        <a href="{{route('admin.categories.index')}}" class="nav-link"
                                             data-key="t-chat"> Loại sách </a>
                                     </li>
                                     <li class="nav-item">
                                         <a href="{{ route('admin.categories.authors.index') }}" class="nav-link"
                                             data-key="t-chat"> Tác giả </a>
                                     </li>
+
                                     <li class="nav-item">
                                         <a href="{{route('admin.categories.brands.brand')}}" class="nav-link" data-key="t-chat"> Thương hiệu </a>
                                     </li>
@@ -770,10 +771,42 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link menu-link" href="{{route('admin.reviews.index')}}" >
-                                <i class="ri-pages-line"></i> <span data-key="t-pages">Quản lý đánh giá</span>
+                            <a class="nav-link menu-link" href="#sidebarNews" data-bs-toggle="collapse" role="button"
+                                aria-expanded="false" aria-controls="sidebarNews">
+                                <i class="ri-newspaper-line"></i> <span data-key="t-news">Quản lý tin tức</span>
                             </a>
+                            <div class="collapse menu-dropdown" id="sidebarNews">
+                                <ul class="nav nav-sm flex-column">
+                                    <li class="nav-item">
+                                        <a href="{{ route('admin.news.index') }}" class="nav-link"
+                                            data-key="t-news-list">Danh sách</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{ route('admin.news.create') }}" class="nav-link"
+                                            data-key="t-news-create">Thêm mới</a>
+                                    </li>
+                                </ul>
+                            </div>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link menu-link" href="#sidebarContacts" data-bs-toggle="collapse"
+                                role="button" aria-expanded="false" aria-controls="sidebarContacts">
+                                <i class="ri-mail-line"></i> <!-- icon thư, bạn có thể đổi icon khác -->
+                                <span data-key="t-contacts">Quản lý liên hệ</span>
+                            </a>
+                            <div class="collapse menu-dropdown" id="sidebarContacts">
+                                <ul class="nav nav-sm flex-column">
+                                    <li class="nav-item">
+                                        <a href="{{ route('admin.contacts.index') }}" class="nav-link"
+                                            data-key="t-contacts-list">
+                                            Danh sách liên hệ
+                                        </a>
+                                    </li>
+                                   
+                                </ul>
+                            </div>
+                        </li>
+
 
                         <li class="nav-item">
                             <a class="nav-link menu-link" href="#sidebarAdvanceUI" data-bs-toggle="collapse"
@@ -1607,6 +1640,17 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     {!! Toastr::message() !!}
+    <script>
+        // Nếu trang được tải từ bộ nhớ cache (back/forward)
+        if (performance.getEntriesByType('navigation')[0]?.type === 'back_forward') {
+            // Xóa Toastr message hiện lại từ session cũ
+            const toastrContainer = document.querySelector('#toast-container');
+            if (toastrContainer) {
+                toastrContainer.remove();
+            }
+        }
+    </script>
+
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
     <script>
@@ -1616,15 +1660,9 @@
             freeMode: true,
             watchSlidesProgress: true,
             breakpoints: {
-                640: {
-                    slidesPerView: 4
-                },
-                768: {
-                    slidesPerView: 5
-                },
-                1024: {
-                    slidesPerView: 6
-                },
+                640: { slidesPerView: 4 },
+                768: { slidesPerView: 5 },
+                1024: { slidesPerView: 6 },
             },
         });
 
