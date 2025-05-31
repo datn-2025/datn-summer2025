@@ -7,8 +7,19 @@ use Illuminate\Database\Seeder;
 
 class PaymentMethodSeeder extends Seeder
 {
-        public function run()
-        {
-            PaymentMethod::factory(3)->create();
+    public function run()
+    {
+        $methods = [
+            ['name' => 'Thanh toán khi nhận hàng'],
+            ['name' => 'Chuyển khoản ngân hàng'],
+            ['name' => 'Ví điện tử'],
+        ];
+
+        foreach ($methods as $method) {
+            PaymentMethod::updateOrCreate(
+                ['name' => $method['name']],
+                $method
+            );
         }
+    }
 }

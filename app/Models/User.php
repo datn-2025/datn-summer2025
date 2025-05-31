@@ -12,7 +12,7 @@ class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
-    
+
     protected $table = 'users';
 
     const ROLE_ADMIN = 'Admin';
@@ -63,8 +63,8 @@ class User extends Authenticatable
         // return $this->role === self::ROLE_ADMIN;
         return $this->role && $this->role->name === 'Admin';
 
-        // return $this->role_id === 'bddabc45-3a65-3311-aa0b-9d95effef61c'; 
-        // return $this->role()->where('name', 'Admin')->exists(); 
+        // return $this->role_id === 'bddabc45-3a65-3311-aa0b-9d95effef61c';
+        // return $this->role()->where('name', 'Admin')->exists();
     }
 
     public function isActive()
@@ -114,5 +114,10 @@ class User extends Authenticatable
     public function appliedVouchers()
     {
         return $this->hasMany(AppliedVoucher::class);
+    }
+
+    public function cart()
+    {
+        return $this->hasMany(Cart::class);
     }
 }
