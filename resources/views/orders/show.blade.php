@@ -90,9 +90,19 @@
             </div>
 
             <div class="border-t mt-4 pt-4">
+                @php
+                    $subtotal = $order->orderItems->sum('total');
+                    $discount = 0;
+                    if ($order->voucher) {
+                        $discount = $subtotal * ($order->voucher->discount_percent / 100);
+                        if ($order->voucher->max_discount && $discount > $order->voucher->max_discount) {
+                            $discount = $order->voucher->max_discount;
+                        }
+                    }
+                @endphp
                 <div class="flex justify-between mb-2">
                     <span>Tạm tính:</span>
-                    <span>{{ number_format($order->orderItems->sum('total')) }} VNĐ</span>
+                    <span>{{ number_format($subtotal) }} VNĐ</span>
                 </div>
                 <div class="flex justify-between mb-2">
                     <span>Phí vận chuyển:</span>
@@ -100,13 +110,13 @@
                 </div>
                 @if($order->voucher)
                 <div class="flex justify-between mb-2">
-                    <span>Giảm giá:</span>
-                    <span>{{ number_format($order->orderItems->sum('total') + $order->shipping_fee - $order->total_amount) }} VNĐ</span>
+                    <span>Giảm giá ({{ $order->voucher->code }}):</span>
+                    <span>-{{ number_format($discount) }} VNĐ</span>
                 </div>
                 @endif
                 <div class="flex justify-between font-bold">
                     <span>Tổng tiền:</span>
-                    <span>{{ number_format($order->total_amount) }} VNĐ</span>
+                    <span>{{ number_format($subtotal + $order->shipping_fee - $discount) }} VNĐ</span>
                 </div>
             </div>
         </div>
