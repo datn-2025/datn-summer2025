@@ -180,7 +180,7 @@
 
 
         {{-- Đánh giá --}}
-        <div class="mt-16 bg-white/90 shadow-sm border border-gray-200 rounded-lg p-6">
+        <!-- <div class="mt-16 bg-white/90 shadow-sm border border-gray-200 rounded-lg p-6">
             <h2 class="text-2xl font-semibold mb-4 border-b pb-2 border-gray-300 text-gray-800 flex items-center">
                 <i class="fas fa-star mr-2 text-yellow-400"></i>Đánh giá từ khách hàng
             </h2>
@@ -203,6 +203,78 @@
             @empty
                 <p class=" text-gray-500 italic">Chưa có đánh giá nào cho sản phẩm này.</p>
             @endforelse
+        </div> -->
+        {{-- Phần lọc đánh giá --}}
+        {{-- Đánh giá --}}
+        <div class="mt-16 bg-white/90 shadow-sm border border-gray-200 rounded-lg p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-semibold text-gray-800 flex items-center">
+                    <i class="fas fa-star mr-2 text-yellow-400"></i>Đánh giá từ khách hàng
+                </h2>
+                
+                {{-- Thanh lọc đánh giá --}}
+                <div class="flex items-center space-x-2">
+                    <span class="text-sm text-gray-600 mr-2">Lọc theo:</span>
+                    @php
+                        $currentRating = request('rating');
+                        $totalReviews = $book->reviews->count();
+                    @endphp
+                    
+                    <a href="?rating=" 
+                    class="px-3 py-1 text-sm rounded-full transition-all 
+                            {{ !$currentRating ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
+                        Tất cả ({{ $totalReviews }})
+                    </a>
+                    
+                    @for($i = 5; $i >= 1; $i--)
+                        @php
+                            $count = $book->reviews->where('rating', $i)->count();
+                            $isActive = $currentRating == $i ? 'bg-yellow-100 text-yellow-800 border border-yellow-300' : 'bg-gray-100 hover:bg-gray-200';
+                        @endphp
+                        <a href="?rating={{ $i }}" 
+                        class="px-3 py-1 text-sm rounded-full transition-all flex items-center {{ $isActive }}">
+                            {{ $i }} <i class="fas fa-star text-yellow-400 ml-1"></i>
+                            <span class="ml-1 text-xs bg-{{ $currentRating == $i ? 'yellow-200' : 'gray-200' }} px-2 py-0.5 rounded-full">
+                                {{ $count }}
+                            </span>
+                        </a>
+                    @endfor
+                </div>
+            </div>
+
+            {{-- Danh sách đánh giá --}}
+            <div class="space-y-6">
+                @php
+                    $filteredReviews = $currentRating 
+                        ? $book->reviews->where('rating', $currentRating) 
+                        : $book->reviews;
+                @endphp
+
+                @forelse($filteredReviews as $review)
+                    <div class="border-b border-gray-200 pb-6 last:border-0">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center">
+                                <i class="fas fa-user-circle text-2xl text-gray-400 mr-3"></i>
+                                <div>
+                                    <p class="font-medium text-gray-900">{{ $review->user->name ?? 'Khách hàng' }}</p>
+                                    <div class="flex items-center">
+                                        @for($i = 1; $i <= 5; $i++)
+                                            <i class="fas fa-star text-{{ $i <= $review->rating ? 'yellow-400' : 'gray-300' }} text-sm"></i>
+                                        @endfor
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="text-sm text-gray-500">{{ $review->created_at->format('d/m/Y') }}</span>
+                        </div>
+                        <p class="text-gray-700 pl-11">{{ $review->comment }}</p>
+                    </div>
+                @empty
+                    <div class="text-center py-8">
+                        <i class="fas fa-comment-slash text-4xl text-gray-300 mb-2"></i>
+                        <p class="text-gray-500">Chưa có đánh giá nào cho sản phẩm này.</p>
+                    </div>
+                @endforelse
+            </div>
         </div>
 
         {{-- Sản phẩm liên quan --}}
