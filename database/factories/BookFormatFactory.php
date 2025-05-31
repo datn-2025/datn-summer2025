@@ -16,14 +16,14 @@ class BookFormatFactory extends Factory
             'Ebook' => [30000, 80000],       // Giá ebook thường thấp hơn
             'Sách Vật Lý' => [50000, 150000],  // Giá cao nhất
         ];
-        
+
         $format = $this->faker->randomElement(array_keys($prices));
         $priceRange = $prices[$format];
         $isPhysical = in_array($format, ['Sách Vật Lý']);
-        
+
         return [
             'book_id' => Book::factory(),
-            'format_name' => $format,
+            'name' => $format,
             'price' => $this->faker->numberBetween($priceRange[0], $priceRange[1]),
             'discount' => $this->faker->optional(0.3)->numberBetween(5, 25), // 30% chance of having a discount
             'stock' => $isPhysical ? $this->faker->numberBetween(10, 100) : null, // Chỉ format vật lý mới có stock
