@@ -14,6 +14,45 @@ use Illuminate\Support\Facades\Log;
 
 class UserClientController extends Controller
 {
+    // public function index(Request $request)
+    // {
+    //     if (!Auth::check()) {
+    //         return redirect()->route('login')->with('error', 'Vui lòng đăng nhập để xem đánh giá');
+    //     }
+    
+    //     $user = Auth::user();
+    //     $type = $request->query('type', '1');
+        
+    //     // Get completed orders (assuming status 'Thành công' means completed)
+    //     $completedStatus = OrderStatus::where('name', 'Thành công')->first();
+        
+    //     if (!$completedStatus) {
+    //         return redirect()->back()->with('error', 'Không tìm thấy trạng thái đơn hàng đã hoàn thành');
+    //     }
+        
+    //     $query = $user->orders()
+    //         ->with(['orderItems.book', 'reviews'])
+    //         ->where('order_status_id', $completedStatus->id);
+        
+    //     // Filter based on review status
+    //     switch ($type) {
+    //         case '2': // Not reviewed
+    //             $query->whereDoesntHave('reviews');
+    //             break;
+    //         case '3': // Already reviewed
+    //             $query->whereHas('reviews');
+    //             break;
+    //         // Default (type=1): Show all
+    //     }
+        
+    //     $orders = $query->latest()->paginate(10);
+        
+    //     return view('clients.account.purchases', [
+    //         'orders' => $orders,
+    //         'currentType' => $type,
+    //     ]);
+    // }
+
     public function index(Request $request)
     {
         if (!Auth::check()) {
@@ -45,7 +84,16 @@ class UserClientController extends Controller
             // Default (type=1): Show all
         }
         
-        $orders = $query->latest()->paginate(10);
+        // Sắp xếp: đơn hàng chưa đánh giá lên đầu, sau đó mới đến đơn hàng đã đánh giá
+        $orders = $query->select('orders.*')
+            ->leftJoin('reviews', function($join) {
+                $join->on('orders.id', '=', 'reviews.order_id')
+                     ->whereNull('reviews.deleted_at');
+            })
+            ->groupBy('orders.id')
+            ->orderByRaw('COUNT(reviews.id) = 0 DESC') // Sắp xếp đơn hàng chưa đánh giá lên đầu
+            ->latest('orders.created_at') // Sau đó sắp xếp theo thời gian tạo mới nhất
+            ->paginate(10);
         
         return view('clients.account.purchases', [
             'orders' => $orders,
@@ -89,12 +137,24 @@ class UserClientController extends Controller
             ->firstOrFail();
         
         // Check if review already exists
-        $existingReview = Review::where('user_id', $user->id)
+        // $existingReview = Review::where('user_id', $user->id)
+        //     ->where('book_id', $request->book_id)
+        //     ->where('order_id', $order->id)
+        //     ->exists();
+            
+        // if ($existingReview) {
+        //     return redirect()->back()->with('error', 'Bạn đã đánh giá sản phẩm này rồi');
+        // }
+        $existingReview = Review::withTrashed()
+            ->where('user_id', $user->id)
             ->where('book_id', $request->book_id)
             ->where('order_id', $order->id)
-            ->exists();
-            
+            ->first();
+
         if ($existingReview) {
+            if ($existingReview->trashed()) {
+                return redirect()->back()->with('error', 'Bạn đã xóa đánh giá cho sản phẩm này và không thể đánh giá lại');
+            }
             return redirect()->back()->with('error', 'Bạn đã đánh giá sản phẩm này rồi');
         }
         

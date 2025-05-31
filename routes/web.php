@@ -21,6 +21,7 @@ use App\Http\Controllers\Admin\ReviewController;
 use App\Http\Controllers\Admin\NewsArticleController;
 use App\Http\Controllers\Admin\PaymentMethodController;
 use App\Http\Controllers\Client\UserClientController;
+use App\Http\Controllers\Client\ReviewController as ClientReviewController;
 
 // Route public cho books (categoryId optional)
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -80,6 +81,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [LoginController::class, 'index'])->name('index');
         Route::get('/purchase', [UserClientController::class, 'index'])->name('purchase');
         Route::post('/review', [UserClientController::class, 'storeReview'])->name('review.store');
+
+        Route::prefix('reviews')->name('reviews.')->group(function () {
+            Route::put('/{id}', [ClientReviewController::class, 'update'])->name('update');
+            Route::delete('/{id}', [ClientReviewController::class, 'destroy'])->name('destroy');
+        });
     });
 });
 

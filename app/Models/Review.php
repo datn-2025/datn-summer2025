@@ -6,9 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\SoftDeletes;
 class Review extends Model
 {
     use HasFactory;
+    use SoftDeletes;
 
     protected $fillable = [
         'user_id',
@@ -23,6 +25,8 @@ class Review extends Model
     protected $casts = [
         'rating' => 'integer'
     ];
+
+    protected $dates = ['deleted_at'];
 
     public $incrementing = false; 
     protected $keyType = 'string';
