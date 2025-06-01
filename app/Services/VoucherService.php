@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Voucher;
 use App\Models\User;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class VoucherService
 {
@@ -17,6 +18,12 @@ class VoucherService
             ->where(function($query) {
                 $query->whereRaw('quantity > (SELECT COUNT(*) FROM applied_vouchers WHERE voucher_id = vouchers.id)')
                     ->orWhereNull('quantity');
+            })
+            ->whereNotExists(function($query) use ($user) {
+                $query->select(DB::raw(1))
+                    ->from('applied_vouchers')
+                    ->whereRaw('applied_vouchers.voucher_id = vouchers.id')
+                    ->where('user_id', $user->id);
             })
             ->get()
             ->map(function($voucher) {

@@ -59,7 +59,7 @@ class Voucher extends Model
     public function isValid()
     {
         $now = now()->startOfDay();
-        return $this->status === 'active' 
+        return $this->status === 'active'
             && $now->between($this->valid_from, $this->valid_to)
             && ($this->quantity > $this->appliedVouchers()->count());
     }
