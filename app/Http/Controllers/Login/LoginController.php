@@ -321,10 +321,6 @@ class LoginController extends Controller
             if ($user->avatar && file_exists(public_path('storage/' . $user->avatar))) {
                 unlink(public_path('storage/' . $user->avatar));
             }
-
-
-    $user->save();
-
             // Lưu file vào storage/app/public/avatars
             $request->avatar->storeAs('avatars', $filename, 'public');
 
@@ -332,12 +328,10 @@ class LoginController extends Controller
             $user->avatar = 'avatars/' . $filename;
         }
 
-
-
-
-
         $user->save();
-
+        Toastr::success('Cập nhật hồ sơ thành công!', 'Thành công');
+        return back();
+    }
 
     // Hiển thị form đổi mật khẩu
     public function showChangePasswordForm()
@@ -386,8 +380,6 @@ class LoginController extends Controller
 
 
 
-        Toastr::success('Cập nhật hồ sơ thành công!', 'Thành công');
-        return back();
-    }
+        
 
 }

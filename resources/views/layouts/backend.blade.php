@@ -38,6 +38,9 @@
     <!--Swiper slider css-->
     <link href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" rel="stylesheet" type="text/css" />
 
+    <!-- Line Awesome Icons -->
+    <link rel="stylesheet" href="https://cdn.lineawesome.com/1.3.0/line-awesome/css/line-awesome.min.css">
+
     <style>
         .collapse.show+a .toggle-icon,
         .nav-link[aria-expanded="true"] .toggle-icon {
