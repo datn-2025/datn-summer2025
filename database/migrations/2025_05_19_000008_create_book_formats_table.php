@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('book_formats', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('book_id');
-            $table->string('name');
+            $table->string('format_name');
             $table->decimal('price', 12, 2);
             $table->decimal('discount', 12, 2)->nullable();
             $table->integer('stock')->nullable();
