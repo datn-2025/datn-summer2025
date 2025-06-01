@@ -1,74 +1,80 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="auth-container">
-    <div class="left-section">
-        <div class="content-wrapper">
-            <h1>Đặt lại mật khẩu</h1>
-            <p>Nhập mật khẩu mới của bạn</p>
-            <a href="{{ route('account.login') }}" class="btn btn-outline">ĐĂNG NHẬP</a>
+<div class="page-center">
+    <div class="auth-container">
+        <div class="left-section">
+            <div class="content-wrapper">
+                <h1>Đặt lại mật khẩu</h1>
+                <p>Nhập mật khẩu mới của bạn</p>
+                <a href="{{ route('login') }}" class="btn btn-outline">ĐĂNG NHẬP</a>
+            </div>
         </div>
-    </div>
-    <div class="right-section">
-        <div class="form-container">
-            <h2>Đặt lại mật khẩu</h2>
-            @if (session('status'))
-                <div class="alert alert-success">
-                    {{ session('status') }}
-                </div>
-            @endif
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul class="mb-0">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-            <form method="POST" action="{{ route('account.password.update') }}">
-                @csrf
-                <input type="hidden" name="token" value="{{ $token }}">
-                
-                <div class="form-group">
-                    <input type="email" name="email" class="form-control" placeholder="Email" required value="{{ old('email') }}" />
-                </div>
-                
-                <div class="form-group">
-                    <input type="password" name="password" class="form-control" placeholder="Mật khẩu mới" required />
-                </div>
-                
-                <div class="form-group">
-                    <input type="password" name="password_confirmation" class="form-control" placeholder="Xác nhận mật khẩu mới" required />
-                </div>
+        <div class="right-section">
+            <div class="form-container">
+                <h2>Đặt lại mật khẩu</h2>
 
-                <button type="submit" class="btn btn-primary">ĐẶT LẠI MẬT KHẨU</button>
-            </form>
+                @if (session('status'))
+                    <div class="alert alert-success">
+                        {{ session('status') }}
+                    </div>
+                @endif
+
+                <form method="POST" action="{{ route('password.update') }}">
+                    @csrf
+                    <input type="hidden" name="token" value="{{ $token }}">
+                    
+                    <div class="form-group">
+                        <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" placeholder="Email" value="{{ old('email', $email ?? '') }}" required />
+                        @error('email')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="form-group">
+                        <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" placeholder="Mật khẩu mới" required />
+                        @error('password')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="form-group">
+                        <input type="password" name="password_confirmation" class="form-control" placeholder="Xác nhận mật khẩu" required />
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">ĐẶT LẠI MẬT KHẨU</button>
+                </form>
+            </div>
         </div>
     </div>
 </div>
+@endsection
 
+@push('styles')
 <style>
     body {
         margin: 0;
         font-family: 'Montserrat', sans-serif;
         min-height: 100vh;
+        background: linear-gradient(to right, #2193b0, #6dd5ed);
+    }
+
+    .page-center {
         display: flex;
         align-items: center;
         justify-content: center;
-        background: linear-gradient(to right, #2193b0, #6dd5ed);
+        min-height: 100vh;
     }
 
     .auth-container {
         background: #fff;
         border-radius: 10px;
         box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
-        position: relative;
-        overflow: hidden;
         width: 768px;
         max-width: 100%;
         min-height: 480px;
         display: flex;
+        overflow: hidden;
     }
 
     .left-section {
@@ -78,8 +84,8 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        text-align: center;
         padding: 40px;
+        text-align: center;
     }
 
     .content-wrapper {
@@ -93,7 +99,6 @@
 
     .left-section p {
         font-size: 14px;
-        line-height: 1.6;
         margin-bottom: 30px;
     }
 
@@ -124,12 +129,11 @@
         border: none;
         padding: 12px 15px;
         width: 100%;
-        margin-bottom: 15px;
     }
 
     .form-control:focus {
-        outline: none;
         background: #fff;
+        outline: none;
         box-shadow: 0 0 5px rgba(255,75,43,0.2);
     }
 
@@ -159,7 +163,6 @@
         text-transform: uppercase;
         font-weight: bold;
         width: 100%;
-        margin-top: 10px;
         cursor: pointer;
         transition: all 0.3s ease;
     }
@@ -169,27 +172,19 @@
         transform: translateY(-2px);
     }
 
-    .alert {
-        margin-bottom: 20px;
-        padding: 15px;
-        border-radius: 5px;
+    .invalid-feedback {
+        display: block;
+        color: #dc3545;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
     }
 
-    .alert-success {
-        background-color: #d4edda;
-        color: #155724;
-        border: 1px solid #c3e6cb;
-    }
-
-    .alert-danger {
-        background-color: #f8d7da;
-        color: #721c24;
-        border: 1px solid #f5c6cb;
-    }
-
-    .alert ul {
-        margin: 0;
-        padding-left: 20px;
+    .is-invalid {
+        border-color: #dc3545;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%23dc3545' viewBox='0 0 12 12'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right calc(0.375em + 0.1875rem) center;
+        background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
     }
 </style>
-@endsection
+@endpush
