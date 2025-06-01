@@ -58,7 +58,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Toastr::info('Chào mừng bạn đến với trang quản trị!', 'Thông báo');
         return view('admin.dashboard');
-    });
+    })->name('dashboard');
 
 
     Route::prefix('books')->name('books.')->group(function () {
@@ -156,6 +156,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::delete('/{voucher}', [VoucherController::class, 'destroy'])->name('destroy');
 
         Route::get('/export', [VoucherController::class, 'export'])->name('export');
+    });
     // Route admin/attributes
     Route::prefix('attributes')->name('attributes.')->group(function () {
         Route::get('/', [AttributeController::class, 'index'])->name('index');
