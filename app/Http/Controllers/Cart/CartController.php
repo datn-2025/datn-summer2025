@@ -22,7 +22,7 @@ class CartController extends Controller
     {
         if (!Auth::check()) {
             Toastr::error('Bạn cần đăng nhập để xem giỏ hàng của bạn.', 'Lỗi');
-            return redirect()->route('account.login');
+            return redirect()->route('login');
         }
 
         $user = Auth::user();

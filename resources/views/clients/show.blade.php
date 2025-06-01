@@ -462,7 +462,7 @@
                 alert('Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng');
             }
             setTimeout(() => {
-                window.location.href = '{{ route("account.login") }}';
+                window.location.href = '{{ route("login") }}';
             }, 1500);
             return;
         @endauth
