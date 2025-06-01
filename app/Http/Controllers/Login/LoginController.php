@@ -11,8 +11,13 @@ use App\Models\Role;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ActivationMail;
+
+use App\Mail\PasswordChangeMail;
+use Illuminate\Support\Facades\Log;
+
 use App\Mail\ResetPasswordMail;
 use Illuminate\Support\Str;
+
 
 class LoginController extends Controller
 {
@@ -317,6 +322,9 @@ class LoginController extends Controller
                 unlink(public_path('storage/' . $user->avatar));
             }
 
+
+    $user->save();
+
             // Lưu file vào storage/app/public/avatars
             $request->avatar->storeAs('avatars', $filename, 'public');
 
@@ -327,9 +335,59 @@ class LoginController extends Controller
 
 
 
+
         $user->save();
+
+
+    // Hiển thị form đổi mật khẩu
+    public function showChangePasswordForm()
+    {
+        return view('profile.change-password');
+    }
+
+    // Xử lý đổi mật khẩu
+    public function changePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required',
+            'password' => 'required|string|min:8|confirmed|different:current_password',
+        ], [
+            'current_password.required' => 'Vui lòng nhập mật khẩu hiện tại.',
+            'password.required' => 'Vui lòng nhập mật khẩu mới.',
+            'password.min' => 'Mật khẩu mới phải có ít nhất 8 ký tự.',
+            'password.confirmed' => 'Xác nhận mật khẩu mới không khớp.',
+            'password.different' => 'Mật khẩu mới phải khác mật khẩu hiện tại.'
+        ]);
+
+        $user = Auth::user();
+
+        // Kiểm tra mật khẩu hiện tại
+        if (!Hash::check($request->current_password, $user->password)) {
+            Toastr::error('Mật khẩu hiện tại không đúng.', 'Lỗi');
+            return back()->withErrors(['current_password' => 'Mật khẩu hiện tại không đúng.']);
+        }
+
+        // Cập nhật mật khẩu mới
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        // Gửi email thông báo
+        try {
+            Mail::to($user->email)->send(new PasswordChangeMail($user->name));
+        } catch (\Exception $e) {
+            // Log lỗi nhưng không dừng quy trình
+            Log::error('Không thể gửi email thông báo đổi mật khẩu: ' . $e->getMessage());
+        }
+
+        session()->flash('success', 'Bạn đã thay đổi mật khẩu thành công!');
+        return redirect()->route('account.showUser');
+    }
+
+
+
 
         Toastr::success('Cập nhật hồ sơ thành công!', 'Thành công');
         return back();
     }
+
 }

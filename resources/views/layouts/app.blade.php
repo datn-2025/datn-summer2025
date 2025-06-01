@@ -14,8 +14,10 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
     @vite(['resources/js/app.js' , 'resources/css/app.css'])
     @stack('styles')
+    @vite('resources/css/app.css')
+    @vite('resources/js/app.js')
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
-
 <body style="margin:0; min-height:100vh;">
     @include('layouts.partials.navbar')
     @yield('content')
@@ -27,7 +29,7 @@
     <!-- Toastr JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     @stack('scripts')
-    @include('layouts.partials.footer')
+  @include('layouts.partials.footer')
 </body>
 
 </html>
