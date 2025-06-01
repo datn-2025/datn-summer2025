@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -71,7 +72,9 @@
         </div>
     </div>
 </div>
+@endsection
 
+@push('styles')
 <style>
     .auth-container {
         background: #fff;
@@ -83,6 +86,7 @@
         max-width: 100%;
         min-height: 540px;
         display: flex;
+        overflow: hidden;
     }
 
     .left-section {
@@ -92,7 +96,6 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        text-align: center;
         padding: 40px;
         position: relative;
         overflow: hidden;
@@ -168,7 +171,6 @@
     }
 
     .form-control:focus {
-        outline: none;
         background: #fff;
         border-color: #2c3e50;
         box-shadow: 0 4px 12px rgba(44, 62, 80, 0.1);
@@ -216,7 +218,6 @@
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(44, 62, 80, 0.2);
     }
-
     .alert {
         margin-bottom: 20px;
         padding: 16px;

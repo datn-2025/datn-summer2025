@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -30,35 +31,33 @@
             <p>Nhập email của bạn để nhận liên kết đặt lại mật khẩu</p>
             <a href="{{ route('login') }}" class="btn btn-outline">ĐĂNG NHẬP</a>
         </div>
-    </div>
-    <div class="right-section">
-        <div class="form-container">
-            <h2>Đặt lại mật khẩu</h2>
-            @if (session('status'))
-                <div class="alert alert-success">
-                    {{ session('status') }}
-                </div>
-            @endif
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul class="mb-0">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-            <form method="POST" action="{{ route('account.password.email') }}">
-                @csrf
-                <div class="form-group">
-                    <input type="email" name="email" class="form-control" placeholder="Email" required autofocus value="{{ old('email') }}" />
-                </div>
-                <button type="submit" class="btn btn-primary">GỬI LIÊN KẾT ĐẶT LẠI MẬT KHẨU</button>
-            </form>
+        <div class="right-section">
+            <div class="form-container">
+                <h2>Đặt lại mật khẩu</h2>
+
+                @if (session('status'))
+                    <div class="alert alert-success">
+                        {{ session('status') }}
+                    </div>
+                @endif
+
+                <form method="POST" action="{{ route('password.email') }}">
+                    @csrf
+                    <div class="form-group">
+                        <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" placeholder="Email" required value="{{ old('email') }}" />
+                        @error('email')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <button type="submit" class="btn btn-primary">GỬI LIÊN KẾT ĐẶT LẠI MẬT KHẨU</button>
+                </form>
+            </div>
         </div>
     </div>
 </div>
+@endsection
 
+@push('styles')
 <style>
     .auth-container {
         background: #fff;
@@ -70,6 +69,7 @@
         max-width: 100%;
         min-height: 540px;
         display: flex;
+        overflow: hidden;
     }
 
     .left-section {
@@ -79,7 +79,6 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        text-align: center;
         padding: 40px;
         position: relative;
         overflow: hidden;
@@ -155,7 +154,6 @@
     }
 
     .form-control:focus {
-        outline: none;
         background: #fff;
         border-color: #2c3e50;
         box-shadow: 0 4px 12px rgba(44, 62, 80, 0.1);
@@ -249,3 +247,4 @@
     @stack('scripts')
 </body>
 </html>
+

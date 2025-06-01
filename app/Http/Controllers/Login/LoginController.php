@@ -217,28 +217,38 @@ class LoginController extends Controller
     public function sendResetLinkEmail(Request $request)
     {
         $request->validate([
-            'email' => 'required|email|exists:users',
+            'email' => 'required|email|exists:users,email',
         ], [
-            'email.exists' => 'Không tìm thấy địa chỉ email này trong hệ thống.',
             'email.required' => 'Vui lòng nhập email.',
-            'email.email' => 'Email không đúng định dạng.'
+            'email.email' => 'Email không đúng định dạng.',
+            'email.exists' => 'Email này không tồn tại trong hệ thống.'
         ]);
 
         $user = User::where('email', $request->email)->first();
-        $resetToken = Str::random(64);
-        $user->update(['reset_token' => $resetToken]);
-
-        $resetLink = route('account.password.reset', ['token' => $resetToken , 'email' => $request->email]);
-
-        try {
-            Mail::to($request->email)->send(new ResetPasswordMail($resetLink));
-            Toastr::success('Chúng tôi đã gửi email chứa liên kết đặt lại mật khẩu của bạn!', 'Thành công');
-        } catch (\Exception $e) {
-            Toastr::error('Không thể gửi email đặt lại mật khẩu. Vui lòng thử lại sau.', 'Lỗi');
+        
+        if ($user->status === 'Bị Khóa') {
+            Toastr::error('Tài khoản đã bị khóa. Vui lòng liên hệ quản trị viên.', 'Lỗi');
             return back()->withInput();
         }
 
-        return back();
+        $resetToken = Str::random(64);
+        $user->reset_token = $resetToken;
+        $user->save();
+
+
+        $resetLink = route('account.password.reset', ['token' => $resetToken , 'email' => $request->email]);
+
+
+        try {
+            Mail::to($user->email)->send(new ResetPasswordMail($resetLink));
+            Toastr::success('Chúng tôi đã gửi email chứa liên kết đặt lại mật khẩu của bạn!', 'Thành công');
+            return back();
+        } catch (\Exception $e) {
+            $user->reset_token = null;
+            $user->save();
+            Toastr::error('Không thể gửi email đặt lại mật khẩu. Vui lòng thử lại sau.', 'Lỗi');
+            return back()->withInput();
+        }
     }
 
     // Hiển thị form đặt lại mật khẩu
@@ -253,7 +263,7 @@ class LoginController extends Controller
         // dd($request->all());
         $request->validate([
             'token' => 'required',
-            'email' => 'required|email|exists:users',
+            'email' => 'required|email|exists:users,email',
             'password' => 'required|string|min:8|confirmed',
         ], [
             // 'email.required' => 'Vui lòng nhập email.',
@@ -270,17 +280,17 @@ class LoginController extends Controller
         // dd($user);
 
         if (!$user) {
-            Toastr::error('Mã token không hợp lệ!', 'Lỗi');
-            return back()->withErrors(['email' => 'Mã token không hợp lệ!']);
+            Toastr::error('Liên kết đặt lại mật khẩu không hợp lệ hoặc đã hết hạn!', 'Lỗi');
+            return back()->withErrors(['email' => 'Liên kết đặt lại mật khẩu không hợp lệ hoặc đã hết hạn!']);
         }
 
-        $user->update([
-            'password' => Hash::make($request->password),
-            'reset_token' => null
-        ]);
+        $user->password = Hash::make($request->password);
+        $user->reset_token = null;
+        $user->save();
 
-        Toastr::success('Mật khẩu của bạn đã được thay đổi!', 'Thành công');
+        Toastr::success('Mật khẩu đã được thay đổi thành công. Vui lòng đăng nhập lại.', 'Thành công');
         return redirect()->route('login');
+
     }
 
     // hiển thị thông tin người dùng khi đang đăng nhập
@@ -316,10 +326,6 @@ class LoginController extends Controller
             if ($user->avatar && file_exists(public_path('storage/' . $user->avatar))) {
                 unlink(public_path('storage/' . $user->avatar));
             }
-
-
-            $user->save();
-
             // Lưu file vào storage/app/public/avatars
             $request->avatar->storeAs('avatars', $filename, 'public');
 
@@ -327,12 +333,12 @@ class LoginController extends Controller
             $user->avatar = 'avatars/' . $filename;
         }
 
-
-
-
-
         $user->save();
+        Toastr::success('Cập nhật hồ sơ thành công!', 'Thành công');
+        return back();
     }
+
+
     // Hiển thị form đổi mật khẩu
     public function showChangePasswordForm()
     {

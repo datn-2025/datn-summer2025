@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -39,37 +40,49 @@
                     <i class="fab fa-google"></i>
                 </a>
             </div>
-            <div class="divider">hoặc sử dụng email để đăng ký</div>
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul class="mb-0">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
+        </div>
+        <div class="right-section">
+            <div class="form-container">
+                <h2>Tạo tài khoản</h2>
+                <div class="social-buttons">
+                    <a href="#" class="social-button google">
+                        <i class="fab fa-google"></i>
+                    </a>
                 </div>
-            @endif
-            <form method="POST" action="{{ route('account.register.submit') }}">
-                @csrf
-                <div class="form-group">
-                    <input type="text" name="name" class="form-control" placeholder="Họ và tên" required value="{{ old('name') }}" />
-                </div>
-                <div class="form-group">
-                    <input type="email" name="email" class="form-control" placeholder="Email" required value="{{ old('email') }}" />
-                </div>
-                <div class="form-group">
-                    <input type="password" name="password" class="form-control" placeholder="Mật khẩu" required />
-                </div>
-                <div class="form-group">
-                    <input type="password" name="password_confirmation" class="form-control" placeholder="Xác nhận mật khẩu" required />
-                </div>
-                <button type="submit" class="btn btn-primary">ĐĂNG KÝ</button>
-            </form>
+                <div class="divider">hoặc sử dụng email để đăng ký</div>
+
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul class="mb-0">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                <form method="POST" action="{{ route('account.register.submit') }}">
+                    @csrf
+                    <div class="form-group">
+                        <input type="text" name="name" class="form-control" placeholder="Họ và tên" required value="{{ old('name') }}" />
+                    </div>
+                    <div class="form-group">
+                        <input type="email" name="email" class="form-control" placeholder="Email" required value="{{ old('email') }}" />
+                    </div>
+                    <div class="form-group">
+                        <input type="password" name="password" class="form-control" placeholder="Mật khẩu" required />
+                    </div>
+                    <div class="form-group">
+                        <input type="password" name="password_confirmation" class="form-control" placeholder="Xác nhận mật khẩu" required />
+                    </div>
+                    <button type="submit" class="btn btn-primary">ĐĂNG KÝ</button>
+                </form>
+            </div>
         </div>
     </div>
 </div>
-<style>
 
+<style>
 
     .auth-container {
         background: #fff;
@@ -167,6 +180,7 @@
         height: 44px;
         width: 44px;
         color: #2c3e50;
+
         text-decoration: none;
         transition: all 0.3s ease;
         font-size: 1.1rem;
@@ -175,6 +189,7 @@
     .social-button:hover {
         color: #fff;
         transform: translateY(-2px);
+
     }
 
     .social-button.google:hover {
