@@ -31,6 +31,7 @@ class ContactController extends Controller
     // $note = $data['note'] ?? $data['message'] ?? null;
 
     DB::table('contacts')->insert([
+      'id' => (string) \Illuminate\Support\Str::uuid(), // Tạo UUID cho id
       'name' => $data['name'],
       'email' => $data['email'],
       'phone' => $data['phone'],
