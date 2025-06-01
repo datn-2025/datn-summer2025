@@ -95,7 +95,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::put('/{paymentMethod}/restore', [PaymentMethodController::class, 'restore'])->name('restore');
         Route::delete('/{paymentMethod}/force-delete', [PaymentMethodController::class, 'forceDelete'])->name('force-delete');
     });
-  
+
     // Route admin/categories
     Route::prefix('categories')->name('categories.')->group(function () {
         Route::get('/', [CategoryController::class, 'index'])->name('index');
@@ -177,9 +177,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // Route admin/orders
     Route::prefix('orders')->name('orders.')->group(function () {
         Route::get('/', [OrderController::class, 'index'])->name('index');
-        Route::get('/show/{id}', [OrderController::class, 'show'])->name('show');
-        Route::get('/edit/{id}', [OrderController::class, 'edit'])->name('edit');
-        Route::put('/update/{id}', [OrderController::class, 'update'])->name('update');
+        Route::get('/checkout', [OrderController::class, 'checkout'])->name('checkout');
+        Route::get('/{order}', [OrderController::class, 'show'])->name('show');
+        Route::post('/store', [OrderController::class, 'store'])->name('store');
+        Route::post('/apply-voucher', [OrderController::class, 'applyVoucher'])->name('apply-voucher');
     });
 });
 
@@ -213,10 +214,19 @@ Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
 Route::middleware('auth')->group(function () {
     // Đăng xuất
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-    
+
     // Trang tài khoản
     Route::prefix('account')->name('account.')->group(function () {
         Route::get('/', [LoginController::class, 'index'])->name('index');
+    });
+
+    // Đơn hàng
+    Route::prefix('orders')->name('orders.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\OrderController::class, 'index'])->name('index');
+        Route::get('/checkout', [\App\Http\Controllers\OrderController::class, 'checkout'])->name('checkout');
+        Route::get('/{order}', [\App\Http\Controllers\OrderController::class, 'show'])->name('show');
+        Route::post('/store', [\App\Http\Controllers\OrderController::class, 'store'])->name('store');
+        Route::post('/apply-voucher', [\App\Http\Controllers\OrderController::class, 'applyVoucher'])->name('apply-voucher');
     });
 });
 
