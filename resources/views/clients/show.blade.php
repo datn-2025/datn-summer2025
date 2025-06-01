@@ -214,6 +214,14 @@
                 
                 {{-- Thanh lọc đánh giá --}}
                 <div class="flex items-center space-x-2">
+                    @if($book->reviews->count() > 0)
+                        <div class="flex items-center bg-blue-50 px-3 py-1 rounded-full mr-2">
+                            <span class="text-sm font-medium text-blue-800 mr-1">
+                                {{ number_format($book->average_rating, 1) }} / 5 <i class="fas fa-star text-yellow-400"></i>
+                            </span>
+                            <span class="text-xs text-blue-600">({{ $book->reviews->count() }})</span>
+                        </div>
+                    @endif
                     <span class="text-sm text-gray-600 mr-2">Lọc theo:</span>
                     @php
                         $currentRating = request('rating');
