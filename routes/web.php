@@ -205,8 +205,7 @@ Route::prefix('account')->name('account.')->group(function () {
         Route::post('/password/change', [LoginController::class, 'changePassword'])->name('password.update');
 
     });
-
-
+});
 
 
 // Login và tài khoản
