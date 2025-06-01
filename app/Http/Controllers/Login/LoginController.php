@@ -25,7 +25,7 @@ class LoginController extends Controller
     public function index()
     {
         if (!Auth::check()) {
-            return redirect()->route('account.login');
+            return redirect()->route('login');
         }
         return view('account.index');
     }
@@ -61,7 +61,7 @@ class LoginController extends Controller
         // Kiểm tra trạng thái tài khoản trước khi đăng nhập
         $user = User::where('email', $request->email)->first();
         // dd($user);
-        
+
 
         if ($user) {
             // Kiểm tra nếu tài khoản bị khóa
@@ -228,7 +228,7 @@ class LoginController extends Controller
         $resetToken = Str::random(64);
         $user->update(['reset_token' => $resetToken]);
 
-        $resetLink = route('account.password.reset', ['token' => $resetToken]);
+        $resetLink = route('account.password.reset', ['token' => $resetToken , 'email' => $request->email]);
 
         try {
             Mail::to($request->email)->send(new ResetPasswordMail($resetLink));
@@ -242,22 +242,23 @@ class LoginController extends Controller
     }
 
     // Hiển thị form đặt lại mật khẩu
-    public function showResetPasswordForm($token)
+    public function showResetPasswordForm($token, $email)
     {
-        return view('account.reset-password-form', ['token' => $token]);
+        return view('account.reset-password-form', ['token' => $token, 'email' => $email]);
     }
 
     // Xử lý đặt lại mật khẩu
     public function handleResetPassword(Request $request)
     {
+        // dd($request->all());
         $request->validate([
             'token' => 'required',
             'email' => 'required|email|exists:users',
             'password' => 'required|string|min:8|confirmed',
         ], [
-            'email.required' => 'Vui lòng nhập email.',
-            'email.email' => 'Email không đúng định dạng.',
-            'email.exists' => 'Email không tồn tại trong hệ thống.',
+            // 'email.required' => 'Vui lòng nhập email.',
+            // 'email.email' => 'Email không đúng định dạng.',
+            // 'email.exists' => 'Email không tồn tại trong hệ thống.',
             'password.required' => 'Vui lòng nhập mật khẩu mới.',
             'password.min' => 'Mật khẩu phải có ít nhất 8 ký tự.',
             'password.confirmed' => 'Xác nhận mật khẩu không khớp.'
@@ -266,6 +267,7 @@ class LoginController extends Controller
         $user = User::where('email', $request->email)
             ->where('reset_token', $request->token)
             ->first();
+        // dd($user);
 
         if (!$user) {
             Toastr::error('Mã token không hợp lệ!', 'Lỗi');
@@ -278,7 +280,7 @@ class LoginController extends Controller
         ]);
 
         Toastr::success('Mật khẩu của bạn đã được thay đổi!', 'Thành công');
-        return redirect()->route('account.login');
+        return redirect()->route('login');
     }
 
     // hiển thị thông tin người dùng khi đang đăng nhập
@@ -286,7 +288,7 @@ class LoginController extends Controller
     {
         if (!Auth::check()) {
             Toastr::error('Bạn cần đăng nhập để xem thông tin tài khoản.', 'Lỗi');
-            return redirect()->route('account.login');
+            return redirect()->route('login');
         }
 
         $user = Auth::user();
@@ -316,7 +318,7 @@ class LoginController extends Controller
             }
 
 
-    $user->save();
+            $user->save();
 
             // Lưu file vào storage/app/public/avatars
             $request->avatar->storeAs('avatars', $filename, 'public');
@@ -330,8 +332,7 @@ class LoginController extends Controller
 
 
         $user->save();
-
-
+    }
     // Hiển thị form đổi mật khẩu
     public function showChangePasswordForm()
     {
@@ -375,12 +376,4 @@ class LoginController extends Controller
         session()->flash('success', 'Bạn đã thay đổi mật khẩu thành công!');
         return redirect()->route('account.showUser');
     }
-
-
-
-
-        Toastr::success('Cập nhật hồ sơ thành công!', 'Thành công');
-        return back();
-    }
-
 }
