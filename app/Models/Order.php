@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Str;
+
 class Order extends Model
 {
     use HasFactory;
@@ -17,15 +18,20 @@ class Order extends Model
         'address_id',
         'voucher_id',
         'total_amount',
+        'shipping_fee',
+        'order_code',
         'order_status_id',
-        'payment_status_id'
+        'payment_method_id',
+        'payment_status_id',
+        'qr_code'
     ];
 
     protected $casts = [
-        'total_amount' => 'decimal:2'
+        'total_amount' => 'decimal:2',
+        'shipping_fee' => 'decimal:2'
     ];
 
-    public $incrementing = false; 
+    public $incrementing = false;
     protected $keyType = 'string';
 
     public function user(): BelongsTo
@@ -53,6 +59,11 @@ class Order extends Model
         return $this->belongsTo(PaymentStatus::class);
     }
 
+    public function paymentMethod(): BelongsTo
+    {
+        return $this->belongsTo(PaymentMethod::class);
+    }
+
     public function invoice(): HasOne
     {
         return $this->hasOne(Invoice::class);
@@ -66,6 +77,11 @@ class Order extends Model
     public function appliedVoucher(): HasOne
     {
         return $this->hasOne(AppliedVoucher::class);
+    }
+
+    public function orderItems(): HasMany
+    {
+        return $this->hasMany(OrderItem::class);
     }
 
     protected static function boot()

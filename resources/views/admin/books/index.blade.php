@@ -27,7 +27,7 @@
                 <div class="d-flex align-items-center justify-content-between">
                     <h4 class="card-title mb-0">Danh Sách Sách</h4>
                     <div>
-                        <a href="{{ route('admin.books.create') }}" class="btn btn-primary btn-sm me-2">
+                        <a href="{{ route('admin.books.create') }}" class="btn btn-primary btn-sm me-2" style="background-color:#405189; border-color: #405189">
                             <i class="ri-add-line me-1"></i> Thêm sách mới
                         </a>
                         <a href="{{ route('admin.books.trash') }}" class="btn btn-outline-danger btn-sm">
@@ -87,15 +87,13 @@
                         <div class="col-sm-3">
                             <select name="status" class="form-select">
                                 <option value="">Tất cả trạng thái</option>
-                                <option value="available" {{ request('status') == 'available' ? 'selected' : '' }}>
+                                <option value="Còn Hàng" {{ request('status') == 'Còn Hàng' ? 'selected' : '' }}>
                                     Còn Hàng</option>
-                                <option value="low_stock" {{ request('status') == 'low_stock' ? 'selected' : '' }}>
-                                    Sắp Hết Hàng</option>
-                                <option value="out_of_stock" {{ request('status') == 'out_of_stock' ? 'selected' : '' }}>
+                                <option value="Hết Hàng Tồn Kho" {{ request('status') == 'Hết Hàng Tồn Kho' ? 'selected' : '' }}>
                                     Hết Hàng Tồn Kho</option>
-                                <option value="ebook_only" {{ request('status') == 'ebook_only' ? 'selected' : '' }}>
-                                    Chỉ bản Ebook</option>
-                                <option value="discontinued" {{ request('status') == 'discontinued' ? 'selected' : '' }}>
+                                <option value="Sắp Ra Mắt" {{ request('status') == 'Sắp Ra Mắt' ? 'selected' : '' }}>
+                                    Sắp Ra Mắt</option>
+                                <option value="Ngừng Kinh Doanh" {{ request('status') == 'Ngừng Kinh Doanh' ? 'selected' : '' }}>
                                     Ngừng Kinh Doanh</option>
                             </select>
                         </div>
@@ -118,7 +116,7 @@
                             </div>
                         </div>
                         <div class="col-lg-3">
-                            <button type="submit" class="btn btn-primary me-2">
+                            <button type="submit" class="btn btn-primary me-2" style="background-color:#405189; border-color: #405189">
                                 <i class="ri-search-2-line"></i> Tìm kiếm
                             </button>
                             <a href="{{ route('admin.books.index') }}" class="btn btn-light me-2">
@@ -130,7 +128,7 @@
 
                 <div class="table-responsive">
                     <table class="table table-hover align-middle table-nowrap mb-0">
-                        <thead>
+                        <thead class="text-muted table-light">
                             <tr>
                                 <th class="text-center" style="width: 50px;">#</th>
                                 <th class="text-center">ISBN</th>

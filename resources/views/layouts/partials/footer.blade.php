@@ -56,7 +56,7 @@
                 <img src="{{asset('storage/images/paypal.jpg')}}" alt="" class="h-8">
             </div>
             <div class="border-gray-200 text-center text-base text-gray-500 py-4">
-                 © 2025 Bản quyền thuộc về Bookly. Thiết kế bởi TemplatesJungle
+                 © 2025 Bản quyền thuộc về BookBee. Thiết kế bởi BookBee Team
             </div>
         </div>
     </div>
