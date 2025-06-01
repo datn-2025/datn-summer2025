@@ -22,7 +22,7 @@ use App\Http\Controllers\Admin\NewsArticleController;
 use App\Http\Controllers\Admin\PaymentMethodController;
 
 
-// danh sach yeu thich 
+// danh sach yeu thich
 Route::get('/wishlist', [WishlistController::class, 'getWishlist'])->name('wishlist.index');
 Route::post('/wishlist/add', [WishlistController::class, 'add'])->name('wishlist.add');
 Route::post('/wishlist/delete', [WishlistController::class, 'delete'])->name('wishlist.delete');
@@ -53,7 +53,9 @@ Route::get('/test-qr-code/{id}', function ($id) {
     return redirect()->route('admin.orders.show', $order->id)->with('success', 'QR Code generated successfully!');
 });    // Route nhóm admin
 Route::prefix('admin')->name('admin.')->group(function () {
+    // Dashboard route
     Route::get('/', function () {
+
         Toastr::info('Chào mừng bạn đến với trang quản trị!', 'Thông báo');
         return view('admin.dashboard');
     });
@@ -72,6 +74,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/trash', [AdminBookController::class, 'trash'])->name('trash');
         Route::post('/restore/{id}', [AdminBookController::class, 'restore'])->name('restore');
         Route::delete('/force-delete/{id}', [AdminBookController::class, 'forceDelete'])->name('force-delete');
+
     });
     // Admin Payment Methods
     Route::prefix('payment-methods')->name('payment-methods.')->group(function () {
@@ -123,8 +126,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
     });
     Route::resource('vouchers', VoucherController::class);
 
-
-
     // Route admin/users
     Route::prefix('users')->name('users.')->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('index');
@@ -133,6 +134,28 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::put('/{id}', [UserController::class, 'update'])->name('update');
     });
 
+    // Voucher routes
+    Route::prefix('vouchers')->name('vouchers.')->group(function () {
+        // Route để lấy danh sách đối tượng theo điều kiện
+        Route::get('/get-condition-options', [VoucherController::class, 'getConditionOptions'])
+            ->name('getConditionOptions');
+        Route::get('/search', [VoucherController::class, 'search'])->name('search');
+
+        // Trash routes - Đặt trước các route khác
+        Route::get('/trash', [VoucherController::class, 'trash'])->name('trash');
+        Route::post('/restore/{id}', [VoucherController::class, 'restore'])->name('restore');
+        Route::delete('/force-delete/{id}', [VoucherController::class, 'forceDelete'])->name('force-delete');
+
+        // Các route CRUD thông thường
+        Route::get('/', [VoucherController::class, 'index'])->name('index');
+        Route::get('/create', [VoucherController::class, 'create'])->name('create');
+        Route::post('/', [VoucherController::class, 'store'])->name('store');
+        Route::get('/{voucher}', [VoucherController::class, 'show'])->name('show');
+        Route::get('/{voucher}/edit', [VoucherController::class, 'edit'])->name('edit');
+        Route::put('/{voucher}', [VoucherController::class, 'update'])->name('update');
+        Route::delete('/{voucher}', [VoucherController::class, 'destroy'])->name('destroy');
+
+        Route::get('/export', [VoucherController::class, 'export'])->name('export');
     // Route admin/attributes
     Route::prefix('attributes')->name('attributes.')->group(function () {
         Route::get('/', [AttributeController::class, 'index'])->name('index');

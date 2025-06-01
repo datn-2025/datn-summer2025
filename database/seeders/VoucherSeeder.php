@@ -3,13 +3,19 @@
 namespace Database\Seeders;
 
 use App\Models\Voucher;
+use App\Models\VoucherCondition;
+use App\Models\Book;
+use App\Models\Author;
+use App\Models\Brand;
+use App\Models\Category;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class VoucherSeeder extends Seeder
-{    public function run()
+{
+    protected function generateUniqueCode($prefix)
     {
-        // Xóa các voucher hiện có để tránh trùng lặp khi chạy lại seeder
-        // Voucher::truncate(); // Chỉ dùng nếu bạn chắc chắn muốn xóa tất cả voucher cũ
+
 
         // Tạo một số voucher hoạt động cho mục đích test
         Voucher::factory()->active()->create([
@@ -26,7 +32,6 @@ class VoucherSeeder extends Seeder
             'valid_to' => now()->addMonths(6),
         ]);
 
-        // Bạn có thể giữ lại phần tạo voucher ngẫu nhiên nếu muốn có thêm dữ liệu test
-        // Voucher::factory(10)->create();
+
     }
 }
