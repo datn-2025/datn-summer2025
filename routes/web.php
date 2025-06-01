@@ -82,6 +82,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/purchase', [UserClientController::class, 'index'])->name('purchase');
         Route::post('/review', [UserClientController::class, 'storeReview'])->name('review.store');
 
+        Route::get('/orders', [OrderController::class, 'index'])->name('orders');
+
+
         Route::prefix('reviews')->name('reviews.')->group(function () {
             Route::put('/{id}', [ClientReviewController::class, 'update'])->name('update');
             Route::delete('/{id}', [ClientReviewController::class, 'destroy'])->name('destroy');

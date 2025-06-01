@@ -1,7 +1,9 @@
-@extends('layouts.app')
+<!-- @extends('layouts.app') -->
+@extends('layouts.account')
 
-@section('content')
+@section('account_content')
 <div class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-8">
+    <!-- @include('layouts.partials.user-sidebar') -->
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Header Card -->
         <div class="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden mb-8">
