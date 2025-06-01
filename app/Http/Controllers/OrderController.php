@@ -47,9 +47,7 @@ class OrderController extends Controller
         $cartItems = $user->cart()->with(['book.images', 'bookFormat'])->get();
 
         // Tính tổng tiền
-        $subtotal = $cartItems->sum(function ($item) {
-            return $item->price * $item->quantity;
-        });
+        $subtotal = $cartItems->sum('price');
 
         return view('orders.checkout', compact(
             'addresses',
@@ -128,15 +126,10 @@ class OrderController extends Controller
             DB::commit();
             Log::info('DB Transaction committed.');
 
-            // Gửi email xác nhận - tách riêng khỏi transaction
-            try {
-                Log::info('Calling EmailService::sendOrderConfirmation.');
+            // Gửi email xác nhận qua queue
+            dispatch(function() use ($order) {
                 $this->emailService->sendOrderConfirmation($order);
-                Log::info('EmailService::sendOrderConfirmation completed.');
-            } catch (\Exception $e) {
-                Log::error('Failed to send confirmation email: ' . $e->getMessage());
-                // Không throw exception ở đây để không ảnh hưởng đến luồng chính
-            }
+            })->afterCommit();
 
             Log::info('Redirecting to orders.show.');
             return redirect()->route('orders.show', $order->id)
@@ -153,7 +146,9 @@ class OrderController extends Controller
 
     public function show(Order $order)
     {
-        Gate::authorize('view', $order);
+        if ($order->user_id !== Auth::id()) {
+            abort(403, 'Bạn không có quyền xem đơn hàng này');
+        }
 
         $order->load([
             'orderItems.book.images',

@@ -69,6 +69,7 @@ class OrderService
 
         // Tạo các order items
         foreach ($cartItems as $item) {
+            $total = $item->price * $item->quantity;
             OrderItem::create([
                 'id' => (string) Str::uuid(),
                 'order_id' => $order->id,
@@ -76,7 +77,7 @@ class OrderService
                 'book_format_id' => $item->book_format_id,
                 'quantity' => $item->quantity,
                 'price' => $item->price,
-                'total' => $item->price * $item->quantity
+                'total' => $total
             ]);
         }
 
