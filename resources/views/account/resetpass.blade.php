@@ -31,7 +31,8 @@
             <p>Nhập email của bạn để nhận liên kết đặt lại mật khẩu</p>
             <a href="{{ route('login') }}" class="btn btn-outline">ĐĂNG NHẬP</a>
         </div>
-        <div class="right-section">
+    </div>
+     <div class="right-section">
             <div class="form-container">
                 <h2>Đặt lại mật khẩu</h2>
 
@@ -53,9 +54,8 @@
                 </form>
             </div>
         </div>
-    </div>
 </div>
-@endsection
+</div>
 
 @push('styles')
 <style>
