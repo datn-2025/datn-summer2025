@@ -196,23 +196,19 @@ Route::prefix('admin')->name('admin.')->group(function () {
 });
 
 Route::prefix('account')->name('account.')->group(function () {
-    // Route::get('/', [LoginController::class, 'index'])->name('index');
-    // Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-    // Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
     Route::get('/register', [LoginController::class, 'register'])->name('register');
     Route::post('/register', [LoginController::class, 'handleRegister'])->name('register.submit');
-    Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
-    // Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
+
+    // Kích hoạt tài khoản
+    Route::get('/activate/{token}', [ActivationController::class, 'activate'])->name('activate');
+    Route::post('/resend-activation', [ActivationController::class, 'resendActivation'])->name('resend.activation');
 
 
-    // Password Reset Routes
-    Route::get('/forgot-password', [\App\Http\Controllers\Login\LoginController::class, 'showForgotPasswordForm'])->name('password.request');
-    Route::post('/forgot-password', [\App\Http\Controllers\Login\LoginController::class, 'sendResetLinkEmail'])->name('password.email');
-    Route::get('/reset-password/{token}', [\App\Http\Controllers\Login\LoginController::class, 'showResetPasswordForm'])->name('password.reset');
-    Route::post('/reset-password', [\App\Http\Controllers\Login\LoginController::class, 'handleResetPassword'])->name('password.update');
-
-    // Activation routes
-    Route::get('/activate/{userId}', [ActivationController::class, 'activate'])->name('activate');
+    // profile
+    Route::middleware('auth')->group(function () {
+        Route::get('/', [LoginController::class, 'index'])->name('index');
+        Route::get('/showUser', [LoginController::class, 'showUser'])->name('showUser');
+        Route::put('/profile/update', [LoginController::class, 'updateProfile'])->name('profile.update');
 
     // Protected routes requiring authentication
     Route::middleware(['auth'])->group(function () {
@@ -223,6 +219,7 @@ Route::prefix('account')->name('account.')->group(function () {
         // password change
         Route::get('/password/change', [LoginController::class, 'showChangePasswordForm'])->name('password.change');
         Route::post('/password/change', [LoginController::class, 'changePassword'])->name('password.update');
+
     });
 });
 
@@ -232,6 +229,12 @@ Route::prefix('account')->name('account.')->group(function () {
 // Login và tài khoản
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
+// Quên mật khẩu
+    Route::get('/forgot-password', [LoginController::class, 'showForgotPasswordForm'])->name('password.request');
+    Route::post('/forgot-password', [LoginController::class, 'sendResetLinkEmail'])->name('password.email');
+    Route::get('/reset-password/{token}', [LoginController::class, 'showResetPasswordForm'])->name('password.reset');
+    Route::post('/reset-password', [LoginController::class, 'handleResetPassword'])->name('password.update');
+
 
 Route::middleware('auth')->group(function () {
     // Đăng xuất
