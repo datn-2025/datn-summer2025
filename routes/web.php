@@ -203,9 +203,16 @@ Route::prefix('account')->name('account.')->group(function () {
     // Activation routes
     Route::get('/activate/{userId}', [ActivationController::class, 'activate'])->name('activate');
 
-    // profile
-    Route::get('/showUser', [LoginController::class, 'showUser'])->name('showUser');
-    Route::put('/profile/update', [LoginController::class, 'updateProfile'])->name('profile.update');
+    // Protected routes requiring authentication
+    Route::middleware(['auth'])->group(function () {
+        // profile
+        Route::get('/showUser', [LoginController::class, 'showUser'])->name('showUser');
+        Route::put('/profile/update', [LoginController::class, 'updateProfile'])->name('profile.update');
+
+        // password change
+        Route::get('/password/change', [LoginController::class, 'showChangePasswordForm'])->name('password.change');
+        Route::post('/password/change', [LoginController::class, 'changePassword'])->name('password.update');
+    });
 });
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
