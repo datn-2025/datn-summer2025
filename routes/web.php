@@ -209,9 +209,6 @@ Route::prefix('account')->name('account.')->group(function () {
         Route::get('/', [LoginController::class, 'index'])->name('index');
         Route::get('/showUser', [LoginController::class, 'showUser'])->name('showUser');
         Route::put('/profile/update', [LoginController::class, 'updateProfile'])->name('profile.update');
-
-    // Protected routes requiring authentication
-    Route::middleware(['auth'])->group(function () {
         // profile
         Route::get('/showUser', [LoginController::class, 'showUser'])->name('showUser');
         Route::put('/profile/update', [LoginController::class, 'updateProfile'])->name('profile.update');
@@ -368,4 +365,3 @@ Route::prefix('admin')->name('admin.')->group(function () {
         });
     });
 });
-
