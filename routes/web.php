@@ -18,8 +18,12 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Wishlists\WishlistController;
 use App\Http\Controllers\Contact\ContactController;
 use App\Http\Controllers\Article\NewsController;
+
+use App\Http\Controllers\Cart\CartController;
+
 use App\Http\Controllers\Admin\NewsArticleController;
 use App\Http\Controllers\Admin\PaymentMethodController;
+
 
 // danh sach yeu thich 
 Route::get('/wishlist', [WishlistController::class, 'getWishlist'])->name('wishlist.index');
@@ -28,6 +32,7 @@ Route::post('/wishlist/delete', [WishlistController::class, 'delete'])->name('wi
 Route::post('/wishlist/delete-all', [WishlistController::class, 'deleteAll'])->name('wishlist.delete-all');
 Route::post('/wishlist/add-to-cart', [WishlistController::class, 'addToCartFromWishlist'])->name('wishlist.addToCart');
 // Hiển thị danh sách và danh mục
+
 
 // Route public cho books (categoryId optional)
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -39,6 +44,22 @@ Route::get('/contact', [ContactController::class, 'showForm'])->name('contact.fo
 Route::post('/contact', [ContactController::class, 'submitForm'])->name('contact.submit');
 Route::get('/news', [NewsController::class, 'index'])->name('news.index');
 Route::get('/news/{id}', [NewsController::class, 'show'])->name('news.show');
+
+
+
+
+// cart
+Route::prefix('cart')->group(function () {
+    Route::get('/', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/add', [CartController::class, 'addToCart'])->name('cart.add');
+    Route::post('/update', [CartController::class, 'updateCart'])->name('cart.update');
+    Route::post('/remove', [CartController::class, 'removeFromCart'])->name('cart.remove');
+    Route::post('/clear', [CartController::class, 'clearCart'])->name('cart.clear');
+    Route::post('/add-wishlist', [CartController::class, 'addAllWishlistToCart'])->name('cart.add-wishlist');
+    Route::post('/apply-voucher', [CartController::class, 'applyVoucher'])->name('cart.apply-voucher');
+    Route::post('/remove-voucher', [CartController::class, 'removeVoucher'])->name('cart.remove-voucher');
+});
+
 
 
 // Test route for QR code generation
@@ -85,7 +106,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::put('/{paymentMethod}/restore', [PaymentMethodController::class, 'restore'])->name('restore');
         Route::delete('/{paymentMethod}/force-delete', [PaymentMethodController::class, 'forceDelete'])->name('force-delete');
     });
-  
+
     // Route admin/categories
     Route::prefix('categories')->name('categories.')->group(function () {
         Route::get('/', [CategoryController::class, 'index'])->name('index');
@@ -114,6 +135,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::put('/{id}', [AuthorController::class, 'update'])->name('update');
         });
     });
+
+
     // Route admin/vouchers
     Route::prefix('vouchers')->name('vouchers.')->group(function () {
         Route::get('/trash', [VoucherController::class, 'trash'])->name('trash');
@@ -121,6 +144,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::delete('{id}/force-delete', [VoucherController::class, 'forceDelete'])->name('force-delete');
     });
     Route::resource('vouchers', VoucherController::class);
+
 
 
 
@@ -164,9 +188,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // Route admin/orders
     Route::prefix('orders')->name('orders.')->group(function () {
         Route::get('/', [OrderController::class, 'index'])->name('index');
-        Route::get('/show/{id}', [OrderController::class, 'show'])->name('show');
-        Route::get('/edit/{id}', [OrderController::class, 'edit'])->name('edit');
-        Route::put('/update/{id}', [OrderController::class, 'update'])->name('update');
+        Route::get('/checkout', [OrderController::class, 'checkout'])->name('checkout');
+        Route::get('/{order}', [OrderController::class, 'show'])->name('show');
+        Route::post('/store', [OrderController::class, 'store'])->name('store');
+        Route::post('/apply-voucher', [OrderController::class, 'applyVoucher'])->name('apply-voucher');
     });
 });
 
@@ -189,9 +214,16 @@ Route::prefix('account')->name('account.')->group(function () {
     // Activation routes
     Route::get('/activate/{userId}', [ActivationController::class, 'activate'])->name('activate');
 
-    // profile
-    Route::get('/showUser', [LoginController::class, 'showUser'])->name('showUser');
-    Route::put('/profile/update', [LoginController::class, 'updateProfile'])->name('profile.update');
+    // Protected routes requiring authentication
+    Route::middleware(['auth'])->group(function () {
+        // profile
+        Route::get('/showUser', [LoginController::class, 'showUser'])->name('showUser');
+        Route::put('/profile/update', [LoginController::class, 'updateProfile'])->name('profile.update');
+
+        // password change
+        Route::get('/password/change', [LoginController::class, 'showChangePasswordForm'])->name('password.change');
+        Route::post('/password/change', [LoginController::class, 'changePassword'])->name('password.update');
+    });
 });
 
 
@@ -204,10 +236,19 @@ Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
 Route::middleware('auth')->group(function () {
     // Đăng xuất
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-    
+
     // Trang tài khoản
     Route::prefix('account')->name('account.')->group(function () {
         Route::get('/', [LoginController::class, 'index'])->name('index');
+    });
+
+    // Đơn hàng
+    Route::prefix('orders')->name('orders.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\OrderController::class, 'index'])->name('index');
+        Route::get('/checkout', [\App\Http\Controllers\OrderController::class, 'checkout'])->name('checkout');
+        Route::get('/{order}', [\App\Http\Controllers\OrderController::class, 'show'])->name('show');
+        Route::post('/store', [\App\Http\Controllers\OrderController::class, 'store'])->name('store');
+        Route::post('/apply-voucher', [\App\Http\Controllers\OrderController::class, 'applyVoucher'])->name('apply-voucher');
     });
 });
 
