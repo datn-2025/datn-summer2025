@@ -5,6 +5,8 @@ use App\Http\Controllers\Admin\Auth\AdminAuthController;
 use App\Http\Controllers\Admin\BookController as AdminBookController;
 use App\Http\Controllers\Admin\ContactController as AdminContactController;
 use App\Http\Controllers\Admin\AdminCategoryController;
+use App\Http\Controllers\Admin\AdminReviewController;
+use App\Http\Controllers\Admin\AdminPaymentMethodController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\UserController;
@@ -19,9 +21,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Wishlists\WishlistController;
 use App\Http\Controllers\Contact\ContactController;
 use App\Http\Controllers\Article\NewsController;
-use App\Http\Controllers\Admin\AdminReviewController;
 use App\Http\Controllers\Admin\NewsArticleController;
-use App\Http\Controllers\Admin\PaymentMethodController;
 use App\Http\Controllers\Client\UserClientController;
 use App\Http\Controllers\Client\ClientReviewController;
 
@@ -186,16 +186,16 @@ Route::prefix('admin')->name('admin.')->group(function () {
         });
 
         Route::prefix('payment-methods')->name('payment-methods.')->group(function () {
-            Route::get('/', [PaymentMethodController::class, 'index'])->name('index');
-            Route::get('/create', [PaymentMethodController::class, 'create'])->name('create');
-            Route::post('/', [PaymentMethodController::class, 'store'])->name('store');
-            Route::get('/{paymentMethod}/edit', [PaymentMethodController::class, 'edit'])->name('edit');
-            Route::put('/{paymentMethod}', [PaymentMethodController::class, 'update'])->name('update');
-            Route::delete('/{paymentMethod}', [PaymentMethodController::class, 'destroy'])->name('destroy');
+            Route::get('/', [AdminPaymentMethodController::class, 'index'])->name('index');
+            Route::get('/create', [AdminPaymentMethodController::class, 'create'])->name('create');
+            Route::post('/', [AdminPaymentMethodController::class, 'store'])->name('store');
+            Route::get('/{paymentMethod}/edit', [AdminPaymentMethodController::class, 'edit'])->name('edit');
+            Route::put('/{paymentMethod}', [AdminPaymentMethodController::class, 'update'])->name('update');
+            Route::delete('/{paymentMethod}', [AdminPaymentMethodController::class, 'destroy'])->name('destroy');
 
-            Route::get('/trash', [PaymentMethodController::class, 'trash'])->name('trash');
-            Route::put('/{paymentMethod}/restore', [PaymentMethodController::class, 'restore'])->name('restore');
-            Route::delete('/{paymentMethod}/force-delete', [PaymentMethodController::class, 'forceDelete'])->name('force-delete');
+            Route::get('/trash', [AdminPaymentMethodController::class, 'trash'])->name('trash');
+            Route::put('/{paymentMethod}/restore', [AdminPaymentMethodController::class, 'restore'])->name('restore');
+            Route::delete('/{paymentMethod}/force-delete', [AdminPaymentMethodController::class, 'forceDelete'])->name('force-delete');
         });
 
         // routes admin/reviews
