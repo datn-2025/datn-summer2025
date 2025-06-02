@@ -208,7 +208,9 @@
               </div>
 
               {{-- Giá sách --}}
-              <span class="price text-primary fw-bold mb-2 fs-5">${{ number_format($book->min_price ?? 0, 2) }}</span>
+              <span class="price text-primary fw-bold mb-2 fs-5">
+                {{ number_format($book->min_price ?? 0, 0, ',', '.') }} đ
+              </span>
 
               {{-- Nút thêm giỏ hàng và yêu thích --}}
               <div class="card-concern position-absolute start-0 end-0 d-flex gap-2">
