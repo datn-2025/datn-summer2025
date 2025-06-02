@@ -60,6 +60,113 @@ Route::prefix('admin')->name('admin.')->group(function () {
         return view('admin.dashboard');
     })->name('dashboard');
 
+    // Route admin/contacts
+    Route::resource('contacts', \App\Http\Controllers\Admin\ContactController::class);
+    Route::post('contacts/{contact}/reply', [\App\Http\Controllers\Admin\ContactController::class, 'sendReply'])->name('contacts.reply');
+    Route::prefix('books')->name('books.')->group(function () {
+        Route::get('/', [AdminBookController::class, 'index'])->name('index');
+        Route::get('/create', [AdminBookController::class, 'create'])->name('create');
+        Route::post('/store', [AdminBookController::class, 'store'])->name('store');
+        Route::get('/show/{id}/{slug}', [AdminBookController::class, 'show'])->name('show');
+        Route::get('/edit/{id}/{slug}', [AdminBookController::class, 'edit'])->name('edit');
+        Route::put('/update/{id}/{slug}', [AdminBookController::class, 'update'])->name('update');
+        Route::delete('/delete/{id}', [AdminBookController::class, 'destroy'])->name('destroy');
+
+        // Trash routes
+        Route::get('/trash', [AdminBookController::class, 'trash'])->name('trash');
+        Route::post('/restore/{id}', [AdminBookController::class, 'restore'])->name('restore');
+        Route::delete('/force-delete/{id}', [AdminBookController::class, 'forceDelete'])->name('force-delete');
+    });
+  
+    // Admin Payment Methods
+    Route::prefix('payment-methods')->name('payment-methods.')->group(function () {
+        Route::get('/', [PaymentMethodController::class, 'index'])->name('index');
+        Route::get('/create', [PaymentMethodController::class, 'create'])->name('create');
+        Route::post('/', [PaymentMethodController::class, 'store'])->name('store');
+        Route::get('/{paymentMethod}/edit', [PaymentMethodController::class, 'edit'])->name('edit');
+        Route::put('/{paymentMethod}', [PaymentMethodController::class, 'update'])->name('update');
+        Route::delete('/{paymentMethod}', [PaymentMethodController::class, 'destroy'])->name('destroy');
+        // Thêm các route mới
+        Route::get('/trash', [PaymentMethodController::class, 'trash'])->name('trash');
+        Route::put('/{paymentMethod}/restore', [PaymentMethodController::class, 'restore'])->name('restore');
+        Route::delete('/{paymentMethod}/force-delete', [PaymentMethodController::class, 'forceDelete'])->name('force-delete');
+    });
+
+    // Route admin/categories
+    Route::prefix('categories')->name('categories.')->group(function () {
+        Route::get('/', [CategoryController::class, 'index'])->name('index');
+        // Route admin/brand
+        Route::prefix('brands')->name('brands.')->group(function () {
+            Route::get('/', [CategoryController::class, 'brand'])->name('brand');
+            Route::get('/create', [CategoryController::class, 'BrandCreate'])->name('create');
+            Route::post('/', [CategoryController::class, 'BrandStore'])->name('store');
+            Route::get('/trash', [CategoryController::class, 'BrandTrash'])->name('trash');
+            Route::delete('/{author}', [CategoryController::class, 'BrandDestroy'])->name('destroy');
+            Route::put('/{id}/restore', [CategoryController::class, 'BrandRestore'])->name('restore');
+            Route::delete('/{id}/force', [CategoryController::class, 'BrandForceDelete'])->name('force-delete');
+            Route::get('/{id}/edit', [CategoryController::class, 'BrandEdit'])->name('edit');
+            Route::put('/{id}', [CategoryController::class, 'BrandUpdate'])->name('update');
+        });
+        // Route admin/authors
+        Route::prefix('authors')->name('authors.')->group(function () {
+            Route::get('/', [AuthorController::class, 'index'])->name('index');
+            Route::get('/create', [AuthorController::class, 'create'])->name('create');
+            Route::post('/', [AuthorController::class, 'store'])->name('store');
+            Route::get('/trash', [AuthorController::class, 'trash'])->name('trash');
+            Route::delete('/{author}', [AuthorController::class, 'destroy'])->name('destroy');
+            Route::put('/{id}/restore', [AuthorController::class, 'restore'])->name('restore');
+            Route::delete('/{id}/force', [AuthorController::class, 'forceDelete'])->name('force-delete');
+            Route::get('/{id}/edit', [AuthorController::class, 'edit'])->name('edit');
+            Route::put('/{id}', [AuthorController::class, 'update'])->name('update');
+        });
+    });
+    // Route admin/vouchers
+    Route::prefix('vouchers')->name('vouchers.')->group(function () {
+        Route::get('/trash', [VoucherController::class, 'trash'])->name('trash');
+        Route::post('{id}/restore', [VoucherController::class, 'restore'])->name('restore');
+        Route::delete('{id}/force-delete', [VoucherController::class, 'forceDelete'])->name('force-delete');
+    });
+    Route::resource('vouchers', VoucherController::class);
+
+
+
+    // Route admin/users
+    Route::prefix('users')->name('users.')->group(function () {
+        Route::get('/', [UserController::class, 'index'])->name('index');
+        Route::get('/{id}', [UserController::class, 'show'])->name('show');
+        Route::get('/{id}/edit', [UserController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [UserController::class, 'update'])->name('update');
+    });
+
+    // Route admin/attributes
+    Route::prefix('attributes')->name('attributes.')->group(function () {
+        Route::get('/', [AttributeController::class, 'index'])->name('index');
+        Route::get('/create', [AttributeController::class, 'create'])->name('create');
+        Route::post('/store', [AttributeController::class, 'store'])->name('store');
+        Route::get('/show/{id}', [AttributeController::class, 'show'])->name('show');
+        Route::get('/edit/{id}', [AttributeController::class, 'edit'])->name('edit');
+        Route::put('/update/{id}', [AttributeController::class, 'update'])->name('update');
+        Route::delete('/delete/{id}', [AttributeController::class, 'destroy'])->name('destroy');
+    });
+    // Route admin/news
+    Route::prefix('news')->name('news.')->group(function () {
+        Route::get('/', [NewsArticleController::class, 'index'])->name('index');
+        Route::get('/create', [NewsArticleController::class, 'create'])->name('create');
+        Route::post('/', [NewsArticleController::class, 'store'])->name('store');
+        Route::get('/{article}', [NewsArticleController::class, 'show'])->name('show');
+        Route::get('/{article}/edit', [NewsArticleController::class, 'edit'])->name('edit');
+        Route::put('/{article}', [NewsArticleController::class, 'update'])->name('update');
+        Route::delete('/{article}', [NewsArticleController::class, 'destroy'])->name('destroy');
+    });
+
+    // Route admin/orders
+    Route::prefix('orders')->name('orders.')->group(function () {
+        Route::get('/', [OrderController::class, 'index'])->name('index');
+        Route::get('/show/{id}', [OrderController::class, 'show'])->name('show');
+        Route::get('/edit/{id}', [OrderController::class, 'edit'])->name('edit');
+        Route::put('/update/{id}', [OrderController::class, 'update'])->name('update');
+    });
+});
 
     Route::prefix('books')->name('books.')->group(function () {
         Route::get('/', [AdminBookController::class, 'index'])->name('index');
