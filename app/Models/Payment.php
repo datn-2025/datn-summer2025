@@ -15,7 +15,8 @@ class Payment extends Model
         'payment_method_id',
         'transaction_id',
         'amount',
-        'paid_at'
+        'paid_at',
+        'payment_status_id'
     ];
 
     protected $casts = [
@@ -23,7 +24,7 @@ class Payment extends Model
         'paid_at' => 'datetime'
     ];
 
-    public $incrementing = false; 
+    public $incrementing = false;
     protected $keyType = 'string';
 
     public function order(): BelongsTo
