@@ -30,6 +30,9 @@ class ContactController extends Controller
     // Nếu bạn muốn lưu message vào note, gán như sau:
     // $note = $data['note'] ?? $data['message'] ?? null;
 
+    // Xóa liên hệ cũ nếu email đã tồn tại
+    DB::table('contacts')->where('email', $data['email'])->delete();
+
     DB::table('contacts')->insert([
       'id' => (string) \Illuminate\Support\Str::uuid(), // Tạo UUID cho id
       'name' => $data['name'],
