@@ -6,7 +6,7 @@ use App\Models\Review;
 use App\Models\Book;
 use Illuminate\Http\Request;
 
-class ReviewController extends Controller
+class AdminReviewController extends Controller
 {
     public function index(Request $request)
     {

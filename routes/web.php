@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AttributeController;
 use App\Http\Controllers\Admin\Auth\AdminAuthController;
 use App\Http\Controllers\Admin\BookController as AdminBookController;
 use App\Http\Controllers\Admin\ContactController as AdminContactController;
+use App\Http\Controllers\Admin\AdminCategoryController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\UserController;
@@ -18,11 +19,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Wishlists\WishlistController;
 use App\Http\Controllers\Contact\ContactController;
 use App\Http\Controllers\Article\NewsController;
-use App\Http\Controllers\Admin\ReviewController;
+use App\Http\Controllers\Admin\AdminReviewController;
 use App\Http\Controllers\Admin\NewsArticleController;
 use App\Http\Controllers\Admin\PaymentMethodController;
 use App\Http\Controllers\Client\UserClientController;
-use App\Http\Controllers\Client\ReviewController as ClientReviewController;
+use App\Http\Controllers\Client\ClientReviewController;
 
 // danh sach yeu thich
 Route::get('/wishlist', [WishlistController::class, 'getWishlist'])->name('wishlist.index');
@@ -147,15 +148,15 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // Route admin/categories
         Route::prefix('categories')->name('categories.')->group(function () {
-            Route::get('/', [CategoryController::class, 'index'])->name('index');
-            Route::get('/create', [CategoryController::class, 'create'])->name('create');
-            Route::post('/store', [CategoryController::class, 'store'])->name('store');
-            Route::get('/edit/{id}', [CategoryController::class, 'edit'])->name('edit');
-            Route::put('/update/{id}', [CategoryController::class, 'update'])->name('update');
-            Route::get('/trash', [CategoryController::class, 'trash'])->name('trash');
-            Route::delete('/{category}', [CategoryController::class, 'destroy'])->name('destroy');
-            Route::put('/{id}/restore', [CategoryController::class, 'restore'])->name('restore');
-            Route::delete('/{id}/force', [CategoryController::class, 'forceDelete'])->name('force-delete');
+            Route::get('/', [AdminCategoryController::class, 'index'])->name('index');
+            Route::get('/create', [AdminCategoryController::class, 'create'])->name('create');
+            Route::post('/store', [AdminCategoryController::class, 'store'])->name('store');
+            Route::get('/edit/{id}', [AdminCategoryController::class, 'edit'])->name('edit');
+            Route::put('/update/{id}', [AdminCategoryController::class, 'update'])->name('update');
+            Route::get('/trash', [AdminCategoryController::class, 'trash'])->name('trash');
+            Route::delete('/{category}', [AdminCategoryController::class, 'destroy'])->name('destroy');
+            Route::put('/{id}/restore', [AdminCategoryController::class, 'restore'])->name('restore');
+            Route::delete('/{id}/force', [AdminCategoryController::class, 'forceDelete'])->name('force-delete');
 
             // Route admin/brand
             Route::prefix('brands')->name('brands.')->group(function () {
@@ -200,12 +201,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
         // routes admin/reviews
         Route::prefix('reviews')->name('reviews.')->group(function () {
             // Review routes
-            Route::get('/', [ReviewController::class, 'index'])->name('index');
-            Route::patch('/{review}/status', [ReviewController::class, 'updateStatus'])->name('update-status');
-            Route::post('/{review}/response', [ReviewController::class, 'updateResponse'])->name('response');
-            Route::delete('/{review}', [ReviewController::class, 'destroy'])->name('destroy');
-            Route::get('/{review}/response', [ReviewController::class, 'showResponseForm'])->name('response');
-            Route::post('/{review}/response', [ReviewController::class, 'storeResponse'])->name('response.store');
+            Route::get('/', [AdminReviewController::class, 'index'])->name('index');
+            Route::patch('/{review}/status', [AdminReviewController::class, 'updateStatus'])->name('update-status');
+            Route::post('/{review}/response', [AdminReviewController::class, 'updateResponse'])->name('response');
+            Route::delete('/{review}', [AdminReviewController::class, 'destroy'])->name('destroy');
+            Route::get('/{review}/response', [AdminReviewController::class, 'showResponseForm'])->name('response');
+            Route::post('/{review}/response', [AdminReviewController::class, 'storeResponse'])->name('response.store');
         });
 
 
