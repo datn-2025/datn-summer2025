@@ -123,7 +123,7 @@ class BookController extends Controller
                 return back();
             }
         }
-        
+
         // Validation với thông báo tùy chỉnh
         $request->validate([
             'title' => 'required|string|max:255',
@@ -185,20 +185,22 @@ class BookController extends Controller
             'page_count'
         ]);
 
+        // dd($request->hasFile('cover_image'));
+
         $slug = Str::slug($data['title']);
         $data['slug'] = $slug;
 
-         // Xử lý ảnh chính
+        
+        
+        $book = Book::create($data);
+        // Xử lý ảnh chính
         if ($request->hasFile('cover_image')) {
-            $coverImage = $request->file('cover_image');
-            $coverImagePath = $coverImage->store('public/books');
-            $coverImagePath = str_replace('public/', '', $coverImagePath);
+            $coverImagePath = $request->file('cover_image')->store('books', 'public');
+            $book->cover_image = $coverImagePath;
+            $book->save();
         }
 
-
-        $book = Book::create($data);
-
-         // Xử lý ảnh phụ
+        // Xử lý ảnh phụ
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
                 $path = $image->store('books/thumbnail', 'public');
@@ -294,7 +296,7 @@ class BookController extends Controller
 
         return view('admin.books.show', compact('book', 'attributes', 'averageRating', 'reviewCount'));
     }
-    
+
     public function edit($id, $slug)
     {
         $book = Book::with([
@@ -302,18 +304,18 @@ class BookController extends Controller
             'images',
             'attributeValues'
         ])->findOrFail($id);
-        
+
         $categories = Category::all();
         $brands = Brand::all();
         $authors = Author::all();
         $attributes = Attribute::with('values')->get();
-        
+
         // Lấy định dạng sách vật lý nếu có
         $physicalFormat = $book->formats->where('format_name', 'Sách Vật Lý')->first();
-        
+
         // Lấy định dạng ebook nếu có
         $ebookFormat = $book->formats->where('format_name', 'Ebook')->first();
-        
+
         // Chuẩn bị dữ liệu thuộc tính đã chọn
         $selectedAttributeValues = [];
         foreach ($book->attributeValues as $attributeValue) {
@@ -322,19 +324,19 @@ class BookController extends Controller
                 'extra_price' => $attributeValue->pivot->extra_price ?? 0
             ];
         }
-        
+
         return view('admin.books.edit', compact(
-            'book', 
-            'categories', 
-            'brands', 
-            'authors', 
-            'attributes', 
-            'physicalFormat', 
-            'ebookFormat', 
+            'book',
+            'categories',
+            'brands',
+            'authors',
+            'attributes',
+            'physicalFormat',
+            'ebookFormat',
             'selectedAttributeValues'
         ));
     }
-    
+
     public function update(Request $request, $id, $slug)
     {
         $book = Book::findOrFail($id);
@@ -385,224 +387,224 @@ class BookController extends Controller
                 'format' => 'Vui lòng chọn ít nhất một định dạng sách (Sách vật lý hoặc Ebook)'
             ]);
         }
-            
-            $data = $request->only([
-                'title',
-                'description',
-                'author_id',
-                'brand_id',
-                'category_id',
-                'status',
-                'isbn',
-                'publication_date',
-                'page_count'
-            ]);
-            
-           // Kiểm tra slug trùng lặp trước khi validate
-            $title = $request->input('title');
-            if ($title) {
-                $slug = Str::slug($title);
-                $data['slug'] = $slug;
-                $slugExists = Book::where('slug', $slug)->where('id', '!=', $id)->exists();
-                if ($slugExists) {
-                    Toastr::error('Tiêu đề sách đã tồn tại. Vui lòng chọn tiêu đề khác.');
-                    return back();
-                }
+
+        $data = $request->only([
+            'title',
+            'description',
+            'author_id',
+            'brand_id',
+            'category_id',
+            'status',
+            'isbn',
+            'publication_date',
+            'page_count'
+        ]);
+
+        // Kiểm tra slug trùng lặp trước khi validate
+        $title = $request->input('title');
+        if ($title) {
+            $slug = Str::slug($title);
+            $data['slug'] = $slug;
+            $slugExists = Book::where('slug', $slug)->where('id', '!=', $id)->exists();
+            if ($slugExists) {
+                Toastr::error('Tiêu đề sách đã tồn tại. Vui lòng chọn tiêu đề khác.');
+                return back();
             }
-            
-            // Xử lý ảnh chính nếu có cập nhật
-            if ($request->hasFile('cover_image')) {
-                // Xóa ảnh cũ nếu có
-                if ($book->cover_image && Storage::disk('public')->exists($book->cover_image)) {
-                    Storage::disk('public')->delete($book->cover_image);
-                }
-                
-                $coverImage = $request->file('cover_image');
-                $coverImagePath = $coverImage->store('books', 'public');
-                $data['cover_image'] = $coverImagePath;
-            }
-            
-            // Cập nhật thông tin sách
-            $book->update($data);
-            
-            // Xử lý ảnh phụ nếu có cập nhật
-            if ($request->hasFile('images')) {
-                foreach ($request->file('images') as $image) {
-                    $path = $image->store('books/thumbnail', 'public');
-                    $book->images()->create([
-                        'image_url' => $path
-                    ]);
-                }
-            }
-            
-            // Xử lý xóa ảnh nếu có yêu cầu
-            if ($request->filled('delete_images')) {
-                $imageIds = $request->input('delete_images');
-                $imagesToDelete = $book->images()->whereIn('id', $imageIds)->get();
-                
-                foreach ($imagesToDelete as $image) {
-                    if (Storage::disk('public')->exists($image->image_url)) {
-                        Storage::disk('public')->delete($image->image_url);
-                    }
-                    $image->delete();
-                }
-            }
-            
-            // Cập nhật định dạng sách vật lý
-            if ($request->boolean('has_physical')) {
-                $physicalFormat = $book->formats()->where('format_name', 'Sách Vật Lý')->first();
-                
-                $physicalData = [
-                    'format_name' => 'Sách Vật Lý',
-                    'price' => $request->input('formats.physical.price'),
-                    'discount' => $request->input('formats.physical.discount'),
-                    'stock' => $request->input('formats.physical.stock'),
-                ];
-                
-                if ($physicalFormat) {
-                    $physicalFormat->update($physicalData);
-                } else {
-                    $book->formats()->create($physicalData);
-                }
-            } else {
-                // Xóa định dạng sách vật lý nếu không còn sử dụng
-                $book->formats()->where('format_name', 'Sách Vật Lý')->delete();
-            }
-            
-            // Cập nhật định dạng ebook
-            if ($request->boolean('has_ebook')) {
-                $ebookFormat = $book->formats()->where('format_name', 'Ebook')->first();
-                
-                $ebookData = [
-                    'format_name' => 'Ebook',
-                    'price' => $request->input('formats.ebook.price'),
-                    'discount' => $request->input('formats.ebook.discount'),
-                    'allow_sample_read' => $request->boolean('formats.ebook.allow_sample_read'),
-                ];
-                
-                // Upload file ebook chính nếu có cập nhật
-                if ($request->hasFile('formats.ebook.file')) {
-                    // Xóa file cũ nếu có
-                    if ($ebookFormat && $ebookFormat->file_url && Storage::disk('public')->exists($ebookFormat->file_url)) {
-                        Storage::disk('public')->delete($ebookFormat->file_url);
-                    }
-                    
-                    $ebookFile = $request->file('formats.ebook.file');
-                    $ebookFilename = time() . '_' . Str::slug(pathinfo($ebookFile->getClientOriginalName(), PATHINFO_FILENAME)) . '.' . $ebookFile->getClientOriginalExtension();
-                    $ebookPath = $ebookFile->storeAs('ebooks', $ebookFilename, 'public');
-                    $ebookData['file_url'] = $ebookPath;
-                }
-                
-                // Upload file xem thử nếu có cập nhật
-                if ($request->hasFile('formats.ebook.sample_file')) {
-                    // Xóa file cũ nếu có
-                    if ($ebookFormat && $ebookFormat->sample_file_url && Storage::disk('public')->exists($ebookFormat->sample_file_url)) {
-                        Storage::disk('public')->delete($ebookFormat->sample_file_url);
-                    }
-                    
-                    $sampleFile = $request->file('formats.ebook.sample_file');
-                    $sampleFilename = time() . '_sample_' . Str::slug(pathinfo($sampleFile->getClientOriginalName(), PATHINFO_FILENAME)) . '.' . $sampleFile->getClientOriginalExtension();
-                    $samplePath = $sampleFile->storeAs('ebook-samples', $sampleFilename, 'public');
-                    $ebookData['sample_file_url'] = $samplePath;
-                }
-                
-                if ($ebookFormat) {
-                    $ebookFormat->update($ebookData);
-                } else {
-                    $book->formats()->create($ebookData);
-                }
-            } else {
-                // Xóa định dạng ebook nếu không còn sử dụng
-                $book->formats()->where('format_name', 'Ebook')->delete();
-            }
-            
-            // Cập nhật thuộc tính và giá thêm
-            // Xóa tất cả các liên kết thuộc tính hiện tại
-            $book->attributeValues()->detach();
-            
-            // Thêm lại các thuộc tính mới
-            if ($request->filled('attribute_values')) {
-                foreach ($request->attribute_values as $valueId => $data) {
-                    BookAttributeValue::create([
-                        'book_id' => $book->id,
-                        'attribute_value_id' => $data['id'],
-                        'extra_price' => $data['extra_price'] ?? 0
-                    ]);
-                }
-            }
-            
-            Toastr::success('Cập nhật sách thành công!');
-            return redirect()->route('admin.books.index');
         }
-        
-        public function destroy($id)
-        {
-            $book = Book::findOrFail($id);
-            $book->delete();
-            
-            Toastr::success('Sách đã được chuyển vào thùng rác!', 'Thành công');
-            return redirect()->route('admin.books.index');
+
+        // Xử lý ảnh chính nếu có cập nhật
+        if ($request->hasFile('cover_image')) {
+            // Xóa ảnh cũ nếu có
+            if ($book->cover_image && Storage::disk('public')->exists($book->cover_image)) {
+                Storage::disk('public')->delete($book->cover_image);
+            }
+
+            $coverImage = $request->file('cover_image');
+            $coverImagePath = $coverImage->store('books', 'public');
+            $data['cover_image'] = $coverImagePath;
         }
-        
-        public function trash(Request $request)
-        {
-            $query = Book::onlyTrashed()
-                ->with([
-                    'category:id,name',
-                    'author:id,name',
-                    'brand:id,name',
-                    'formats:id,book_id,format_name,price,discount,stock',
-                    'images:id,book_id,image_url'
+
+        // Cập nhật thông tin sách
+        $book->update($data);
+
+        // Xử lý ảnh phụ nếu có cập nhật
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('books/thumbnail', 'public');
+                $book->images()->create([
+                    'image_url' => $path
                 ]);
-                
-            // Tìm kiếm theo tiêu đề sách hoặc mã ISBN
-            if ($request->filled('search')) {
-                $query->where(function ($q) use ($request) {
-                    $q->where('title', 'like', '%' . $request->search . '%')
-                        ->orWhere('isbn', 'like', '%' . $request->search . '%');
-                });
             }
-            
-            $trashedBooks = $query->orderBy('deleted_at', 'desc')->paginate(10)->withQueryString();
-            return view('admin.books.trash', compact('trashedBooks'));
         }
-        
-        public function restore($id)
-        {
-            $book = Book::onlyTrashed()->findOrFail($id);
-            $book->restore();
-            
-            Toastr::success('Sách đã được khôi phục thành công!', 'Thành công');
-            return redirect()->route('admin.books.trash');
-        }
-        
-        public function forceDelete($id)
-        {
-            $book = Book::onlyTrashed()->findOrFail($id);
-            
-            // Xóa các hình ảnh liên quan
-            foreach ($book->images as $image) {
-                if ($image->image_url && Storage::disk('public')->exists($image->image_url)) {
+
+        // Xử lý xóa ảnh nếu có yêu cầu
+        if ($request->filled('delete_images')) {
+            $imageIds = $request->input('delete_images');
+            $imagesToDelete = $book->images()->whereIn('id', $imageIds)->get();
+
+            foreach ($imagesToDelete as $image) {
+                if (Storage::disk('public')->exists($image->image_url)) {
                     Storage::disk('public')->delete($image->image_url);
                 }
                 $image->delete();
             }
-            
-            // Xóa ảnh bìa
-            if ($book->cover_image && Storage::disk('public')->exists($book->cover_image)) {
-                Storage::disk('public')->delete($book->cover_image);
-            }
-            
-            // Xóa các định dạng sách
-            $book->formats()->delete();
-            
-            // Xóa các liên kết với thuộc tính
-            $book->attributeValues()->detach();
-            
-            // Xóa vĩnh viễn sách
-            $book->forceDelete();
-            
-            Toastr::success('Sách đã được xóa vĩnh viễn!', 'Thành công');
-            return redirect()->route('admin.books.trash');
         }
+
+        // Cập nhật định dạng sách vật lý
+        if ($request->boolean('has_physical')) {
+            $physicalFormat = $book->formats()->where('format_name', 'Sách Vật Lý')->first();
+
+            $physicalData = [
+                'format_name' => 'Sách Vật Lý',
+                'price' => $request->input('formats.physical.price'),
+                'discount' => $request->input('formats.physical.discount'),
+                'stock' => $request->input('formats.physical.stock'),
+            ];
+
+            if ($physicalFormat) {
+                $physicalFormat->update($physicalData);
+            } else {
+                $book->formats()->create($physicalData);
+            }
+        } else {
+            // Xóa định dạng sách vật lý nếu không còn sử dụng
+            $book->formats()->where('format_name', 'Sách Vật Lý')->delete();
+        }
+
+        // Cập nhật định dạng ebook
+        if ($request->boolean('has_ebook')) {
+            $ebookFormat = $book->formats()->where('format_name', 'Ebook')->first();
+
+            $ebookData = [
+                'format_name' => 'Ebook',
+                'price' => $request->input('formats.ebook.price'),
+                'discount' => $request->input('formats.ebook.discount'),
+                'allow_sample_read' => $request->boolean('formats.ebook.allow_sample_read'),
+            ];
+
+            // Upload file ebook chính nếu có cập nhật
+            if ($request->hasFile('formats.ebook.file')) {
+                // Xóa file cũ nếu có
+                if ($ebookFormat && $ebookFormat->file_url && Storage::disk('public')->exists($ebookFormat->file_url)) {
+                    Storage::disk('public')->delete($ebookFormat->file_url);
+                }
+
+                $ebookFile = $request->file('formats.ebook.file');
+                $ebookFilename = time() . '_' . Str::slug(pathinfo($ebookFile->getClientOriginalName(), PATHINFO_FILENAME)) . '.' . $ebookFile->getClientOriginalExtension();
+                $ebookPath = $ebookFile->storeAs('ebooks', $ebookFilename, 'public');
+                $ebookData['file_url'] = $ebookPath;
+            }
+
+            // Upload file xem thử nếu có cập nhật
+            if ($request->hasFile('formats.ebook.sample_file')) {
+                // Xóa file cũ nếu có
+                if ($ebookFormat && $ebookFormat->sample_file_url && Storage::disk('public')->exists($ebookFormat->sample_file_url)) {
+                    Storage::disk('public')->delete($ebookFormat->sample_file_url);
+                }
+
+                $sampleFile = $request->file('formats.ebook.sample_file');
+                $sampleFilename = time() . '_sample_' . Str::slug(pathinfo($sampleFile->getClientOriginalName(), PATHINFO_FILENAME)) . '.' . $sampleFile->getClientOriginalExtension();
+                $samplePath = $sampleFile->storeAs('ebook-samples', $sampleFilename, 'public');
+                $ebookData['sample_file_url'] = $samplePath;
+            }
+
+            if ($ebookFormat) {
+                $ebookFormat->update($ebookData);
+            } else {
+                $book->formats()->create($ebookData);
+            }
+        } else {
+            // Xóa định dạng ebook nếu không còn sử dụng
+            $book->formats()->where('format_name', 'Ebook')->delete();
+        }
+
+        // Cập nhật thuộc tính và giá thêm
+        // Xóa tất cả các liên kết thuộc tính hiện tại
+        $book->attributeValues()->detach();
+
+        // Thêm lại các thuộc tính mới
+        if ($request->filled('attribute_values')) {
+            foreach ($request->attribute_values as $valueId => $data) {
+                BookAttributeValue::create([
+                    'book_id' => $book->id,
+                    'attribute_value_id' => $data['id'],
+                    'extra_price' => $data['extra_price'] ?? 0
+                ]);
+            }
+        }
+
+        Toastr::success('Cập nhật sách thành công!');
+        return redirect()->route('admin.books.index');
     }
+
+    public function destroy($id)
+    {
+        $book = Book::findOrFail($id);
+        $book->delete();
+
+        Toastr::success('Sách đã được chuyển vào thùng rác!', 'Thành công');
+        return redirect()->route('admin.books.index');
+    }
+
+    public function trash(Request $request)
+    {
+        $query = Book::onlyTrashed()
+            ->with([
+                'category:id,name',
+                'author:id,name',
+                'brand:id,name',
+                'formats:id,book_id,format_name,price,discount,stock',
+                'images:id,book_id,image_url'
+            ]);
+
+        // Tìm kiếm theo tiêu đề sách hoặc mã ISBN
+        if ($request->filled('search')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('title', 'like', '%' . $request->search . '%')
+                    ->orWhere('isbn', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        $trashedBooks = $query->orderBy('deleted_at', 'desc')->paginate(10)->withQueryString();
+        return view('admin.books.trash', compact('trashedBooks'));
+    }
+
+    public function restore($id)
+    {
+        $book = Book::onlyTrashed()->findOrFail($id);
+        $book->restore();
+
+        Toastr::success('Sách đã được khôi phục thành công!', 'Thành công');
+        return redirect()->route('admin.books.trash');
+    }
+
+    public function forceDelete($id)
+    {
+        $book = Book::onlyTrashed()->findOrFail($id);
+
+        // Xóa các hình ảnh liên quan
+        foreach ($book->images as $image) {
+            if ($image->image_url && Storage::disk('public')->exists($image->image_url)) {
+                Storage::disk('public')->delete($image->image_url);
+            }
+            $image->delete();
+        }
+
+        // Xóa ảnh bìa
+        if ($book->cover_image && Storage::disk('public')->exists($book->cover_image)) {
+            Storage::disk('public')->delete($book->cover_image);
+        }
+
+        // Xóa các định dạng sách
+        $book->formats()->delete();
+
+        // Xóa các liên kết với thuộc tính
+        $book->attributeValues()->detach();
+
+        // Xóa vĩnh viễn sách
+        $book->forceDelete();
+
+        Toastr::success('Sách đã được xóa vĩnh viễn!', 'Thành công');
+        return redirect()->route('admin.books.trash');
+    }
+}
