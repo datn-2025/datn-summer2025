@@ -651,110 +651,11 @@ class CartController extends Controller
     }
 
     /**
-     * Thêm tất cả sản phẩm từ wishlist vào giỏ hàng
+     * Thêm tất cả sản phẩm từ wishlist vào giỏ hàng (giờ chỉ chuyển hướng sang trang wishlist)
      */
     public function addAllWishlistToCart(Request $request)
     {
-        try {
-            if (!Auth::check()) {
-                return response()->json(['error' => 'Bạn cần đăng nhập để thực hiện chức năng này.'], 401);
-            }
-
-            $userId = Auth::id();
-            
-            // Lấy tất cả sản phẩm trong wishlist
-            $wishlistItems = DB::table('wishlists')
-                ->join('books', 'wishlists.book_id', '=', 'books.id')
-                ->join('book_formats', function($join) {
-                    $join->on('books.id', '=', 'book_formats.book_id');
-                })
-                ->where('wishlists.user_id', $userId)
-                ->select(
-                    'books.id as book_id',
-                    'books.title',
-                    'book_formats.id as format_id',
-                    'book_formats.price',
-                    'book_formats.stock'
-                )
-                ->get();
-
-            if ($wishlistItems->isEmpty()) {
-                return response()->json([
-                    'error' => 'Danh sách yêu thích của bạn trống'
-                ], 404);
-            }
-
-            $addedCount = 0;
-            $skippedItems = [];
-
-            foreach ($wishlistItems as $item) {
-                // Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa (không có thuộc tính đặc biệt)
-                $existingCart = DB::table('carts')
-                    ->where('user_id', $userId)
-                    ->where('book_id', $item->book_id)
-                    ->where('book_format_id', $item->format_id)
-                    ->where('attribute_value_ids', '[]')
-                    ->first();
-
-                if ($existingCart) {
-                    // Nếu đã có, tăng số lượng (nếu đủ tồn kho)
-                    $newQuantity = $existingCart->quantity + 1;
-                    if ($newQuantity <= $item->stock) {
-                        DB::table('carts')
-                            ->where('id', $existingCart->id)
-                            ->update([
-                                'quantity' => $newQuantity,
-                                'updated_at' => now()
-                            ]);
-                        $addedCount++;
-                    } else {
-                        $skippedItems[] = [
-                            'title' => $item->title,
-                            'reason' => 'Không đủ tồn kho'
-                        ];
-                    }
-                } else {
-                    // Nếu chưa có, thêm mới (nếu có tồn kho)
-                    if ($item->stock > 0) {
-                        DB::table('carts')->insert([
-                            'id' => Str::uuid(),
-                            'user_id' => $userId,
-                            'book_id' => $item->book_id,
-                            'book_format_id' => $item->format_id,
-                            'quantity' => 1,
-                            'attribute_value_ids' => '[]',
-                            'price' => $item->price,
-                            'created_at' => now(),
-                            'updated_at' => now()
-                        ]);
-                        $addedCount++;
-                    } else {
-                        $skippedItems[] = [
-                            'title' => $item->title,
-                            'reason' => 'Hết hàng'
-                        ];
-                    }
-                }
-            }
-
-            $response = [
-                'success' => "Đã thêm {$addedCount} sản phẩm từ danh sách yêu thích vào giỏ hàng",
-                'added_count' => $addedCount
-            ];
-
-            if (!empty($skippedItems)) {
-                $response['skipped_items'] = $skippedItems;
-                $response['message'] = "Một số sản phẩm không thể thêm vào giỏ hàng";
-            }
-
-            return response()->json($response);
-
-        } catch (\Exception $e) {
-            Log::error('Error in addAllWishlistToCart:', [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-            return response()->json(['error' => 'Có lỗi xảy ra khi thêm từ danh sách yêu thích'], 500);
-        }
+        // Chỉ chuyển hướng sang trang wishlist
+        return redirect()->route('wishlist.index');
     }
 }

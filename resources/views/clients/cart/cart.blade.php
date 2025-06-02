@@ -39,9 +39,9 @@
                 <div class="col-md-4">
                     <div class="action-buttons-container">
                         <div class="d-flex gap-2 justify-content-end">
-                            <button class="btn modern-action-btn btn-outline-primary" id="add-wishlist-btn">
+                            <a class="btn modern-action-btn btn-outline-primary" id="add-wishlist-btn" href="{{ route('wishlist.index') }}">
                                 <i class="fas fa-heart me-2"></i>Thêm từ yêu thích
-                            </button>
+                            </a>
                             <button class="btn modern-action-btn btn-outline-danger" id="clear-cart-btn">
                                 <i class="fas fa-trash-alt me-2"></i>Xóa tất cả
                             </button>
@@ -365,14 +365,13 @@
             </div>
             <h2 class="empty-cart-title">Giỏ hàng của bạn đang trống</h2>
             <p class="empty-cart-text">Khám phá hàng ngàn cuốn sách hay và thêm chúng vào giỏ hàng của bạn!</p>
-            
             <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center align-items-center">
                 <a href="{{ route('books.index') }}" class="shop-now-btn">
                     <i class="fas fa-book-open me-2"></i>Khám phá sách ngay
                 </a>
-                <button class="btn btn-outline-primary" id="add-wishlist-btn" style="border-radius: 12px; padding: 14px 28px; font-weight: 600;">
+                <a href="{{ route('wishlist.index') }}" class="btn btn-outline-primary" style="border-radius: 12px; padding: 14px 28px; font-weight: 600;">
                     <i class="fas fa-heart me-2"></i>Thêm từ yêu thích
-                </button>
+                </a>
             </div>
             
             <!-- Additional suggestions -->
