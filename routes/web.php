@@ -20,7 +20,19 @@ use App\Http\Controllers\Contact\ContactController;
 use App\Http\Controllers\Article\NewsController;
 use App\Http\Controllers\Admin\NewsArticleController;
 use App\Http\Controllers\Admin\PaymentMethodController;
+use App\Http\Controllers\cart\CartController;
 
+// cart
+Route::prefix('cart')->group(function () {
+    Route::get('/', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/add', [CartController::class, 'addToCart'])->name('cart.add');
+    Route::post('/update', [CartController::class, 'updateCart'])->name('cart.update');
+    Route::post('/remove', [CartController::class, 'removeFromCart'])->name('cart.remove');
+    Route::post('/clear', [CartController::class, 'clearCart'])->name('cart.clear');
+    Route::post('/add-wishlist', [CartController::class, 'addAllWishlistToCart'])->name('cart.add-wishlist');
+    Route::post('/apply-voucher', [CartController::class, 'applyVoucher'])->name('cart.apply-voucher');
+    Route::post('/remove-voucher', [CartController::class, 'removeVoucher'])->name('cart.remove-voucher');
+});
 
 // danh sach yeu thich
 Route::get('/wishlist', [WishlistController::class, 'getWishlist'])->name('wishlist.index');
