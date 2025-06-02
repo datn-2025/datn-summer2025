@@ -33,7 +33,7 @@ class UserController extends Controller
 
         $users = $query->paginate(10)->appends($request->only(['search', 'status']));
 
-        return view('users.index', compact('users'));
+        return view('admin.users.index', compact('users'));
     }
 
     public function show($id)
@@ -55,14 +55,14 @@ class UserController extends Controller
                     'paymentStatus' => $order->paymentStatus
                 ];
             });
-        return view('users.show', compact('user', 'listDonHang'));
+        return view('admin.users.show', compact('user', 'listDonHang'));
     }
 
     public function edit($id)
     {
         $user = User::with('role')->findOrFail($id);
         $roles = Role::all();
-        return view('users.edit', compact('user', 'roles'));
+        return view('admin.users.edit', compact('user', 'roles'));
     }
 
     public function update(Request $request, $id)
@@ -78,7 +78,7 @@ class UserController extends Controller
         ]);
 
         $user = User::with('role')->findOrFail($id);
-        
+
         // Lưu thông tin cũ trước khi cập nhật
         $oldRole = $user->role ? $user->role->name : 'Chưa phân quyền';
         $oldStatus = $user->status;
@@ -97,7 +97,7 @@ class UserController extends Controller
             try {
                 Mail::to($user->email)
                     ->queue(new UserStatusUpdated($user, $oldRole, $oldStatus));
-                    
+
                 // Log thành công vào queue
                 Log::info('Đã thêm email thông báo vào queue cho user: ' . $user->email);
             } catch (\Exception $e) {
