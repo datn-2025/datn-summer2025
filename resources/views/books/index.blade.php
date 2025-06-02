@@ -184,7 +184,7 @@
 
               {{-- Tiêu đề sách --}}
               <h6 class="mt-4 mb-0 fw-bold">
-                <a href="{{ url('book/' . $book->id) }}">{{ $book->title }}</a>
+                <a href="{{ route('books.show', $book->slug) }}">{{ $book->title }}</a>
               </h6>
 
               {{-- Tác giả và đánh giá sao --}}
@@ -212,9 +212,9 @@
                 {{ number_format($book->min_price ?? 0, 0, ',', '.') }} đ
               </span>
 
-              {{-- Nút thêm giỏ hàng và yêu thích --}}
+              {{-- Nút xem chi tiết và yêu thích --}}
               <div class="card-concern position-absolute start-0 end-0 d-flex gap-2">
-                <button type="button" class="btn btn-dark" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Add to cart">
+                <a href="{{ route('books.show', $book->slug) }}" class="btn btn-dark" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="View details">
                   <svg class="cart">
                     <use xlink:href="#cart"></use>
                   </svg>
