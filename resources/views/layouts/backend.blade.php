@@ -1,24 +1,66 @@
-<!doctype html>
-<html lang="en" data-layout="vertical" data-topbar="light" data-sidebar="dark" data-sidebar-size="lg"
-    data-sidebar-image="none" data-preloader="disable">
+<!DOCTYPE html>
+<html lang="vi" data-layout="vertical" data-topbar="light" data-sidebar="dark" data-sidebar-size="lg"
+    data-sidebar-image="none">
 
 <head>
-
     <meta charset="utf-8" />
-    <title>@yield('title')</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
-    <meta content="Themesbrand" name="author" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta content="BookBee Admin Dashboard" name="description" />
+    <meta content="Your Team" name="author" />
+    <title>BookBee Admin - @yield('title')</title>
+
     <!-- App favicon -->
     <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico') }}">
 
     <!-- jsvectormap css -->
-    <link href="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/css/jsvectormap.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/css/jsvectormap.min.css" rel="stylesheet"
+        type="text/css" />
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Toastr CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+
+    <!-- Toastr JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
+    <script>
+        // Cấu hình toastr
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "timeOut": "3000",
+            "extendedTimeOut": "1000",
+            "preventDuplicates": true,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+
+        // Hiển thị thông báo từ session
+        @if(session('success'))
+            toastr.success("{{ session('success') }}");
+        @endif
+
+        @if(session('error'))
+            toastr.error("{{ session('error') }}");
+        @endif
+    </script>
 
     <!-- Layout config Js -->
     <script src="{{ asset('assets/js/layout.js') }}"></script>
+
     <!-- Bootstrap Css -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        type="text/css" />
     <!-- Icons Css -->
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/@mdi/font@7.3.67/css/materialdesignicons.min.css" rel="stylesheet">
@@ -35,20 +77,21 @@
     <!--Swiper slider css-->
     <link href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" rel="stylesheet" type="text/css" />
 
+    <!-- Line Awesome Icons -->
+    <link rel="stylesheet" href="https://cdn.lineawesome.com/1.3.0/line-awesome/css/line-awesome.min.css">
+
     <style>
-
-.collapse.show + a .toggle-icon,
-.nav-link[aria-expanded="true"] .toggle-icon {
-    transform: rotate(180deg);
-    transition: transform 0.3s ease;
-}
-
+        .collapse.show+a .toggle-icon,
+        .nav-link[aria-expanded="true"] .toggle-icon {
+            transform: rotate(180deg);
+            transition: transform 0.3s ease;
+        }
     </style>
     {{-- TinyMCE --}}
     <script src="https://cdn.jsdelivr.net/npm/tinymce@6/tinymce.min.js"></script>
     <script>
         tinymce.init({
-            selector: '#description',
+            selector: '#description, #content',
             height: 300,
             menubar: false,
             plugins: 'lists link image preview code fullscreen',
@@ -84,7 +127,8 @@
                                     <img src="{{ asset('assets/images/logo-sm.png') }}" alt="" height="22">
                                 </span>
                                 <span class="logo-lg">
-                                    <img src="{{ asset('assets/images/logo-light.png') }}" alt="" height="17">
+                                    <img src="{{ asset('assets/images/logo-light.png') }}" alt=""
+                                        height="17">
                                 </span>
                             </a>
                         </div>
@@ -256,8 +300,8 @@
                                     </div>
 
                                     <div class="px-2 pt-2">
-                                        <ul class="nav nav-tabs dropdown-tabs nav-tabs-custom" data-dropdown-tabs="true"
-                                            id="notificationItemsTab" role="tablist">
+                                        <ul class="nav nav-tabs dropdown-tabs nav-tabs-custom"
+                                            data-dropdown-tabs="true" id="notificationItemsTab" role="tablist">
                                             <li class="nav-item waves-effect waves-light">
                                                 <a class="nav-link active" data-bs-toggle="tab" href="#all-noti-tab"
                                                     role="tab" aria-selected="true">
@@ -265,14 +309,14 @@
                                                 </a>
                                             </li>
                                             <li class="nav-item waves-effect waves-light">
-                                                <a class="nav-link" data-bs-toggle="tab" href="#messages-tab" role="tab"
-                                                    aria-selected="false">
+                                                <a class="nav-link" data-bs-toggle="tab" href="#messages-tab"
+                                                    role="tab" aria-selected="false">
                                                     Messages
                                                 </a>
                                             </li>
                                             <li class="nav-item waves-effect waves-light">
-                                                <a class="nav-link" data-bs-toggle="tab" href="#alerts-tab" role="tab"
-                                                    aria-selected="false">
+                                                <a class="nav-link" data-bs-toggle="tab" href="#alerts-tab"
+                                                    role="tab" aria-selected="false">
                                                     Alerts
                                                 </a>
                                             </li>
@@ -282,7 +326,8 @@
                                 </div>
 
                                 <div class="tab-content position-relative" id="notificationItemsTabContent">
-                                    <div class="tab-pane fade show active py-2 ps-2" id="all-noti-tab" role="tabpanel">
+                                    <div class="tab-pane fade show active py-2 ps-2" id="all-noti-tab"
+                                        role="tabpanel">
                                         <div data-simplebar style="max-height: 300px;" class="pe-2">
                                             <div
                                                 class="text-reset notification-item d-block dropdown-item position-relative">
@@ -309,8 +354,8 @@
                                                     </div>
                                                     <div class="px-2 fs-15">
                                                         <div class="form-check notification-check">
-                                                            <input class="form-check-input" type="checkbox" value=""
-                                                                id="all-notification-check01">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                value="" id="all-notification-check01">
                                                             <label class="form-check-label"
                                                                 for="all-notification-check01"></label>
                                                         </div>
@@ -340,8 +385,8 @@
                                                     </div>
                                                     <div class="px-2 fs-15">
                                                         <div class="form-check notification-check">
-                                                            <input class="form-check-input" type="checkbox" value=""
-                                                                id="all-notification-check02">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                value="" id="all-notification-check02">
                                                             <label class="form-check-label"
                                                                 for="all-notification-check02"></label>
                                                         </div>
@@ -372,8 +417,8 @@
                                                     </div>
                                                     <div class="px-2 fs-15">
                                                         <div class="form-check notification-check">
-                                                            <input class="form-check-input" type="checkbox" value=""
-                                                                id="all-notification-check03">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                value="" id="all-notification-check03">
                                                             <label class="form-check-label"
                                                                 for="all-notification-check03"></label>
                                                         </div>
@@ -402,8 +447,8 @@
                                                     </div>
                                                     <div class="px-2 fs-15">
                                                         <div class="form-check notification-check">
-                                                            <input class="form-check-input" type="checkbox" value=""
-                                                                id="all-notification-check04">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                value="" id="all-notification-check04">
                                                             <label class="form-check-label"
                                                                 for="all-notification-check04"></label>
                                                         </div>
@@ -443,8 +488,8 @@
                                                     </div>
                                                     <div class="px-2 fs-15">
                                                         <div class="form-check notification-check">
-                                                            <input class="form-check-input" type="checkbox" value=""
-                                                                id="messages-notification-check01">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                value="" id="messages-notification-check01">
                                                             <label class="form-check-label"
                                                                 for="messages-notification-check01"></label>
                                                         </div>
@@ -472,8 +517,8 @@
                                                     </div>
                                                     <div class="px-2 fs-15">
                                                         <div class="form-check notification-check">
-                                                            <input class="form-check-input" type="checkbox" value=""
-                                                                id="messages-notification-check02">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                value="" id="messages-notification-check02">
                                                             <label class="form-check-label"
                                                                 for="messages-notification-check02"></label>
                                                         </div>
@@ -501,8 +546,8 @@
                                                     </div>
                                                     <div class="px-2 fs-15">
                                                         <div class="form-check notification-check">
-                                                            <input class="form-check-input" type="checkbox" value=""
-                                                                id="messages-notification-check03">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                value="" id="messages-notification-check03">
                                                             <label class="form-check-label"
                                                                 for="messages-notification-check03"></label>
                                                         </div>
@@ -529,8 +574,8 @@
                                                     </div>
                                                     <div class="px-2 fs-15">
                                                         <div class="form-check notification-check">
-                                                            <input class="form-check-input" type="checkbox" value=""
-                                                                id="messages-notification-check04">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                value="" id="messages-notification-check04">
                                                             <label class="form-check-label"
                                                                 for="messages-notification-check04"></label>
                                                         </div>
@@ -562,8 +607,8 @@
                         </div>
 
                         <div class="dropdown ms-sm-3 header-item topbar-user">
-                            <button type="button" class="btn" id="page-header-user-dropdown" data-bs-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false">
+                            <button type="button" class="btn" id="page-header-user-dropdown"
+                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="d-flex align-items-center">
                                     <img class="rounded-circle header-profile-user"
                                         src="{{ asset('assets/images/users/avatar-1.jpg') }}" alt="Header Avatar">
@@ -600,9 +645,13 @@
                                 <a class="dropdown-item" href="auth-lockscreen-basic.html"><i
                                         class="mdi mdi-lock text-muted fs-16 align-middle me-1"></i> <span
                                         class="align-middle">Lock screen</span></a>
-                                <a class="dropdown-item" href="auth-logout-basic.html"><i
-                                        class="mdi mdi-logout text-muted fs-16 align-middle me-1"></i> <span
-                                        class="align-middle" data-key="t-logout">Logout</span></a>
+                                <form method="POST" action="{{ route('admin.logout') }}" style="display: inline;">
+                                    @csrf
+                                    <button type="submit" class="dropdown-item">
+                                        <i class="mdi mdi-logout text-muted fs-16 align-middle me-1"></i>
+                                        <span class="align-middle" data-key="t-logout">Đăng xuất</span>
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -621,7 +670,8 @@
                     <div class="modal-body">
                         <div class="mt-2 text-center">
                             <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="loop"
-                                colors="primary:#f7b84b,secondary:#f06548" style="width:100px;height:100px"></lord-icon>
+                                colors="primary:#f7b84b,secondary:#f06548"
+                                style="width:100px;height:100px"></lord-icon>
                             <div class="mt-4 pt-2 fs-15 mx-4 mx-sm-5">
                                 <h4>Are you sure ?</h4>
                                 <p class="text-muted mx-4 mb-0">Are you sure you want to remove this Notification ?</p>
@@ -673,22 +723,24 @@
                     <ul class="navbar-nav" id="navbar-nav">
                         <li class="menu-title"><span data-key="t-menu">Menu</span></li>
                         <li class="nav-item">
-                            <a class="nav-link menu-link" href="#sidebarDashboards">
-                                <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Báo cáo tổng
-                                    quan</span>
+                            <a class="nav-link menu-link" href="{{ route('admin.dashboard.index') }}">
+                                <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Báo cáo tổng quan</span>
                             </a>
                         </li> <!-- end Dashboard Menu -->
 
                         <li class="nav-item">
-                            <a class="nav-link menu-link" href="#sidebarAuth" data-bs-toggle="collapse" role="button"
-                                aria-expanded="false" aria-controls="sidebarAuth">
+
+                            <a class="nav-link menu-link" href="#sidebarAuth" data-bs-toggle="collapse"
+                                role="button" aria-expanded="false" aria-controls="sidebarAuth">
                                 <i class="ri-account-circle-line"></i> <span data-key="t-authentication">Quản lý người
                                     dùng </span>
                             </a>
                             <div class="collapse menu-dropdown" id="sidebarAuth">
                                 <ul class="nav nav-sm flex-column">
                                     <li class="nav-item">
-                                        <a href="{{ route('admin.users.index') }}" class="nav-link" data-key="t-signin"> Danh sách
+
+                                        <a href="{{ route('admin.users.index') }}" class="nav-link"
+                                            data-key="t-signin"> Danh sách
                                         </a>
                                     </li>
                                 </ul>
@@ -696,8 +748,8 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link menu-link" href="#sidebarLayouts" data-bs-toggle="collapse" role="button"
-                                aria-expanded="false" aria-controls="sidebarLayouts">
+                            <a class="nav-link menu-link" href="#sidebarLayouts" data-bs-toggle="collapse"
+                                role="button" aria-expanded="false" aria-controls="sidebarLayouts">
                                 <i class="ri-layout-3-line"></i> <span data-key="t-layouts">Quản lý cửa hàng</span>
                             </a>
                             <div class="collapse menu-dropdown" id="sidebarLayouts">
@@ -713,81 +765,131 @@
                         </li> <!-- end Dashboard Menu -->
 
                         <li class="nav-item">
-                            <a class="nav-link menu-link" href="#sidebarApps" data-bs-toggle="collapse" role="button"
-                                aria-expanded="false" aria-controls="sidebarApps">
+                            <a class="nav-link menu-link" href="#sidebarApps" data-bs-toggle="collapse"
+                                role="button" aria-expanded="false" aria-controls="sidebarApps">
                                 <i class="ri-apps-2-line"></i> <span data-key="t-apps">Quản lý sản phẩm</span>
                             </a>
                             <div class="collapse menu-dropdown" id="sidebarApps">
                                 <ul class="nav nav-sm flex-column">
                                     <li class="nav-item">
-                                        <a href="{{route('admin.books.index')}}" class="nav-link" data-key="t-chat">
+
+                                        <a href="{{ route('admin.books.index') }}" class="nav-link"
+                                            data-key="t-chat">
                                             Danh sách </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="{{route('admin.attributes.index')}}" class="nav-link"> <span
+                                        <a href="{{ route('admin.attributes.index') }}" class="nav-link"> <span
                                                 data-key="t-file-manager">Thuộc tính</span></a>
                                     </li>
                                 </ul>
                             </div>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link menu-link" href="#sidebarCate" data-bs-toggle="collapse" role="button"
-                                aria-expanded="false" aria-controls="sidebarCate">
-                                <i class="ri-apps-2-line"></i> <span data-key="t-apps">Quản lý danh mục sản phẩm</span>
+                            <a class="nav-link menu-link" href="#sidebarCate" data-bs-toggle="collapse"
+                                role="button" aria-expanded="false" aria-controls="sidebarCate">
+                                <i class="ri-apps-2-line"></i> <span data-key="t-apps">Quản lý danh mục sản
+                                    phẩm</span>
                             </a>
                             <div class="collapse menu-dropdown" id="sidebarCate">
                                 <ul class="nav nav-sm flex-column">
                                     <li class="nav-item">
-                                        <a href="{{route('admin.categories.index')}}" class="nav-link" data-key="t-chat"> Loại sách </a>
+                                        <a href="{{route('admin.categories.index')}}" class="nav-link"
+                                            data-key="t-chat"> Loại sách </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="{{route('admin.categories.authors.index')}}" class="nav-link" data-key="t-chat"> Tác giả </a>
+                                        <a href="{{ route('admin.categories.authors.index') }}" class="nav-link"
+                                            data-key="t-chat"> Tác giả </a>
                                     </li>
-                                    
+
+                                    <li class="nav-item">
+                                        <a href="{{route('admin.categories.brands.brand')}}" class="nav-link" data-key="t-chat"> Thương hiệu </a>
+                                    </li>
                                 </ul>
                             </div>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link menu-link" href="{{route('admin.orders.index')}}" >
+                            <a class="nav-link menu-link" href="{{ route('admin.orders.index') }}">
                                 <i class="ri-pages-line"></i> <span data-key="t-pages">Quản lý đơn hàng</span>
                             </a>
                         </li>
 
                         <li class="nav-item">
+                            <a class="nav-link menu-link" href="#sidebarNews" data-bs-toggle="collapse" role="button"
+                                aria-expanded="false" aria-controls="sidebarNews">
+                                <i class="ri-newspaper-line"></i> <span data-key="t-news">Quản lý tin tức</span>
+                            </a>
+                            <div class="collapse menu-dropdown" id="sidebarNews">
+                                <ul class="nav nav-sm flex-column">
+                                    <li class="nav-item">
+                                        <a href="{{ route('admin.news.index') }}" class="nav-link"
+                                            data-key="t-news-list">Danh sách</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{ route('admin.news.create') }}" class="nav-link"
+                                            data-key="t-news-create">Thêm mới</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link menu-link" href="#sidebarContacts" data-bs-toggle="collapse"
+                                role="button" aria-expanded="false" aria-controls="sidebarContacts">
+                                <i class="ri-mail-line"></i> <!-- icon thư, bạn có thể đổi icon khác -->
+                                <span data-key="t-contacts">Quản lý liên hệ</span>
+                            </a>
+                            <div class="collapse menu-dropdown" id="sidebarContacts">
+                                <ul class="nav nav-sm flex-column">
+                                    <li class="nav-item">
+                                        <a href="{{ route('admin.contacts.index') }}" class="nav-link"
+                                            data-key="t-contacts-list">
+                                            Danh sách liên hệ
+                                        </a>
+                                    </li>
+
+                                </ul>
+                            </div>
+                        </li>
+
+
+                        <li class="nav-item">
                             <a class="nav-link menu-link" href="#sidebarAdvanceUI" data-bs-toggle="collapse"
                                 role="button" aria-expanded="false" aria-controls="sidebarAdvanceUI">
-                                <i class="ri-stack-line"></i> <span data-key="t-advance-ui">Quản lý khuyến mãi toàn nền
+
+                                <i class="ri-stack-line"></i> <span data-key="t-advance-ui">Quản lý khuyến mãi toàn
+                                    nền
                                     tảng</span>
                             </a>
                             <div class="collapse menu-dropdown" id="sidebarAdvanceUI">
                                 <ul class="nav nav-sm flex-column">
                                     <li class="nav-item">
-                                        <a href="advance-ui-sweetalerts.html" class="nav-link"
-                                            data-key="t-sweet-alerts"> Danh sách</a>
+                                        <a href="{{ route('admin.vouchers.index') }}" class="nav-link">Danh sách</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="advance-ui-nestable.html" class="nav-link" data-key="t-nestable-list">
+
+                                        <a href="advance-ui-nestable.html" class="nav-link"
+                                            data-key="t-nestable-list">
                                             Thêm</a>
+
                                     </li>
                                 </ul>
                             </div>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link menu-link" href="#sidebarForms" data-bs-toggle="collapse" role="button"
-                                aria-expanded="false" aria-controls="sidebarForms">
+                            <a class="nav-link menu-link" href="#sidebarForms" data-bs-toggle="collapse"
+                                role="button" aria-expanded="false" aria-controls="sidebarForms">
                                 <i class="ri-file-list-3-line"></i> <span data-key="t-forms">Quản lý thanh toán và
                                     phương thức thanh toán</span>
                             </a>
                             <div class="collapse menu-dropdown" id="sidebarForms">
                                 <ul class="nav nav-sm flex-column">
                                     <li class="nav-item">
-                                        <a href="forms-elements.html" class="nav-link" data-key="t-basic-elements">Danh
+                                        <a href="{{route('admin.payment-methods.index')}}" class="nav-link" data-key="t-basic-elements">Danh
                                             sách</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="forms-select.html" class="nav-link" data-key="t-form-select"> Thêm </a>
+                                        <a href="{{route('admin.payment-methods.create')}}" class="nav-link" data-key="t-form-select"> Thêm </a>
                                     </li>
                                 </ul>
                             </div>
@@ -980,10 +1082,12 @@
                                 <div class="form-check card-radio dark">
                                     <input class="form-check-input" type="radio" name="data-bs-theme"
                                         id="layout-mode-dark" value="dark">
-                                    <label class="form-check-label p-0 avatar-md w-100 bg-dark" for="layout-mode-dark">
+                                    <label class="form-check-label p-0 avatar-md w-100 bg-dark"
+                                        for="layout-mode-dark">
                                         <span class="d-flex gap-1 h-100">
                                             <span class="flex-shrink-0">
-                                                <span class="bg-white bg-opacity-10 d-flex h-100 flex-column gap-1 p-1">
+                                                <span
+                                                    class="bg-white bg-opacity-10 d-flex h-100 flex-column gap-1 p-1">
                                                     <span
                                                         class="d-block p-1 px-2 bg-white bg-opacity-10 rounded mb-2"></span>
                                                     <span class="d-block p-1 px-2 pb-0 bg-white bg-opacity-10"></span>
@@ -1122,8 +1226,8 @@
                         <p class="text-muted">Choose Fixed or Scrollable Layout Position.</p>
 
                         <div class="btn-group radio" role="group">
-                            <input type="radio" class="btn-check" name="data-layout-position" id="layout-position-fixed"
-                                value="fixed">
+                            <input type="radio" class="btn-check" name="data-layout-position"
+                                id="layout-position-fixed" value="fixed">
                             <label class="btn btn-light w-sm" for="layout-position-fixed">Fixed</label>
 
                             <input type="radio" class="btn-check" name="data-layout-position"
@@ -1137,8 +1241,8 @@
                     <div class="row">
                         <div class="col-4">
                             <div class="form-check card-radio">
-                                <input class="form-check-input" type="radio" name="data-topbar" id="topbar-color-light"
-                                    value="light">
+                                <input class="form-check-input" type="radio" name="data-topbar"
+                                    id="topbar-color-light" value="light">
                                 <label class="form-check-label p-0 avatar-md w-100" for="topbar-color-light">
                                     <span class="d-flex gap-1 h-100">
                                         <span class="flex-shrink-0">
@@ -1162,8 +1266,8 @@
                         </div>
                         <div class="col-4">
                             <div class="form-check card-radio">
-                                <input class="form-check-input" type="radio" name="data-topbar" id="topbar-color-dark"
-                                    value="dark">
+                                <input class="form-check-input" type="radio" name="data-topbar"
+                                    id="topbar-color-dark" value="dark">
                                 <label class="form-check-label p-0 avatar-md w-100" for="topbar-color-dark">
                                     <span class="d-flex gap-1 h-100">
                                         <span class="flex-shrink-0">
@@ -1275,7 +1379,8 @@
                                 <div class="form-check sidebar-setting card-radio">
                                     <input class="form-check-input" type="radio" name="data-sidebar-size"
                                         id="sidebar-size-small-hover" value="sm-hover">
-                                    <label class="form-check-label p-0 avatar-md w-100" for="sidebar-size-small-hover">
+                                    <label class="form-check-label p-0 avatar-md w-100"
+                                        for="sidebar-size-small-hover">
                                         <span class="d-flex gap-1 h-100">
                                             <span class="flex-shrink-0">
                                                 <span class="bg-light d-flex h-100 flex-column gap-1">
@@ -1542,7 +1647,6 @@
     </div>
 
     {{-- định dang sách from thêm sách --}}
-    <script src="{{ asset('assets/js/custom.js') }}"></script>
     <!-- JAVASCRIPT -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/simplebar@6.2.5/dist/simplebar.min.js"></script>
@@ -1572,7 +1676,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/list.pagination.js/0.1.1/list.pagination.min.js"></script>
 
     <!-- listjs init -->
-    <script src="{{ asset('assets/js/pages/listjs.init.js') }}"></script>
 
     <!-- Sweet Alerts js -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.5/dist/sweetalert2.all.min.js"></script>
@@ -1581,33 +1684,44 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     {!! Toastr::message() !!}
+    <script>
+        // Nếu trang được tải từ bộ nhớ cache (back/forward)
+        if (performance.getEntriesByType('navigation')[0]?.type === 'back_forward') {
+            // Xóa Toastr message hiện lại từ session cũ
+            const toastrContainer = document.querySelector('#toast-container');
+            if (toastrContainer) {
+                toastrContainer.remove();
+            }
+        }
+    </script>
+
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
     <script>
         const thumbnailSlider = new Swiper(".thumbnail-slider", {
-        spaceBetween: 10,
-        slidesPerView: 4,
-        freeMode: true,
-        watchSlidesProgress: true,
-        breakpoints: {
-            640: { slidesPerView: 4 },
-            768: { slidesPerView: 5 },
-            1024: { slidesPerView: 6 },
-        },
-    });
+            spaceBetween: 10,
+            slidesPerView: 4,
+            freeMode: true,
+            watchSlidesProgress: true,
+            breakpoints: {
+                640: { slidesPerView: 4 },
+                768: { slidesPerView: 5 },
+                1024: { slidesPerView: 6 },
+            },
+        });
 
-    const mainSlider = new Swiper(".main-slider", {
-        spaceBetween: 10,
-        navigation: {
-            nextEl: ".swiper-button-next",
-            prevEl: ".swiper-button-prev"
-        },
-        thumbs: {
-            swiper: thumbnailSlider,
-        },
-    });
+        const mainSlider = new Swiper(".main-slider", {
+            spaceBetween: 10,
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev"
+            },
+            thumbs: {
+                swiper: thumbnailSlider,
+            },
+        });
     </script>
-    
+
     @yield('scripts')
 </body>
 
