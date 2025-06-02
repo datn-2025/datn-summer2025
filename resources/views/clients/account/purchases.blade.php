@@ -8,7 +8,7 @@
         <!-- Header Card -->
         <div class="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden mb-8">
             <div class="bg-gradient-to-r from-blue-600 to-indigo-600 px-8 py-6">
-                <h1 class="text-2xl font-bold text-white">Đơn hàng của tôi</h1>
+                <h1 class="text-2xl font-bold text-white">Đánh giá của tôi</h1>
             </div>
             
             <div class="p-8">
