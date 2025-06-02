@@ -72,7 +72,6 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Sản phẩm</th>
-                                    <th>Tác giả</th>
                                     <th>Khách hàng</th>
                                     <th>Bình luận</th>
                                     <th>Phản hồi Admin</th>
@@ -93,13 +92,6 @@
                                             </a>
                                         @else
                                             <span class="text-muted">Sản phẩm đã xóa</span>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @if($review->book && $review->book->author)
-                                            {{ $review->book->author->name }}
-                                        @else
-                                            <span class="text-muted">N/A</span>
                                         @endif
                                     </td>
                                     <td>{{ $review->user->name ?? 'Người dùng đã xóa' }}</td>
