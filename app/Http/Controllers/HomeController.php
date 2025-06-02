@@ -7,6 +7,7 @@ use App\Models\Book;
 use App\Models\NewsArticle;
 use App\Models\Review;
 use Illuminate\Support\Facades\DB;
+use Jorenvh\Share\ShareFacade;
 
 class HomeController extends Controller
 {
@@ -68,13 +69,29 @@ class HomeController extends Controller
     }
 
     public function show($slug)
-    {
-        $book = Book::with(['author', 'category', 'brand', 'formats', 'images', 'reviews.user','attributeValues.attribute'])
-            ->where('slug', $slug)->firstOrFail();
-        $relatedBooks = Book::where('category_id', $book->category_id)
-            ->where('id', '!=', $book->id)
-            ->with(['images', 'author', 'formats'])
-            ->take(4)->get();
-        return view('clients.show', compact('book', 'relatedBooks'));
-    }
+{
+    $book = Book::with([
+        'author', 'category', 'brand', 'formats', 'images', 'reviews.user', 'attributeValues.attribute'
+    ])->where('slug', $slug)->firstOrFail();
+
+    $relatedBooks = Book::where('category_id', $book->category_id)
+        ->where('id', '!=', $book->id)
+        ->with(['images', 'author', 'formats'])
+        ->take(4)
+        ->get();
+
+    // Tạo các nút chia sẻ link sản phẩm
+    $shareButtons = ShareFacade::page(
+        route('books.show', $book->slug),
+        $book->title
+    )
+    ->facebook()
+    ->twitter()
+    ->linkedin()
+    ->whatsapp()
+    ->telegram();
+
+    return view('clients.show', compact('book', 'relatedBooks', 'shareButtons'));
+}
+
 }
