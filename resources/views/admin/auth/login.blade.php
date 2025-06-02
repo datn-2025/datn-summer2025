@@ -51,17 +51,15 @@
                                 {{-- Thông báo --}}
                                 @foreach (['danger' => 'error', 'success' => 'success'] as $type => $msg)
                                     @if (session($msg))
-                                        <div class="alert alert-{{ $type }} alert-dismissible fade show" role="alert">
+                                        <div class="alert alert-{{ $type }}" role="alert">
                                             {{ session($msg) }}
-                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                         </div>
                                     @endif
                                 @endforeach
 
                                 @if ($errors->any())
-                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <div class="alert alert-danger" role="alert">
                                         {!! implode('<br>', $errors->all()) !!}
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                     </div>
                                 @endif
 
