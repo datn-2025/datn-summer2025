@@ -455,6 +455,13 @@
   </form>
 </div>
 
+{{-- Reset Filter Button --}}
+          <div class="mb-4" style="margin-top: 20px;">
+            <a href="{{ url('/books') }}" class="btn btn-outline-secondary w-100">
+              Đặt lại tìm kiếm
+            </a>
+          </div>
+
 
         </div>
       </aside>
