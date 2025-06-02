@@ -29,23 +29,23 @@
                         'active' => $currentRoute === 'account.index'
                     ],
                     [
-                        'route' => 'account.orders',
+                        'route' => 'account.orders.index',
                         'icon' => 'fas fa-shopping-bag',
                         'title' => 'Đơn hàng',
                         'badge' => 0,
-                        'active' => $currentRoute === 'account.orders'
+                        'active' => $currentRoute === 'account.orders.index'
                     ],
                     [
                         'route' => 'account.purchase',
                         'icon' => 'fas fa-star',
-                        'title' => 'Đánh giá',
+                        'title' => 'Đánh giá của tôi',
                         'badge' => 0,
                         'active' => $currentRoute === 'account.purchase'
                     ],
                     [
                         'route' => 'home',
                         'icon' => 'fas fa-star',
-                        'title' => 'Đánh giá của tôi',
+                        'title' => 'Chưa có',
                         'active' => str_starts_with($currentRoute, 'account.reviews')
                     ],
                     // Thêm form đăng xuất

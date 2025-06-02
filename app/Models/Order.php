@@ -98,4 +98,16 @@ class Order extends Model
     {
         return $this->hasMany(Review::class);
     }
+
+    public function shippingAddress()
+    {
+        // Giả sử bạn có trường shipping_address_id trong bảng orders
+        return $this->belongsTo(Address::class, 'shipping_address_id');
+    }
+
+    public function billingAddress()
+    {
+        // Giả sử bạn có trường billing_address_id trong bảng orders
+        return $this->belongsTo(Address::class, 'billing_address_id');
+    }
 }
