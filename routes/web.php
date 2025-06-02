@@ -127,9 +127,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::delete('{id}/force-delete', [VoucherController::class, 'forceDelete'])->name('force-delete');
     });
     Route::resource('vouchers', VoucherController::class);
-
-
-
     // Route admin/users
     Route::prefix('users')->name('users.')->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('index');
@@ -166,23 +163,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/edit/{id}', [OrderController::class, 'edit'])->name('edit');
         Route::put('/update/{id}', [OrderController::class, 'update'])->name('update');
     });
-});
 
-    Route::prefix('books')->name('books.')->group(function () {
-        Route::get('/', [AdminBookController::class, 'index'])->name('index');
-        Route::get('/create', [AdminBookController::class, 'create'])->name('create');
-        Route::post('/store', [AdminBookController::class, 'store'])->name('store');
-        Route::get('/show/{id}/{slug}', [AdminBookController::class, 'show'])->name('show');
-        Route::get('/edit/{id}/{slug}', [AdminBookController::class, 'edit'])->name('edit');
-        Route::put('/update/{id}/{slug}', [AdminBookController::class, 'update'])->name('update');
-        Route::delete('/delete/{id}', [AdminBookController::class, 'destroy'])->name('destroy');
-
-        // Trash routes
-        Route::get('/trash', [AdminBookController::class, 'trash'])->name('trash');
-        Route::post('/restore/{id}', [AdminBookController::class, 'restore'])->name('restore');
-        Route::delete('/force-delete/{id}', [AdminBookController::class, 'forceDelete'])->name('force-delete');
-
-    });
     // Admin Payment Methods
     Route::prefix('payment-methods')->name('payment-methods.')->group(function () {
         Route::get('/', [PaymentMethodController::class, 'index'])->name('index');
