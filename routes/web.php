@@ -137,6 +137,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
         })->name('dashboard');
         Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
 
+
+        // Route admin/contacts
+        Route::resource('contacts', \App\Http\Controllers\Admin\ContactController::class);
+        Route::post('contacts/{contact}/reply', [\App\Http\Controllers\Admin\ContactController::class, 'sendReply'])->name('contacts.reply');
         Route::prefix('books')->name('books.')->group(function () {
             Route::get('/', [AdminBookController::class, 'index'])->name('index');
             Route::get('/create', [AdminBookController::class, 'create'])->name('create');

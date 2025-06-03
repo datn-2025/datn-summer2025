@@ -511,11 +511,13 @@
                             <button type="button" class="btn" id="page-header-user-dropdown"
                                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="d-flex align-items-center">
-                                    <img class="rounded-circle header-profile-user"
-                                        src="{{ Auth::user()->avatar }}" alt="Header Avatar">
+                                    <img class="rounded-circle header-profile-user" src="{{ Auth::user()->avatar }}"
+                                        alt="Header Avatar">
                                     <span class="text-start ms-xl-2">
-                                        <span class="d-none d-xl-block ms-1 fs-12 user-name-text">{{ Auth::user()->name }}</span>
-                                        <span class="d-none d-xl-inline-block ms-1 fw-medium user-name-sub-text">{{ Auth::user()->email }}</span>
+                                        <span
+                                            class="d-none d-xl-block ms-1 fs-12 user-name-text">{{ Auth::user()->name }}</span>
+                                        <span
+                                            class="d-none d-xl-inline-block ms-1 fw-medium user-name-sub-text">{{ Auth::user()->email }}</span>
                                     </span>
                                 </span>
                             </button>
@@ -639,10 +641,9 @@
                             <div class="collapse menu-dropdown" id="sidebarAuth">
                                 <ul class="nav nav-sm flex-column">
                                     <li class="nav-item">
-
                                         <a href="{{ route('admin.users.index') }}" class="nav-link"
-                                            data-key="t-signin"> Danh sách
-                                        </a>
+                                            data-key="t-signin">
+                                            Danh sách
                                     </li>
                                 </ul>
                             </div>
@@ -752,15 +753,11 @@
                                 </ul>
                             </div>
                         </li>
-
-
                         <li class="nav-item">
                             <a class="nav-link menu-link" href="#sidebarAdvanceUI" data-bs-toggle="collapse"
                                 role="button" aria-expanded="false" aria-controls="sidebarAdvanceUI">
-
                                 <i class="ri-stack-line"></i> <span data-key="t-advance-ui">Quản lý khuyến mãi toàn
-                                    nền
-                                    tảng</span>
+                                    nền tảng</span>
                             </a>
                             <div class="collapse menu-dropdown" id="sidebarAdvanceUI">
                                 <ul class="nav nav-sm flex-column">
