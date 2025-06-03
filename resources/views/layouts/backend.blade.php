@@ -75,6 +75,7 @@
 
     <!--Swiper slider css-->
     <link href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" rel="stylesheet" type="text/css" />
+    <script src="//unpkg.com/alpinejs" defer></script>
 
     <!-- Line Awesome Icons -->
     <link rel="stylesheet" href="https://cdn.lineawesome.com/1.3.0/line-awesome/css/line-awesome.min.css">
@@ -98,7 +99,7 @@
             placeholder: 'Nhập mô tả chi tiết...'
         });
     </script>
-
+    @livewireStyles
 </head>
 
 <body>
@@ -699,7 +700,7 @@
                     </span>
                 </a>
                 <!-- Light Logo-->
-                <a href="index.html" class="logo logo-light">
+                <a href="{{route('admin.dashboard')}}" class="logo logo-light">
                     <span class="logo-sm">
                         <img src="{{ asset('assets/images/logo-sm.png') }}" alt="" height="22">
                     </span>
@@ -770,7 +771,8 @@
                                     </li>
 
                                     <li class="nav-item">
-                                        <a href="{{route('admin.categories.brands.brand')}}" class="nav-link" data-key="t-chat"> Thương hiệu </a>
+                                        <a href="{{route('admin.categories.brands.brand')}}" class="nav-link"
+                                            data-key="t-chat"> Thương hiệu </a>
                                     </li>
                                 </ul>
                             </div>
@@ -852,14 +854,17 @@
                             <div class="collapse menu-dropdown" id="sidebarForms">
                                 <ul class="nav nav-sm flex-column">
                                     <li class="nav-item">
-                                        <a href="{{route('admin.payment-methods.index')}}" class="nav-link" data-key="t-basic-elements">Danh
+                                        <a href="{{route('admin.payment-methods.index')}}" class="nav-link"
+                                            data-key="t-basic-elements">Danh
                                             sách</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="{{route('admin.payment-methods.create')}}" class="nav-link" data-key="t-form-select"> Thêm </a>
+                                        <a href="{{route('admin.payment-methods.create')}}" class="nav-link"
+                                            data-key="t-form-select"> Thêm </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="{{route('admin.payment-methods.history')}}" class="nav-link" data-key="t-form-select"> Lịch sử thanh toán </a>
+                                        <a href="{{route('admin.payment-methods.history')}}" class="nav-link"
+                                            data-key="t-form-select"> Lịch sử thanh toán </a>
                                     </li>
                                 </ul>
                             </div>
@@ -880,7 +885,11 @@
         <!-- ============================================================== -->
         <div class="main-content">
             <div class="page-content">
-                @yield('content')
+                @hasSection('content')
+                    @yield('content')
+                @else
+                    {{ $slot }}
+                @endif
             </div>
             <!-- End Page-content -->
 
@@ -1693,6 +1702,8 @@
     </script>
 
     @yield('scripts')
+    @livewireScripts
+    @stack('scripts')
 </body>
 
 </html>
