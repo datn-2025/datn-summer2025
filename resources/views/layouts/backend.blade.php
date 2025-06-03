@@ -36,6 +36,7 @@
 
     <!--Swiper slider css-->
     <link href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" rel="stylesheet" type="text/css" />
+    <script src="//unpkg.com/alpinejs" defer></script>
 
     <style>
         .collapse.show+a .toggle-icon,
@@ -56,7 +57,7 @@
             placeholder: 'Nhập mô tả chi tiết...'
         });
     </script>
-
+    @livewireStyles
 </head>
 
 <body>
@@ -651,7 +652,7 @@
                     </span>
                 </a>
                 <!-- Light Logo-->
-                <a href="index.html" class="logo logo-light">
+                <a href="{{route('admin.dashboard')}}" class="logo logo-light">
                     <span class="logo-sm">
                         <img src="{{ asset('assets/images/logo-sm.png') }}" alt="" height="22">
                     </span>
@@ -673,7 +674,7 @@
                     <ul class="navbar-nav" id="navbar-nav">
                         <li class="menu-title"><span data-key="t-menu">Menu</span></li>
                         <li class="nav-item">
-                            <a class="nav-link menu-link" href="#sidebarDashboards">
+                            <a class="nav-link menu-link" href="{{route('admin.dashboard')}}">
                                 <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Báo cáo tổng
                                     quan</span>
                             </a>
@@ -748,7 +749,8 @@
                                     </li>
 
                                     <li class="nav-item">
-                                        <a href="{{route('admin.categories.brands.brand')}}" class="nav-link" data-key="t-chat"> Thương hiệu </a>
+                                        <a href="{{route('admin.categories.brands.brand')}}" class="nav-link"
+                                            data-key="t-chat"> Thương hiệu </a>
                                     </li>
 
                                 </ul>
@@ -793,7 +795,7 @@
                                             Danh sách liên hệ
                                         </a>
                                     </li>
-                                   
+
                                 </ul>
                             </div>
                         </li>
@@ -828,14 +830,17 @@
                             <div class="collapse menu-dropdown" id="sidebarForms">
                                 <ul class="nav nav-sm flex-column">
                                     <li class="nav-item">
-                                        <a href="{{route('admin.payment-methods.index')}}" class="nav-link" data-key="t-basic-elements">Danh
+                                        <a href="{{route('admin.payment-methods.index')}}" class="nav-link"
+                                            data-key="t-basic-elements">Danh
                                             sách</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="{{route('admin.payment-methods.create')}}" class="nav-link" data-key="t-form-select"> Thêm </a>
+                                        <a href="{{route('admin.payment-methods.create')}}" class="nav-link"
+                                            data-key="t-form-select"> Thêm </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="{{route('admin.payment-methods.history')}}" class="nav-link" data-key="t-form-select"> Lịch sử thanh toán </a>
+                                        <a href="{{route('admin.payment-methods.history')}}" class="nav-link"
+                                            data-key="t-form-select"> Lịch sử thanh toán </a>
                                     </li>
                                 </ul>
                             </div>
@@ -856,7 +861,11 @@
         <!-- ============================================================== -->
         <div class="main-content">
             <div class="page-content">
-                @yield('content')
+                @hasSection('content')
+                    @yield('content')
+                @else
+                    {{ $slot }}
+                @endif
             </div>
             <!-- End Page-content -->
 
@@ -1668,6 +1677,8 @@
     </script>
 
     @yield('scripts')
+    @livewireScripts
+    @stack('scripts')
 </body>
 
 </html>
