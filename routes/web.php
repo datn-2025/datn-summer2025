@@ -27,6 +27,7 @@ use App\Http\Controllers\Client\UserClientController;
 use App\Http\Controllers\Client\ClientReviewController;
 use App\Http\Controllers\Client\ClientOrderController;
 use App\Http\Controllers\cart\CartController;
+use App\Livewire\RevenueReport;
 
 // Route QR code
 Route::get('storage/private/{filename}', function ($filename) {
@@ -82,6 +83,7 @@ Route::post('/forgot-password', [LoginController::class, 'sendResetLinkEmail'])-
 Route::get('/reset-password/{token}/{email}', [LoginController::class, 'showResetPasswordForm'])->name('password.reset');
 Route::post('/reset-password', [LoginController::class, 'handleResetPassword'])->name('password.update');
 
+
 //------------------------------------------------------
 // Ai fix đi nhó
 Route::prefix('account')->name('account.')->group(function () {
@@ -104,19 +106,10 @@ Route::middleware('auth')->prefix('account')->name('account.')->group(function (
     // Profile management
     Route::get('/profile', [LoginController::class, 'showUser'])->name('profile');
     Route::put('/profile/update', [LoginController::class, 'updateProfile'])->name('profile.update');
-
     
     // Password change
     Route::get('/password/change', [LoginController::class, 'showChangePasswordForm'])->name('changePassword');
     Route::post('/password/change', [LoginController::class, 'changePassword'])->name('password.update');
-    
-    // Orders management
-    Route::prefix('orders')->name('orders.')->group(function () {
-        Route::get('/', [ClientOrderController::class, 'index'])->name('index');
-        Route::get('/{id}', [ClientOrderController::class, 'show'])->name('show');
-        Route::put('/{id}', [ClientOrderController::class, 'update'])->name('update');
-        Route::delete('/{id}', [ClientOrderController::class, 'destroy'])->name('destroy');
-    });
     
     // Address management
     Route::get('/addresses', [\App\Http\Controllers\AddressController::class, 'index'])->name('addresses');
@@ -125,20 +118,31 @@ Route::middleware('auth')->prefix('account')->name('account.')->group(function (
     Route::put('/addresses/{id}', [\App\Http\Controllers\AddressController::class, 'update'])->name('addresses.update');
     Route::delete('/addresses/{id}', [\App\Http\Controllers\AddressController::class, 'destroy'])->name('addresses.destroy');
     Route::post('/addresses/{id}/set-default', [\App\Http\Controllers\AddressController::class, 'setDefault'])->name('addresses.setDefault');
-
-    // User purchase and review routes
-    Route::get('/purchase', [UserClientController::class, 'index'])->name('purchase');
-    Route::post('/review', [UserClientController::class, 'storeReview'])->name('review.store');
-
-    Route::prefix('reviews')->name('reviews.')->group(function () {
-        Route::put('/{id}', [ClientReviewController::class, 'update'])->name('update');
-        Route::delete('/{id}', [ClientReviewController::class, 'destroy'])->name('destroy');
-    });
-});
+// lỗi nè
+    return redirect()->route('admin.orders.show', $order->id)->with('success', 'QR Code generated successfully!');
+});   
+// Route đăng nhập chỉnh ở đây nha, sửa thì sửa vào đây, không được xóa có gì liên hệ Tuyết
 Route::middleware('auth')->group(function () {
     // Đăng xuất
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
+    Route::prefix('account')->name('account.')->group(function () {
+        Route::get('/', [LoginController::class, 'index'])->name('index');
+        Route::get('/purchase', [UserClientController::class, 'index'])->name('purchase');
+        Route::post('/review', [UserClientController::class, 'storeReview'])->name('review.store');
+
+        Route::prefix('orders')->name('orders.')->group(function () {
+            Route::get('/', [ClientOrderController::class, 'index'])->name('index');
+            Route::get('/{id}', [ClientOrderController::class, 'show'])->name('show');
+            Route::put('/{id}', [ClientOrderController::class, 'update'])->name('update');
+            Route::delete('/{id}', [ClientOrderController::class, 'destroy'])->name('destroy');
+        });
+
+        Route::prefix('reviews')->name('reviews.')->group(function () {
+            Route::put('/{id}', [ClientReviewController::class, 'update'])->name('update');
+            Route::delete('/{id}', [ClientReviewController::class, 'destroy'])->name('destroy');
+        });
+    });
     // Đơn hàng checkout và store
     Route::prefix('orders')->name('orders.')->group(function () {
         Route::get('/', [\App\Http\Controllers\OrderController::class, 'index'])->name('index');
@@ -158,7 +162,13 @@ Route::prefix('orders')->name('orders.')->group(function () {
     Route::post('/apply-voucher', [\App\Http\Controllers\OrderController::class, 'applyVoucher'])->name('apply-voucher');
 });
 
+Route::prefix('admin')->name('admin.')->group(function () {
+
+    Route::get('/revenue-report', RevenueReport::class)->name('revenue-report');
+
+});
 //---------------------------------------------------
+
 // Route đăng nhập admin (chỉ cho khách)
 Route::middleware('guest.admin')->group(function () {
     Route::get('/admin/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
