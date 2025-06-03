@@ -19,6 +19,7 @@ use App\Http\Controllers\Contact\ContactController;
 use App\Http\Controllers\Article\NewsController;
 use App\Http\Controllers\Admin\NewsArticleController;
 use App\Http\Controllers\Admin\PaymentMethodController;
+use App\Livewire\RevenueReport;
 
 
 // Route public cho books (categoryId optional)
@@ -48,7 +49,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/', function () {
         Toastr::info('Chào mừng bạn đến với trang quản trị!', 'Thông báo');
         return view('admin.dashboard');
-    });
+    })->name('dashboard');
+
+    Route::get('/revenue-report', RevenueReport::class)->name('revenue-report');
+
 
 
     Route::prefix('books')->name('books.')->group(function () {
