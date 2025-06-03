@@ -11,51 +11,41 @@ document.addEventListener('DOMContentLoaded', function () {
     const discountText = document.getElementById('discountText');
     const discountPercent = document.getElementById('discountPercent');
 
+    const quantityGroup = quantityInput?.closest('.mt-4.flex');
+    const attributeGroups = document.querySelectorAll('[id^="attribute_"]');
+
     function updatePriceAndStock() {
-        let basePrice = parseFloat(priceDisplay.dataset.basePrice) || 0;
-        let stock = parseInt(productQuantityDisplay.textContent) || 0;
-
-        // Nếu có chọn định dạng
         const selectedOption = formatSelect?.selectedOptions?.[0];
-        if (selectedOption && selectedOption.value) {
-            basePrice = parseFloat(selectedOption.getAttribute('data-price')) || 0;
-            stock = parseInt(selectedOption.getAttribute('data-stock')) || 0;
-        }
+        let basePrice = parseInt(selectedOption?.getAttribute('data-price')) || 0;
+        let discount = parseFloat(selectedOption?.getAttribute('data-discount')) || 0;
+        let stock = parseInt(selectedOption?.getAttribute('data-stock')) || 0;
+        let isEbook = selectedOption?.textContent?.toLowerCase().includes('ebook');
 
-        // Tính thêm giá từ thuộc tính (nếu có)
-        const attributeSelects = document.querySelectorAll('select[id^="attribute_"]');
-        attributeSelects.forEach(select => {
-            const option = select.selectedOptions?.[0];
-            if (option) {
-                const extra = parseFloat(option.getAttribute('data-price')) || 0;
-                basePrice += extra;
-            }
+        // Cộng thêm giá từ thuộc tính (ép số nguyên tuyệt đối)
+        document.querySelectorAll('select[id^="attribute_"]').forEach(select => {
+            const extra = parseInt(select.selectedOptions?.[0]?.getAttribute('data-price')) || 0;
+            basePrice += extra;
         });
 
-        // Tính giảm giá
+        // Tính final price chính xác
         let finalPrice = basePrice;
-        let discount = 0;
-        if (selectedOption) {
-            discount = parseFloat(selectedOption.getAttribute('data-discount')) || 0;
-        }
-        
         if (discount > 0) {
-            finalPrice = basePrice - (basePrice * (discount / 100));
+            finalPrice = Math.round(basePrice - (basePrice * (discount / 100)));
         }
-   
-        // Cập nhật giao diện giá
+
+        // Hiển thị giá
+        priceDisplay.textContent = `${Math.round(finalPrice).toLocaleString('vi-VN')}₫`;
+        priceDisplay.dataset.basePrice = basePrice;
+
         if (originalPriceElement) {
             if (discount > 0) {
                 originalPriceElement.style.display = 'inline';
-                originalPriceElement.textContent = `${basePrice.toLocaleString('vi-VN')}₫`;
+                originalPriceElement.textContent = `${Math.round(basePrice).toLocaleString('vi-VN')}₫`;
             } else {
                 originalPriceElement.style.display = 'none';
             }
         }
 
-        priceDisplay.textContent = `${finalPrice.toLocaleString('vi-VN')}₫`;
-        
-        // Cập nhật % giảm giá
         if (discountText && discountPercent) {
             if (discount > 0) {
                 discountText.style.display = 'inline';
@@ -65,26 +55,53 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
-        // Cập nhật tồn kho
-        stockDisplay.textContent = stock > 0 ? 'Còn hàng' : 'Hết hàng';
-        productQuantityDisplay.textContent = stock;
+        // Ebook: ẩn số lượng và thuộc tính không phải "ngôn ngữ"
+        if (isEbook) {
+            if (quantityGroup) quantityGroup.style.display = 'none';
+            quantityInput.value = 1;
+            quantityInput.disabled = true;
 
-        // Cập nhật số lượng tối đa
-        quantityInput.max = stock;
-        if (parseInt(quantityInput.value) > stock) {
-            quantityInput.value = stock > 0 ? 1 : 0;
+            attributeGroups.forEach(select => {
+                const label = document.querySelector(`label[for="${select.id}"]`);
+                const isLanguage = label?.textContent.toLowerCase().includes('ngôn ngữ');
+                select.closest('.col-span-1').style.display = isLanguage ? 'block' : 'none';
+            });
+
+            productQuantityDisplay.textContent = 'Không giới hạn';
+            stockDisplay.textContent = 'Có thể mua';
+            stockDisplay.className = 'font-bold px-3 py-1.5 rounded text-white bg-blue-500';
+            addToCartBtn.disabled = false;
+            addToCartBtn.classList.remove('bg-gray-300');
+            addToCartBtn.classList.add('bg-black');
+            incrementBtn.disabled = true;
+            decrementBtn.disabled = true;
+        } else {
+            if (quantityGroup) quantityGroup.style.display = 'flex';
+            quantityInput.disabled = false;
+
+            attributeGroups.forEach(select => {
+                select.closest('.col-span-1').style.display = 'block';
+            });
+
+            productQuantityDisplay.textContent = stock > 0 ? stock : 0;
+            quantityInput.max = stock;
+            if (parseInt(quantityInput.value) > stock) {
+                quantityInput.value = stock > 0 ? 1 : 0;
+            }
+
+            const outOfStock = stock <= 0;
+            addToCartBtn.disabled = outOfStock;
+            addToCartBtn.classList.toggle('bg-gray-300', outOfStock);
+            addToCartBtn.classList.toggle('bg-black', !outOfStock);
+            incrementBtn.disabled = outOfStock;
+            decrementBtn.disabled = outOfStock;
+
+            stockDisplay.textContent = outOfStock ? 'Hết hàng' : 'Còn hàng';
+            stockDisplay.className = `font-bold px-3 py-1.5 rounded text-white ${outOfStock ? 'bg-gray-900' : 'bg-green-500'}`;
         }
-
-        // Bật/tắt nút mua
-        const outOfStock = stock <= 0;
-        addToCartBtn.disabled = outOfStock;
-        addToCartBtn.classList.toggle('bg-gray-300', outOfStock);
-        addToCartBtn.classList.toggle('bg-black', !outOfStock);
-        incrementBtn.disabled = outOfStock;
-        decrementBtn.disabled = outOfStock;
     }
 
-    // Nút tăng giảm
+    // Nút tăng/giảm số lượng
     incrementBtn?.addEventListener('click', () => {
         const max = parseInt(quantityInput.max);
         let val = parseInt(quantityInput.value) || 1;
@@ -96,14 +113,11 @@ document.addEventListener('DOMContentLoaded', function () {
         if (val > 1) quantityInput.value = val - 1;
     });
 
-    // Xử lý khi người dùng nhập trực tiếp
     quantityInput?.addEventListener('input', () => {
         let val = parseInt(quantityInput.value) || 0;
         const max = parseInt(quantityInput.max);
-        
         if (val < 1) val = 1;
         if (val > max) val = max;
-        
         quantityInput.value = val;
     });
 
@@ -119,6 +133,6 @@ document.addEventListener('DOMContentLoaded', function () {
         select.addEventListener('change', updatePriceAndStock);
     });
 
-    // Load lần đầu
+    // Khởi tạo ban đầu
     updatePriceAndStock();
 });
