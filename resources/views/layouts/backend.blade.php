@@ -1,35 +1,53 @@
-<!DOCTYPE html>
-<html lang="vi" data-layout="vertical" data-topbar="light" data-sidebar="dark" data-sidebar-size="lg"
-    data-sidebar-image="none">
+<!doctype html>
+<html lang="en" data-layout="vertical" data-topbar="light" data-sidebar="dark" data-sidebar-size="lg"
+    data-sidebar-image="none" data-preloader="disable">
 
 <head>
     <meta charset="utf-8" />
+    <title>BookBee Admin - @yield('title')</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta content="BookBee Admin Dashboard" name="description" />
     <meta content="Your Team" name="author" />
-    <title>BookBee Admin - @yield('title')</title>
 
-    <!-- App favicon -->
+    <!-- Favicon -->
     <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico') }}">
 
-    <!-- jsvectormap css -->
-    <link href="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/css/jsvectormap.min.css" rel="stylesheet"
-        type="text/css" />
+    <!-- ========== CSS ========== -->
 
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <!-- Local Vendor CSS -->
+    <link rel="stylesheet" href="{{ asset('assets/libs/jsvectormap/css/jsvectormap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/libs/swiper/swiper-bundle.min.css') }}">
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Core CSS -->
+    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/icons.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/app.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/custom.min.css') }}">
+
+    <!-- CDN Icon Fonts -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.3.67/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css">
+    <link rel="stylesheet" href="https://cdn.lineawesome.com/1.3.0/line-awesome/css/line-awesome.min.css">
 
     <!-- Toastr CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
+    <!-- ========== JS ========== -->
+
+    <!-- Layout config -->
+    <script src="{{ asset('assets/js/layout.js') }}"></script>
+
+    <!-- jQuery & Bootstrap (CDN) -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- Toastr JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
+    <!-- Toastr Notification -->
     <script>
-        // Cấu hình toastr
         toastr.options = {
             "closeButton": true,
             "progressBar": true,
@@ -45,49 +63,16 @@
             "hideMethod": "fadeOut"
         };
 
-        // Hiển thị thông báo từ session
-        @if(session('success'))
+        @if (session('success'))
             toastr.success("{{ session('success') }}");
         @endif
 
-        @if(session('error'))
+        @if (session('error'))
             toastr.error("{{ session('error') }}");
         @endif
     </script>
 
-    <!-- Layout config Js -->
-    <script src="{{ asset('assets/js/layout.js') }}"></script>
-
-    <!-- Bootstrap Css -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        type="text/css" />
-    <!-- Icons Css -->
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@7.3.67/css/materialdesignicons.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
-    <!-- App Css-->
-    <link href="{{ asset('assets/css/app.min.css') }}" rel="stylesheet" type="text/css" />
-    <!-- custom Css-->
-    <link href="{{ asset('assets/css/custom.min.css') }}" rel="stylesheet" type="text/css" />
-
-    {{-- toastr notification --}}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
-
-    <!--Swiper slider css-->
-    <link href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" rel="stylesheet" type="text/css" />
-
-    <!-- Line Awesome Icons -->
-    <link rel="stylesheet" href="https://cdn.lineawesome.com/1.3.0/line-awesome/css/line-awesome.min.css">
-
-    <style>
-        .collapse.show+a .toggle-icon,
-        .nav-link[aria-expanded="true"] .toggle-icon {
-            transform: rotate(180deg);
-            transition: transform 0.3s ease;
-        }
-    </style>
-    {{-- TinyMCE --}}
+    <!-- TinyMCE -->
     <script src="https://cdn.jsdelivr.net/npm/tinymce@6/tinymce.min.js"></script>
     <script>
         tinymce.init({
@@ -100,6 +85,14 @@
         });
     </script>
 
+    <!-- Custom styles -->
+    <style>
+        .collapse.show+a .toggle-icon,
+        .nav-link[aria-expanded="true"] .toggle-icon {
+            transform: rotate(180deg);
+            transition: transform 0.3s ease;
+        }
+    </style>
 </head>
 
 <body>
@@ -113,16 +106,17 @@
                     <div class="d-flex">
                         <!-- LOGO -->
                         <div class="navbar-brand-box horizontal-logo">
-                            <a href="index.html" class="logo logo-dark">
+                            <a href="" class="logo logo-dark">
                                 <span class="logo-sm">
                                     <img src="{{ asset('assets/images/logo-sm.png') }}" alt="" height="22">
                                 </span>
                                 <span class="logo-lg">
-                                    <img src="{{ asset('assets/images/logo-dark.png') }}" alt="" height="17">
+                                    <img src="{{ asset('assets/images/logo-dark.png') }}" alt=""
+                                        height="17">
                                 </span>
                             </a>
 
-                            <a href="index.html" class="logo logo-light">
+                            <a href="" class="logo logo-light">
                                 <span class="logo-sm">
                                     <img src="{{ asset('assets/images/logo-sm.png') }}" alt="" height="22">
                                 </span>
@@ -143,99 +137,6 @@
                             </span>
                         </button>
 
-                        <!-- App Search-->
-                        <form class="app-search d-none d-md-block">
-                            <div class="position-relative">
-                                <input type="text" class="form-control" placeholder="Search..." autocomplete="off"
-                                    id="search-options" value="">
-                                <span class="mdi mdi-magnify search-widget-icon"></span>
-                                <span class="mdi mdi-close-circle search-widget-icon search-widget-icon-close d-none"
-                                    id="search-close-options"></span>
-                            </div>
-                            <div class="dropdown-menu dropdown-menu-lg" id="search-dropdown">
-                                <div data-simplebar style="max-height: 320px;">
-                                    <!-- item-->
-                                    <div class="dropdown-header">
-                                        <h6 class="text-overflow text-muted mb-0 text-uppercase">Recent Searches</h6>
-                                    </div>
-
-                                    <div class="dropdown-item bg-transparent text-wrap">
-                                        <a href="index.html" class="btn btn-soft-secondary btn-sm rounded-pill">how to
-                                            setup <i class="mdi mdi-magnify ms-1"></i></a>
-                                        <a href="index.html" class="btn btn-soft-secondary btn-sm rounded-pill">buttons
-                                            <i class="mdi mdi-magnify ms-1"></i></a>
-                                    </div>
-                                    <!-- item-->
-                                    <div class="dropdown-header mt-2">
-                                        <h6 class="text-overflow text-muted mb-1 text-uppercase">Pages</h6>
-                                    </div>
-
-                                    <!-- item-->
-                                    <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                        <i class="ri-bubble-chart-line align-middle fs-18 text-muted me-2"></i>
-                                        <span>Analytics Dashboard</span>
-                                    </a>
-
-                                    <!-- item-->
-                                    <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                        <i class="ri-lifebuoy-line align-middle fs-18 text-muted me-2"></i>
-                                        <span>Help Center</span>
-                                    </a>
-
-                                    <!-- item-->
-                                    <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                        <i class="ri-user-settings-line align-middle fs-18 text-muted me-2"></i>
-                                        <span>My account settings</span>
-                                    </a>
-
-                                    <!-- item-->
-                                    <div class="dropdown-header mt-2">
-                                        <h6 class="text-overflow text-muted mb-2 text-uppercase">Members</h6>
-                                    </div>
-
-                                    <div class="notification-list">
-                                        <!-- item -->
-                                        <a href="javascript:void(0);" class="dropdown-item notify-item py-2">
-                                            <div class="d-flex">
-                                                <img src="{{ asset('assets/images/users/avatar-2.jpg') }}"
-                                                    class="me-3 rounded-circle avatar-xs" alt="user-pic">
-                                                <div class="flex-grow-1">
-                                                    <h6 class="m-0">Angela Bernier</h6>
-                                                    <span class="fs-11 mb-0 text-muted">Manager</span>
-                                                </div>
-                                            </div>
-                                        </a>
-                                        <!-- item -->
-                                        <a href="javascript:void(0);" class="dropdown-item notify-item py-2">
-                                            <div class="d-flex">
-                                                <img src="{{ asset('assets/images/users/avatar-3.jpg') }}"
-                                                    class="me-3 rounded-circle avatar-xs" alt="user-pic">
-                                                <div class="flex-grow-1">
-                                                    <h6 class="m-0">David Grasso</h6>
-                                                    <span class="fs-11 mb-0 text-muted">Web Designer</span>
-                                                </div>
-                                            </div>
-                                        </a>
-                                        <!-- item -->
-                                        <a href="javascript:void(0);" class="dropdown-item notify-item py-2">
-                                            <div class="d-flex">
-                                                <img src="{{ asset('assets/images/users/avatar-5.jpg') }}"
-                                                    class="me-3 rounded-circle avatar-xs" alt="user-pic">
-                                                <div class="flex-grow-1">
-                                                    <h6 class="m-0">Mike Bunch</h6>
-                                                    <span class="fs-11 mb-0 text-muted">React Developer</span>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-
-                                <div class="text-center pt-3 pb-1">
-                                    <a href="pages-search-results.html" class="btn btn-primary btn-sm">View All
-                                        Results <i class="ri-arrow-right-line ms-1"></i></a>
-                                </div>
-                            </div>
-                        </form>
                     </div>
 
                     <div class="d-flex align-items-center">
@@ -610,19 +511,20 @@
                             <button type="button" class="btn" id="page-header-user-dropdown"
                                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="d-flex align-items-center">
-                                    <img class="rounded-circle header-profile-user"
-                                        src="{{ asset('assets/images/users/avatar-1.jpg') }}" alt="Header Avatar">
+                                    <img class="rounded-circle header-profile-user" src="{{ Auth::user()->avatar }}"
+                                        alt="Header Avatar">
                                     <span class="text-start ms-xl-2">
-                                        <span class="d-none d-xl-inline-block ms-1 fw-medium user-name-text">Anna
-                                            Adame</span>
-                                        <span class="d-none d-xl-block ms-1 fs-12 user-name-sub-text">Founder</span>
+                                        <span
+                                            class="d-none d-xl-block ms-1 fs-12 user-name-text">{{ Auth::user()->name }}</span>
+                                        <span
+                                            class="d-none d-xl-inline-block ms-1 fw-medium user-name-sub-text">{{ Auth::user()->email }}</span>
                                     </span>
                                 </span>
                             </button>
                             <div class="dropdown-menu dropdown-menu-end">
                                 <!-- item-->
                                 <h6 class="dropdown-header">Welcome Anna!</h6>
-                                <a class="dropdown-item" href="pages-profile.html"><i
+                                <a class="dropdown-item" href=""><i
                                         class="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i> <span
                                         class="align-middle">Profile</span></a>
                                 <a class="dropdown-item" href="apps-chat.html"><i
@@ -635,7 +537,7 @@
                                         class="mdi mdi-lifebuoy text-muted fs-16 align-middle me-1"></i> <span
                                         class="align-middle">Help</span></a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="pages-profile.html"><i
+                                <a class="dropdown-item" href=""><i
                                         class="mdi mdi-wallet text-muted fs-16 align-middle me-1"></i> <span
                                         class="align-middle">Balance : <b>$5971.67</b></span></a>
                                 <a class="dropdown-item" href="pages-profile-settings.html"><span
@@ -692,7 +594,7 @@
             <!-- LOGO -->
             <div class="navbar-brand-box">
                 <!-- Dark Logo-->
-                <a href="index.html" class="logo logo-dark">
+                <a href="" class="logo logo-dark">
                     <span class="logo-sm">
                         <img src="{{ asset('assets/images/logo-sm.png') }}" alt="" height="22">
                     </span>
@@ -701,7 +603,7 @@
                     </span>
                 </a>
                 <!-- Light Logo-->
-                <a href="index.html" class="logo logo-light">
+                <a href="" class="logo logo-light">
                     <span class="logo-sm">
                         <img src="{{ asset('assets/images/logo-sm.png') }}" alt="" height="22">
                     </span>
@@ -723,8 +625,9 @@
                     <ul class="navbar-nav" id="navbar-nav">
                         <li class="menu-title"><span data-key="t-menu">Menu</span></li>
                         <li class="nav-item">
-                            <a class="nav-link menu-link" href="{{ route('admin.dashboard.index') }}">
-                                <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Báo cáo tổng quan</span>
+                            <a class="nav-link menu-link" href="{{ route('admin.dashboard') }}">
+                                <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Báo cáo tổng
+                                    quan</span>
                             </a>
                         </li> <!-- end Dashboard Menu -->
 
@@ -738,10 +641,9 @@
                             <div class="collapse menu-dropdown" id="sidebarAuth">
                                 <ul class="nav nav-sm flex-column">
                                     <li class="nav-item">
-
                                         <a href="{{ route('admin.users.index') }}" class="nav-link"
-                                            data-key="t-signin"> Danh sách
-                                        </a>
+                                            data-key="t-signin">
+                                            Danh sách
                                     </li>
                                 </ul>
                             </div>
@@ -793,7 +695,7 @@
                             <div class="collapse menu-dropdown" id="sidebarCate">
                                 <ul class="nav nav-sm flex-column">
                                     <li class="nav-item">
-                                        <a href="{{route('admin.categories.index')}}" class="nav-link"
+                                        <a href="{{ route('admin.categories.index') }}" class="nav-link"
                                             data-key="t-chat"> Loại sách </a>
                                     </li>
                                     <li class="nav-item">
@@ -802,7 +704,8 @@
                                     </li>
 
                                     <li class="nav-item">
-                                        <a href="{{route('admin.categories.brands.brand')}}" class="nav-link" data-key="t-chat"> Thương hiệu </a>
+                                        <a href="{{ route('admin.categories.brands.brand') }}" class="nav-link"
+                                            data-key="t-chat"> Thương hiệu </a>
                                     </li>
                                 </ul>
                             </div>
@@ -815,8 +718,8 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link menu-link" href="#sidebarNews" data-bs-toggle="collapse" role="button"
-                                aria-expanded="false" aria-controls="sidebarNews">
+                            <a class="nav-link menu-link" href="#sidebarNews" data-bs-toggle="collapse"
+                                role="button" aria-expanded="false" aria-controls="sidebarNews">
                                 <i class="ri-newspaper-line"></i> <span data-key="t-news">Quản lý tin tức</span>
                             </a>
                             <div class="collapse menu-dropdown" id="sidebarNews">
@@ -850,15 +753,11 @@
                                 </ul>
                             </div>
                         </li>
-
-
                         <li class="nav-item">
                             <a class="nav-link menu-link" href="#sidebarAdvanceUI" data-bs-toggle="collapse"
                                 role="button" aria-expanded="false" aria-controls="sidebarAdvanceUI">
-
                                 <i class="ri-stack-line"></i> <span data-key="t-advance-ui">Quản lý khuyến mãi toàn
-                                    nền
-                                    tảng</span>
+                                    nền tảng</span>
                             </a>
                             <div class="collapse menu-dropdown" id="sidebarAdvanceUI">
                                 <ul class="nav nav-sm flex-column">
@@ -885,11 +784,13 @@
                             <div class="collapse menu-dropdown" id="sidebarForms">
                                 <ul class="nav nav-sm flex-column">
                                     <li class="nav-item">
-                                        <a href="{{route('admin.payment-methods.index')}}" class="nav-link" data-key="t-basic-elements">Danh
+                                        <a href="{{ route('admin.payment-methods.index') }}" class="nav-link"
+                                            data-key="t-basic-elements">Danh
                                             sách</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="{{route('admin.payment-methods.create')}}" class="nav-link" data-key="t-form-select"> Thêm </a>
+                                        <a href="{{ route('admin.payment-methods.create') }}" class="nav-link"
+                                            data-key="t-form-select"> Thêm </a>
                                     </li>
                                 </ul>
                             </div>
@@ -921,7 +822,7 @@
                         <div class="col-sm-6">
                             <script>
                                 document.write(new Date().getFullYear())
-                            </script> © Velzon.
+                            </script> © BookBee.
                         </div>
                         <div class="col-sm-6">
                             <div class="text-sm-end d-none d-sm-block">
@@ -1647,56 +1548,39 @@
     </div>
 
     {{-- định dang sách from thêm sách --}}
-    <!-- JAVASCRIPT -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/simplebar@6.2.5/dist/simplebar.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.29.1/dist/feather.min.js"></script>
+    <!-- Core JS -->
+    <script src="{{ asset('assets/libs/bootstrap/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/simplebar/simplebar.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/node-waves/waves.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/feather-icons/feather.min.js') }}"></script>
+
+    <!-- Plugin JS -->
+    <script src="{{ asset('assets/libs/apexcharts/apexcharts.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/jsvectormap/jsvectormap.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/jsvectormap/maps/world-merc.js') }}"></script>
+    <script src="{{ asset('assets/libs/swiper/swiper-bundle.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/prism/prism.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/list/list.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/list/list.pagination.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/toastr/toastr.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/sweetalert2/sweetalert2.all.min.js') }}"></script>
+
+    <!-- Custom JS -->
     <script src="{{ asset('assets/js/pages/plugins/lord-icon-2.1.0.js') }}"></script>
     <script src="{{ asset('assets/js/plugins.js') }}"></script>
-
-    <!-- apexcharts -->
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.45.1/dist/apexcharts.min.js"></script>
-
-    <!-- Vector map-->
-    <script src="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/js/jsvectormap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/maps/world-merc.js"></script>
-
-    <!--Swiper slider js-->
-    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
-
-    <!-- Dashboard init -->
     <script src="{{ asset('assets/js/pages/dashboard-ecommerce.init.js') }}"></script>
-
-    <!-- App js -->
     <script src="{{ asset('assets/js/app.js') }}"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/2.3.1/list.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/list.pagination.js/0.1.1/list.pagination.min.js"></script>
-
-    <!-- listjs init -->
-
-    <!-- Sweet Alerts js -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.5/dist/sweetalert2.all.min.js"></script>
-
-    {{-- toastr notification --}}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <!-- Toastr -->
     {!! Toastr::message() !!}
     <script>
-        // Nếu trang được tải từ bộ nhớ cache (back/forward)
         if (performance.getEntriesByType('navigation')[0]?.type === 'back_forward') {
-            // Xóa Toastr message hiện lại từ session cũ
-            const toastrContainer = document.querySelector('#toast-container');
-            if (toastrContainer) {
-                toastrContainer.remove();
-            }
+            document.querySelector('#toast-container')?.remove();
         }
     </script>
 
-
-    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+    <!-- Swiper Init -->
     <script>
         const thumbnailSlider = new Swiper(".thumbnail-slider", {
             spaceBetween: 10,
@@ -1704,9 +1588,15 @@
             freeMode: true,
             watchSlidesProgress: true,
             breakpoints: {
-                640: { slidesPerView: 4 },
-                768: { slidesPerView: 5 },
-                1024: { slidesPerView: 6 },
+                640: {
+                    slidesPerView: 4
+                },
+                768: {
+                    slidesPerView: 5
+                },
+                1024: {
+                    slidesPerView: 6
+                },
             },
         });
 
@@ -1717,7 +1607,7 @@
                 prevEl: ".swiper-button-prev"
             },
             thumbs: {
-                swiper: thumbnailSlider,
+                swiper: thumbnailSlider
             },
         });
     </script>
