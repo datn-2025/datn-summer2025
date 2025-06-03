@@ -299,7 +299,7 @@
                     <div class="form-group">
                         <input type="password" name="password" class="form-control" placeholder="Mật khẩu" required />
                     </div>
-                    <a href="{{ route('password.request') }}" class="forgot-password">Quên mật khẩu?</a>
+                    <a href="{{ route('account.password.request') }}" class="forgot-password">Quên mật khẩu?</a>
                     <button type="submit" class="btn btn-primary">ĐĂNG NHẬP</button>
                 </form>
             </div>
