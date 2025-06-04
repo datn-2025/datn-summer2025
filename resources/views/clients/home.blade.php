@@ -84,8 +84,8 @@
                                         </div>
                                     </div>
                                     <div class="p-4 flex flex-col justify-between flex-1">
-                                        <p class="text-black font-bold text-[15px]">
-                                            {{number_format($book->price, 0, ',', '.')}}₫
+                                        <p class="text-red-500 font-bold">
+                                            Giá tiền {{ number_format($book->formats->first()->price ?? 0, 0, ',', '.') }}₫
                                         </p>
                                         <h3 class="text-sm font-semibold mt-1">{{$book->title}}</h3>
                                         <p class="text-xs text-gray-500 mt-1">
@@ -274,7 +274,9 @@
                     <div class="p-4 bg-white flex flex-col flex-1 justify-between h-[180px]">
                         <h3 class="text-base font-semibold text-gray-800">{{$book->title}}</h3>
                         <p class="text-sm text-gray-500">{{$book->author?->name ?? 'Không rõ'}}</p>
-                        <p class="text-lg font-bold text-red-600 mt-2">{{number_format($book->price, 0, ',', '.')}}₫ </p>
+                        <p class="text-red-500 font-bold">
+                            Giá tiền {{ number_format($book->formats->first()->price ?? 0, 0, ',', '.') }}₫
+                        </p>
                         <a href="#"
                             class="mt-4 inline-block bg-black text-white px-4 py-2 rounded text-sm hover:bg-gray-800 text-center w-full">
                             Thêm vào giỏ hàng →
