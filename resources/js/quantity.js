@@ -16,31 +16,31 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function updatePriceAndStock() {
         const selectedOption = formatSelect?.selectedOptions?.[0];
-        let basePrice = parseInt(selectedOption?.getAttribute('data-price')) || 0;
+        let basePrice = parseFloat(selectedOption?.getAttribute('data-price')) || 0;
         let discount = parseFloat(selectedOption?.getAttribute('data-discount')) || 0;
         let stock = parseInt(selectedOption?.getAttribute('data-stock')) || 0;
         let isEbook = selectedOption?.textContent?.toLowerCase().includes('ebook');
 
-        // Cộng thêm giá từ thuộc tính (ép số nguyên tuyệt đối)
+        let totalExtra = 0;
         document.querySelectorAll('select[id^="attribute_"]').forEach(select => {
-            const extra = parseInt(select.selectedOptions?.[0]?.getAttribute('data-price')) || 0;
-            basePrice += extra;
+            const extra = parseFloat(select.selectedOptions?.[0]?.getAttribute('data-price')) || 0;
+            totalExtra += extra;
         });
 
-        // Tính final price chính xác
-        let finalPrice = basePrice;
+        const totalBase = basePrice + totalExtra;
+
+        let finalPrice = totalBase;
         if (discount > 0) {
-            finalPrice = Math.round(basePrice - (basePrice * (discount / 100)));
+            finalPrice = totalBase - (totalBase * (discount / 100));
         }
 
-        // Hiển thị giá
-        priceDisplay.textContent = `${Math.round(finalPrice).toLocaleString('vi-VN')}₫`;
-        priceDisplay.dataset.basePrice = basePrice;
+        priceDisplay.textContent = `${finalPrice.toLocaleString('vi-VN', { minimumFractionDigits: 0 })}₫`;
+        priceDisplay.dataset.basePrice = totalBase;
 
         if (originalPriceElement) {
             if (discount > 0) {
                 originalPriceElement.style.display = 'inline';
-                originalPriceElement.textContent = `${Math.round(basePrice).toLocaleString('vi-VN')}₫`;
+                originalPriceElement.textContent = `${totalBase.toLocaleString('vi-VN', { minimumFractionDigits: 0 })}₫`;
             } else {
                 originalPriceElement.style.display = 'none';
             }
@@ -55,7 +55,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
-        // Ebook: ẩn số lượng và thuộc tính không phải "ngôn ngữ"
         if (isEbook) {
             if (quantityGroup) quantityGroup.style.display = 'none';
             quantityInput.value = 1;
@@ -101,7 +100,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Nút tăng/giảm số lượng
     incrementBtn?.addEventListener('click', () => {
         const max = parseInt(quantityInput.max);
         let val = parseInt(quantityInput.value) || 1;
@@ -127,12 +125,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Lắng nghe thay đổi
     formatSelect?.addEventListener('change', updatePriceAndStock);
     document.querySelectorAll('select[id^="attribute_"]').forEach(select => {
         select.addEventListener('change', updatePriceAndStock);
     });
 
-    // Khởi tạo ban đầu
     updatePriceAndStock();
 });
