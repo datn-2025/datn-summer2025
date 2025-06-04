@@ -31,7 +31,9 @@ class User extends Authenticatable
         'status',
         'role_id',
         'reset_token',
-        'avatar'
+        'avatar',
+        'activation_token',
+        'activation_expires'
 
     ];
 

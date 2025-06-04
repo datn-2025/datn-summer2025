@@ -208,7 +208,9 @@
               </div>
 
               {{-- Giá sách --}}
-              <span class="price text-primary fw-bold mb-2 fs-5">${{ number_format($book->min_price ?? 0, 2) }}</span>
+              <span class="price text-primary fw-bold mb-2 fs-5">
+                {{ number_format($book->min_price ?? 0, 0, ',', '.') }} đ
+              </span>
 
               {{-- Nút xem chi tiết và yêu thích --}}
               <div class="card-concern position-absolute start-0 end-0 d-flex gap-2">
@@ -436,24 +438,31 @@
     <ul class="list-unstyled">
       <li>
         <input type="radio" name="price_range" value="1-10" id="price-1-10" {{ request('price_range') == '1-10' ? 'checked' : '' }}>
-        <label for="price-1-10">$1 - $10</label>
+        <label for="price-1-10">0 - 10.000 đ</label>
       </li>
       <li>
         <input type="radio" name="price_range" value="10-50" id="price-10-50" {{ request('price_range') == '10-50' ? 'checked' : '' }}>
-        <label for="price-10-50">$10 - $50</label>
+        <label for="price-10-50">10.000 - 50.000 đ</label>
       </li>
       <li>
         <input type="radio" name="price_range" value="50-100" id="price-50-100" {{ request('price_range') == '50-100' ? 'checked' : '' }}>
-        <label for="price-50-100">$50 - $100</label>
+        <label for="price-50-100">50.000 - 100.000 đ</label>
       </li>
       <li>
         <input type="radio" name="price_range" value="100+" id="price-100+" {{ request('price_range') == '100+' ? 'checked' : '' }}>
-        <label for="price-100+">$100+</label>
+        <label for="price-100+">Trên 100.000 đ</label>
       </li>
     </ul>
     <button type="submit" class="btn btn-primary">Apply</button>
   </form>
 </div>
+
+{{-- Reset Filter Button --}}
+          <div class="mb-4" style="margin-top: 20px;">
+            <a href="{{ url('/books') }}" class="btn btn-outline-secondary w-100">
+              Đặt lại tìm kiếm
+            </a>
+          </div>
 
 
         </div>

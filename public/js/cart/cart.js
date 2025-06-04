@@ -610,44 +610,15 @@ document.addEventListener('DOMContentLoaded', function() {
     // Thêm tất cả từ danh sách yêu thích
     const addWishlistBtn = document.getElementById('add-wishlist-btn');
     if (addWishlistBtn) {
-        addWishlistBtn.addEventListener('click', function() {
-            addWishlistBtn.disabled = true;
-            addWishlistBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Đang thêm...';
-
-            $.ajax({
-                url: '/cart/add-wishlist',
-                method: 'POST',
-                data: {
-                    _token: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                },
-                success: function(response) {
-                    if (response.success) {
-                        toastr.success(response.success);
-                        
-                        // Hiển thị thông tin về sản phẩm bị bỏ qua (nếu có)
-                        if (response.skipped_items && response.skipped_items.length > 0) {
-                            let skippedMsg = 'Một số sản phẩm không thể thêm:\n';
-                            response.skipped_items.forEach(item => {
-                                skippedMsg += `- ${item.title}: ${item.reason}\n`;
-                            });
-                            toastr.warning(skippedMsg, 'Thông báo', {
-                                timeOut: 5000
-                            });
-                        }
-                        
-                        setTimeout(() => {
-                            window.location.reload();
-                        }, 1500);
-                    }
-                },
-                error: function(xhr) {
-                    const response = xhr.responseJSON;
-                    toastr.error(response?.error || 'Có lỗi xảy ra khi thêm từ danh sách yêu thích');
-                    
-                    addWishlistBtn.disabled = false;
-                    addWishlistBtn.innerHTML = '<i class="fas fa-heart me-2"></i>Thêm từ yêu thích';
-                }
-            });
+        addWishlistBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (addWishlistBtn.classList.contains('loading')) return;
+            const originalHtml = addWishlistBtn.innerHTML;
+            addWishlistBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Đang chuyển...';
+            addWishlistBtn.classList.add('loading'); // KHÔNG thêm 'disabled' để tránh bị chặn click
+            setTimeout(() => {
+                window.location.href = addWishlistBtn.href || '/wishlist';
+            }, 500);
         });
     }
 });

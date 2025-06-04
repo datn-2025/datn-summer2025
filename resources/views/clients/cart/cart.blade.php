@@ -39,9 +39,9 @@
                 <div class="col-md-4">
                     <div class="action-buttons-container">
                         <div class="d-flex gap-2 justify-content-end">
-                            <button class="btn modern-action-btn btn-outline-primary" id="add-wishlist-btn">
+                            <a class="btn modern-action-btn btn-outline-primary" id="add-wishlist-btn" href="{{ route('wishlist.index') }}">
                                 <i class="fas fa-heart me-2"></i>Thêm từ yêu thích
-                            </button>
+                            </a>
                             <button class="btn modern-action-btn btn-outline-danger" id="clear-cart-btn">
                                 <i class="fas fa-trash-alt me-2"></i>Xóa tất cả
                             </button>
@@ -241,7 +241,7 @@
                         </div>
                         
                         <!-- Mã giảm giá -->
-                        <div class="mb-4">
+                        {{-- <div class="mb-4">
                             <div class="voucher-section">
                                 <div class="d-flex align-items-center mb-3">
                                     <div class="voucher-icon-wrapper me-3">
@@ -252,7 +252,6 @@
                                         <small class="text-muted">Nhập mã để nhận ưu đãi</small>
                                     </div>
                                 </div>
-                                
                                 <div class="voucher-input-container position-relative">
                                     @php
                                         $appliedVoucher = session()->get('applied_voucher');
@@ -293,7 +292,7 @@
                                     @endif
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                         
                         <!-- Chi tiết thanh toán -->
                         <div class="payment-breakdown">
@@ -312,7 +311,7 @@
                                 </div>
                             </div>
                             
-                            <div class="breakdown-item">
+                            {{-- <div class="breakdown-item">
                                 <div class="d-flex justify-content-between align-items-center py-2">
                                     <span class="text-muted">
                                         <i class="fas fa-percentage me-2"></i>Giảm giá:
@@ -321,7 +320,7 @@
                                         {{ $hasVoucher ? '- ' . number_format($appliedVoucher['discount_amount']) . 'đ' : '0đ' }}
                                     </span>
                                 </div>
-                            </div>
+                            </div> --}}
                             
                             <div class="breakdown-divider my-3"></div>
                             
@@ -331,7 +330,7 @@
                                         <i class="fas fa-coins me-2 text-warning"></i>Tổng cộng:
                                     </span>
                                     <span class="fs-4 fw-bold text-success" id="total-amount">
-                                        {{ number_format($hasVoucher ? $total - $appliedVoucher['discount_amount'] : $total) }}đ
+                                        {{ number_format($total) }}đ
                                     </span>
                                 </div>
                             </div>
@@ -366,14 +365,13 @@
             </div>
             <h2 class="empty-cart-title">Giỏ hàng của bạn đang trống</h2>
             <p class="empty-cart-text">Khám phá hàng ngàn cuốn sách hay và thêm chúng vào giỏ hàng của bạn!</p>
-            
             <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center align-items-center">
                 <a href="{{ route('books.index') }}" class="shop-now-btn">
                     <i class="fas fa-book-open me-2"></i>Khám phá sách ngay
                 </a>
-                <button class="btn btn-outline-primary" id="add-wishlist-btn" style="border-radius: 12px; padding: 14px 28px; font-weight: 600;">
+                <a href="{{ route('wishlist.index') }}" class="btn btn-outline-primary" style="border-radius: 12px; padding: 14px 28px; font-weight: 600;">
                     <i class="fas fa-heart me-2"></i>Thêm từ yêu thích
-                </button>
+                </a>
             </div>
             
             <!-- Additional suggestions -->
@@ -400,6 +398,7 @@
         </div>
     @endif
 </div>
+@endsection
 
 @push('scripts')
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
