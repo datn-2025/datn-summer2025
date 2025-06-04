@@ -153,7 +153,7 @@ class LoginController extends Controller
         'name.max' => 'Tên đăng nhập tối đa 255 ký tự.',
         'email.required' => 'Vui lòng nhập email.',
         'email.email' => 'Email không đúng định dạng.',
-        'email.unique' => 'Email đã tồn tại.',
+        'email.unique' => 'Email đã tồn tại. Vui lòng đăng ký bằng email khác!',
         'password.required' => 'Vui lòng nhập mật khẩu.',
         'password.min' => 'Mật khẩu tối thiểu 8 ký tự.',
         'password.confirmed' => 'Xác nhận mật khẩu không khớp.',
@@ -194,21 +194,21 @@ class LoginController extends Controller
         return back()->withInput();
     }
 
-    return redirect()->route('account.index');
+    return redirect()->route('login');
 }
 public function activate(Request $request)
 {
     $user = User::find($request->userId);
 
     if (!$user || $user->activation_token !== $request->token || now()->greaterThan($user->activation_expires)) {
-        return redirect()->route('account.index')->with('error', 'Liên kết không hợp lệ hoặc đã hết hạn.');
+        return redirect()->route('login')->with('error', 'Liên kết không hợp lệ hoặc đã hết hạn.');
     }
 
     $user->status = 'Hoạt Động';
     $user->activation_token = null;
     $user->activation_expires = null;
     $user->save();
-    return redirect()->route('account.index')->with('success', 'Tài khoản đã được kích hoạt thành công.');
+    return redirect()->route('login')->with('success', 'Tài khoản đã được kích hoạt thành công.');
 }
 
 
@@ -253,7 +253,7 @@ public function activate(Request $request)
         $user->save();
 
 
-        $resetLink = route('account.password.reset', ['token' => $resetToken , 'email' => $request->email]);
+        $resetLink = route('password.reset', ['token' => $resetToken , 'email' => $request->email]);
 
 
         try {
