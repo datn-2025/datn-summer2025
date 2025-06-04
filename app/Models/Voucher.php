@@ -25,15 +25,13 @@ class Voucher extends Model
     ];
 
     protected $casts = [
-        'valid_from' => 'datetime',
-        'valid_to' => 'datetime',
-        'discount_percent' => 'float',
+        'valid_from' => 'date',
+        'valid_to' => 'date',
+        'discount_percent' => 'decimal:2',
         'max_discount' => 'decimal:2',
         'min_order_value' => 'decimal:2',
-        'valid_from' => 'datetime',
-        'valid_to' => 'datetime',
         'quantity' => 'integer',
-        'status' => 'boolean'
+        'status' => 'string'
     ];
 
     public $incrementing = false;

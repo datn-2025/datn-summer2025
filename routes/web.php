@@ -89,7 +89,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::put('/{paymentMethod}/restore', [PaymentMethodController::class, 'restore'])->name('restore');
         Route::delete('/{paymentMethod}/force-delete', [PaymentMethodController::class, 'forceDelete'])->name('force-delete');
     });
-  
+
     // Route admin/categories
     Route::prefix('categories')->name('categories.')->group(function () {
         Route::get('/', [CategoryController::class, 'index'])->name('index');
@@ -120,22 +120,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
     });
     // Route admin/vouchers
     Route::prefix('vouchers')->name('vouchers.')->group(function () {
-        Route::get('/trash', [VoucherController::class, 'trash'])->name('trash');
-        Route::post('{id}/restore', [VoucherController::class, 'restore'])->name('restore');
-        Route::delete('{id}/force-delete', [VoucherController::class, 'forceDelete'])->name('force-delete');
-    });
-    Route::resource('vouchers', VoucherController::class);
-
-    // Route admin/users
-    Route::prefix('users')->name('users.')->group(function () {
-        Route::get('/', [UserController::class, 'index'])->name('index');
-        Route::get('/{id}', [UserController::class, 'show'])->name('show');
-        Route::get('/{id}/edit', [UserController::class, 'edit'])->name('edit');
-        Route::put('/{id}', [UserController::class, 'update'])->name('update');
-    });
-
-    // Voucher routes
-    Route::prefix('vouchers')->name('vouchers.')->group(function () {
         // Route để lấy danh sách đối tượng theo điều kiện
         Route::get('/get-condition-options', [VoucherController::class, 'getConditionOptions'])
             ->name('getConditionOptions');
@@ -157,6 +141,15 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::get('/export', [VoucherController::class, 'export'])->name('export');
     });
+
+    // Route admin/users
+    Route::prefix('users')->name('users.')->group(function () {
+        Route::get('/', [UserController::class, 'index'])->name('index');
+        Route::get('/{id}', [UserController::class, 'show'])->name('show');
+        Route::get('/{id}/edit', [UserController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [UserController::class, 'update'])->name('update');
+    });
+
     // Route admin/attributes
     Route::prefix('attributes')->name('attributes.')->group(function () {
         Route::get('/', [AttributeController::class, 'index'])->name('index');
@@ -245,7 +238,7 @@ Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
 Route::middleware('auth')->group(function () {
     // Đăng xuất
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-    
+
     // Trang tài khoản
     Route::prefix('account')->name('account.')->group(function () {
         Route::get('/', [LoginController::class, 'index'])->name('index');
