@@ -304,10 +304,10 @@ Route::prefix('account')->name('account.')->group(function () {
 
 
     // Password Reset Routes
-    Route::get('/forgot-password', [LoginController::class, 'showForgotPasswordForm'])->name('password.request');
-    Route::post('/forgot-password', [LoginController::class, 'sendResetLinkEmail'])->name('password.email');
-    Route::get('/reset-password/{token}/{email}', [LoginController::class, 'showResetPasswordForm'])->name('password.reset');
-    Route::post('/reset-password', [LoginController::class, 'handleResetPassword'])->name('password.update');
+    // Route::get('/forgot-password', [LoginController::class, 'showForgotPasswordForm'])->name('password.request');
+    // Route::post('/forgot-password', [LoginController::class, 'sendResetLinkEmail'])->name('password.email');
+    // Route::get('/reset-password/{token}/{email}', [LoginController::class, 'showResetPasswordForm'])->name('password.reset');
+    // Route::post('/reset-password', [LoginController::class, 'handleResetPassword'])->name('password.update');
 
     // Kích hoạt tài khoản
     Route::get('/activate/{token}', [ActivationController::class, 'activate'])->name('activate.token');
@@ -338,10 +338,10 @@ Route::prefix('account')->name('account.')->group(function () {
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
 // Quên mật khẩu
-    // Route::get('/forgot-password', [LoginController::class, 'showForgotPasswordForm'])->name('password.request');
-    // Route::post('/forgot-password', [LoginController::class, 'sendResetLinkEmail'])->name('password.email');
-    // Route::get('/reset-password/{token}', [LoginController::class, 'showResetPasswordForm'])->name('password.reset');
-    // Route::post('/reset-password', [LoginController::class, 'handleResetPassword'])->name('password.update');
+    Route::get('/forgot-password', [LoginController::class, 'showForgotPasswordForm'])->name('password.request');
+    Route::post('/forgot-password', [LoginController::class, 'sendResetLinkEmail'])->name('password.email');
+    Route::get('/reset-password/{token}/{email}', [LoginController::class, 'showResetPasswordForm'])->name('password.reset');
+    Route::post('/reset-password', [LoginController::class, 'handleResetPassword'])->name('password.update');
 
 
 Route::middleware('auth')->group(function () {
