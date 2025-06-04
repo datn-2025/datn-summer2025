@@ -25,6 +25,19 @@ use App\Http\Controllers\Admin\NewsArticleController;
 use App\Http\Controllers\Client\UserClientController;
 use App\Http\Controllers\Client\ClientReviewController;
 use App\Http\Controllers\Client\ClientOrderController;
+use App\Http\Controllers\cart\CartController;
+
+// cart
+Route::prefix('cart')->group(function () {
+    Route::get('/', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/add', [CartController::class, 'addToCart'])->name('cart.add');
+    Route::post('/update', [CartController::class, 'updateCart'])->name('cart.update');
+    Route::post('/remove', [CartController::class, 'removeFromCart'])->name('cart.remove');
+    Route::post('/clear', [CartController::class, 'clearCart'])->name('cart.clear');
+    Route::post('/add-wishlist', [CartController::class, 'addAllWishlistToCart'])->name('cart.add-wishlist');
+    Route::post('/apply-voucher', [CartController::class, 'applyVoucher'])->name('cart.apply-voucher');
+    Route::post('/remove-voucher', [CartController::class, 'removeVoucher'])->name('cart.remove-voucher');
+});
 
 // danh sach yeu thich
 Route::get('/wishlist', [WishlistController::class, 'getWishlist'])->name('wishlist.index');
@@ -42,6 +55,8 @@ Route::get('/book/{slug}', [HomeController::class, 'show'])->name('books.show');
 Route::get('/books/{categoryId?}', [BookController::class, 'index'])->name('books.index');
 Route::get('/contact', [ContactController::class, 'showForm'])->name('contact.form');
 Route::post('/contact', [ContactController::class, 'submitForm'])->name('contact.submit');
+
+// lien he 
 Route::get('/news', [NewsController::class, 'index'])->name('news.index');
 Route::get('/news/{id}', [NewsController::class, 'show'])->name('news.show');
 
@@ -58,6 +73,7 @@ Route::get('/test-qr-code/{id}', function ($id) {
 });
 
 Route::prefix('account')->name('account.')->group(function () {
+    Route::get('activate', [LoginController::class, 'activate'])->name('activate');
     Route::get('/register', [LoginController::class, 'register'])->name('register');
     Route::post('/register', [LoginController::class, 'handleRegister'])->name('register.submit');
 
@@ -69,7 +85,7 @@ Route::prefix('account')->name('account.')->group(function () {
     Route::post('/reset-password', [LoginController::class, 'handleResetPassword'])->name('password.update');
 
     // Kích hoạt tài khoản
-    Route::get('/activate/{token}', [ActivationController::class, 'activate'])->name('activate');
+    Route::get('/activate/{token}', [ActivationController::class, 'activate'])->name('activate.token');
     Route::post('/resend-activation', [ActivationController::class, 'resendActivation'])->name('resend.activation');
 
 
@@ -87,19 +103,18 @@ Route::prefix('account')->name('account.')->group(function () {
 
         // password change
         Route::get('/password/change', [LoginController::class, 'showChangePasswordForm'])->name('password.change');
-        Route::post('/password/change', [LoginController::class, 'changePassword'])->name('password.update');
+        Route::post('/password/change', [LoginController::class, 'changePassword'])->name('password.change');
     });
 });
-
 
 // Login và tài khoản
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
 // Quên mật khẩu
-Route::get('/forgot-password', [LoginController::class, 'showForgotPasswordForm'])->name('password.request');
-Route::post('/forgot-password', [LoginController::class, 'sendResetLinkEmail'])->name('password.email');
-Route::get('/reset-password/{token}', [LoginController::class, 'showResetPasswordForm'])->name('password.reset');
-Route::post('/reset-password', [LoginController::class, 'handleResetPassword'])->name('password.update');
+    // Route::get('/forgot-password', [LoginController::class, 'showForgotPasswordForm'])->name('password.request');
+    // Route::post('/forgot-password', [LoginController::class, 'sendResetLinkEmail'])->name('password.email');
+    // Route::get('/reset-password/{token}', [LoginController::class, 'showResetPasswordForm'])->name('password.reset');
+    // Route::post('/reset-password', [LoginController::class, 'handleResetPassword'])->name('password.update');
 
 
 Route::middleware('auth')->group(function () {
