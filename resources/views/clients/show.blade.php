@@ -61,7 +61,7 @@
                 <p class="text-gray-700">Thương hiệu: <span
                         class="font-semibold">{{ $book->brand->name ?? 'không rõ' }}</span></p>
                 <p class="text-gray-700">ISBN: {{ $book->isbn }}</p>
-                <p class="text-gray-700">Ngày xuất bản: {{ $book->publication_date->format('d/m/Y') }}</p>
+                <p class="text-gray-700">Ngày xuất bản: {{ $book->publication_date }}</p>
                 <p class="text-gray-700">Số trang: {{ $book->page_count }}</p>
 
                 @php
@@ -243,7 +243,7 @@
                         </div>
                     </div>
                     <p class="text-gray-600 mt-2 italic">{{ $review->comment }}</p>
-                    <p class="text-end text-muted small mb-0">{{ $review->created_at->format('H:i d/m/Y') }}</p>
+                    <p class="text-end text-muted small mb-0">{{ $review->created_at }}</p>
                 </div>
             @empty
                 <p class=" text-gray-500 italic">Chưa có đánh giá nào cho sản phẩm này.</p>
@@ -377,7 +377,6 @@
             document.getElementById('mainImage').src = imageUrl;
         }
     </script>
-@endpush
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>

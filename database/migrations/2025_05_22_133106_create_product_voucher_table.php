@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('product_voucher', function (Blueprint $table) {
             $table->uuid('voucher_id');
             $table->uuid('book_id');
+            $table->primary(['voucher_id', 'book_id']);
             $table->foreign('voucher_id')->references('id')->on('vouchers')->onDelete('cascade');
             $table->foreign('book_id')->references('id')->on('books')->onDelete('cascade');
         });

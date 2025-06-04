@@ -13,25 +13,25 @@ const CartVoucher = {
 
     // Initialize voucher system
     init() {
-        this.bindVoucherEvents();
-        this.checkInitialState();
+        // this.bindVoucherEvents();
+        // this.checkInitialState();
     },
 
     // Bind voucher-related events using event delegation
     bindVoucherEvents() {
         // Use event delegation for dynamic buttons
-        $(document).on('click', '#apply-voucher', (e) => {
-            e.preventDefault();
-            this.applyVoucher();
-        });
+        // $(document).on('click', '#apply-voucher', (e) => {
+        //     e.preventDefault();
+        //     this.applyVoucher();
+        // });
 
-        $(document).on('click', '#remove-voucher-btn', (e) => {
-            e.preventDefault();
-            this.removeVoucher();
-        });
+        // $(document).on('click', '#remove-voucher-btn', (e) => {
+        //     e.preventDefault();
+        //     this.removeVoucher();
+        // });
 
         // Bind voucher input events
-        this.bindVoucherInput();
+        // this.bindVoucherInput();
     },
 
     // Bind voucher input events
