@@ -9,7 +9,11 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+    <!-- Toastr CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+
+    <!-- Toastr JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     @stack('styles')
     <style>
         body {
@@ -299,7 +303,7 @@
                     <div class="form-group">
                         <input type="password" name="password" class="form-control" placeholder="Mật khẩu" required />
                     </div>
-                    <a href="{{ route('account.password.request') }}" class="forgot-password">Quên mật khẩu?</a>
+                    <a href="{{ route('password.request') }}" class="forgot-password">Quên mật khẩu?</a>
                     <button type="submit" class="btn btn-primary">ĐĂNG NHẬP</button>
                 </form>
             </div>
