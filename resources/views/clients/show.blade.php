@@ -146,14 +146,12 @@
                             <span id="bookPrice" class="text-3xl font-bold text-red-600" data-base-price="{{ $defaultPrice }}">
                                 {{ number_format($finalPrice, 0, ',', '.') }}₫
                             </span>
-                            @if($discount > 0)
-                                <span class="text-lg line-through text-gray-400" id="originalPrice">
-                                    {{ number_format($defaultPrice, 0, ',', '.') }}₫
-                                </span>
-                                <span id="discountText" class="text-sm font-medium text-red-500 bg-red-50 px-2 py-1 rounded">
-                                    -<span id="discountPercent">{{ $discount }}</span>%
-                                </span>
-                            @endif
+                            <span class="text-lg line-through text-gray-400" id="originalPrice" style="{{ $discount > 0 ? '' : 'display: none;' }}">
+                                {{ number_format($defaultPrice, 0, ',', '.') }}₫
+                            </span>
+                            <span id="discountText" class="text-sm font-medium text-red-500 bg-red-50 px-2 py-1 rounded" style="{{ $discount > 0 ? '' : 'display: none;' }}">
+                                -<span id="discountPercent">{{ $discount }}</span>%
+                            </span>
                         </div>
                     </div>
                 </div>
