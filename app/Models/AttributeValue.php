@@ -35,6 +35,16 @@ class AttributeValue extends Model
         });
     }
 
+    public function orderItems()
+    {
+        return $this->belongsToMany(
+            OrderItem::class,
+            'order_item_attribute_values',
+            'attribute_value_id',
+            'order_item_id'
+        );
+    }
+
     public $incrementing = false; 
     protected $keyType = 'string';
 }

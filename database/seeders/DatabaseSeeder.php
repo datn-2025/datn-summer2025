@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             RoleSeeder::class,
+            ActiveUserSeeder::class,
             UserSeeder::class,
             CategorySeeder::class,
             BrandSeeder::class,
@@ -34,14 +35,15 @@ class DatabaseSeeder extends Seeder
             PaymentMethodSeeder::class,
             PaymentStatusSeeder::class,
             OrderStatusSeeder::class,
-            OrderSeeder::class,
-            InvoiceSeeder::class,
-            InvoiceItemSeeder::class,
-            AppliedVoucherSeeder::class,
             VoucherSeeder::class,
+            AppliedVoucherSeeder::class,
             ReviewSeeder::class,
             PaymentSeeder::class,
             WishlistSeeder::class,
+            CartSeeder::class,            // Đưa CartSeeder xuống sau các bảng dữ liệu liên quan
+            OrderSeeder::class,
+            InvoiceSeeder::class,
+            InvoiceItemSeeder::class,
         ]);
     }
 }
