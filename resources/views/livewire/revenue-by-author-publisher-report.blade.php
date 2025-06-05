@@ -1,5 +1,5 @@
-
 <div class="card-body">
+    <!-- Revenue by Author -->
     <h5 class="card-title mb-3">Revenue by Author</h5>
     <ul class="list-group list-group-flush mb-4">
         @forelse ($authorRevenue as $author)
@@ -12,6 +12,7 @@
         @endforelse
     </ul>
 
+    <!-- Revenue by Publisher -->
     <h5 class="card-title mb-3">Revenue by Publisher</h5>
     <ul class="list-group list-group-flush">
         @forelse ($publisherRevenue as $brand)
