@@ -20,7 +20,9 @@ use App\Http\Controllers\Contact\ContactController;
 use App\Http\Controllers\Article\NewsController;
 use App\Http\Controllers\Admin\NewsArticleController;
 use App\Http\Controllers\Admin\PaymentMethodController;
+use App\Livewire\RevenueReport;
 use App\Http\Controllers\cart\CartController;
+
 
 // cart
 Route::prefix('cart')->group(function () {
@@ -73,6 +75,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Toastr::info('Chào mừng bạn đến với trang quản trị!', 'Thông báo');
         return view('admin.dashboard');
     })->name('dashboard');
+    Route::get('/revenue-report', RevenueReport::class)->name('revenue-report');
 
     // Route admin/contacts
     Route::resource('contacts', \App\Http\Controllers\Admin\ContactController::class);
@@ -104,6 +107,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/trash', [PaymentMethodController::class, 'trash'])->name('trash');
         Route::put('/{paymentMethod}/restore', [PaymentMethodController::class, 'restore'])->name('restore');
         Route::delete('/{paymentMethod}/force-delete', [PaymentMethodController::class, 'forceDelete'])->name('force-delete');
+
+        Route::get('/history', [PaymentMethodController::class, 'history'])->name('history');
+        Route::put('/{id}/status', [PaymentMethodController::class, 'updateStatus'])
+            ->name('updateStatus');
     });
 
     // Route admin/categories
