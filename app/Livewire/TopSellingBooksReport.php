@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\Book;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 
@@ -11,12 +12,11 @@ class TopSellingBooksReport extends Component
 
     public function mount()
     {
-        $this->books = DB::table('order_items')
-            ->join('books', 'order_items.book_id', '=', 'books.id')
-            ->select('books.title', 'books.cover_image', DB::raw('SUM(order_items.quantity) as total_sold'))
-            ->groupBy('books.id')
+       $this->books = Book::select('id', 'title', 'cover_image')
+            ->withSum('orderItems as total_sold', 'quantity')
+            ->has('orderItems') // <-- Chỉ lấy sách đã từng được bán
             ->orderByDesc('total_sold')
-            ->limit(5)
+            ->limit(7)
             ->get();
     }
 
