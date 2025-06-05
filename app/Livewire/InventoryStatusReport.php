@@ -10,15 +10,15 @@ class InventoryStatusReport extends Component
     public $books;
 
     public function mount()
-    {
-        // Lấy 5 sách có tổng tồn kho cao nhất từ các book formats
-        $this->books = Book::with('formats')
-            ->select('id', 'title', 'cover_image', 'status')
-            ->withSum('formats as total_stock', 'stock')
-            ->orderByDesc('total_stock')
-            ->limit(5)
-            ->get();
-    }
+{
+    // Lấy 5 sách có tổng tồn kho ít nhất từ các book formats
+    $this->books = Book::with('formats')
+        ->select('id', 'title', 'cover_image', 'status')
+        ->withSum('formats as total_stock', 'stock')
+        ->orderBy('total_stock') // Sắp xếp tăng dần
+        ->limit(6)
+        ->get();
+}
 
     public function render()
     {
