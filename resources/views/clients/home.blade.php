@@ -305,7 +305,7 @@
                                     class="font-medium text-gray-700">{{ $review->book->title ?? 'Không xác định' }}</span>
                             </p>
                             <p class="text-xs text-gray-400 mb-2">
-                                Ngày: {{ $review->created_at->format('d/m/Y') }}
+                                Ngày: {{ $review->created_at }}
                             </p>
 
                             <p class="text-gray-700 italic mb-4">“{{ $review->comment ?? 'Không có nội dung.' }}”</p>
