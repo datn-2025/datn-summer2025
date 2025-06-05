@@ -4,6 +4,9 @@ use App\Http\Controllers\Admin\AttributeController;
 use App\Http\Controllers\Admin\Auth\AdminAuthController;
 use App\Http\Controllers\Admin\BookController as AdminBookController;
 use App\Http\Controllers\Admin\ContactController as AdminContactController;
+use App\Http\Controllers\Admin\AdminCategoryController;
+use App\Http\Controllers\Admin\AdminReviewController;
+use App\Http\Controllers\Admin\AdminPaymentMethodController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\UserController;
@@ -19,7 +22,9 @@ use App\Http\Controllers\Wishlists\WishlistController;
 use App\Http\Controllers\Contact\ContactController;
 use App\Http\Controllers\Article\NewsController;
 use App\Http\Controllers\Admin\NewsArticleController;
-use App\Http\Controllers\Admin\PaymentMethodController;
+use App\Http\Controllers\Client\UserClientController;
+use App\Http\Controllers\Client\ClientReviewController;
+use App\Http\Controllers\Client\ClientOrderController;
 use App\Http\Controllers\cart\CartController;
 
 // cart
@@ -65,236 +70,6 @@ Route::get('/test-qr-code/{id}', function ($id) {
     $method->setAccessible(true);
     $method->invoke($controller, $order);
     return redirect()->route('admin.orders.show', $order->id)->with('success', 'QR Code generated successfully!');
-});    // Route nhóm admin
-Route::prefix('admin')->name('admin.')->group(function () {
-    // Dashboard route
-    Route::get('/', function () {
-
-        Toastr::info('Chào mừng bạn đến với trang quản trị!', 'Thông báo');
-        return view('admin.dashboard');
-    })->name('dashboard');
-
-    // Route admin/contacts
-    Route::resource('contacts', \App\Http\Controllers\Admin\ContactController::class);
-    Route::post('contacts/{contact}/reply', [\App\Http\Controllers\Admin\ContactController::class, 'sendReply'])->name('contacts.reply');
-    Route::prefix('books')->name('books.')->group(function () {
-        Route::get('/', [AdminBookController::class, 'index'])->name('index');
-        Route::get('/create', [AdminBookController::class, 'create'])->name('create');
-        Route::post('/store', [AdminBookController::class, 'store'])->name('store');
-        Route::get('/show/{id}/{slug}', [AdminBookController::class, 'show'])->name('show');
-        Route::get('/edit/{id}/{slug}', [AdminBookController::class, 'edit'])->name('edit');
-        Route::put('/update/{id}/{slug}', [AdminBookController::class, 'update'])->name('update');
-        Route::delete('/delete/{id}', [AdminBookController::class, 'destroy'])->name('destroy');
-
-        // Trash routes
-        Route::get('/trash', [AdminBookController::class, 'trash'])->name('trash');
-        Route::post('/restore/{id}', [AdminBookController::class, 'restore'])->name('restore');
-        Route::delete('/force-delete/{id}', [AdminBookController::class, 'forceDelete'])->name('force-delete');
-    });
-  
-    // Admin Payment Methods
-    Route::prefix('payment-methods')->name('payment-methods.')->group(function () {
-        Route::get('/', [PaymentMethodController::class, 'index'])->name('index');
-        Route::get('/create', [PaymentMethodController::class, 'create'])->name('create');
-        Route::post('/', [PaymentMethodController::class, 'store'])->name('store');
-        Route::get('/{paymentMethod}/edit', [PaymentMethodController::class, 'edit'])->name('edit');
-        Route::put('/{paymentMethod}', [PaymentMethodController::class, 'update'])->name('update');
-        Route::delete('/{paymentMethod}', [PaymentMethodController::class, 'destroy'])->name('destroy');
-        // Thêm các route mới
-        Route::get('/trash', [PaymentMethodController::class, 'trash'])->name('trash');
-        Route::put('/{paymentMethod}/restore', [PaymentMethodController::class, 'restore'])->name('restore');
-        Route::delete('/{paymentMethod}/force-delete', [PaymentMethodController::class, 'forceDelete'])->name('force-delete');
-    });
-
-    // Route admin/categories
-    Route::prefix('categories')->name('categories.')->group(function () {
-        Route::get('/', [CategoryController::class, 'index'])->name('index');
-        // Route admin/brand
-        Route::prefix('brands')->name('brands.')->group(function () {
-            Route::get('/', [CategoryController::class, 'brand'])->name('brand');
-            Route::get('/create', [CategoryController::class, 'BrandCreate'])->name('create');
-            Route::post('/', [CategoryController::class, 'BrandStore'])->name('store');
-            Route::get('/trash', [CategoryController::class, 'BrandTrash'])->name('trash');
-            Route::delete('/{author}', [CategoryController::class, 'BrandDestroy'])->name('destroy');
-            Route::put('/{id}/restore', [CategoryController::class, 'BrandRestore'])->name('restore');
-            Route::delete('/{id}/force', [CategoryController::class, 'BrandForceDelete'])->name('force-delete');
-            Route::get('/{id}/edit', [CategoryController::class, 'BrandEdit'])->name('edit');
-            Route::put('/{id}', [CategoryController::class, 'BrandUpdate'])->name('update');
-        });
-        // Route admin/authors
-        Route::prefix('authors')->name('authors.')->group(function () {
-            Route::get('/', [AuthorController::class, 'index'])->name('index');
-            Route::get('/create', [AuthorController::class, 'create'])->name('create');
-            Route::post('/', [AuthorController::class, 'store'])->name('store');
-            Route::get('/trash', [AuthorController::class, 'trash'])->name('trash');
-            Route::delete('/{author}', [AuthorController::class, 'destroy'])->name('destroy');
-            Route::put('/{id}/restore', [AuthorController::class, 'restore'])->name('restore');
-            Route::delete('/{id}/force', [AuthorController::class, 'forceDelete'])->name('force-delete');
-            Route::get('/{id}/edit', [AuthorController::class, 'edit'])->name('edit');
-            Route::put('/{id}', [AuthorController::class, 'update'])->name('update');
-        });
-    });
-    // Route admin/vouchers
-    Route::prefix('vouchers')->name('vouchers.')->group(function () {
-        Route::get('/trash', [VoucherController::class, 'trash'])->name('trash');
-        Route::post('{id}/restore', [VoucherController::class, 'restore'])->name('restore');
-        Route::delete('{id}/force-delete', [VoucherController::class, 'forceDelete'])->name('force-delete');
-    });
-    Route::resource('vouchers', VoucherController::class);
-    // Route admin/users
-    Route::prefix('users')->name('users.')->group(function () {
-        Route::get('/', [UserController::class, 'index'])->name('index');
-        Route::get('/{id}', [UserController::class, 'show'])->name('show');
-        Route::get('/{id}/edit', [UserController::class, 'edit'])->name('edit');
-        Route::put('/{id}', [UserController::class, 'update'])->name('update');
-    });
-
-    // Route admin/attributes
-    Route::prefix('attributes')->name('attributes.')->group(function () {
-        Route::get('/', [AttributeController::class, 'index'])->name('index');
-        Route::get('/create', [AttributeController::class, 'create'])->name('create');
-        Route::post('/store', [AttributeController::class, 'store'])->name('store');
-        Route::get('/show/{id}', [AttributeController::class, 'show'])->name('show');
-        Route::get('/edit/{id}', [AttributeController::class, 'edit'])->name('edit');
-        Route::put('/update/{id}', [AttributeController::class, 'update'])->name('update');
-        Route::delete('/delete/{id}', [AttributeController::class, 'destroy'])->name('destroy');
-    });
-    // Route admin/news
-    Route::prefix('news')->name('news.')->group(function () {
-        Route::get('/', [NewsArticleController::class, 'index'])->name('index');
-        Route::get('/create', [NewsArticleController::class, 'create'])->name('create');
-        Route::post('/', [NewsArticleController::class, 'store'])->name('store');
-        Route::get('/{article}', [NewsArticleController::class, 'show'])->name('show');
-        Route::get('/{article}/edit', [NewsArticleController::class, 'edit'])->name('edit');
-        Route::put('/{article}', [NewsArticleController::class, 'update'])->name('update');
-        Route::delete('/{article}', [NewsArticleController::class, 'destroy'])->name('destroy');
-    });
-
-    // Route admin/orders
-    Route::prefix('orders')->name('orders.')->group(function () {
-        Route::get('/', [OrderController::class, 'index'])->name('index');
-        Route::get('/show/{id}', [OrderController::class, 'show'])->name('show');
-        Route::get('/edit/{id}', [OrderController::class, 'edit'])->name('edit');
-        Route::put('/update/{id}', [OrderController::class, 'update'])->name('update');
-    });
-
-    // Admin Payment Methods
-    Route::prefix('payment-methods')->name('payment-methods.')->group(function () {
-        Route::get('/', [PaymentMethodController::class, 'index'])->name('index');
-        Route::get('/create', [PaymentMethodController::class, 'create'])->name('create');
-        Route::post('/', [PaymentMethodController::class, 'store'])->name('store');
-        Route::get('/{paymentMethod}/edit', [PaymentMethodController::class, 'edit'])->name('edit');
-        Route::put('/{paymentMethod}', [PaymentMethodController::class, 'update'])->name('update');
-        Route::delete('/{paymentMethod}', [PaymentMethodController::class, 'destroy'])->name('destroy');
-        // Thêm các route mới
-        Route::get('/trash', [PaymentMethodController::class, 'trash'])->name('trash');
-        Route::put('/{paymentMethod}/restore', [PaymentMethodController::class, 'restore'])->name('restore');
-        Route::delete('/{paymentMethod}/force-delete', [PaymentMethodController::class, 'forceDelete'])->name('force-delete');
-    });
-  
-    // Route admin/categories
-    Route::prefix('categories')->name('categories.')->group(function () {
-        Route::get('/', [CategoryController::class, 'index'])->name('index');
-        // Route admin/brand
-        Route::prefix('brands')->name('brands.')->group(function () {
-            Route::get('/', [CategoryController::class, 'brand'])->name('brand');
-            Route::get('/create', [CategoryController::class, 'BrandCreate'])->name('create');
-            Route::post('/', [CategoryController::class, 'BrandStore'])->name('store');
-            Route::get('/trash', [CategoryController::class, 'BrandTrash'])->name('trash');
-            Route::delete('/{author}', [CategoryController::class, 'BrandDestroy'])->name('destroy');
-            Route::put('/{id}/restore', [CategoryController::class, 'BrandRestore'])->name('restore');
-            Route::delete('/{id}/force', [CategoryController::class, 'BrandForceDelete'])->name('force-delete');
-            Route::get('/{id}/edit', [CategoryController::class, 'BrandEdit'])->name('edit');
-            Route::put('/{id}', [CategoryController::class, 'BrandUpdate'])->name('update');
-        });
-        // Route admin/authors
-        Route::prefix('authors')->name('authors.')->group(function () {
-            Route::get('/', [AuthorController::class, 'index'])->name('index');
-            Route::get('/create', [AuthorController::class, 'create'])->name('create');
-            Route::post('/', [AuthorController::class, 'store'])->name('store');
-            Route::get('/trash', [AuthorController::class, 'trash'])->name('trash');
-            Route::delete('/{author}', [AuthorController::class, 'destroy'])->name('destroy');
-            Route::put('/{id}/restore', [AuthorController::class, 'restore'])->name('restore');
-            Route::delete('/{id}/force', [AuthorController::class, 'forceDelete'])->name('force-delete');
-            Route::get('/{id}/edit', [AuthorController::class, 'edit'])->name('edit');
-            Route::put('/{id}', [AuthorController::class, 'update'])->name('update');
-        });
-    });
-    // Route admin/vouchers
-    Route::prefix('vouchers')->name('vouchers.')->group(function () {
-        Route::get('/trash', [VoucherController::class, 'trash'])->name('trash');
-        Route::post('{id}/restore', [VoucherController::class, 'restore'])->name('restore');
-        Route::delete('{id}/force-delete', [VoucherController::class, 'forceDelete'])->name('force-delete');
-    });
-    Route::resource('vouchers', VoucherController::class);
-
-    // Route admin/users
-    Route::prefix('users')->name('users.')->group(function () {
-        Route::get('/', [UserController::class, 'index'])->name('index');
-        Route::get('/{id}', [UserController::class, 'show'])->name('show');
-        Route::get('/{id}/edit', [UserController::class, 'edit'])->name('edit');
-        Route::put('/{id}', [UserController::class, 'update'])->name('update');
-    });
-
-    // Voucher routes
-    Route::prefix('vouchers')->name('vouchers.')->group(function () {
-        // Route để lấy danh sách đối tượng theo điều kiện
-        Route::get('/get-condition-options', [VoucherController::class, 'getConditionOptions'])
-            ->name('getConditionOptions');
-        Route::get('/search', [VoucherController::class, 'search'])->name('search');
-
-        // Trash routes - Đặt trước các route khác
-        Route::get('/trash', [VoucherController::class, 'trash'])->name('trash');
-        Route::post('/restore/{id}', [VoucherController::class, 'restore'])->name('restore');
-        Route::delete('/force-delete/{id}', [VoucherController::class, 'forceDelete'])->name('force-delete');
-
-        // Các route CRUD thông thường
-        Route::get('/', [VoucherController::class, 'index'])->name('index');
-        Route::get('/create', [VoucherController::class, 'create'])->name('create');
-        Route::post('/', [VoucherController::class, 'store'])->name('store');
-        Route::get('/{voucher}', [VoucherController::class, 'show'])->name('show');
-        Route::get('/{voucher}/edit', [VoucherController::class, 'edit'])->name('edit');
-        Route::put('/{voucher}', [VoucherController::class, 'update'])->name('update');
-        Route::delete('/{voucher}', [VoucherController::class, 'destroy'])->name('destroy');
-
-        Route::get('/export', [VoucherController::class, 'export'])->name('export');
-    });
-    // Route admin/attributes
-    Route::prefix('attributes')->name('attributes.')->group(function () {
-        Route::get('/', [AttributeController::class, 'index'])->name('index');
-        Route::get('/create', [AttributeController::class, 'create'])->name('create');
-        Route::post('/store', [AttributeController::class, 'store'])->name('store');
-        Route::get('/show/{id}', [AttributeController::class, 'show'])->name('show');
-        Route::get('/edit/{id}', [AttributeController::class, 'edit'])->name('edit');
-        Route::put('/update/{id}', [AttributeController::class, 'update'])->name('update');
-        Route::delete('/delete/{id}', [AttributeController::class, 'destroy'])->name('destroy');
-    });
-    // Route admin/contacts
-    Route::prefix('contacts')->name('contacts.')->group(function () {
-        Route::get('/', [AdminContactController::class, 'index'])->name('index');
-        Route::get('/show/{id}', [AdminContactController::class, 'show'])->name('show');
-        Route::put('/update/{id}', [AdminContactController::class, 'update'])->name('update'); // Cập nhật trạng thái
-        Route::delete('/delete/{id}', [AdminContactController::class, 'destroy'])->name('destroy'); // Xóa liên hệ
-        Route::post('/reply/{contact}', [AdminContactController::class, 'sendReply'])->name('reply'); // Gửi phản hồi
-    });
-    // Route admin/news
-    Route::prefix('news')->name('news.')->group(function () {
-        Route::get('/', [NewsArticleController::class, 'index'])->name('index');
-        Route::get('/create', [NewsArticleController::class, 'create'])->name('create');
-        Route::post('/', [NewsArticleController::class, 'store'])->name('store');
-        Route::get('/{article}', [NewsArticleController::class, 'show'])->name('show');
-        Route::get('/{article}/edit', [NewsArticleController::class, 'edit'])->name('edit');
-        Route::put('/{article}', [NewsArticleController::class, 'update'])->name('update');
-        Route::delete('/{article}', [NewsArticleController::class, 'destroy'])->name('destroy');
-    });
-
-    // Route admin/orders
-    Route::prefix('orders')->name('orders.')->group(function () {
-        Route::get('/', [OrderController::class, 'index'])->name('index');
-        Route::get('/show/{id}', [OrderController::class, 'show'])->name('show');
-        Route::get('/edit/{id}', [OrderController::class, 'edit'])->name('edit');
-        Route::put('/update/{id}', [OrderController::class, 'update'])->name('update');
-    });
 });
 
 Route::prefix('account')->name('account.')->group(function () {
@@ -314,10 +89,9 @@ Route::prefix('account')->name('account.')->group(function () {
     Route::post('/resend-activation', [ActivationController::class, 'resendActivation'])->name('resend.activation');
 
 
-
     // profile
-        Route::get('/showUser', [LoginController::class, 'showUser'])->name('showUser');
-        Route::put('/profile/update', [LoginController::class, 'updateProfile'])->name('profile.update');
+    Route::get('/showUser', [LoginController::class, 'showUser'])->name('showUser');
+    Route::put('/profile/update', [LoginController::class, 'updateProfile'])->name('profile.update');
 
     Route::middleware('auth')->group(function () {
         Route::get('/', [LoginController::class, 'index'])->name('index');
@@ -330,7 +104,6 @@ Route::prefix('account')->name('account.')->group(function () {
         // password change
         Route::get('/password/change', [LoginController::class, 'showChangePasswordForm'])->name('password.change');
         Route::post('/password/change', [LoginController::class, 'changePassword'])->name('password.change');
-
     });
 });
 
@@ -347,10 +120,24 @@ Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
 Route::middleware('auth')->group(function () {
     // Đăng xuất
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-    
+
     // Trang tài khoản
     Route::prefix('account')->name('account.')->group(function () {
         Route::get('/', [LoginController::class, 'index'])->name('index');
+        Route::get('/purchase', [UserClientController::class, 'index'])->name('purchase');
+        Route::post('/review', [UserClientController::class, 'storeReview'])->name('review.store');
+
+        Route::prefix('orders')->name('orders.')->group(function () {
+            Route::get('/', [ClientOrderController::class, 'index'])->name('index');
+            Route::get('/{id}', [ClientOrderController::class, 'show'])->name('show');
+            Route::put('/{id}', [ClientOrderController::class, 'update'])->name('update');
+            Route::delete('/{id}', [ClientOrderController::class, 'destroy'])->name('destroy');
+        });
+
+        Route::prefix('reviews')->name('reviews.')->group(function () {
+            Route::put('/{id}', [ClientReviewController::class, 'update'])->name('update');
+            Route::delete('/{id}', [ClientReviewController::class, 'destroy'])->name('destroy');
+        });
     });
     // Đơn hàngAdd commentMore actions
     Route::prefix('orders')->name('orders.')->group(function () {
@@ -362,7 +149,7 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-
+// Route nhóm admin
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/login', [AdminAuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [AdminAuthController::class, 'login'])->name('login.submit');
@@ -372,8 +159,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Toastr::info('Chào mừng bạn đến với trang quản trị!', 'Thông báo');
             return view('admin.dashboard');
         })->name('dashboard');
+
         Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
 
+        // Route admin/contacts
+        Route::resource('contacts', \App\Http\Controllers\Admin\ContactController::class);
+        Route::post('contacts/{contact}/reply', [\App\Http\Controllers\Admin\ContactController::class, 'sendReply'])->name('contacts.reply');
         Route::prefix('books')->name('books.')->group(function () {
             Route::get('/', [AdminBookController::class, 'index'])->name('index');
             Route::get('/create', [AdminBookController::class, 'create'])->name('create');
@@ -391,17 +182,15 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // Route admin/categories
         Route::prefix('categories')->name('categories.')->group(function () {
-            Route::get('/', [CategoryController::class, 'index'])->name('index');
-            Route::get('/create', [CategoryController::class, 'create'])->name('create');
-            Route::post('/store', [CategoryController::class, 'store'])->name('store');
-            Route::get('/edit/{id}', [CategoryController::class, 'edit'])->name('edit');
-            Route::put('/update/{id}', [CategoryController::class, 'update'])->name('update');
-            // Route::delete('/soft-delete/{id}', [CategoryController::class, 'softDelete'])->name('soft-delete');
-            // Route::delete('/force-delete/{id}', [CategoryController::class, 'forceDelete'])->name('force-delete');
-            Route::get('/trash', [CategoryController::class, 'trash'])->name('trash');
-            Route::delete('/{category}', [CategoryController::class, 'destroy'])->name('destroy');
-            Route::put('/{id}/restore', [CategoryController::class, 'restore'])->name('restore');
-            Route::delete('/{id}/force', [CategoryController::class, 'forceDelete'])->name('force-delete');
+            Route::get('/', [AdminCategoryController::class, 'index'])->name('index');
+            Route::get('/create', [AdminCategoryController::class, 'create'])->name('create');
+            Route::post('/store', [AdminCategoryController::class, 'store'])->name('store');
+            Route::get('/edit/{id}', [AdminCategoryController::class, 'edit'])->name('edit');
+            Route::put('/update/{id}', [AdminCategoryController::class, 'update'])->name('update');
+            Route::get('/trash', [AdminCategoryController::class, 'trash'])->name('trash');
+            Route::delete('/{category}', [AdminCategoryController::class, 'destroy'])->name('destroy');
+            Route::put('/{id}/restore', [AdminCategoryController::class, 'restore'])->name('restore');
+            Route::delete('/{id}/force', [AdminCategoryController::class, 'forceDelete'])->name('force-delete');
 
             // Route admin/brand
             Route::prefix('brands')->name('brands.')->group(function () {
@@ -415,7 +204,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
                 Route::get('/{id}/edit', [CategoryController::class, 'BrandEdit'])->name('edit');
                 Route::put('/{id}', [CategoryController::class, 'BrandUpdate'])->name('update');
             });
-
             // Route admin/authors
             Route::prefix('authors')->name('authors.')->group(function () {
                 Route::get('/', [AuthorController::class, 'index'])->name('index');
@@ -429,27 +217,31 @@ Route::prefix('admin')->name('admin.')->group(function () {
                 Route::put('/{id}', [AuthorController::class, 'update'])->name('update');
             });
         });
-        // Admin Payment Methods
+
         Route::prefix('payment-methods')->name('payment-methods.')->group(function () {
-            Route::get('/', [PaymentMethodController::class, 'index'])->name('index');
-            Route::get('/create', [PaymentMethodController::class, 'create'])->name('create');
-            Route::post('/', [PaymentMethodController::class, 'store'])->name('store');
-            Route::get('/{paymentMethod}/edit', [PaymentMethodController::class, 'edit'])->name('edit');
-            Route::put('/{paymentMethod}', [PaymentMethodController::class, 'update'])->name('update');
-            Route::delete('/{paymentMethod}', [PaymentMethodController::class, 'destroy'])->name('destroy');
-            // Thêm các route mới
-            Route::get('/trash', [PaymentMethodController::class, 'trash'])->name('trash');
-            Route::put('/{paymentMethod}/restore', [PaymentMethodController::class, 'restore'])->name('restore');
-            Route::delete('/{paymentMethod}/force-delete', [PaymentMethodController::class, 'forceDelete'])->name('force-delete');
+            Route::get('/', [AdminPaymentMethodController::class, 'index'])->name('index');
+            Route::get('/create', [AdminPaymentMethodController::class, 'create'])->name('create');
+            Route::post('/', [AdminPaymentMethodController::class, 'store'])->name('store');
+            Route::get('/{paymentMethod}/edit', [AdminPaymentMethodController::class, 'edit'])->name('edit');
+            Route::put('/{paymentMethod}', [AdminPaymentMethodController::class, 'update'])->name('update');
+            Route::delete('/{paymentMethod}', [AdminPaymentMethodController::class, 'destroy'])->name('destroy');
+
+            Route::get('/trash', [AdminPaymentMethodController::class, 'trash'])->name('trash');
+            Route::put('/{paymentMethod}/restore', [AdminPaymentMethodController::class, 'restore'])->name('restore');
+            Route::delete('/{paymentMethod}/force-delete', [AdminPaymentMethodController::class, 'forceDelete'])->name('force-delete');
         });
 
-        Route::prefix('vouchers')->name('vouchers.')->group(function () {
-            Route::get('/trash', [VoucherController::class, 'trash'])->name('trash');
-            Route::post('{id}/restore', [VoucherController::class, 'restore'])->name('restore');
-            Route::delete('{id}/force-delete', [VoucherController::class, 'forceDelete'])->name('force-delete');
+        // routes admin/reviews
+        Route::prefix('reviews')->name('reviews.')->group(function () {
+            Route::get('/', [AdminReviewController::class, 'index'])->name('index');
+            Route::patch('/{review}/status', [AdminReviewController::class, 'updateStatus'])->name('update-status');
+            Route::post('/{review}/response', [AdminReviewController::class, 'updateResponse'])->name('response');
+            Route::delete('/{review}', [AdminReviewController::class, 'destroy'])->name('destroy');
+            Route::get('/{review}/response', [AdminReviewController::class, 'showResponseForm'])->name('response');
+            Route::post('/{review}/response', [AdminReviewController::class, 'storeResponse'])->name('response.store');
         });
-        Route::resource('vouchers', VoucherController::class);
 
+        // Route admin/users
         Route::prefix('users')->name('users.')->group(function () {
             Route::get('/', [UserController::class, 'index'])->name('index');
             Route::get('/{id}', [UserController::class, 'show'])->name('show');
@@ -457,6 +249,39 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::put('/{id}', [UserController::class, 'update'])->name('update');
         });
 
+        // Route admin/vouchers
+        Route::prefix('vouchers')->name('vouchers.')->group(function () {
+            Route::get('/trash', [VoucherController::class, 'trash'])->name('trash');
+            Route::post('{id}/restore', [VoucherController::class, 'restore'])->name('restore');
+            Route::delete('{id}/force-delete', [VoucherController::class, 'forceDelete'])->name('force-delete');
+        });
+        Route::resource('vouchers', VoucherController::class);
+
+        // Voucher routes
+        Route::prefix('vouchers')->name('vouchers.')->group(function () {
+            // Route để lấy danh sách đối tượng theo điều kiện
+            Route::get('/get-condition-options', [VoucherController::class, 'getConditionOptions'])
+                ->name('getConditionOptions');
+            Route::get('/search', [VoucherController::class, 'search'])->name('search');
+
+            // Trash routes - Đặt trước các route khác
+            Route::get('/trash', [VoucherController::class, 'trash'])->name('trash');
+            Route::post('/restore/{id}', [VoucherController::class, 'restore'])->name('restore');
+            Route::delete('/force-delete/{id}', [VoucherController::class, 'forceDelete'])->name('force-delete');
+
+            // Các route CRUD thông thường
+            Route::get('/', [VoucherController::class, 'index'])->name('index');
+            Route::get('/create', [VoucherController::class, 'create'])->name('create');
+            Route::post('/', [VoucherController::class, 'store'])->name('store');
+            Route::get('/{voucher}', [VoucherController::class, 'show'])->name('show');
+            Route::get('/{voucher}/edit', [VoucherController::class, 'edit'])->name('edit');
+            Route::put('/{voucher}', [VoucherController::class, 'update'])->name('update');
+            Route::delete('/{voucher}', [VoucherController::class, 'destroy'])->name('destroy');
+
+            Route::get('/export', [VoucherController::class, 'export'])->name('export');
+        });
+
+        // Route admin/attributes
         Route::prefix('attributes')->name('attributes.')->group(function () {
             Route::get('/', [AttributeController::class, 'index'])->name('index');
             Route::get('/create', [AttributeController::class, 'create'])->name('create');
@@ -467,6 +292,27 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::delete('/delete/{id}', [AttributeController::class, 'destroy'])->name('destroy');
         });
 
+        // Route admin/contacts
+        Route::prefix('contacts')->name('contacts.')->group(function () {
+            Route::get('/', [AdminContactController::class, 'index'])->name('index');
+            Route::get('/show/{id}', [AdminContactController::class, 'show'])->name('show');
+            Route::put('/update/{id}', [AdminContactController::class, 'update'])->name('update'); // Cập nhật trạng thái
+            Route::delete('/delete/{id}', [AdminContactController::class, 'destroy'])->name('destroy'); // Xóa liên hệ
+            Route::post('/reply/{contact}', [AdminContactController::class, 'sendReply'])->name('reply'); // Gửi phản hồi
+        });
+
+        // Route admin/news
+        Route::prefix('news')->name('news.')->group(function () {
+            Route::get('/', [NewsArticleController::class, 'index'])->name('index');
+            Route::get('/create', [NewsArticleController::class, 'create'])->name('create');
+            Route::post('/', [NewsArticleController::class, 'store'])->name('store');
+            Route::get('/{article}', [NewsArticleController::class, 'show'])->name('show');
+            Route::get('/{article}/edit', [NewsArticleController::class, 'edit'])->name('edit');
+            Route::put('/{article}', [NewsArticleController::class, 'update'])->name('update');
+            Route::delete('/{article}', [NewsArticleController::class, 'destroy'])->name('destroy');
+        });
+
+        // Route admin/orders
         Route::prefix('orders')->name('orders.')->group(function () {
             Route::get('/', [OrderController::class, 'index'])->name('index');
             Route::get('/show/{id}', [OrderController::class, 'show'])->name('show');
@@ -475,4 +321,3 @@ Route::prefix('admin')->name('admin.')->group(function () {
         });
     });
 });
-// 
