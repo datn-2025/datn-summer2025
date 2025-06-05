@@ -13,7 +13,7 @@ class DashboardStats extends Component
     public $customerCount;
     public $revenue;
     public $balance;
-    public $timePeriod = 'month';
+    public $timePeriod = null;
 
     public function mount()
     {
@@ -27,49 +27,57 @@ class DashboardStats extends Component
 
     public function updateStats()
     {
-        $now = now();
+        $queryOrder = Order::query();
+        $queryUser = User::query();
 
-        switch ($this->timePeriod) {
-            case 'day':
-                $startDate = $now->copy()->startOfDay();
-                $endDate = $now->copy()->endOfDay();
-                break;
-            case 'week':
-                $startDate = $now->copy()->startOfWeek();
-                $endDate = $now->copy()->endOfWeek();
-                break;
-            case 'quarter':
-                $startDate = $now->copy()->startOfQuarter();
-                $endDate = $now->copy()->endOfQuarter();
-                break;
-            default: // 'month'
-                $startDate = $now->copy()->startOfMonth();
-                $endDate = $now->copy()->endOfMonth();
+        // Nếu có chọn thời gian => lọc theo thời gian
+        if ($this->timePeriod) {
+            $now = now();
+            switch ($this->timePeriod) {
+                case 'day':
+                    $start = $now->copy()->startOfDay();
+                    $end = $now->copy()->endOfDay();
+                    break;
+                case 'week':
+                    $start = $now->copy()->startOfWeek();
+                    $end = $now->copy()->endOfWeek();
+                    break;
+                case 'month':
+                    $start = $now->copy()->startOfMonth();
+                    $end = $now->copy()->endOfMonth();
+                    break;
+                case 'quarter':
+                    $start = $now->copy()->startOfQuarter();
+                    $end = $now->copy()->endOfQuarter();
+                    break;
+            }
+
+            $queryOrder->whereBetween('created_at', [$start, $end]);
+            $queryUser->whereBetween('created_at', [$start, $end]);
         }
 
         // Tổng số đơn hàng
-        $this->orderCount = Order::whereBetween('created_at', [$startDate, $endDate])->count();
+        $this->orderCount = $queryOrder->count();
 
         // Tổng khách hàng có role là 'user'
-        $this->customerCount = User::whereHas('role', function ($query) {
-                $query->where('name', 'user');
-            })
-            ->whereBetween('created_at', [$startDate, $endDate])
-            ->count();
+        $this->customerCount = $queryUser->whereHas('role', function ($q) {
+            $q->where('name', 'user');
+        })->count();
 
         // Doanh thu thực nhận (chỉ đơn đã thanh toán & thành công)
-        $this->revenue = Order::whereHas('orderStatus', function ($q) {
-                $q->where('name', 'Thành công');
-            })
-            ->whereHas('paymentStatus', function ($q) {
-                $q->where('name', 'Đã Thanh Toán');
-            })
-            ->whereBetween('created_at', [$startDate, $endDate])
-            ->sum('total_amount');
+        $this->revenue = Order::whereHas('orderStatus', fn($q) =>
+        $q->where('name', 'Thành công'))
+            ->whereHas('paymentStatus', fn($q) =>
+            $q->where('name', 'Đã Thanh Toán'));
 
-        // Số dư: tổng tiền tất cả các đơn trong khoảng thời gian
-        $this->balance = Order::whereBetween('created_at', [$startDate, $endDate])
-            ->sum('total_amount');
+        if ($this->timePeriod) {
+            $this->revenue->whereBetween('created_at', [$start, $end]);
+        }
+
+        $this->revenue = $this->revenue->sum('total_amount');
+
+        // Số dư: tổng tiền tất cả các đơn
+        $this->balance = $queryOrder->sum('total_amount');
     }
 
     public function render()
