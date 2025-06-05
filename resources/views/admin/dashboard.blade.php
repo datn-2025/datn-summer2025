@@ -71,6 +71,7 @@
                                     </div>
                                 </div>
 
+
                                 <!-- 4 Thẻ thống kê chính -->
                                 <livewire:dashboard-stats />
 
@@ -85,6 +86,18 @@
                                     </div>
                                     <div class="col-xl-4 col-md-6">
                                         <livewire:revenue-by-author-publisher-report />
+                                    </div>
+                                </div>
+
+                                <div class="row mt-4">
+                                    <div class="col-xl-4 col-md-6">
+                                        <livewire:book-category-chart />
+                                    </div>
+                                    <div class="col-xl-4 col-md-6">
+                                        <livewire:book-author-chart />
+                                    </div>
+                                    <div class="col-xl-4 col-md-6">
+                                        <livewire:book-brand-chart />
                                     </div>
                                 </div>
 
