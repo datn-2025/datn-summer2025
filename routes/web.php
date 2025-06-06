@@ -139,6 +139,14 @@ Route::middleware('auth')->group(function () {
             Route::delete('/{id}', [ClientReviewController::class, 'destroy'])->name('destroy');
         });
     });
+    // Đơn hàngAdd commentMore actions
+    Route::prefix('orders')->name('orders.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\OrderController::class, 'index'])->name('index');
+        Route::get('/checkout', [\App\Http\Controllers\OrderController::class, 'checkout'])->name('checkout');
+        Route::get('/{order}', [\App\Http\Controllers\OrderController::class, 'show'])->name('show');
+        Route::post('/store', [\App\Http\Controllers\OrderController::class, 'store'])->name('store');
+        Route::post('/apply-voucher', [\App\Http\Controllers\OrderController::class, 'applyVoucher'])->name('apply-voucher');
+    });
 });
 
 // Route nhóm admin
