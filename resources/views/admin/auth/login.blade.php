@@ -10,14 +10,34 @@
     <meta content="Themesbrand" name="author" />
     <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico') }}">
 
-    <!-- Toastr CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-
     {{-- Styles --}}
     @foreach (['bootstrap.min.css', 'icons.min.css', 'app.min.css', 'custom.min.css'] as $css)
         <link href="{{ asset("assets/css/$css") }}" rel="stylesheet">
     @endforeach
     <script src="{{ asset('assets/js/layout.js') }}"></script>
+
+     <!-- Toastr CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <!-- toastr JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+     <script>
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "timeOut": "3000",
+            "extendedTimeOut": "1000",
+            "preventDuplicates": true,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+    </script>
+    <!-- Render Thông báo từ Session -->
+    {!! Toastr::message() !!}
 </head>
 
 <body>
@@ -144,34 +164,5 @@
         <script src="{{ asset("assets/$js") }}"></script>
     @endforeach
 </body>
-<!-- jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<!-- toastr JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-<script>
-    toastr.options = {
-        "closeButton": true,
-        "progressBar": true,
-        "positionClass": "toast-top-right",
-        "timeOut": "3000",
-        "extendedTimeOut": "1000",
-        "preventDuplicates": true,
-        "showDuration": "300",
-        "hideDuration": "1000",
-        "showEasing": "swing",
-        "hideEasing": "linear",
-        "showMethod": "fadeIn",
-        "hideMethod": "fadeOut"
-    };
-
-    @if (session('success'))
-        toastr.success("{{ session('success') }}");
-    @endif
-
-    @if (session('error'))
-        toastr.error("{{ session('error') }}");
-    @endif
-</script>
 
 </html>
