@@ -28,16 +28,13 @@
                 </svg>
             </div>
         </div>
-
+        
         <!-- Auth content -->
         <div class="auth-page-content">
             <div class="container">
-                <div class="text-center mt-sm-5 mb-4 text-white-50">
-                    <a class="d-inline-block auth-logo">
-                        <img src="{{ asset('assets/images/logo-light.png') }}" alt="logo" height="40">
-                    </a>
+                <div class="text-center text-white-50">
+                        <img src="/images/logo-admin-layout-login.png" alt="logo" height="150">
                 </div>
-
                 <div class="row justify-content-center">
                     <div class="col-md-8 col-lg-6 col-xl-5">
                         <div class="card mt-4">
