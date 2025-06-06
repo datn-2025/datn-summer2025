@@ -50,12 +50,11 @@ class AdminAuthController extends Controller
 
             $request->session()->regenerate();
             $request->session()->put('admin_name', $user->name);
-            return redirect()->intended(route('admin.dashboard'));
+             return redirect()->intended(route('admin.dashboard'))
+                         ->with('success', 'Đăng nhập thành công');
         }
 
-        return back()->withErrors([
-            'email' => 'Email hoặc mật khẩu không chính xác',
-        ]);
+        return back()->with('error', 'Email hoặc mật khẩu không chính xác');
 
         // if (!Hash::check($request->password, $user->password)) {
         //    return back()->withErrors([
