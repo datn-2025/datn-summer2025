@@ -37,14 +37,16 @@ class AdminAuthController extends Controller
 
             if (!$user->isAdmin()) {
                 Auth::logout();
-                return back()->withErrors([
-                    'email' => 'Bạn không có quyền truy cập vào trang quản trị',
-                ]);
+                Toastr::error('Bạn không có quyền truy cập vào trang quản trị');
+                return redirect()->back()->withInput();
+                // return back()->withErrors([
+                //     'email' => 'Bạn không có quyền truy cập vào trang quản trị',
+                // ]);
             }
 
             if (!$user->isActive()) {
                 Auth::logout();
-                return back()->withErrors([
+                return redirect()->back()->withErrors([
                     'email' => 'Tài khoản của bạn đã bị khóa hoặc chưa được kích hoạt',
                 ]);
             }
@@ -52,12 +54,12 @@ class AdminAuthController extends Controller
             $request->session()->regenerate();
             $request->session()->put('admin_name', $user->name);
             Toastr::success('Đăng nhập thành công!');
-            return redirect()->intended(route('admin.dashboard'));
+            return redirect()->route('admin.dashboard');
         }
 
-        return back()->withErrors([
-            'email' => 'Email hoặc mật khẩu không chính xác',
-        ]);
+        return redirect()->back()
+            ->withErrors(['error' => 'Sai tài khoản hoặc mật khẩu'])
+            ->withInput();
 
         // if (!Hash::check($request->password, $user->password)) {
         //    return back()->withErrors([
@@ -79,7 +81,7 @@ class AdminAuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        Toastr::success('Bạn đã đăng xuất thành công.');
+        Toastr::success('Đăng xuất thành công!');
         return redirect()->route('admin.login');
     }
 }

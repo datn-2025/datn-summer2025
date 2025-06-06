@@ -16,11 +16,13 @@
     @endforeach
     <script src="{{ asset('assets/js/layout.js') }}"></script>
 
-     <!-- Toastr CSS -->
+    <!-- Toastr CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-    <!-- toastr JS -->
+  <!-- jQuery (Toastr cần jQuery) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Toastr JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-     <script>
+    <script>
         toastr.options = {
             "closeButton": true,
             "progressBar": true,
@@ -35,9 +37,14 @@
             "showMethod": "fadeIn",
             "hideMethod": "fadeOut"
         };
+        @if (session('success'))
+            toastr.success("{{ session('success') }}");
+        @endif
+
+        @if (session('error'))
+            toastr.error("{{ session('error') }}");
+        @endif
     </script>
-    <!-- Render Thông báo từ Session -->
-    {!! Toastr::message() !!}
 </head>
 
 <body>
@@ -163,6 +170,8 @@
     @foreach (['libs/bootstrap/js/bootstrap.bundle.min.js', 'libs/simplebar/simplebar.min.js', 'libs/node-waves/waves.min.js', 'libs/feather-icons/feather.min.js', 'js/pages/plugins/lord-icon-2.1.0.js', 'js/plugins.js', 'libs/particles.js/particles.js', 'js/pages/particles.app.js', 'js/pages/password-addon.init.js'] as $js)
         <script src="{{ asset("assets/$js") }}"></script>
     @endforeach
+   <!-- Render Thông báo từ Session -->
+    {!! Toastr::message() !!}
 </body>
 
 </html>
