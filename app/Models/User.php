@@ -64,7 +64,7 @@ class User extends Authenticatable
 
     public function isActive()
     {
-        return strtolower($this->status) === 'hoạt động';
+        return $this->status === 'Hoạt Động';
     }
 
     public function role()
