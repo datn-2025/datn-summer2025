@@ -40,10 +40,6 @@
         @if (session('success'))
             toastr.success("{{ session('success') }}");
         @endif
-
-        @if (session('error'))
-            toastr.error("{{ session('error') }}");
-        @endif
     </script>
 </head>
 
@@ -79,14 +75,6 @@
                                             {{ $message }}
                                         </div>
                                     @enderror
-                                    {{-- Flash message --}}
-                                    @foreach (['danger' => 'error', 'success' => 'success'] as $type => $msg)
-                                        @if (session($msg))
-                                            <div class="alert alert-{{ $type }}" role="alert">
-                                                {{ session($msg) }}
-                                            </div>
-                                        @endif
-                                    @endforeach
 
                                     {{-- Form login --}}
                                     <form method="POST" action="{{ route('admin.login.submit') }}"
