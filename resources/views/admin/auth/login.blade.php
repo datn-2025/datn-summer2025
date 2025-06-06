@@ -10,6 +10,9 @@
     <meta content="Themesbrand" name="author" />
     <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico') }}">
 
+    <!-- Toastr CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
     {{-- Styles --}}
     @foreach (['bootstrap.min.css', 'icons.min.css', 'app.min.css', 'custom.min.css'] as $css)
         <link href="{{ asset("assets/css/$css") }}" rel="stylesheet">
@@ -28,12 +31,12 @@
                 </svg>
             </div>
         </div>
-        
+
         <!-- Auth content -->
         <div class="auth-page-content">
             <div class="container">
                 <div class="text-center text-white-50">
-                        <img src="/images/logo-admin-layout-login.png" alt="logo" height="150">
+                    <img src="/images/logo-admin-layout-login.png" alt="logo" height="150">
                 </div>
                 <div class="row justify-content-center">
                     <div class="col-md-8 col-lg-6 col-xl-5">
@@ -141,5 +144,10 @@
         <script src="{{ asset("assets/$js") }}"></script>
     @endforeach
 </body>
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- toastr JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
 </html>
