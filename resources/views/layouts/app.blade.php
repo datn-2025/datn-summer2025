@@ -41,6 +41,31 @@
             document.write('<script src="https://polyfill.io/v3/polyfill.min.js?features=IntersectionObserver"><\/script>');
         }
     </script>
+    <style>
+        .nav-link {
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #dc3545 !important; /* Bootstrap red hoặc màu đỏ bạn dùng */
+        }
+
+        .nav-link.active {
+            color: #dc3545 !important;
+            
+        }
+        .footer-menu a {
+        color: #717171!important;          /* màu mặc định là đen */
+        text-decoration: none !important;
+        transition: color 0.3s ease;
+        }
+
+        .footer-menu a:hover {
+        color: #dc3545 !important;       /* màu đỏ Bootstrap */
+        text-decoration: none !important;
+        }
+
+    </style>
 </head>
 
 <body style="margin:0; min-height:100vh;">
