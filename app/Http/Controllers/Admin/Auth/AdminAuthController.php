@@ -37,11 +37,9 @@ class AdminAuthController extends Controller
 
             if (!$user->isAdmin()) {
                 Auth::logout();
-                Toastr::error('Bạn không có quyền truy cập vào trang quản trị');
-                return redirect()->back()->withInput();
-                // return back()->withErrors([
-                //     'email' => 'Bạn không có quyền truy cập vào trang quản trị',
-                // ]);
+                return back()->withErrors([
+                    'email' => 'Bạn không có quyền truy cập vào trang quản trị',
+                ]);
             }
 
             if (!$user->isActive()) {
