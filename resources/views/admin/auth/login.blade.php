@@ -18,7 +18,7 @@
 
     <!-- Toastr CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-  <!-- jQuery (Toastr cần jQuery) -->
+    <!-- jQuery (Toastr cần jQuery) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- Toastr JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
@@ -62,20 +62,24 @@
         <!-- Auth content -->
         <div class="auth-page-content">
             <div class="container">
-                <div class="text-center text-white-50">
-                    <img src="/images/logo-admin-layout-login.png" alt="logo" height="150">
-                </div>
                 <div class="row justify-content-center">
-                    <div class="col-md-8 col-lg-6 col-xl-5">
-                        <div class="card mt-4">
+                    <div class="col-md-8 col-lg-6 col-xl-5 mt-5">
+                        <div class="card mt-5">
                             <div class="card-body p-4">
-                                <div class="text-center mt-2">
+                                <div class="text-center mt-3">
+                                    <img src="/images/logo-admin-layout-login.png" alt="logo" height="60" class="mb-2">
                                     <h5 class="text-primary">Chào mừng trở lại!</h5>
                                     <p class="text-muted">Đăng nhập để tiếp tục với BookBee Admin</p>
                                 </div>
 
                                 <div class="p-2 mt-4">
-                                    {{-- Thông báo --}}
+                                    {{-- Hiển thị lỗi đăng nhập chung (key "login") --}}
+                                    @error('login')
+                                        <div class="alert alert-danger" role="alert">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                    {{-- Flash message --}}
                                     @foreach (['danger' => 'error', 'success' => 'success'] as $type => $msg)
                                         @if (session($msg))
                                             <div class="alert alert-{{ $type }}" role="alert">
@@ -83,12 +87,6 @@
                                             </div>
                                         @endif
                                     @endforeach
-
-                                    @if ($errors->any())
-                                        <div class="alert alert-danger" role="alert">
-                                            {!! implode('<br>', $errors->all()) !!}
-                                        </div>
-                                    @endif
 
                                     {{-- Form login --}}
                                     <form method="POST" action="{{ route('admin.login.submit') }}"
@@ -105,9 +103,6 @@
                                         </div>
 
                                         <div class="mb-3">
-                                            <div class="float-end">
-                                                <a href="#" class="text-muted">Quên mật khẩu?</a>
-                                            </div>
                                             <label for="password" class="form-label">Mật khẩu</label>
                                             <div class="position-relative auth-pass-inputgroup mb-3">
                                                 <input type="password" name="password" id="password"
@@ -130,18 +125,11 @@
                                             <label class="form-check-label" for="remember">Nhớ tài khoản</label>
                                         </div>
 
-                                        <div class="mt-4">
+                                        <div class="mt-4 mb-5">
                                             <button type="submit" class="btn btn-success w-100">
                                                 <i class="ri-login-box-line align-middle me-1"></i> Đăng nhập
                                             </button>
                                         </div>
-
-                                        {{-- <div class="mt-4 text-center">
-                                        <h5 class="fs-13 mb-4">Đăng nhập bằng</h5>
-                                        <div>
-                                            <button type="button" class="btn btn-danger btn-icon waves-effect waves-light"><i class="ri-google-fill fs-16"></i></button>
-                                        </div>
-                                    </div> --}}
                                     </form>
                                 </div>
                             </div>
@@ -163,14 +151,12 @@
                 </p>
             </div>
         </footer>
-
     </div>
 
     <!-- Scripts -->
     @foreach (['libs/bootstrap/js/bootstrap.bundle.min.js', 'libs/simplebar/simplebar.min.js', 'libs/node-waves/waves.min.js', 'libs/feather-icons/feather.min.js', 'js/pages/plugins/lord-icon-2.1.0.js', 'js/plugins.js', 'libs/particles.js/particles.js', 'js/pages/particles.app.js', 'js/pages/password-addon.init.js'] as $js)
         <script src="{{ asset("assets/$js") }}"></script>
     @endforeach
-   <!-- Render Thông báo từ Session -->
     {!! Toastr::message() !!}
 </body>
 
