@@ -45,11 +45,10 @@ Route::post('/wishlist/add', [WishlistController::class, 'add'])->name('wishlist
 Route::post('/wishlist/delete', [WishlistController::class, 'delete'])->name('wishlist.delete');
 Route::post('/wishlist/delete-all', [WishlistController::class, 'deleteAll'])->name('wishlist.delete-all');
 Route::post('/wishlist/add-to-cart', [WishlistController::class, 'addToCartFromWishlist'])->name('wishlist.addToCart');
-// Hiển thị danh sách và danh mục
 
 // Route public cho books (categoryId optional)
 Route::get('/', [HomeController::class, 'index'])->name('home');
-
+// Hiển thị danh sách và danh mục
 Route::get('/books/{slug?}', [BookController::class, 'index'])->name('books.index');
 Route::get('/book/{slug}', [HomeController::class, 'show'])->name('books.show');
 Route::get('/books/{categoryId?}', [BookController::class, 'index'])->name('books.index');
