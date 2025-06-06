@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Admin\Auth;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AdminAuthController extends Controller
 {
@@ -19,10 +21,7 @@ class AdminAuthController extends Controller
 
     public function login(Request $request)
     {
-        if (Auth::check() && Auth::user()->isAdmin()) {
-            return redirect()->route('admin.dashboard');
-        }
-        $credentials = $request->validate([
+        $request->validate([
             'email' => 'required|email',
             'password' => 'required|min:6',
         ], [
@@ -32,45 +31,25 @@ class AdminAuthController extends Controller
             'password.min' => 'Mật khẩu phải có ít nhất 6 ký tự.',
         ]);
 
-        if (Auth::attempt($credentials)) {
-            $user = Auth::user();
+        // Tìm user theo email
+        $user = User::where('email', $request->email)->with('role')->first();
 
-            if (!$user->isAdmin()) {
-                Auth::logout();
-                return back()->withErrors([
-                    'email' => 'Bạn không có quyền truy cập vào trang quản trị',
-                ]);
-            }
-
-            if (!$user->isActive()) {
-                Auth::logout();
-                return redirect()->back()->withErrors([
-                    'email' => 'Tài khoản của bạn đã bị khóa hoặc chưa được kích hoạt',
-                ]);
-            }
-
-            $request->session()->regenerate();
-            $request->session()->put('admin_name', $user->name);
-            Toastr::success('Đăng nhập thành công!');
-            return redirect()->route('admin.dashboard');
+        // Kiểm tra tồn tại user, quyền admin, trạng thái hoạt động
+        if (!$user || !$user->isAdmin() || !$user->isActive()) {
+            return back()->withInput($request->only('email'))
+                ->withErrors(['email' => 'Tài khoản hoặc mật khẩu không đúng']);
         }
 
-        return redirect()->back()
-            ->withErrors(['error' => 'Sai tài khoản hoặc mật khẩu'])
-            ->withInput();
+        // Kiểm tra mật khẩu
+        if (!Hash::check($request->password, $user->password)) {
+            return back()->withInput($request->only('email'))
+                ->withErrors(['email' => 'Tài khoản hoặc mật khẩu không đúng']);
+        }
 
-        // if (!Hash::check($request->password, $user->password)) {
-        //    return back()->withErrors([
-        //         'email' => ['Email không chính xác.'],
-        //         'password' => ['Mật khẩu không chính xác.'],
-        //     ]);
-        // }
-
-        // $request->session()->put([
-        //     'admin_id' => $user->id,
-        //     'admin_name' => $user->name,
-        //     'admin_role' => $user->role->name
-        // ]);
+        // Đăng nhập thành công
+        Auth::login($user);
+        Toastr::success('Đăng nhập thành công!');
+        return redirect()->route('admin.dashboard');
     }
 
     public function logout(Request $request)
