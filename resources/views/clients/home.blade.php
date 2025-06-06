@@ -74,35 +74,88 @@
                     <div class="swiper-wrapper">
                         @foreach ($category->books as $book)
                             <div class="swiper-slide pb-6">
-                                <div 
-                                    class="group bg-white border border-transparent hover:border-black rounded transition duration-300 overflow-hidden flex flex-col h-[510px]">
-                                    <div class="relative aspect-[1/1.05] bg-gray-100 overflow-hidden">
-                                        <img src="{{ asset('storage/images/' . $book->image) }}" alt="{{ $book->title }}">
-                                        <div class="absolute top-2 right-2 z-10">
-                                            <form class="wishlistForm" action="{{ route('wishlist.add') }}" method="POST">
-                                                @csrf
-                                                <input type="hidden" name="book_id" value="{{ $book->id }}">
-                                                <button type="submit"  style="background: none; border: none;">
-                                                    <i
-                                                        class="far fa-heart text-2xl text-gray-700 hover:text-red-500 cursor-pointer"></i>
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                    <div  class="p-4 flex flex-col justify-between flex-1">
-                                        <p class="text-black font-bold text-[15px]">
-                                            {{ number_format($book->price, 0, ',', '.') }}₫
-                                        </p>
-                                        <h3 onclick="window.location='{{ route('books.show', ['slug' => $book->slug]) }}'" class="text-sm font-semibold mt-1">{{ $book->title }}</h3>
-                                        <p  class="text-xs text-gray-500 mt-1">
-                                            {{ $category->name ?? 'Chưa có danh mục' }}
-                                        </p>
-                                        <a href="#"
-                                            class="mt-4 inline-block bg-black text-white px-4 py-2 rounded text-sm hover:bg-gray-800 text-center w-full">
-                                            Thêm vào giỏ hàng →
-                                        </a>
+                                <div class="bg-white rounded hover:shadow-lg transition-shadow duration-300 cursor-pointer flex flex-col justify-between">
+                                    {{-- Wishlist icon --}}
+                                    <div class="absolute top-2 right-2 z-10">
+                                        <form class="wishlistForm" action="{{ route('wishlist.add') }}" method="POST"
+                                            onclick="event.stopPropagation();">
+                                            @csrf
+                                            <input type="hidden" name="book_id" value="{{ $book->id }}">
+                                            <button type="submit" style="background: none; border: none;">
+                                                <i class="far fa-heart text-xl text-gray-700 hover:text-red-500"></i>
+                                            </button>
+                                        </form>
                                     </div>
 
+                                    {{-- Ảnh sách --}}
+                                    <div class="flex justify-center pt-4">
+                                        <img src="{{ asset('storage/images/' . $book->image) }}" alt="{{ $book->title }}"
+                                            class="w-[190px] h-[190px] object-cover rounded">
+                                    </div>
+
+                                    {{-- Nội dung --}}
+                                    <div class="p-4 flex flex-col flex-1">
+                                        <p onclick="window.location='{{ route('books.show', ['slug' => $book->slug]) }}'"
+                                            class="text-sm font-medium text-gray-800 mb-1 line-clamp-2">{{ $book->title }}</p>
+
+                                        {{-- Giá --}}
+                                        <div class="text-red-600 font-bold text-base">
+                                            {{ number_format($book->discount_price ?? $book->price, 0, ',', '.') }} đ
+                                        </div>
+
+                                        {{-- Giảm giá --}}
+                                        @if ($book->discount_price)
+                                            @php
+                                                $discountPercent = round(100 - ($book->discount_price / $book->price) * 100);
+                                            @endphp
+                                            <span class="inline-block mt-1 text-white bg-red-600 text-xs font-semibold px-2 py-1 rounded">
+                                                -{{ $discountPercent }}%
+                                            </span>
+                                            <div class="text-sm text-gray-500 line-through mt-1">
+                                                {{ number_format($book->price, 0, ',', '.') }} đ
+                                            </div>
+                                        @endif
+
+                                        {{-- Đánh giá --}}
+                                        <div class="mt-2 text-yellow-400">
+                                            @php
+                                                $rating = round($book->reviews->avg('rating'), 1);
+                                                $fullStars = floor($rating);
+                                                $halfStar = $rating - $fullStars >= 0.5;
+                                                $emptyStars = 5 - $fullStars - ($halfStar ? 1 : 0);
+                                            @endphp
+
+                                            {{-- Sao đầy --}}
+                                            @for ($i = 0; $i < $fullStars; $i++)
+                                                <i class="fas fa-star"></i>
+                                            @endfor
+
+                                            {{-- Nửa sao --}}
+                                            @if ($halfStar)
+                                                <i class="fas fa-star-half-alt"></i>
+                                            @endif
+
+                                            {{-- Sao rỗng --}}
+                                            @for ($i = 0; $i < $emptyStars; $i++)
+                                                <i class="far fa-star"></i>
+                                            @endfor
+
+                                            <span class="text-gray-600 text-sm">({{ $book->reviews->count() }} đánh giá)</span>
+                                        </div>
+                                    </div>
+
+                                    {{-- Nút hành động --}}
+                                    <div class="px-4 pb-4 mt-auto flex justify-between items-center">
+                                        <a href="{{ route('books.show', ['slug' => $book->slug]) }}"
+                                            class="bg-red-700 hover:bg-red-800 text-white px-4 py-2 rounded text-sm font-semibold">
+                                            Mua ngay 
+                                        </a>
+
+                                        <button onclick="event.stopPropagation(); alert('Thêm vào giỏ hàng')"
+                                            class="border border-red-700 text-red-700 px-3 py-2 rounded hover:bg-red-50">
+                                            <i class="fas fa-shopping-cart"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         @endforeach
@@ -165,15 +218,88 @@
                 <h3 class="text-xl font-bold mb-4">Nổi bật</h3>
                 <div class="flex flex-col gap-y-6">
                     @foreach ($featuredBooks as $book)
-                        <div onclick="window.location='{{ route('books.show', ['slug' => $book->slug]) }}'"
-                            class="min-h-[300px] flex flex-col justify-between border border-gray-200 rounded p-3 hover:border-black transition">
-                            <img src="{{ $book->images->first() ? asset('storage/' . $book->images->first()->image_url) : asset('storage/default.jpg') }}"
-                                alt="{{ $book->title }}" class="w-20 h-28 object-cover mb-2">
-                            <p class="font-semibold text-sm leading-tight">Tiêu đề: {{ $book->title }}</p>
-                            <p class="text-xs text-gray-500">Tác giả: {{ $book->author->name ?? 'Không rõ' }}</p>
-                            <p class="text-red-500 font-bold">
-                                Giá tiền: {{ number_format($book->formats->first()->price ?? 0, 0, ',', '.') }}₫
-                            </p>
+                        <div class="bg-white rounded hover:shadow-lg transition-shadow duration-300 cursor-pointer flex flex-col justify-between h-[450px]">
+                            {{-- Wishlist icon --}}
+                            <div class="absolute top-2 right-2 z-10">
+                                <form class="wishlistForm" action="{{ route('wishlist.add') }}" method="POST"
+                                    onclick="event.stopPropagation();">
+                                    @csrf
+                                    <input type="hidden" name="book_id" value="{{ $book->id }}">
+                                    <button type="submit" style="background: none; border: none;">
+                                        <i class="far fa-heart text-xl text-gray-700 hover:text-red-500"></i>
+                                    </button>
+                                </form>
+                            </div>
+
+                            {{-- Ảnh sách --}}
+                            <div class="flex justify-center pt-4">
+                                <img src="{{ asset('storage/images/' . $book->image) }}" alt="{{ $book->title }}"
+                                    class="w-[190px] h-[190px] object-cover rounded">
+                            </div>
+
+                            {{-- Nội dung --}}
+                            <div class="p-4 flex flex-col flex-1">
+                                <p onclick="window.location='{{ route('books.show', ['slug' => $book->slug]) }}'"
+                                    class="text-sm font-medium text-gray-800 mb-1 line-clamp-2">{{ $book->title }}</p>
+
+                                {{-- Giá --}}
+                                <div class="text-red-600 font-bold text-base">
+                                    {{ number_format($book->discount_price ?? $book->price, 0, ',', '.') }} đ
+                                </div>
+
+                                {{-- Giảm giá --}}
+                                @if ($book->discount_price)
+                                    @php
+                                        $discountPercent = round(100 - ($book->discount_price / $book->price) * 100);
+                                    @endphp
+                                    <span class="inline-block mt-1 text-white bg-red-600 text-xs font-semibold px-2 py-1 rounded">
+                                        -{{ $discountPercent }}%
+                                    </span>
+                                    <div class="text-sm text-gray-500 line-through mt-1">
+                                        {{ number_format($book->price, 0, ',', '.') }} đ
+                                    </div>
+                                @endif
+
+                                {{-- Đánh giá --}}
+                                <div class="mt-2 text-yellow-400">
+                                    @php
+                                        $rating = round($book->reviews->avg('rating'), 1);
+                                        $fullStars = floor($rating);
+                                        $halfStar = $rating - $fullStars >= 0.5;
+                                        $emptyStars = 5 - $fullStars - ($halfStar ? 1 : 0);
+                                    @endphp
+
+                                    {{-- Sao đầy --}}
+                                    @for ($i = 0; $i < $fullStars; $i++)
+                                        <i class="fas fa-star"></i>
+                                    @endfor
+
+                                    {{-- Nửa sao --}}
+                                    @if ($halfStar)
+                                        <i class="fas fa-star-half-alt"></i>
+                                    @endif
+
+                                    {{-- Sao rỗng --}}
+                                    @for ($i = 0; $i < $emptyStars; $i++)
+                                        <i class="far fa-star"></i>
+                                    @endfor
+
+                                    <span class="text-gray-600 text-sm">({{ $book->reviews->count() }} đánh giá)</span>
+                                </div>
+                            </div>
+
+                            {{-- Nút hành động --}}
+                            <div class="px-4 pb-4 mt-auto flex justify-between items-center">
+                                <a href="{{ route('books.show', ['slug' => $book->slug]) }}"
+                                    class="bg-red-700 hover:bg-red-800 text-white px-4 py-2 rounded text-sm font-semibold">
+                                    Mua ngay 
+                                </a>
+
+                                <button onclick="event.stopPropagation(); alert('Thêm vào giỏ hàng')"
+                                    class="border border-red-700 text-red-700 px-3 py-2 rounded hover:bg-red-50">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </button>
+                            </div>
                         </div>
                     @endforeach
                 </div>
@@ -185,15 +311,88 @@
                 <h3 class="text-xl font-bold mb-4">Mới nhất</h3>
                 <div class="flex flex-col gap-y-6">
                     @foreach ($latestBooks as $book)
-                        <div onclick="window.location='{{ route('books.show', ['slug' => $book->slug]) }}'"
-                            class="min-h-[300px] flex flex-col justify-between border border-gray-200 rounded p-3 hover:border-black transition">
-                            <img src="{{ asset('storage/' . ($book->images->first()->image_url ?? 'default.jpg')) }}"
-                                alt="{{ $book->title }}" class="w-20 h-28 object-cover mb-2">
-                            <p class="font-semibold text-sm leading-tight">Tiêu đề: {{ $book->title }}</p>
-                            <p class="text-xs text-gray-500">Tác giả: {{ $book->author->name ?? 'Không rõ' }}</p>
-                            <p class="text-red-500 font-bold">
-                                Giá tiền {{ number_format($book->formats->first()->price ?? 0, 0, ',', '.') }}₫
-                            </p>
+                        <div class="bg-white rounded hover:shadow-lg transition-shadow duration-300 cursor-pointer flex flex-col justify-between h-[450px]">
+                            {{-- Wishlist icon --}}
+                            <div class="absolute top-2 right-2 z-10">
+                                <form class="wishlistForm" action="{{ route('wishlist.add') }}" method="POST"
+                                    onclick="event.stopPropagation();">
+                                    @csrf
+                                    <input type="hidden" name="book_id" value="{{ $book->id }}">
+                                    <button type="submit" style="background: none; border: none;">
+                                        <i class="far fa-heart text-xl text-gray-700 hover:text-red-500"></i>
+                                    </button>
+                                </form>
+                            </div>
+
+                            {{-- Ảnh sách --}}
+                            <div class="flex justify-center pt-4">
+                                <img src="{{ asset('storage/images/' . $book->image) }}" alt="{{ $book->title }}"
+                                    class="w-[190px] h-[190px] object-cover rounded">
+                            </div>
+
+                            {{-- Nội dung --}}
+                            <div class="p-4 flex flex-col flex-1">
+                                <p onclick="window.location='{{ route('books.show', ['slug' => $book->slug]) }}'"
+                                    class="text-sm font-medium text-gray-800 mb-1 line-clamp-2">{{ $book->title }}</p>
+
+                                {{-- Giá --}}
+                                <div class="text-red-600 font-bold text-base">
+                                    {{ number_format($book->discount_price ?? $book->price, 0, ',', '.') }} đ
+                                </div>
+
+                                {{-- Giảm giá --}}
+                                @if ($book->discount_price)
+                                    @php
+                                        $discountPercent = round(100 - ($book->discount_price / $book->price) * 100);
+                                    @endphp
+                                    <span class="inline-block mt-1 text-white bg-red-600 text-xs font-semibold px-2 py-1 rounded">
+                                        -{{ $discountPercent }}%
+                                    </span>
+                                    <div class="text-sm text-gray-500 line-through mt-1">
+                                        {{ number_format($book->price, 0, ',', '.') }} đ
+                                    </div>
+                                @endif
+
+                                {{-- Đánh giá --}}
+                                <div class="mt-2 text-yellow-400">
+                                    @php
+                                        $rating = round($book->reviews->avg('rating'), 1);
+                                        $fullStars = floor($rating);
+                                        $halfStar = $rating - $fullStars >= 0.5;
+                                        $emptyStars = 5 - $fullStars - ($halfStar ? 1 : 0);
+                                    @endphp
+
+                                    {{-- Sao đầy --}}
+                                    @for ($i = 0; $i < $fullStars; $i++)
+                                        <i class="fas fa-star"></i>
+                                    @endfor
+
+                                    {{-- Nửa sao --}}
+                                    @if ($halfStar)
+                                        <i class="fas fa-star-half-alt"></i>
+                                    @endif
+
+                                    {{-- Sao rỗng --}}
+                                    @for ($i = 0; $i < $emptyStars; $i++)
+                                        <i class="far fa-star"></i>
+                                    @endfor
+
+                                    <span class="text-gray-600 text-sm">({{ $book->reviews->count() }} đánh giá)</span>
+                                </div>
+                            </div>
+
+                            {{-- Nút hành động --}}
+                            <div class="px-4 pb-4 mt-auto flex justify-between items-center">
+                                <a href="{{ route('books.show', ['slug' => $book->slug]) }}"
+                                    class="bg-red-700 hover:bg-red-800 text-white px-4 py-2 rounded text-sm font-semibold">
+                                    Mua ngay 
+                                </a>
+
+                                <button onclick="event.stopPropagation(); alert('Thêm vào giỏ hàng')"
+                                    class="border border-red-700 text-red-700 px-3 py-2 rounded hover:bg-red-50">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </button>
+                            </div>
                         </div>
                     @endforeach
                 </div>
@@ -205,19 +404,88 @@
                 <h3 class="text-xl font-bold mb-4">Đánh giá cao</h3>
                 <div class="flex flex-col gap-y-6">
                     @foreach ($bestReviewedBooks as $book)
-                        @php
-                            $rating = round($book->reviews->avg('rating'), 1);
+                        <div class="bg-white rounded hover:shadow-lg transition-shadow duration-300 cursor-pointer flex flex-col justify-between h-[450px]">
+                            {{-- Wishlist icon --}}
+                            <div class="absolute top-2 right-2 z-10">
+                                <form class="wishlistForm" action="{{ route('wishlist.add') }}" method="POST"
+                                    onclick="event.stopPropagation();">
+                                    @csrf
+                                    <input type="hidden" name="book_id" value="{{ $book->id }}">
+                                    <button type="submit" style="background: none; border: none;">
+                                        <i class="far fa-heart text-xl text-gray-700 hover:text-red-500"></i>
+                                    </button>
+                                </form>
+                            </div>
 
-                        @endphp
-                        <div onclick="window.location='{{ route('books.show', ['slug' => $book->slug]) }}'"
-                            class="min-h-[300px] flex flex-col justify-between border border-gray-200 rounded p-3 hover:border-black transition">
-                            <img src="{{ asset('storage/' . ($book->images->first()->image_url ?? 'default.jpg')) }}"
-                                alt="{{ $book->title }}" class="w-20 h-28 object-cover mb-2">
-                            <p class="font-semibold text-sm leading-tight">Tiêu đề: {{ $book->title }}</p>
-                            <p class="text-xs text-gray-500">Tác giả: {{ $book->author->name ?? 'Không rõ' }}</p>
-                            <p class="text-red-500 font-bold">
-                                Giá tiền: {{ number_format($book->formats->first()->price ?? 0, 0, ',', '.') }}₫
-                            </p>
+                            {{-- Ảnh sách --}}
+                            <div class="flex justify-center pt-4">
+                                <img src="{{ asset('storage/images/' . $book->image) }}" alt="{{ $book->title }}"
+                                    class="w-[190px] h-[190px] object-cover rounded">
+                            </div>
+
+                            {{-- Nội dung --}}
+                            <div class="p-4 flex flex-col flex-1">
+                                <p onclick="window.location='{{ route('books.show', ['slug' => $book->slug]) }}'"
+                                    class="text-sm font-medium text-gray-800 mb-1 line-clamp-2">{{ $book->title }}</p>
+
+                                {{-- Giá --}}
+                                <div class="text-red-600 font-bold text-base">
+                                    {{ number_format($book->discount_price ?? $book->price, 0, ',', '.') }} đ
+                                </div>
+
+                                {{-- Giảm giá --}}
+                                @if ($book->discount_price)
+                                    @php
+                                        $discountPercent = round(100 - ($book->discount_price / $book->price) * 100);
+                                    @endphp
+                                    <span class="inline-block mt-1 text-white bg-red-600 text-xs font-semibold px-2 py-1 rounded">
+                                        -{{ $discountPercent }}%
+                                    </span>
+                                    <div class="text-sm text-gray-500 line-through mt-1">
+                                        {{ number_format($book->price, 0, ',', '.') }} đ
+                                    </div>
+                                @endif
+
+                                {{-- Đánh giá --}}
+                                <div class="mt-2 text-yellow-400">
+                                    @php
+                                        $rating = round($book->reviews->avg('rating'), 1);
+                                        $fullStars = floor($rating);
+                                        $halfStar = $rating - $fullStars >= 0.5;
+                                        $emptyStars = 5 - $fullStars - ($halfStar ? 1 : 0);
+                                    @endphp
+
+                                    {{-- Sao đầy --}}
+                                    @for ($i = 0; $i < $fullStars; $i++)
+                                        <i class="fas fa-star"></i>
+                                    @endfor
+
+                                    {{-- Nửa sao --}}
+                                    @if ($halfStar)
+                                        <i class="fas fa-star-half-alt"></i>
+                                    @endif
+
+                                    {{-- Sao rỗng --}}
+                                    @for ($i = 0; $i < $emptyStars; $i++)
+                                        <i class="far fa-star"></i>
+                                    @endfor
+
+                                    <span class="text-gray-600 text-sm">({{ $book->reviews->count() }} đánh giá)</span>
+                                </div>
+                            </div>
+
+                            {{-- Nút hành động --}}
+                            <div class="px-4 pb-4 mt-auto flex justify-between items-center">
+                                <a href="{{ route('books.show', ['slug' => $book->slug]) }}"
+                                    class="bg-red-700 hover:bg-red-800 text-white px-4 py-2 rounded text-sm font-semibold">
+                                    Mua ngay 
+                                </a>
+
+                                <button onclick="event.stopPropagation(); alert('Thêm vào giỏ hàng')"
+                                    class="border border-red-700 text-red-700 px-3 py-2 rounded hover:bg-red-50">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </button>
+                            </div>
                         </div>
                     @endforeach
                 </div>
@@ -229,26 +497,87 @@
                 <h3 class="text-xl font-bold mb-4">Giảm giá</h3>
                 <div class="flex flex-col gap-y-6">
                     @foreach ($saleBooks as $book)
-                        @php
-                            $fomat = $book->formats->first();
-                            $oldPrice = $fomat->price ?? 0;
-                            $discount = $fomat->discount ?? 0;
-                            $newPrice = $oldPrice - $oldPrice * ($discount / 100);
-                        @endphp
-                        <div onclick="window.location='{{ route('books.show', ['slug' => $book->slug]) }}'"
-                            class="min-h-[300px] flex flex-col justify-between border border-gray-200 rounded p-3 hover:border-black transition">
-                            <img src="{{ asset('storage/' . ($book->images->first()->image_url ?? 'default.jpg')) }}"
-                                alt="{{ $book->title }}" class="w-20 h-28 object-cover mb-2">
-                            <p class="font-semibold text-sm leading-tight">Tiêu đề: {{ $book->title }}</p>
-                            <p class="text-xs text-gray-500">Tác giả: {{ $book->author->name ?? 'Không rõ' }}</p>
-                            {{-- 💸 Giá có giảm --}}
-                            <div class="text-sm mt-1">
-                                <span class="line-through text-gray-700 mr-2">
-                                    Giá tiền: {{ number_format($oldPrice, 0, ',', '.') }}₫
-                                </span>
-                                <span class="text-red-600 font-bold">
-                                    Giá tiền: {{ number_format($newPrice, 0, ',', '.') }}₫
-                                </span>
+                        <div class="bg-white rounded hover:shadow-lg transition-shadow duration-300 cursor-pointer flex flex-col justify-between h-[450px]">
+                            {{-- Wishlist icon --}}
+                            <div class="absolute top-2 right-2 z-10">
+                                <form class="wishlistForm" action="{{ route('wishlist.add') }}" method="POST"
+                                    onclick="event.stopPropagation();">
+                                    @csrf
+                                    <input type="hidden" name="book_id" value="{{ $book->id }}">
+                                    <button type="submit" style="background: none; border: none;">
+                                        <i class="far fa-heart text-xl text-gray-700 hover:text-red-500"></i>
+                                    </button>
+                                </form>
+                            </div>
+
+                            {{-- Ảnh sách --}}
+                            <div class="flex justify-center pt-4">
+                                <img src="{{ asset('storage/images/' . $book->image) }}" alt="{{ $book->title }}"
+                                    class="w-[190px] h-[190px] object-cover rounded">
+                            </div>
+
+                            {{-- Nội dung --}}
+                            <div class="p-4 flex flex-col flex-1">
+                                <p onclick="window.location='{{ route('books.show', ['slug' => $book->slug]) }}'"
+                                    class="text-sm font-medium text-gray-800 mb-1 line-clamp-2">{{ $book->title }}</p>
+
+                                {{-- Giá --}}
+                                <div class="text-red-600 font-bold text-base">
+                                    {{ number_format($book->discount_price ?? $book->price, 0, ',', '.') }} đ
+                                </div>
+
+                                {{-- Giảm giá --}}
+                                @if ($book->discount_price)
+                                    @php
+                                        $discountPercent = round(100 - ($book->discount_price / $book->price) * 100);
+                                    @endphp
+                                    <span class="inline-block mt-1 text-white bg-red-600 text-xs font-semibold px-2 py-1 rounded">
+                                        -{{ $discountPercent }}%
+                                    </span>
+                                    <div class="text-sm text-gray-500 line-through mt-1">
+                                        {{ number_format($book->price, 0, ',', '.') }} đ
+                                    </div>
+                                @endif
+
+                                {{-- Đánh giá --}}
+                                <div class="mt-2 text-yellow-400">
+                                    @php
+                                        $rating = round($book->reviews->avg('rating'), 1);
+                                        $fullStars = floor($rating);
+                                        $halfStar = $rating - $fullStars >= 0.5;
+                                        $emptyStars = 5 - $fullStars - ($halfStar ? 1 : 0);
+                                    @endphp
+
+                                    {{-- Sao đầy --}}
+                                    @for ($i = 0; $i < $fullStars; $i++)
+                                        <i class="fas fa-star"></i>
+                                    @endfor
+
+                                    {{-- Nửa sao --}}
+                                    @if ($halfStar)
+                                        <i class="fas fa-star-half-alt"></i>
+                                    @endif
+
+                                    {{-- Sao rỗng --}}
+                                    @for ($i = 0; $i < $emptyStars; $i++)
+                                        <i class="far fa-star"></i>
+                                    @endfor
+
+                                    <span class="text-gray-600 text-sm">({{ $book->reviews->count() }} đánh giá)</span>
+                                </div>
+                            </div>
+
+                            {{-- Nút hành động --}}
+                            <div class="px-4 pb-4 mt-auto flex justify-between items-center">
+                                <a href="{{ route('books.show', ['slug' => $book->slug]) }}"
+                                    class="bg-red-700 hover:bg-red-800 text-white px-4 py-2 rounded text-sm font-semibold">
+                                    Mua ngay 
+                                </a>
+
+                                <button onclick="event.stopPropagation(); alert('Thêm vào giỏ hàng')"
+                                    class="border border-red-700 text-red-700 px-3 py-2 rounded hover:bg-red-50">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </button>
                             </div>
                         </div>
                     @endforeach
@@ -267,39 +596,96 @@
         <h2 class="text-2xl md:text-3xl font-bold uppercase mb-6">🆕 Sản phẩm mới nhất</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 items-stretch">
             @forelse($books as $book)
-                <div onclick="window.location='{{ route('books.show', ['slug' => $book->slug]) }}'"
-                    class="bg-white rounded shadow-sm overflow-hidden transition-all duration-200 hover:border hover:border-black group flex flex-col h-full">
-                    <div class="relative aspect-[1/1.05] bg-gray-100 overflow-hidden">
-                        <img src="{{ asset('storage/images/' . $book->image) }}"
-                            class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                            alt="{{ $book->title }}">
-                        <div class="absolute top-2 right-2 z-10">
-                            <form class="wishlistForm" action="{{ route('wishlist.add') }}" method="POST">
-                                @csrf
-                                <input type="hidden" name="book_id" value="{{ $book->id }}">
-                                <button type="submit" style="background: none; border: none;">
-                                    <i
-                                        class="far fa-heart text-2xl text-gray-700 hover:text-red-500 cursor-pointer"></i>
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                    <div class="p-4 bg-white flex flex-col flex-1 justify-between h-[180px]">
-                        <h3 class="text-base font-semibold text-gray-800">{{ $book->title }}</h3>
-                        <p class="text-sm text-gray-500">{{ $book->author?->name ?? 'Không rõ' }}</p>
-                        <p class="text-lg font-bold text-red-600 mt-2">{{ number_format($book->price, 0, ',', '.') }}₫
-                        </p>
-                        <a href="#"
-                            class="mt-4 inline-block bg-black text-white px-4 py-2 rounded text-sm hover:bg-gray-800 text-center w-full">
-                            Thêm vào giỏ hàng →
-                        </a>
+                <div
+                    class="bg-white rounded hover:shadow-lg transition-shadow duration-300 cursor-pointer flex flex-col justify-between">
+
+                    {{-- Wishlist icon --}}
+                    <div class="absolute top-2 right-2 z-10">
+                        <form class="wishlistForm" action="{{ route('wishlist.add') }}" method="POST"
+                            onclick="event.stopPropagation();">
+                            @csrf
+                            <input type="hidden" name="book_id" value="{{ $book->id }}">
+                            <button type="submit" style="background: none; border: none;">
+                                <i class="far fa-heart text-xl text-gray-700 hover:text-red-500"></i>
+                            </button>
+                        </form>
                     </div>
 
+                    {{-- Ảnh sách --}}
+                    <div class="flex justify-center pt-4">
+                        <img src="{{ asset('storage/images/' . $book->image) }}" alt="hong có ảnh"
+                            class="w-[190px] h-[190px] object-cover rounded">
+                    </div>
+
+                    {{-- Nội dung --}}
+                    <div class="p-4 flex flex-col flex-1">
+                        <p onclick="window.location='{{ route('books.show', ['slug' => $book->slug]) }}'"
+                            class="text-sm font-medium text-gray-800 mb-1 line-clamp-2">{{ $book->title }}</p>
+
+                        {{-- Giá --}}
+                        <div class="text-red-600 font-bold text-base">
+                            {{ number_format($book->discount_price ?? $book->price, 0, ',', '.') }} đ
+                        </div>
+
+                        {{-- Giảm giá --}}
+                        @if ($book->discount_price)
+                            @php
+                                $discountPercent = round(100 - ($book->discount_price / $book->price) * 100);
+                            @endphp
+                            <span class="inline-block mt-1 text-white bg-red-600 text-xs font-semibold px-2 py-1 rounded">
+                                -{{ $discountPercent }}%
+                            </span>
+                            <div class="text-sm text-gray-500 line-through mt-1">
+                                {{ number_format($book->price, 0, ',', '.') }} đ
+                            </div>
+                        @endif
+
+                        {{-- Đánh giá --}}
+                        <div class="mt-2 text-yellow-400">
+                            @php
+                                $rating = round($book->reviews->avg('rating'), 1);
+                                $fullStars = floor($rating);
+                                $halfStar = $rating - $fullStars >= 0.5;
+                                $emptyStars = 5 - $fullStars - ($halfStar ? 1 : 0);
+                            @endphp
+
+                            {{-- Sao đầy --}}
+                            @for ($i = 0; $i < $fullStars; $i++)
+                                <i class="fas fa-star"></i>
+                            @endfor
+
+                            {{-- Nửa sao --}}
+                            @if ($halfStar)
+                                <i class="fas fa-star-half-alt"></i>
+                            @endif
+
+                            {{-- Sao rỗng --}}
+                            @for ($i = 0; $i < $emptyStars; $i++)
+                                <i class="far fa-star"></i>
+                            @endfor
+
+                            <span class="text-gray-600 text-sm">({{ $book->reviews->count() }} đánh giá)</span>
+                        </div>
+                    </div>
+
+                    {{-- Nút hành động --}}
+                    <div class="px-4 pb-4 mt-auto flex justify-between items-center">
+                        <a href="{{ route('books.show', ['slug' => $book->slug]) }}"
+                            class="bg-red-700 hover:bg-red-800 text-white px-4 py-2 rounded text-sm font-semibold">
+                            Mua ngay 
+                        </a>
+
+                        <button onclick="event.stopPropagation(); alert('Thêm vào giỏ hàng')"
+                            class="border border-red-700 text-red-700 px-3 py-2 rounded hover:bg-red-50">
+                            <i class="fas fa-shopping-cart"></i>
+                        </button>
+                    </div>
                 </div>
             @empty
                 <p class="col-span-4 text-center text-gray-500">Chưa có sản phẩm nào.</p>
             @endforelse
         </div>
+
     </section>
 
 
@@ -365,7 +751,7 @@
                         </div>
                         <div class="mt-4">
                             <a href="#" class=" inline-block text-sm text-red-500 hover:underline font-semibold">
-                                Đọc thêm →
+                                Đọc thêm 
                             </a>
                         </div>
 
@@ -383,45 +769,45 @@
 @endsection
 
 @push('scripts')
-<script>
-$(document).ready(function() {
-    // Cấu hình toastr
-    toastr.options = {
-        "closeButton": true,
-        "progressBar": true,
-        "positionClass": "toast-top-right",
-        "timeOut": "3000"
-    };
+    <script>
+        $(document).ready(function() {
+            // Cấu hình toastr
+            toastr.options = {
+                "closeButton": true,
+                "progressBar": true,
+                "positionClass": "toast-top-right",
+                "timeOut": "3000"
+            };
 
-    $('.wishlistForm').on('submit', function(e) {
-        e.preventDefault();
-        var form = $(this);
-        var heartIcon = form.find('i.fa-heart');
-        
-        $.ajax({
-            url: form.attr('action'),
-            method: 'POST',
-            data: form.serialize(),
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: function(response) {
-                if(response.success) {
-                    heartIcon.removeClass('far').addClass('fas text-red-500');
-                    toastr.success('Đã thêm vào danh sách yêu thích!');
-                } else {
-                    toastr.warning(response.message || 'Có lỗi xảy ra!');
-                }
-            },
-            error: function(xhr) {
-                if(xhr.status === 401) {
-                    toastr.error('Bạn cần đăng nhập để thực hiện chức năng này');
-                } else {
-                    toastr.error('Có lỗi xảy ra, vui lòng thử lại sau');
-                }
-            }
+            $('.wishlistForm').on('submit', function(e) {
+                e.preventDefault();
+                var form = $(this);
+                var heartIcon = form.find('i.fa-heart');
+
+                $.ajax({
+                    url: form.attr('action'),
+                    method: 'POST',
+                    data: form.serialize(),
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            heartIcon.removeClass('far').addClass('fas text-red-500');
+                            toastr.success('Đã thêm vào danh sách yêu thích!');
+                        } else {
+                            toastr.warning(response.message || 'Có lỗi xảy ra!');
+                        }
+                    },
+                    error: function(xhr) {
+                        if (xhr.status === 401) {
+                            toastr.error('Bạn cần đăng nhập để thực hiện chức năng này');
+                        } else {
+                            toastr.error('Có lỗi xảy ra, vui lòng thử lại sau');
+                        }
+                    }
+                });
+            });
         });
-    });
-});
-</script>
+    </script>
 @endpush
