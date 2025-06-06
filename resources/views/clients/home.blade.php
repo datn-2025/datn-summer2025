@@ -74,7 +74,7 @@
                     <div class="swiper-wrapper">
                         @foreach ($category->books as $book)
                             <div class="swiper-slide pb-6">
-                                <div onclick="window.location='{{ route('books.show', ['slug' => $book->slug]) }}'"
+                                <div 
                                     class="group bg-white border border-transparent hover:border-black rounded transition duration-300 overflow-hidden flex flex-col h-[510px]">
                                     <div class="relative aspect-[1/1.05] bg-gray-100 overflow-hidden">
                                         <img src="{{ asset('storage/images/' . $book->image) }}" alt="{{ $book->title }}">
@@ -87,15 +87,14 @@
                                                         class="far fa-heart text-2xl text-gray-700 hover:text-red-500 cursor-pointer"></i>
                                                 </button>
                                             </form>
-
                                         </div>
                                     </div>
-                                    <div class="p-4 flex flex-col justify-between flex-1">
+                                    <div  class="p-4 flex flex-col justify-between flex-1">
                                         <p class="text-black font-bold text-[15px]">
                                             {{ number_format($book->price, 0, ',', '.') }}₫
                                         </p>
-                                        <h3 class="text-sm font-semibold mt-1">{{ $book->title }}</h3>
-                                        <p class="text-xs text-gray-500 mt-1">
+                                        <h3 onclick="window.location='{{ route('books.show', ['slug' => $book->slug]) }}'" class="text-sm font-semibold mt-1">{{ $book->title }}</h3>
+                                        <p  class="text-xs text-gray-500 mt-1">
                                             {{ $category->name ?? 'Chưa có danh mục' }}
                                         </p>
                                         <a href="#"

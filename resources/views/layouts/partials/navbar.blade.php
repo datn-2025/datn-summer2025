@@ -12,8 +12,8 @@
             <li><a href="/" class="hover:text-red-500 text-red-500">Trang chủ</a></li>
             <li><a href="#" class="hover:text-red-500">Giới thiệu</a></li>
             <li><a href="#" class="hover:text-red-500">Cửa hàng</a></li>
-            <li><a href="#" class="hover:text-red-500">Tin tức</a></li>
-            <li><a href="#" class="hover:text-red-500">Liên hệ</a></li>
+            <li><a href="/news" class="hover:text-red-500">Tin tức</a></li>
+            <li><a href="/contact" class="hover:text-red-500">Liên hệ</a></li>
         </ul>
         {{-- Phải: Tìm kiếm + icon + dòng phụ --}}
         <div class="flex flex-col items-end gap-1 text-sm md:text-xs">
@@ -81,7 +81,7 @@
         @endauth
     </div>
 </div>
-                <i class="far fa-heart hover:text-black cursor-pointer"></i>
+                <a href="/wishlist"><i class="far fa-heart hover:text-black cursor-pointer"></i></a>
                 <div class="relative">
                     <i class="fas fa-shopping-bag hover:text-black cursor-pointer"></i>
                     <span
