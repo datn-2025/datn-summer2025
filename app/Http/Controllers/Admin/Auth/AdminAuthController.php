@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\Auth;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Auth;
 
 class AdminAuthController extends Controller
@@ -50,11 +51,13 @@ class AdminAuthController extends Controller
 
             $request->session()->regenerate();
             $request->session()->put('admin_name', $user->name);
-             return redirect()->intended(route('admin.dashboard'))
-                         ->with('success', 'Đăng nhập thành công');
+            Toastr::success('Đăng nhập thành công!');
+            return redirect()->intended(route('admin.dashboard'));
         }
 
-        return back()->with('error', 'Email hoặc mật khẩu không chính xác');
+        return back()->withErrors([
+            'email' => 'Email hoặc mật khẩu không chính xác',
+        ]);
 
         // if (!Hash::check($request->password, $user->password)) {
         //    return back()->withErrors([
@@ -76,6 +79,7 @@ class AdminAuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
+        Toastr::success('Bạn đã đăng xuất thành công.');
         return redirect()->route('admin.login');
     }
 }
