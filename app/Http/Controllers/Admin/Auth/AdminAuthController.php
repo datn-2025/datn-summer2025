@@ -34,10 +34,22 @@ class AdminAuthController extends Controller
         // Tìm user theo email
         $user = User::where('email', $request->email)->with('role')->first();
 
-        // Kiểm tra tồn tại user, quyền admin, trạng thái hoạt động
-        if (!$user || !$user->isAdmin() || !$user->isActive()) {
+        // Kiểm tra tồn tại user
+        if (!$user) {
             return back()->withInput($request->only('email'))
-                ->withErrors(['email' => 'Tài khoản hoặc mật khẩu không đúng']);
+                ->withErrors(['login' => 'Tài khoản hoặc mật khẩu không đúng']);
+        }
+
+        // Kiểm tra quyền admin
+        if (!$user->isAdmin()) {
+            return back()->withInput($request->only('email'))
+                ->withErrors(['login' => 'Bạn không có quyền truy cập vào trang quản trị']);
+        }
+
+        // Kiểm tra trạng thái hoạt động
+        if (!$user->isActive()) {
+            return back()->withInput($request->only('email'))
+                ->withErrors(['login' => 'Tài khoản của bạn đã bị khoá hoặc chưa kích hoạt']);
         }
 
         // Kiểm tra mật khẩu
