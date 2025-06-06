@@ -225,7 +225,6 @@
                                     </div>
 
                                 </div>
-
                                 <div class="tab-content position-relative" id="notificationItemsTabContent">
                                     <div class="tab-pane fade show active py-2 ps-2" id="all-noti-tab"
                                         role="tabpanel">
