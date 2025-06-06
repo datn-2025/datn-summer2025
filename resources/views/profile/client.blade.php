@@ -5,6 +5,8 @@
 <!DOCTYPE html>
 <html lang="vi" data-theme="light">
 <head>
+    <!-- Toastr CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hồ Sơ Cá Nhân - BookBee</title>
@@ -572,6 +574,22 @@
       100% { transform: rotate(360deg); }
     }
   </style>
+    <!-- jQuery and Toastr JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script>
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "timeOut": "5000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+    </script>
+    {!! Toastr::message() !!}
 </head>
 
 <body>
@@ -593,9 +611,63 @@
             @csrf
             @method('PUT') <!-- Đặt phương thức PUT để update -->
 
-            <div class="row">
-                <div class="col-md-8">
-                <!-- Tên đăng nhập -->
+            <!-- Avatar đẹp ở trên cùng -->
+            <div class="mb-4 text-center position-relative">
+                <label class="form-label">Ảnh đại diện (avatar)</label>
+                <div class="avatar-wrapper mx-auto mb-2" style="width: 170px; height: 170px; position: relative;">
+                    <img id="avatarPreview" src="{{ asset('storage/' . Auth::user()->avatar) }}" alt="Avatar" class="rounded-circle shadow avatar-img" style="width: 170px; height: 170px; object-fit: cover; border: 4px solid #fff; transition: box-shadow 0.3s, transform 0.3s;">
+                    <div class="avatar-overlay d-flex align-items-center justify-content-center" style="position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(60,60,60,0.45);border-radius:50%;opacity:0;transition:opacity 0.3s;cursor:pointer;">
+                        <span class="text-white"><i class="fas fa-camera fa-lg"></i> <span class="d-none d-md-inline">Đổi ảnh</span></span>
+                    </div>
+                    <input type="file" name="avatar" class="form-control avatar-input" style="opacity:0;position:absolute;top:0;left:0;width:100%;height:100%;cursor:pointer;" accept="image/jpeg,image/png">
+                </div>
+                <p class="text-muted mt-2 small">Tối đa 1MB. Định dạng: .JPEG, .PNG</p>
+            </div>
+            <script>
+                $(function(){
+                    $('.avatar-wrapper').hover(function(){
+                        $(this).find('.avatar-overlay').css('opacity', 1);
+                    }, function(){
+                        $(this).find('.avatar-overlay').css('opacity', 0);
+                    });
+                    $('.avatar-input').change(function(e){
+                        const [file] = this.files;
+                        if(file){
+                            const reader = new FileReader();
+                            reader.onload = function(ev){
+                                $('#avatarPreview').attr('src', ev.target.result).addClass('animate__animated animate__zoomIn');
+                            }
+                            reader.readAsDataURL(file);
+                        }
+                    });
+                });
+            </script>
+            <style>
+                .avatar-wrapper {
+                    box-shadow: 0 8px 32px 0 rgba(99,102,241,0.25);
+                    overflow: hidden;
+                    border-radius: 50%;
+                    background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+                    transition: box-shadow 0.3s, transform 0.3s;
+                }
+                .avatar-img {
+                    transition: transform 0.3s, box-shadow 0.3s;
+                }
+                .avatar-wrapper:hover .avatar-img {
+                    transform: scale(1.05) rotate(-2deg);
+                    box-shadow: 0 12px 36px 0 rgba(99,102,241,0.35);
+                }
+                .avatar-overlay {
+                    font-size: 1.2rem;
+                    pointer-events: none;
+                }
+                .avatar-wrapper:hover .avatar-overlay {
+                    pointer-events: auto;
+                }
+            </style>
+            <!-- END avatar đẹp ở trên cùng -->
+
+            <!-- Tên đăng nhập -->
                 <div class="mb-4">
                     <label class="form-label">Tên đăng nhập</label>
                     <input type="text" class="form-control" name="name" value="{{ Auth::user()->name }}" required>
@@ -613,11 +685,50 @@
                     <input type="tel" class="form-control" name="phone" value="{{ Auth::user()->phone }}">
                 </div>
 
-                <div class="mb-4 text-center">
-                    <label class="form-label">Ảnh đại diện (avatar)</label>
-                   <input type="file" name="avatar" class="form-control" accept="image/jpeg,image/png">
                     <p class="text-muted mt-2 small">Tối đa 1MB. Định dạng: .JPEG, .PNG</p>
                 </div>
+                <script>
+                    $(function(){
+                        $('.avatar-wrapper').hover(function(){
+                            $(this).find('.avatar-overlay').css('opacity', 1);
+                        }, function(){
+                            $(this).find('.avatar-overlay').css('opacity', 0);
+                        });
+                        $('.avatar-input').change(function(e){
+                            const [file] = this.files;
+                            if(file){
+                                const reader = new FileReader();
+                                reader.onload = function(ev){
+                                    $('#avatarPreview').attr('src', ev.target.result).addClass('animate__animated animate__zoomIn');
+                                }
+                                reader.readAsDataURL(file);
+                            }
+                        });
+                    });
+                </script>
+                <style>
+                    .avatar-wrapper {
+                        box-shadow: 0 8px 32px 0 rgba(99,102,241,0.25);
+                        overflow: hidden;
+                        border-radius: 50%;
+                        background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+                        transition: box-shadow 0.3s, transform 0.3s;
+                    }
+                    .avatar-img {
+                        transition: transform 0.3s, box-shadow 0.3s;
+                    }
+                    .avatar-wrapper:hover .avatar-img {
+                        transform: scale(1.05) rotate(-2deg);
+                        box-shadow: 0 12px 36px 0 rgba(99,102,241,0.35);
+                    }
+                    .avatar-overlay {
+                        font-size: 1.2rem;
+                        pointer-events: none;
+                    }
+                    .avatar-wrapper:hover .avatar-overlay {
+                        pointer-events: auto;
+                    }
+                </style>
 
 
                 <!-- Nút lưu -->
@@ -627,10 +738,6 @@
                 </div>
 
                 <!-- Avatar hiển thị -->
-                <div class="col-md-4 text-center avatar">
-                    <img src="{{ asset('storage/' . Auth::user()->avatar) }}" alt="Avatar" class="mb-3 shadow"
-                             style="width: 150px; height: 150px; object-fit: cover;">
-                </div>
 
             </div>
             </form>

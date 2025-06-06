@@ -351,7 +351,13 @@ public function activate(Request $request)
         }
 
         $user->save();
-        Toastr::success('Cập nhật hồ sơ thành công!', 'Thành công');
+        // Gửi mail thông báo cập nhật hồ sơ
+        try {
+            \Mail::to($user->email)->send(new \App\Mail\ProfileUpdateMail($user));
+        } catch (\Exception $e) {
+            \Log::error('Không thể gửi email thông báo cập nhật hồ sơ: ' . $e->getMessage());
+        }
+        Toastr::success('Cập nhật hồ sơ thành công! Đã gửi email thông báo.', 'Thành công');
         return back();
     }
 
@@ -396,7 +402,7 @@ public function activate(Request $request)
             Log::error('Không thể gửi email thông báo đổi mật khẩu: ' . $e->getMessage());
         }
 
-        session()->flash('success', 'Bạn đã thay đổi mật khẩu thành công!');
+        Toastr::success('Bạn đã thay đổi mật khẩu thành công!', 'Thành công');
         return redirect()->route('account.showUser');
     }
 }
