@@ -1,94 +1,108 @@
+<nav id="header-nav" class="navbar navbar-expand-lg py-3 bg-white border-bottom shadow-sm">
+    <div class="container">
+        {{-- Logo --}}
+        <a class="navbar-brand" href="/">
+            <img src="{{ asset('storage/images/main-logo.png') }}" class="logo" alt="Logo" style="height: 40px;">
+        </a>
 
-<nav class="bg-white px-6 py-5 shadow-sm border-b">
-    <div class="max-w-screen-xl mx-auto flex flex-col gap-2 md:flex-row md:items-center md:justify-between min-h-[80px]">
-        {{-- Trái: Logo --}}
-        <div class="flex items-center justify-between md:justify-start gap-3">
-            <a href="#">
-                <img src="{{ asset('storage/images/main-logo.png') }}" alt="Logo" class="h-10 w-auto max-w-[120px]">
-            </a>
-        </div>
-        {{-- Giữa: Menu chính --}}
-        <ul class="flex flex-wrap justify-center items-center gap-8 text-base semi-bold uppercase tracking-wide text-gray-900">
-            <li><a href="/" class="hover:text-red-500 text-red-500">Trang chủ</a></li>
-            <li><a href="#" class="hover:text-red-500">Giới thiệu</a></li>
-            <li><a href="#" class="hover:text-red-500">Cửa hàng</a></li>
-            <li><a href="/news" class="hover:text-red-500">Tin tức</a></li>
-            <li><a href="/contact" class="hover:text-red-500">Liên hệ</a></li>
-        </ul>
-        {{-- Phải: Tìm kiếm + icon + dòng phụ --}}
-        <div class="flex flex-col items-end gap-1 text-sm md:text-xs">
-            {{-- Dòng phụ --}}
-            <div class="flex items-center gap-4">
-                
-                {{-- Cờ + chọn ngôn ngữ --}}
-                <nav class="relative">
-                    <div class="flex items-center space-x-2">
-                        <img src="{{ asset('storage/images/vn-flag.png') }}" alt="Vietnam Flag" class="h-4 w-6">
-                        {{-- <span class="text-sm font-medium">VietNam</span> --}}
+        {{-- Toggle button for mobile --}}
+        <button class="navbar-toggler d-flex d-lg-none p-2" type="button" data-bs-toggle="offcanvas"
+            data-bs-target="#bdNavbar" aria-controls="bdNavbar" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        {{-- Offcanvas menu --}}
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="bdNavbar" aria-labelledby="bdNavbarOffcanvasLabel">
+            <div class="offcanvas-header">
+                <a class="navbar-brand" href="/">
+                    <img src="{{ asset('storage/images/main-logo.png') }}" class="logo" alt="Logo"
+                        style="height: 40px;">
+                </a>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                {{-- Menu --}}
+                <ul class="navbar-nav text-uppercase flex-grow-1 justify-content-lg-center gap-3">
+                    <li class="nav-item">
+                        <a class="nav-link me-4 {{ Request::is('/') ? 'active' : '' }}" href="/">Trang chủ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link me-4 {{ Request::is('books') ? 'active' : '' }}" href="/books">Sản phẩm
+                            </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link me-4 {{ Request::is('shop') ? 'active' : '' }}" href="/shop">Cửa hàng</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link me-4 {{ Request::is('news') ? 'active' : '' }}" href="/news">Tin tức</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link me-4 {{ Request::is('contact') ? 'active' : '' }}" href="/contact">Liên
+                            hệ</a>
+                    </li>
+
+                </ul>
+
+                {{-- Phải: icon, tìm kiếm, user --}}
+                <div class="d-flex align-items-center gap-3">
+                    {{-- Tìm kiếm --}}
+                    <div class="position-relative">
+                        <i class="fas fa-search position-absolute top-50 end-0 translate-middle-y pe-2 text-muted"></i>
                     </div>
-                </nav>
 
-            </div>
-            {{-- Dòng icon + tìm kiếm --}}
-            <div class="flex items-center gap-3 text-[15px] text-gray-800">
-                {{-- Thanh tìm kiếm --}}
-                <div class="relative">
-                    <input type="text" placeholder="tìm kiếm"
-                        class="pl-3 pr-9 py-1 text-sm rounded border border-gray-300 focus:outline-none focus:border-black w-40">
-                    <i class="fas fa-search absolute right-2 top-1.5 text-sm text-gray-500"></i>
-                </div>
-                <!-- <i class="far fa-user hover:text-black cursor-pointer"></i> -->
-               <!-- Thay thế phần user icon cũ bằng code này -->
-<div style="position: relative; display: inline-block;">
-    <a href="{{ auth()->check() ? '#' : route('login') }}" 
-       style="text-decoration: none; color: inherit;"
-       onmouseover="this.nextElementSibling.style.display='block'"
-       onmouseout="this.nextElementSibling.style.display='none'">
-        <i class="far fa-user"></i>
-        @auth
-            <span style="margin-left: 5px;">{{ Auth::user()->name }}</span>
-        @endauth
-    </a>
-    
-    <div style="position: absolute; right: 0; background: white; 
-                border: 1px solid #ddd; border-radius: 4px; display: none;"
-         onmouseover="this.style.display='block'"
-         onmouseout="this.style.display='none'">
-        @auth
-            <a href="{{ route('account.showUser') }}" 
-               style="display: block; padding: 8px 15px; color: #333; text-decoration: none;
-                      border-bottom: 1px solid #eee; white-space: nowrap;">
-                <i class="fas fa-user-circle" style="margin-right: 8px;"></i> Tài khoản
-            </a>
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <button type="submit" 
-                        style="width: 100%; text-align: left; padding: 8px 15px; 
-                               background: none; border: none; color: #333; cursor: pointer;">
-                    <i class="fas fa-sign-out-alt" style="margin-right: 8px;"></i> Đăng xuất
-                </button>
-            </form>
-        @else
-            <a href="{{ route('login') }}" 
-               style="display: block; padding: 8px 15px; color: #333; text-decoration: none;
-                      border-bottom: 1px solid #eee; white-space: nowrap;">
-                <i class="fas fa-sign-in-alt" style="margin-right: 8px;"></i> Đăng nhập
-            </a>
-            <a href="{{ route('account.register') }}" 
-               style="display: block; padding: 8px 15px; color: #333; text-decoration: none;">
-                <i class="fas fa-user-plus" style="margin-right: 8px;"></i> Đăng ký
-            </a>
-        @endauth
-    </div>
-</div>
-                <a href="/wishlist"><i class="far fa-heart hover:text-black cursor-pointer"></i></a>
-                <div class="relative">
-                    <i class="fas fa-shopping-bag hover:text-black cursor-pointer"></i>
-                    <span
-                        class="absolute -top-2 -right-2 text-[10px] bg-yellow-400 text-black font-bold rounded-full px-1"></span>
+
+                    {{-- User dropdown --}}
+                    <div class="dropdown">
+                        <a href="#" class="d-flex align-items-center text-dark text-decoration-none"
+                            data-bs-toggle="dropdown">
+                            <i class="far fa-user me-1"></i>
+                            @auth
+                                <span>{{ Auth::user()->name }}</span>
+                            @endauth
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end mt-2">
+                            @auth
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('account.showUser') }}">
+                                        <i class="fas fa-user-circle me-2"></i> Tài khoản
+                                    </a>
+                                </li>
+                                <li>
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <button type="submit" class="dropdown-item">
+                                            <i class="fas fa-sign-out-alt me-2"></i> Đăng xuất
+                                        </button>
+                                    </form>
+                                </li>
+                            @else
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('login') }}">
+                                        <i class="fas fa-sign-in-alt me-2"></i> Đăng nhập
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('account.register') }}">
+                                        <i class="fas fa-user-plus me-2"></i> Đăng ký
+                                    </a>
+                                </li>
+                            @endauth
+                        </ul>
+                    </div>
+
+                    {{-- Wishlist --}}
+                    <a href="/wishlist" class="text-dark">
+                        <i class="far fa-heart"></i>
+                    </a>
+
+                    {{-- Cart --}}
+                    <a href="/cart" class="position-relative text-dark">
+                        <i class="fas fa-shopping-bag"></i>
+                        <span
+                            class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning text-dark small">0</span>
+                    </a>
                 </div>
             </div>
         </div>
-
     </div>
 </nav>
