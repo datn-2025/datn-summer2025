@@ -1,10 +1,9 @@
 <?php
-
 namespace App\Http\Controllers\Admin\Auth;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -67,12 +66,13 @@ class AdminAuthController extends Controller
     public function logout(Request $request)
     {
         $guard = Auth::guard('admin');
-        if ($guard->check()) {
-            $guard->logout();
-            $request->session()->invalidate();
-            $request->session()->regenerateToken();
-            Toastr::success('Đăng xuất thành công!');
+        if (!$guard->check()) {
+            abort(404, 'Bạn chưa đăng nhập');
         }
+        $guard->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        Toastr::success('Đăng xuất thành công!');
         return redirect()->route('admin.login');
     }
 }
