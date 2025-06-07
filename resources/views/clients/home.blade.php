@@ -84,8 +84,8 @@
                                         </div>
                                     </div>
                                     <div class="p-4 flex flex-col justify-between flex-1">
-                                        <p class="text-black font-bold text-[15px]">
-                                            {{number_format($book->price, 0, ',', '.')}}₫
+                                        <p class="text-red-500 font-bold">
+                                            Giá tiền {{ number_format($book->formats->first()->price ?? 0, 0, ',', '.') }}₫
                                         </p>
                                         <h3 class="text-sm font-semibold mt-1">{{$book->title}}</h3>
                                         <p class="text-xs text-gray-500 mt-1">
@@ -274,7 +274,9 @@
                     <div class="p-4 bg-white flex flex-col flex-1 justify-between h-[180px]">
                         <h3 class="text-base font-semibold text-gray-800">{{$book->title}}</h3>
                         <p class="text-sm text-gray-500">{{$book->author?->name ?? 'Không rõ'}}</p>
-                        <p class="text-lg font-bold text-red-600 mt-2">{{number_format($book->price, 0, ',', '.')}}₫ </p>
+                        <p class="text-red-500 font-bold">
+                            Giá tiền {{ number_format($book->formats->first()->price ?? 0, 0, ',', '.') }}₫
+                        </p>
                         <a href="#"
                             class="mt-4 inline-block bg-black text-white px-4 py-2 rounded text-sm hover:bg-gray-800 text-center w-full">
                             Thêm vào giỏ hàng →
@@ -305,8 +307,9 @@
                                     class="font-medium text-gray-700">{{ $review->book->title ?? 'Không xác định' }}</span>
                             </p>
                             <p class="text-xs text-gray-400 mb-2">
-                                Ngày: {{ $review->created_at }}
+                                Ngày: {{ $review->created_at?->format('d/m/Y') ?? 'Không rõ' }}
                             </p>
+
 
                             <p class="text-gray-700 italic mb-4">“{{ $review->comment ?? 'Không có nội dung.' }}”</p>
                             <div class="mb-2 text-yellow-400">
@@ -342,19 +345,19 @@
                         class="w-full h-48 object-cover">
                     <div class="p-4 flex flex-col min-h-[270px]">
                         <div class="flex flex-col flex-grow">
-                             <p class=" text-sm text-pink-500 font-medium mb-1">
-                            {{ $article->category ?? ' Tin tức' }}
-                        </p>
-                        <h3 class=" text-lg font-bold mb-2 leading-snug">{{$article->title}}</h3>
-                        <p class=" text-sm text-gray-600 mb-4">{{Str::limit($article->summary, 100)}}</p>
-                       
+                            <p class=" text-sm text-pink-500 font-medium mb-1">
+                                {{ $article->category ?? ' Tin tức' }}
+                            </p>
+                            <h3 class=" text-lg font-bold mb-2 leading-snug">{{$article->title}}</h3>
+                            <p class=" text-sm text-gray-600 mb-4">{{Str::limit($article->summary, 100)}}</p>
+
                         </div>
                         <div class="mt-4">
-                             <a href="#" class=" inline-block text-sm text-red-500 hover:underline font-semibold">
-                            Đọc thêm →
-                        </a>
+                            <a href="#" class=" inline-block text-sm text-red-500 hover:underline font-semibold">
+                                Đọc thêm →
+                            </a>
                         </div>
-                       
+
                     </div>
                 </div>
             @empty
