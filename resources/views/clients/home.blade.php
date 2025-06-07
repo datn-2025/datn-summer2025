@@ -461,8 +461,6 @@
 
 
 
-// ...existing code...
-
 <section class="py-20 bg-black text-white relative overflow-hidden">
     <!-- Background Elements -->
     <div class="absolute inset-0">
@@ -607,41 +605,187 @@
 
 
 
-    <section class="px-4 py-16 max-w-screen-xl mx-auto">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl md:text-3xl font-bold uppercase flex items-center gap-2">📰 Tin tức mới nhất</h2>
-            <a href="#"
-                class="bg-red-400 text-white px-6 py-2 rounded-full text-sm hover:bg-red-600 transition duration-300">
-                Xem tất cả
+// ...existing code...
+
+<section class="bg-white py-20">
+    <div class="max-w-7xl mx-auto px-4">
+        <!-- Header Section -->
+        <div class="mb-16">
+            <div class="flex items-center justify-between mb-8">
+                <div>
+                    <h2 class="text-4xl md:text-5xl font-bold text-black uppercase tracking-tight mb-2">
+                        TIN TỨC & SỰ KIỆN
+                    </h2>
+                    <div class="w-20 h-1 bg-black"></div>
+                </div>
+                <a href="#" 
+                   class="group flex items-center gap-2 text-black font-bold text-sm uppercase tracking-wider hover:opacity-70 transition-opacity">
+                    Xem tất cả
+                    <span class="transform group-hover:translate-x-1 transition-transform">→</span>
+                </a>
+            </div>
+            <p class="text-lg text-gray-600 max-w-xl">
+                Cập nhật những tin tức mới nhất về sách, tác giả và sự kiện văn học
+            </p>
+        </div>
+
+       <!-- Articles Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+    @forelse($articles->take(4) as $index => $article)
+        <article class="group cursor-pointer {{ $index === 0 ? 'md:col-span-2 lg:col-span-2' : '' }}"
+                 onclick="window.location='#'">
+            
+            <!-- Image Container với height thống nhất -->
+            <div class="relative overflow-hidden bg-gray-100 mb-6 {{ $index === 0 ? 'h-64 md:h-80' : 'h-48' }}">
+                <img src="{{ asset('storage/' . $article->thumbnail) }}" 
+                     alt="{{ $article->title }}"
+                     class="w-full h-full object-cover transition-all duration-500 group-hover:scale-105">
+                
+                <!-- Overlay -->
+                <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300"></div>
+                
+                <!-- Category Badge -->
+                <div class="absolute top-4 left-4">
+                    <span class="bg-black text-white px-3 py-1 text-xs font-bold uppercase tracking-wide">
+                        {{ $article->category ?? 'Tin tức' }}
+                    </span>
+                </div>
+
+                <!-- Featured Badge (for first article) -->
+                @if($index === 0)
+                    <div class="absolute top-4 right-4">
+                        <span class="bg-red-500 text-white px-3 py-1 text-xs font-bold uppercase tracking-wide">
+                            Nổi bật
+                        </span>
+                    </div>
+                @endif
+
+                <!-- Reading Time -->
+                <div class="absolute bottom-4 right-4">
+                    <span class="bg-white/90 text-black px-2 py-1 text-xs font-semibold rounded">
+                        {{ rand(2, 8) }} phút đọc
+                    </span>
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div class="space-y-3">
+                <!-- Date & Author -->
+                <div class="flex items-center justify-between text-sm text-gray-500 uppercase tracking-wider">
+                    <div class="flex items-center gap-2">
+                        <div class="w-2 h-2 bg-black rounded-full"></div>
+                        <span>{{ $article->created_at->format('d.m.Y') }}</span>
+                    </div>
+                    <span class="text-xs">{{ $article->author ?? 'BookBee' }}</span>
+                </div>
+
+                <!-- Title -->
+                <h3 class="font-bold {{ $index === 0 ? 'text-xl md:text-2xl' : 'text-lg' }} text-black leading-tight group-hover:opacity-70 transition-opacity">
+                    {{ $article->title }}
+                </h3>
+
+                <!-- Summary -->
+                <p class="text-gray-600 leading-relaxed {{ $index === 0 ? 'text-base' : 'text-sm' }}">
+                    {{ Str::limit($article->summary, $index === 0 ? 150 : 80) }}
+                </p>
+
+                <!-- Tags (chỉ cho bài nổi bật) -->
+                @if($index === 0)
+                    <div class="flex flex-wrap gap-2">
+                        <span class="bg-gray-100 text-gray-700 px-2 py-1 text-xs font-medium uppercase tracking-wide">Văn học</span>
+                        <span class="bg-gray-100 text-gray-700 px-2 py-1 text-xs font-medium uppercase tracking-wide">Bestseller</span>
+                    </div>
+                @endif
+
+                <!-- Read More -->
+                <div class="flex items-center gap-2 text-black font-bold text-sm uppercase tracking-wider group/link">
+                    <span class="group-hover/link:opacity-70 transition-opacity">Đọc thêm</span>
+                    <span class="transform group-hover/link:translate-x-1 transition-transform">→</span>
+                </div>
+            </div>
+        </article>
+    @empty
+        <!-- Empty state -->
+        <div class="col-span-full flex flex-col items-center justify-center py-20 text-center">
+            <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-6">
+                <i class="fas fa-newspaper text-gray-400 text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">Chưa có tin tức nào</h3>
+            <p class="text-gray-500">Hãy quay lại sau để cập nhật những tin tức mới nhất</p>
+        </div>
+    @endforelse
+</div>
+
+        <!-- More Articles Section -->
+        @if($articles->count() > 3)
+            <div class="mt-20 pt-16 border-t border-gray-200">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    @foreach($articles->skip(3)->take(3) as $article)
+                        <article class="group cursor-pointer" onclick="window.location='#'">
+                            <!-- Compact Layout -->
+                            <div class="flex gap-4 p-6 hover:bg-gray-50 transition-colors duration-300">
+                                <!-- Small Image -->
+                                <div class="flex-shrink-0">
+                                    <img src="{{ asset('storage/' . $article->thumbnail) }}" 
+                                         alt="{{ $article->title }}"
+                                         class="w-20 h-20 object-cover">
+                                </div>
+                                
+                                <!-- Content -->
+                                <div class="flex-1 space-y-2">
+                                    <span class="text-xs text-gray-500 uppercase tracking-wider font-medium">
+                                        {{ $article->created_at->format('d/m/Y') }}
+                                    </span>
+                                    <h4 class="font-bold text-sm text-black leading-tight group-hover:opacity-70 transition-opacity line-clamp-2">
+                                        {{ $article->title }}
+                                    </h4>
+                                    <div class="flex items-center gap-1 text-black font-bold text-xs uppercase tracking-wider">
+                                        <span>Đọc →</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    @endforeach
+                </div>
+            </div>
+        @endif
+
+        <!-- Newsletter Subscription -->
+        <div class="mt-20 bg-black text-white p-8 relative overflow-hidden">
+            <!-- Background Elements -->
+            <div class="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -translate-y-16 translate-x-16"></div>
+            <div class="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full translate-y-12 -translate-x-12"></div>
+            
+            <div class="relative z-10 text-center max-w-2xl mx-auto">
+                <h3 class="text-2xl md:text-3xl font-bold uppercase tracking-wide mb-4">
+                    ĐĂNG KÝ NHẬN TIN
+                </h3>
+                <p class="text-white/80 mb-8 text-lg">
+                    Nhận thông tin mới nhất về sách, tác giả và ưu đãi đặc biệt
+                </p>
+                
+                <form class="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+                    <input type="email" 
+                           placeholder="Nhập email của bạn"
+                           class="flex-1 px-6 py-4 bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:border-white/40 transition-colors">
+                    <button type="submit"
+                            class="bg-white text-black px-8 py-4 font-bold text-sm uppercase tracking-wider hover:bg-gray-100 transition-colors duration-300 whitespace-nowrap">
+                        Đăng ký
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Bottom CTA -->
+        <div class="text-center mt-16">
+            <a href="#" class="bg-black text-white px-12 py-4 font-bold text-sm uppercase tracking-wider hover:bg-gray-800 transition-colors duration-300 inline-block">
+                Khám phá thêm tin tức
             </a>
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-            @forelse($articles as $article)
-                <div class="bg-white rounded shadow overflow-hidden hover:shadow-lg transition">
-                    <img src="{{asset('storage/' . $article->thumbnail)}}" alt="{{$article->title}}"
-                        class="w-full h-48 object-cover">
-                    <div class="p-4 flex flex-col min-h-[270px]">
-                        <div class="flex flex-col flex-grow">
-                             <p class=" text-sm text-pink-500 font-medium mb-1">
-                            {{ $article->category ?? ' Tin tức' }}
-                        </p>
-                        <h3 class=" text-lg font-bold mb-2 leading-snug">{{$article->title}}</h3>
-                        <p class=" text-sm text-gray-600 mb-4">{{Str::limit($article->summary, 100)}}</p>
-                       
-                        </div>
-                        <div class="mt-4">
-                             <a href="#" class=" inline-block text-sm text-red-500 hover:underline font-semibold">
-                            Đọc thêm →
-                        </a>
-                        </div>
-                       
-                    </div>
-                </div>
-            @empty
-                <p class="col-span-4 text-center text-gray-500">Chưa có bài viết nào.</p>
-            @endforelse
-        </div>
-    </section>
+    </div>
+</section>
+
+// ...existing code...
 
 
     <script>
