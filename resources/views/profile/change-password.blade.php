@@ -132,16 +132,19 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 
 <script>
-    @if(Session::has('success'))
-        toastr.options = {
-            "closeButton": true,
-            "progressBar": true,
-            "positionClass": "toast-top-right",
-            "timeOut": "3000"
-        }
-        toastr.success("{{ Session::get('success') }}", "Thành công!");
-    @endif
+    // Toastr configuration
+    toastr.options = {
+        "closeButton": true,
+        "progressBar": true,
+        "positionClass": "toast-top-right",
+        "timeOut": "5000", // Consistent 5 seconds
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    };
 </script>
+{!! Toastr::message() !!}
 <div class="container">
     <div class="row g-4">
         <!-- Sidebar -->
@@ -161,7 +164,7 @@
             <div class="main-content">
                 <h2 class="mb-3">Đổi mật khẩu</h2>
                 <p class="text-muted mb-4">Để bảo mật tài khoản, vui lòng không chia sẻ mật khẩu cho người khác</p>
-                    <form method="POST" action="{{ route('account.password.update') }}">
+                    <form method="POST" action="{{ route('account.password.change') }}">
                         @csrf
 
                         <div class="form-group mb-3">
