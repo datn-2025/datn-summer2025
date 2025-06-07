@@ -29,7 +29,14 @@ Route::post('/wishlist/delete', [WishlistController::class, 'delete'])->name('wi
 Route::post('/wishlist/delete-all', [WishlistController::class, 'deleteAll'])->name('wishlist.delete-all');
 Route::post('/wishlist/add-to-cart', [WishlistController::class, 'addToCartFromWishlist'])->name('wishlist.addToCart');
 // Hiển thị danh sách và danh mục
-
+ // Đơn hàngAdd commentMore actions
+ Route::prefix('orders')->name('orders.')->group(function () {
+    Route::get('/', [\App\Http\Controllers\OrderController::class, 'index'])->name('index');
+    Route::get('/checkout', [\App\Http\Controllers\OrderController::class, 'checkout'])->name('checkout');
+    Route::get('/{order}', [\App\Http\Controllers\OrderController::class, 'show'])->name('show');
+    Route::post('/store', [\App\Http\Controllers\OrderController::class, 'store'])->name('store');
+    Route::post('/apply-voucher', [\App\Http\Controllers\OrderController::class, 'applyVoucher'])->name('apply-voucher');
+});
 // Route public cho books (categoryId optional)
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
