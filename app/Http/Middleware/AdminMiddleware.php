@@ -14,6 +14,7 @@ class AdminMiddleware
         if (!$guard->check()) {
             abort(403, 'Bạn chưa đăng nhập');
         }
+        
         $user = $guard->user();
         if (!$user->isAdmin()) {
             $guard->logout();
