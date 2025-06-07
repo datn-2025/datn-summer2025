@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\Auth\AdminAuthController;
 use App\Http\Controllers\Admin\BookController as AdminBookController;
 use App\Http\Controllers\Admin\ContactController as AdminContactController;
 use App\Http\Controllers\Admin\AdminCategoryController;
+use App\Http\Controllers\Admin\AdminDashboard;
 use App\Http\Controllers\Admin\AdminReviewController;
 use App\Http\Controllers\Admin\AdminPaymentMethodController;
 use App\Http\Controllers\Admin\CategoryController;
@@ -16,7 +17,7 @@ use App\Http\Controllers\Admin\VoucherController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\Login\ActivationController;
 use App\Http\Controllers\HomeController;
-use Brian2694\Toastr\Facades\Toastr;
+// use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Wishlists\WishlistController;
 use App\Http\Controllers\Contact\ContactController;
@@ -141,16 +142,13 @@ Route::middleware('auth')->group(function () {
 });
 
 // Route đăng nhập admin (chỉ cho khách)
-Route::middleware('guest')->group(function () {
+Route::middleware('guest:admin')->group(function () {
     Route::get('/admin/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
     Route::post('/admin/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
 });
 
-Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/', function () {
-        // Toastr::info('Chào mừng bạn đến với trang quản trị!', 'Thông báo');
-        return view('admin.dashboard');
-    })->name('dashboard');
+Route::middleware(['auth:admin', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/', [AdminDashboard::class, 'index'])->name('dashboard');
 
     Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
 

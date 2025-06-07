@@ -13,7 +13,7 @@ class AdminAuthController extends Controller
 {
     public function showLoginForm()
     {
-        if (Auth::check() && Auth::user()->isAdmin()) {
+        if (Auth::guard('admin')->check() && Auth::guard('admin')->user()->isAdmin()) {
             return redirect()->route('admin.dashboard');
         }
         return view('admin.auth.login');
@@ -59,14 +59,14 @@ class AdminAuthController extends Controller
         }
 
         // Đăng nhập thành công
-        Auth::login($user);
+        Auth::guard('admin')->login($user);
         Toastr::success('Đăng nhập thành công!');
         return redirect()->route('admin.dashboard');
     }
 
     public function logout(Request $request)
     {
-        Auth::logout();
+        Auth::guard('admin')->logout();
         // Huỷ toàn bộ session
         $request->session()->invalidate();
         $request->session()->regenerateToken(); // Đổi CSRF token mới
