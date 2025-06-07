@@ -10,18 +10,18 @@ class AdminMiddleware
 {
     public function handle(Request $request, Closure $next)
     {
-        if (!Auth::check()) {
+        if (!Auth::guard('admin')->check()) {
             return redirect()->route('admin.login')
                 ->withErrors(['login' => 'Bạn chưa đăng nhập']);
         }
-        if (!Auth::user()->isAdmin()) {
-            Auth::logout();
+        if (!Auth::guard('admin')->user()->isAdmin()) {
+            Auth::guard('admin')->logout();
             return redirect()->route('admin.login')
                 ->withErrors(['login' => 'Bạn không có quyền truy cập vào trang quản trị']);
         }
 
-        if (!Auth::user()->isActive()) {
-            Auth::logout();
+        if (!Auth::guard('admin')->user()->isActive()) {
+            Auth::guard('admin')->logout();
             return redirect()->route('admin.login')
                 ->withErrors(['login' => 'Tài khoản của bạn đã bị khoá hoặc chưa kích hoạt']);
         }
