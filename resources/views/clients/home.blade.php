@@ -784,10 +784,6 @@
         </div>
     </div>
 </section>
-
-// ...existing code...
-
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const reviewSwiper = new Swiper('.reviewSwiper', {
