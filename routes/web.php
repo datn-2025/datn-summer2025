@@ -17,7 +17,7 @@ use App\Http\Controllers\Admin\VoucherController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\Login\ActivationController;
 use App\Http\Controllers\HomeController;
-// use Brian2694\Toastr\Facades\Toastr;
+use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Wishlists\WishlistController;
 use App\Http\Controllers\Contact\ContactController;
@@ -149,7 +149,6 @@ Route::middleware('guest:admin')->group(function () {
 
 Route::middleware(['auth:admin', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminDashboard::class, 'index'])->name('dashboard');
-
     Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
 
     // Route admin/contacts

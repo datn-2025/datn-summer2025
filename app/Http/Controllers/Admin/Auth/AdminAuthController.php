@@ -66,12 +66,13 @@ class AdminAuthController extends Controller
 
     public function logout(Request $request)
     {
-        Auth::guard('admin')->logout();
-        // Huỷ toàn bộ session
-        $request->session()->invalidate();
-        $request->session()->regenerateToken(); // Đổi CSRF token mới
-
-        Toastr::success('Đăng xuất thành công!');
+        $guard = Auth::guard('admin');
+        if ($guard->check()) {
+            $guard->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            Toastr::success('Đăng xuất thành công!');
+        }
         return redirect()->route('admin.login');
     }
 }
