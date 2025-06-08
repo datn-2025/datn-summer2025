@@ -46,7 +46,7 @@
                                         <label for="order_status_id" class="form-label">Trạng thái đơn hàng</label>
                                         <select class="form-select @error('order_status_id') is-invalid @enderror"
                                             id="order_status_id" name="order_status_id">
-                                            <option value="">Chọn trạng thái</option>
+                                            <option value=""><strong>{{ $order->orderStatus->name }}</strong></option>
                                             @foreach($orderStatuses as $status)
                                             <option value="{{ $status->id }}" {{ old('order_status_id', $order->
                                                 order_status_id) == $status->id ? 'selected' : '' }}>

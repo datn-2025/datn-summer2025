@@ -6,9 +6,23 @@ use App\Models\OrderStatus;
 use Illuminate\Database\Seeder;
 
 class OrderStatusSeeder extends Seeder
-{    public function run()
+{
+    public function run()
     {
-        // Tạo 10 trạng thái đơn hàng đã định nghĩa sẵn
-        OrderStatus::factory(10)->create();
+        $statuses = [
+            ['name' => 'Chờ xác nhận'],
+            ['name' => 'Đã xác nhận'],
+            ['name' => 'Đang giao hàng'],
+            ['name' => 'Đã giao hàng'],
+            ['name' => 'Đã hủy'],
+            ['name' => 'Hoàn trả'],
+        ];
+
+        foreach ($statuses as $status) {
+            OrderStatus::updateOrCreate(
+                ['name' => $status['name']],
+                $status
+            );
+        }
     }
 }
