@@ -51,7 +51,7 @@
 
         <div class="row mt-4">
              <div class="col-xl-4 col-md-6">
-                @livewire('book-category-chart') 
+                <livewire:book-category-chart/>
             </div>
             <div class="col-xl-4 col-md-6">
                 <livewire:book-author-chart/>
