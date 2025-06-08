@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\VoucherController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\Login\ActivationController;
 use App\Http\Controllers\HomeController;
+use App\Livewire\BalanceChart;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Wishlists\WishlistController;
@@ -165,6 +166,7 @@ Route::prefix('orders')->name('orders.')->group(function () {
 Route::prefix('admin')->name('admin.')->group(function () {
 
     Route::get('/revenue-report', RevenueReport::class)->name('revenue-report');
+    Route::get('/balance-chart', BalanceChart::class)->name('balance-chart');
 
 });
 //---------------------------------------------------
