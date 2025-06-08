@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\VoucherController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\Login\ActivationController;
 use App\Http\Controllers\HomeController;
+use App\Livewire\BalanceChart;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Wishlists\WishlistController;
@@ -76,6 +77,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         return view('admin.dashboard');
     })->name('dashboard');
     Route::get('/revenue-report', RevenueReport::class)->name('revenue-report');
+    Route::get('/balance-chart', BalanceChart::class)->name('balance-chart');
 
     // Route admin/contacts
     Route::resource('contacts', \App\Http\Controllers\Admin\ContactController::class);
