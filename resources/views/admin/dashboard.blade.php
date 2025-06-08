@@ -71,7 +71,6 @@
                                     </div>
                                 </div>
 
-
                                 <!-- 4 Thẻ thống kê chính -->
                                 <livewire:dashboard-stats />
 
@@ -100,7 +99,6 @@
                                         <livewire:book-brand-chart />
                                     </div>
                                 </div>
-
                             </div> <!-- end card header -->
                         </div>
                     </div>
@@ -110,9 +108,7 @@
                     {{-- @include('admin.dashboard.statistics') --}}
                     {{-- @include('admin.dashboard.sales-graph') --}}
                     {{-- @include('admin.dashboard.top-books') --}}
-
                 </div> <!-- end .h-100 -->
-            </div>
         </div>
     </div>
 @endsection
