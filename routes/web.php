@@ -22,6 +22,23 @@ use App\Http\Controllers\Admin\NewsArticleController;
 use App\Http\Controllers\Admin\PaymentMethodController;
 use App\Http\Controllers\cart\CartController;
 
+// Route QR code
+Route::get('storage/private/{filename}', function ($filename) {
+    $path = storage_path('app/private/' . $filename);
+
+    // Kiểm tra nếu tệp ảnh tồn tại
+    if (file_exists($path)) {
+        return response()->file($path);
+    }
+
+    // Nếu tệp không tồn tại, trả về lỗi 404
+    abort(404);
+})->where('filename', '.*');
+
+Route::get('/get-csrf-token', function() {
+    return response()->json(['token' => csrf_token()]);
+});
+
 // cart
 Route::prefix('cart')->group(function () {
     Route::get('/', [CartController::class, 'index'])->name('cart.index');
@@ -30,7 +47,7 @@ Route::prefix('cart')->group(function () {
     Route::post('/remove', [CartController::class, 'removeFromCart'])->name('cart.remove');
     Route::post('/clear', [CartController::class, 'clearCart'])->name('cart.clear');
     Route::post('/add-wishlist', [CartController::class, 'addAllWishlistToCart'])->name('cart.add-wishlist');
-    Route::post('/apply-voucher', [CartController::class, 'applyVoucher'])->name('cart.apply-voucher');
+    // Route::post('/apply-voucher', [CartController::class, 'applyVoucher'])->name('cart.apply-voucher');
     Route::post('/remove-voucher', [CartController::class, 'removeVoucher'])->name('cart.remove-voucher');
 });
 
@@ -56,16 +73,7 @@ Route::get('/news', [NewsController::class, 'index'])->name('news.index');
 Route::get('/news/{id}', [NewsController::class, 'show'])->name('news.show');
 
 
-// Test route for QR code generation
-Route::get('/test-qr-code/{id}', function ($id) {
-    $order = \App\Models\Order::findOrFail($id);
-    $controller = new \App\Http\Controllers\Admin\OrderController();
-    $reflection = new \ReflectionClass($controller);
-    $method = $reflection->getMethod('generateQrCode');
-    $method->setAccessible(true);
-    $method->invoke($controller, $order);
-    return redirect()->route('admin.orders.show', $order->id)->with('success', 'QR Code generated successfully!');
-});    // Route nhóm admin
+// Route nhóm admin
 Route::prefix('admin')->name('admin.')->group(function () {
     // Dashboard route
     Route::get('/', function () {
@@ -288,13 +296,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::delete('/{article}', [NewsArticleController::class, 'destroy'])->name('destroy');
     });
 
-    // Route admin/orders
-    Route::prefix('orders')->name('orders.')->group(function () {
-        Route::get('/', [OrderController::class, 'index'])->name('index');
-        Route::get('/show/{id}', [OrderController::class, 'show'])->name('show');
-        Route::get('/edit/{id}', [OrderController::class, 'edit'])->name('edit');
-        Route::put('/update/{id}', [OrderController::class, 'update'])->name('update');
-    });
 });
 
 Route::prefix('account')->name('account.')->group(function () {
@@ -357,6 +358,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [\App\Http\Controllers\OrderController::class, 'index'])->name('index');
         Route::get('/checkout', [\App\Http\Controllers\OrderController::class, 'checkout'])->name('checkout');
         Route::get('/{order}', [\App\Http\Controllers\OrderController::class, 'show'])->name('show');
+        Route::post('/cancel', [\App\Http\Controllers\OrderController::class, 'cancel'])->name('cancel');
         Route::post('/store', [\App\Http\Controllers\OrderController::class, 'store'])->name('store');
         Route::post('/apply-voucher', [\App\Http\Controllers\OrderController::class, 'applyVoucher'])->name('apply-voucher');
     });
