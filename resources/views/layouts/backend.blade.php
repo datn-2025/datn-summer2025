@@ -89,6 +89,8 @@
     </style>
     {{-- TinyMCE --}}
     <script src="https://cdn.jsdelivr.net/npm/tinymce@6/tinymce.min.js"></script>
+    <<script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
     <script>
         tinymce.init({
             selector: '#description, #content',
