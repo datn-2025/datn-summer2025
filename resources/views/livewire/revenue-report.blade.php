@@ -17,37 +17,37 @@
     </div>
 
     <!-- Bộ lọc và biểu đồ -->
-   <div class="row align-items-end mb-3">
-    <!-- Cột trái: dropdown -->
-    <div class="col-md-3">
-        <label>Chọn thời gian:</label>
-        <select wire:model="timeRange" wire:change="loadData" class="form-select">
-            <option value="all">Tất cả</option>
-            <option value="day">Hôm nay</option>
-            <option value="week">Tuần này</option>
-            <option value="month">Tháng này</option>
-            <option value="quarter">Quý này</option>
-        </select>
-    </div>
+    <div class="row align-items-end mb-3">
+        <!-- Cột trái: dropdown -->
+        <div class="col-md-3">
+            <label>Chọn thời gian:</label>
+            <select wire:model="timeRange" wire:change="loadData" class="form-select">
+                <option value="all">Tất cả</option>
+                <option value="day">Hôm nay</option>
+                <option value="week">Tuần này</option>
+                <option value="month">Tháng này</option>
+                <option value="quarter">Quý này</option>
+            </select>
+        </div>
 
-    <!-- Cột phải: bộ lọc ngày + nút -->
-    @if ($timeRange === 'all')
-    <div class="col-md-9 d-flex justify-content-end gap-2 flex-wrap">
-        <div>
-            <label>Từ ngày:</label>
-            <input type="date" wire:model.defer="fromDate" class="form-control" />
-        </div>
-        <div>
-            <label>Đến ngày:</label>
-            <input type="date" wire:model.defer="toDate" class="form-control" />
-        </div>
-        <div class="d-flex gap-2 align-items-end">
-            <button wire:click="applyCustomFilter" class="btn btn-primary">Áp dụng</button>
-            <button wire:click="resetFilters" class="btn btn-secondary">Reset</button>
-        </div>
+        <!-- Cột phải: bộ lọc ngày + nút -->
+        @if ($timeRange === 'all')
+            <div class="col-md-9 d-flex justify-content-end gap-2 flex-wrap">
+                <div>
+                    <label>Từ ngày:</label>
+                    <input type="date" wire:model.defer="fromDate" class="form-control" />
+                </div>
+                <div>
+                    <label>Đến ngày:</label>
+                    <input type="date" wire:model.defer="toDate" class="form-control" />
+                </div>
+                <div class="d-flex gap-2 align-items-end">
+                    <button wire:click="applyCustomFilter" class="btn btn-primary">Áp dụng</button>
+                    <button wire:click="resetFilters" class="btn btn-secondary">Reset</button>
+                </div>
+            </div>
+        @endif
     </div>
-    @endif
-</div>
 
 
 
