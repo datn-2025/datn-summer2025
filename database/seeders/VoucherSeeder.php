@@ -32,9 +32,8 @@ class VoucherSeeder extends Seeder
             'valid_to' => now()->addMonths(6),
         ]);
     }
-  
-    public function run()
+  private function generateUniqueCode($prefix)
     {
-        $this->generateUniqueCode('TEST');
+        return $prefix . strtoupper(Str::random(8));
     }
 }
