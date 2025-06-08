@@ -59,6 +59,7 @@ class CartController extends Controller
         foreach ($cart as $item) {
             $total += $item->price * $item->quantity;
         }
+        // dd($total);
 
         // Lấy thông tin voucher đã áp dụng (nếu có)
         $appliedVoucher = session()->get('applied_voucher');

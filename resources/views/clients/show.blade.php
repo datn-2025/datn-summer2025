@@ -33,7 +33,7 @@
             <div class="sticky top-4 space-y-4">
                 <!-- Ảnh chính -->
                 <div class="relative aspect-square bg-white rounded-lg overflow-hidden border border-gray-200">
-                    <img src="{{ asset('storage/' . ($book->images->first()->image_url ?? 'images/default.jpg')) }}"
+                    <img src="{{ asset('storage/' . ($book->cover_image ?? 'images/default.jpg')) }}"
                         alt="{{ $book->title }}" class="w-full h-full object-contain p-2" id="mainImage">
                 </div>
 
