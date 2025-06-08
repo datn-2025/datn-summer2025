@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Order;
+use App\Models\Payment;
 use App\Models\User;
 use Livewire\Component;
 use Carbon\Carbon;
@@ -77,7 +78,10 @@ class DashboardStats extends Component
         $this->revenue = $this->revenue->sum('total_amount');
 
         // Số dư: tổng tiền tất cả các đơn
-        $this->balance = $queryOrder->sum('total_amount');
+        $this->balance = Payment::whereHas('paymentStatus', fn($q) =>
+        $q->where('name', 'Đã thanh toán'))
+            ->whereNotNull('paid_at');
+        $this->balance = $this->balance->sum('amount');
     }
 
     public function render()
