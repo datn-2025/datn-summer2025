@@ -792,6 +792,9 @@
                                         <a href="{{ route('admin.payment-methods.create') }}" class="nav-link"
                                             data-key="t-form-select"> Thêm </a>
                                     </li>
+                                    <li class="nav-item">
+                                        <a href="{{route('admin.payment-methods.history')}}" class="nav-link" data-key="t-form-select"> Lịch sử thanh toán </a>
+                                    </li>
                                 </ul>
                             </div>
                         </li>
