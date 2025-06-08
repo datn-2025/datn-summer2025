@@ -15,8 +15,6 @@ class VoucherSeeder extends Seeder
 {
     protected function generateUniqueCode($prefix)
     {
-
-
         // Tạo một số voucher hoạt động cho mục đích test
         Voucher::factory()->active()->create([
             'code' => 'TESTACTIVE10',
@@ -31,7 +29,10 @@ class VoucherSeeder extends Seeder
             'min_order_value' => 200000,
             'valid_to' => now()->addMonths(6),
         ]);
+    }
 
-
+    public function run()
+    {
+        $this->generateUniqueCode('TEST');
     }
 }

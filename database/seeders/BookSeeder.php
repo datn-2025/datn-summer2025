@@ -49,18 +49,18 @@ class BookSeeder extends Seeder
                 ]);
 
                 // 70% sách có bản bìa cứng
-                if (fake()->boolean(70)) {
+                if (fake()->boolean(30)) {
                     BookFormat::factory()->create([
                         'book_id' => $book->id,
-                        'name' => 'Sách Vật Lý',
+                        'format_name' => 'Sách Vật Lý',
                     ]);
                 }
 
                 // 50% sách có bản ebook
-                if (fake()->boolean(50)) {
+                if (fake()->boolean(10)) {
                     BookFormat::factory()->create([
                         'book_id' => $book->id,
-                        'name' => 'Ebook'
+                        'format_name' => 'Ebook'
                     ]);
                 }
 
