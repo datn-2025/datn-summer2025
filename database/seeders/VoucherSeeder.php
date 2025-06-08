@@ -10,10 +10,12 @@ use App\Models\Brand;
 use App\Models\Category;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class VoucherSeeder extends Seeder
 {
-    protected function generateUniqueCode($prefix)
+    public function run()
     {
         // Tạo một số voucher hoạt động cho mục đích test
         Voucher::factory()->active()->create([
@@ -30,7 +32,7 @@ class VoucherSeeder extends Seeder
             'valid_to' => now()->addMonths(6),
         ]);
     }
-
+  
     public function run()
     {
         $this->generateUniqueCode('TEST');

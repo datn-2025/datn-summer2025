@@ -11,9 +11,9 @@ class Category extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['name', 'slug', 'image'];
+    protected $fillable = ['name', 'slug', 'image', 'status'];
 
-    public $incrementing = false; 
+    public $incrementing = false;
     protected $keyType = 'string';
 
     public function books(): HasMany

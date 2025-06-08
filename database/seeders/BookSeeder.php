@@ -12,16 +12,16 @@ use App\Models\Category;
 use App\Models\Author;
 use App\Models\Brand;
 use Illuminate\Support\Str;
+use Faker\Factory as Faker;
 
 class BookSeeder extends Seeder
 {
     public function run(): void
     {
-        // Đảm bảo có dữ liệu cần thiết trước khi tạo sách
-        $categories = Category::all();
+        $faker = Faker::create('vi_VN');
         $authors = Author::all();
         $brands = Brand::all();
-
+        $categories = Category::all();
         if ($categories->isEmpty() || $authors->isEmpty() || $brands->isEmpty()) {
             $this->command->error('Vui lòng chạy CategorySeeder, AuthorSeeder và BrandSeeder trước!');
             return;
