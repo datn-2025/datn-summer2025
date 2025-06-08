@@ -115,7 +115,6 @@
                             <thead>
                                 <tr>
                                     <th>Mã</th>
-                                    <th>Mô tả</th>
                                     <th>Giảm giá</th>
                                     <th>Điều kiện</th>
                                     <th>Thời hạn</th>
@@ -128,7 +127,6 @@
                                 @forelse($vouchers as $voucher)
                                 <tr>
                                     <td>{{ $voucher->code }}</td>
-                                    <td>{{ Str::limit($voucher->description, 50) }}</td>
                                     <td>
                                         {{ $voucher->discount_percent }}%
                                         @if($voucher->max_discount)
@@ -137,9 +135,6 @@
                                         @endif
                                     </td>
                                     <td>
-                                        @if($voucher->min_order_value)
-                                            <div>Đơn tối thiểu: {{ number_format($voucher->min_order_value) }}đ</div>
-                                        @endif
                                         @foreach($voucher->conditions as $condition)
                                             <div>
                                                 @switch($condition->type)

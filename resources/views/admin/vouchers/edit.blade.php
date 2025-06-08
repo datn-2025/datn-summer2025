@@ -257,6 +257,12 @@
                     voucher_id: '{{ $voucher->id }}'
                 },
                 dataType: 'json',
+                beforeSend: function() {
+                    console.log('Sending request with data:', {
+                        condition_type: type,
+                        voucher_id: '{{ $voucher->id }}'
+                    });
+                },
                 success: function(response) {
                     if (!response.options || response.options.length === 0) {
                         list.html('<div class="col-12"><p>Không tìm thấy đối tượng nào.</p></div>');

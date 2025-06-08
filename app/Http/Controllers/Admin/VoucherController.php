@@ -331,11 +331,16 @@ class VoucherController extends Controller
 
             // Lấy danh sách đã chọn nếu đang edit voucher
             if ($voucherId) {
-                $voucher = Voucher::findOrFail($voucherId);
-                $selectedIds = $voucher->conditions()
-                    ->where('type', $type)
-                    ->pluck('object_id')
-                    ->toArray();
+                try {
+                    $voucher = Voucher::findOrFail($voucherId);
+                    $selectedIds = $voucher->conditions()
+                        ->where('type', $type)
+                        ->pluck('condition_id')
+                        ->toArray();
+                } catch (\Exception $e) {
+                    // Nếu không tìm thấy voucher, coi như đang tạo mới
+                    $selectedIds = [];
+                }
             }
 
             switch ($type) {
