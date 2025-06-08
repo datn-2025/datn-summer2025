@@ -29,22 +29,21 @@
     </div>
 
     <section class="max-w-screen-xl mx-auto px-4 py-10">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-10">            <div class="sticky top-4 space-y-4">            
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+            <div class="sticky top-4 space-y-4">
                 <!-- Ảnh chính -->
                 <div class="relative aspect-square bg-white rounded-lg overflow-hidden border border-gray-200">
                     <img src="{{ asset('storage/' . ($book->images->first()->image_url ?? 'images/default.jpg')) }}"
-                        alt="{{ $book->title }}" 
-                        class="w-full h-full object-contain p-2"
-                        id="mainImage">
+                        alt="{{ $book->title }}" class="w-full h-full object-contain p-2" id="mainImage">
                 </div>
 
                 <!-- Thumbnails -->
-                @if($book->images->count() > 1)
+                @if ($book->images->count() > 1)
                     <div class="grid grid-cols-5 gap-3">
-                        @foreach($book->images as $image)
-                            <div class="relative aspect-square bg-white rounded-lg overflow-hidden cursor-pointer hover:ring-2 hover:ring-blue-500 transition-all border border-gray-200">
-                                <img src="{{ asset('storage/' . $image->image_url) }}"
-                                    alt="{{ $book->title }}"
+                        @foreach ($book->images as $image)
+                            <div
+                                class="relative aspect-square bg-white rounded-lg overflow-hidden cursor-pointer hover:ring-2 hover:ring-blue-500 transition-all border border-gray-200">
+                                <img src="{{ asset('storage/' . $image->image_url) }}" alt="{{ $book->title }}"
                                     class="w-full h-full object-contain p-1 thumbnail-image"
                                     onclick="changeMainImage('{{ asset('storage/' . $image->image_url) }}')">
                             </div>
@@ -62,7 +61,7 @@
                 <p class="text-gray-700">Thương hiệu: <span
                         class="font-semibold">{{ $book->brand->name ?? 'không rõ' }}</span></p>
                 <p class="text-gray-700">ISBN: {{ $book->isbn }}</p>
-                <p class="text-gray-700">Ngày xuất bản: {{ $book->publication_date->format('d/m/Y') }}</p>
+                <p class="text-gray-700">Ngày xuất bản: {{ $book->publication_date }}</p>
                 <p class="text-gray-700">Số trang: {{ $book->page_count }}</p>
 
                 @php
@@ -73,32 +72,42 @@
                     $finalPrice = $defaultPrice - ($defaultPrice * ($discount / 100));
                 @endphp
 
-                <!-- Tình trạng và tồn kho -->            
-                    <p class="text-gray-700">Tình trạng: 
-                    <span class="font-bold px-3 py-1.5 rounded text-white
-                        {{ $defaultStock === -1 ? 'bg-red-500' : 
-                           ($defaultStock === -2 ? 'bg-yellow-500' : 
-                           ($defaultStock === 0 ? 'bg-gray-900' : 'bg-green-500')) }}"
+                <!-- Tình trạng và tồn kho -->
+                <p class="text-gray-700">Tình trạng:
+                    <span
+                        class="font-bold px-3 py-1.5 rounded text-white
+                        {{ $defaultStock === -1
+                            ? 'bg-red-500'
+                            : ($defaultStock === -2
+                                ? 'bg-yellow-500'
+                                : ($defaultStock === 0
+                                    ? 'bg-gray-900'
+                                    : 'bg-green-500')) }}"
                         id="bookStock">
-                        {{ $defaultStock === -1 ? 'Sắp Ra Mắt' : 
-                           ($defaultStock === -2 ? 'Ngưng Kinh Doanh' : 
-                           ($defaultStock === 0 ? 'Hết Hàng Tồn Kho' : 'Còn Hàng')) }}
+                        {{ $defaultStock === -1
+                            ? 'Sắp Ra Mắt'
+                            : ($defaultStock === -2
+                                ? 'Ngưng Kinh Doanh'
+                                : ($defaultStock === 0
+                                    ? 'Hết Hàng Tồn Kho'
+                                    : 'Còn Hàng')) }}
                     </span>
                 </p>
                 <div class="mt-2">
                     <p class="text-gray-700">Số lượng tồn kho: <span class="font-semibold"
                             id="productQuantity">{{ $defaultStock > 0 ? $defaultStock : 0 }}</span></p>
                 </div><!-- Chọn định dạng -->
-                @if($book->formats->count())                    <div class="mt-6">
-                        <label for="bookFormatSelect" class="block text-sm font-medium text-gray-700 mb-2">Định dạng sách</label>
-                        <select class="w-full border rounded-lg p-2.5 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
-                                id="bookFormatSelect">
+                @if ($book->formats->count())
+                    <div class="mt-6">
+                        <label for="bookFormatSelect" class="block text-sm font-medium text-gray-700 mb-2">Định dạng
+                            sách</label>
+                        <select
+                            class="w-full border rounded-lg p-2.5 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            id="bookFormatSelect">
                             @foreach ($book->formats as $i => $format)
-                                <option value="{{ $format->id }}" 
-                                        data-price="{{ $format->price }}"
-                                        data-stock="{{ $format->stock }}" 
-                                        data-discount="{{ $format->discount }}" 
-                                        {{ $i === 0 ? 'selected' : '' }}>
+                                <option value="{{ $format->id }}" data-price="{{ $format->price }}"
+                                    data-stock="{{ $format->stock }}" data-discount="{{ $format->discount }}"
+                                    {{ $i === 0 ? 'selected' : '' }}>
                                     {{ $format->format_name }}
                                 </option>
                             @endforeach
@@ -107,25 +116,25 @@
                 @endif
 
                 <!-- Thuộc tính -->
-                @if($book->attributeValues->count())
+                @if ($book->attributeValues->count())
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-                        @foreach($book->attributeValues->unique('attribute_id') as $attrVal)
+                        @foreach ($book->attributeValues->unique('attribute_id') as $attrVal)
                             <div class="col-span-1">
-                                <label for="attribute_{{ $attrVal->id }}" 
-                                       class="block text-sm font-medium text-gray-700 mb-2">
+                                <label for="attribute_{{ $attrVal->id }}"
+                                    class="block text-sm font-medium text-gray-700 mb-2">
                                     {{ $attrVal->attribute->name ?? 'Không rõ' }}
                                 </label>
-                                <select name="attributes[{{ $attrVal->id }}]" 
-                                        id="attribute_{{ $attrVal->id }}"
-                                        class="w-full border rounded-lg p-2.5 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
-                                        onchange="updatePriceAndStock()">                                    @foreach ($attrVal->attribute->values as $value)                                        @php
+                                <select name="attributes[{{ $attrVal->id }}]" id="attribute_{{ $attrVal->id }}"
+                                    class="w-full border rounded-lg p-2.5 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    onchange="updatePriceAndStock()">
+                                    @foreach ($attrVal->attribute->values as $value)
+                                        @php
                                             $bookAttrValue = \App\Models\BookAttributeValue::where('book_id', $book->id)
                                                 ->where('attribute_value_id', $value->id)
                                                 ->first();
                                             $extraPrice = $bookAttrValue ? $bookAttrValue->extra_price : 0;
                                         @endphp
-                                        <option value="{{ $value->id }}" 
-                                                data-price="{{ $extraPrice }}">
+                                        <option value="{{ $value->id }}" data-price="{{ $extraPrice }}">
                                             {{ $value->value }}
                                         </option>
                                     @endforeach
@@ -133,17 +142,20 @@
                             </div>
                         @endforeach
                     </div>
-                @endif                <!-- Giá tiền -->
+                @endif <!-- Giá tiền -->
                 <div class="mt-4">
                     <div class="flex items-baseline gap-3">
                         <span class="text-gray-500 min-w-[80px]">Giá tiền:</span>
                         <div class="flex items-baseline gap-2">
-                            <span id="bookPrice" class="text-3xl font-bold text-red-600" data-base-price="{{ $defaultPrice }}">
+                            <span id="bookPrice" class="text-3xl font-bold text-red-600"
+                                data-base-price="{{ $defaultPrice }}">
                                 {{ number_format($finalPrice, 0, ',', '.') }}₫
                             </span>
-                            @if($discount > 0)
-                                <span class="text-lg line-through text-gray-400" id="originalPrice">{{ number_format($defaultPrice, 0, ',', '.') }}₫</span>
-                                <span id="discountText" class="text-sm font-medium text-red-500 bg-red-50 px-2 py-1 rounded" style="display: {{ $discount > 0 ? 'inline' : 'none' }}">
+                            @if ($discount > 0)
+                                <span class="text-lg line-through text-gray-400"
+                                    id="originalPrice">{{ number_format($defaultPrice, 0, ',', '.') }}₫</span>
+                                <span id="discountText" class="text-sm font-medium text-red-500 bg-red-50 px-2 py-1 rounded"
+                                    style="display: {{ $discount > 0 ? 'inline' : 'none' }}">
                                     -<span id="discountPercent">{{ $discount }}</span>%
                                 </span>
                             @endif
@@ -156,7 +168,8 @@
                     <label for="quantity" class="text-sm font-semibold">Số lượng:</label>
                     <div class="flex items-center space-x-2">
                         <button id="decrementBtn"
-                            class="bg-gray-300 hover:bg-gray-400 text-xl px-3 py-1 rounded-lg transition-all ease-in-out duration-200">-</button>                        <input type="number" id="quantity" value="1" min="1"
+                            class="bg-gray-300 hover:bg-gray-400 text-xl px-3 py-1 rounded-lg transition-all ease-in-out duration-200">-</button>
+                        <input type="number" id="quantity" value="1" min="1"
                             class="w-16 text-center border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" />
                         <button id="incrementBtn"
                             class="bg-gray-300 hover:bg-gray-400 text-xl px-3 py-1 rounded-lg transition-all ease-in-out duration-200">+</button>
@@ -168,6 +181,31 @@
                         Thêm vào giỏ hàng 
                     </button>
                 </div>
+                <div class="mt-4">
+                    <h3 class="text-sm font-semibold text-gray-600 mb-2">Chia sẻ sản phẩm:</h3>
+
+                    <div class="flex gap-3 items-center text-xl">
+                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url()->current()) }}"
+                            target="_blank">
+                            <i class="fab fa-facebook-f text-blue-600"></i>
+                        </a>
+                        <a href="https://twitter.com/intent/tweet?url={{ urlencode(url()->current()) }}" target="_blank">
+                            <i class="fab fa-twitter text-sky-500"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ urlencode(url()->current()) }}"
+                            target="_blank">
+                            <i class="fab fa-linkedin-in text-blue-700"></i>
+                        </a>
+                        <a href="https://api.whatsapp.com/send?text={{ urlencode(url()->current()) }}" target="_blank">
+                            <i class="fab fa-whatsapp text-green-500"></i>
+                        </a>
+                        <a href="https://t.me/share/url?url={{ urlencode(url()->current()) }}" target="_blank">
+                            <i class="fab fa-telegram-plane text-blue-500"></i>
+                        </a>
+                    </div>
+                </div>
+
+
             </div>
         </div>
         {{-- Mô tả --}}
@@ -185,7 +223,7 @@
 
 
         {{-- Đánh giá --}}
-        <div class="mt-16 bg-white/90 shadow-sm border border-gray-200 rounded-lg p-6">
+        <!-- <div class="mt-16 bg-white/90 shadow-sm border border-gray-200 rounded-lg p-6">
             <h2 class="text-2xl font-semibold mb-4 border-b pb-2 border-gray-300 text-gray-800 flex items-center">
                 <i class="fas fa-star mr-2 text-yellow-400"></i>Đánh giá từ khách hàng
             </h2>
@@ -196,18 +234,100 @@
                     <div class="flex items-center justify-between">
                         <p class="font-semibold text-black">
                             <i class="fas fa-user-circle fa-lg text-secondary me-2"></i>
-                            {{$review->user->name ?? 'Ẩn danh'}}
+                            {{ $review->user->name ?? 'Ẩn danh' }}
                         </p>
                         <div class="text-yellow-400 text-sm">
-                            @for ($i = 0; $i < $review->rating; $i++) ★ @endfor
+                            @for ($i = 0; $i < $review->rating; $i++)
+                                ★
+                            @endfor
                         </div>
                     </div>
-                    <p class="text-gray-600 mt-2 italic">{{$review->comment}}</p>
-                    <p class="text-end text-muted small mb-0">{{ $review->created_at->format('H:i d/m/Y') }}</p>
+                    <p class="text-gray-600 mt-2 italic">{{ $review->comment }}</p>
+                    <p class="text-end text-muted small mb-0">{{ $review->created_at }}</p>
                 </div>
             @empty
                 <p class=" text-gray-500 italic">Chưa có đánh giá nào cho sản phẩm này.</p>
             @endforelse
+        </div> -->
+        {{-- Phần lọc đánh giá --}}
+        {{-- Đánh giá --}}
+        <div class="mt-16 bg-white/90 shadow-sm border border-gray-200 rounded-lg p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-semibold text-gray-800 flex items-center">
+                    <i class="fas fa-star mr-2 text-yellow-400"></i>Đánh giá từ khách hàng
+                </h2>
+                
+                {{-- Thanh lọc đánh giá --}}
+                <div class="flex items-center space-x-2">
+                    @if($book->reviews->count() > 0)
+                        <div class="flex items-center bg-blue-50 px-3 py-1 rounded-full mr-2">
+                            <span class="text-sm font-medium text-blue-800 mr-1">
+                                {{ number_format($book->average_rating, 1) }} / 5 <i class="fas fa-star text-yellow-400"></i>
+                            </span>
+                            <span class="text-xs text-blue-600">({{ $book->reviews->count() }})</span>
+                        </div>
+                    @endif
+                    <span class="text-sm text-gray-600 mr-2">Lọc theo:</span>
+                    @php
+                        $currentRating = request('rating');
+                        $totalReviews = $book->reviews->count();
+                    @endphp
+                    
+                    <a href="?rating=" 
+                    class="px-3 py-1 text-sm rounded-full transition-all 
+                            {{ !$currentRating ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
+                        Tất cả ({{ $totalReviews }})
+                    </a>
+                    
+                    @for($i = 5; $i >= 1; $i--)
+                        @php
+                            $count = $book->reviews->where('rating', $i)->count();
+                            $isActive = $currentRating == $i ? 'bg-yellow-100 text-yellow-800 border border-yellow-300' : 'bg-gray-100 hover:bg-gray-200';
+                        @endphp
+                        <a href="?rating={{ $i }}" 
+                        class="px-3 py-1 text-sm rounded-full transition-all flex items-center {{ $isActive }}">
+                            {{ $i }} <i class="fas fa-star text-yellow-400 ml-1"></i>
+                            <span class="ml-1 text-xs bg-{{ $currentRating == $i ? 'yellow-200' : 'gray-200' }} px-2 py-0.5 rounded-full">
+                                {{ $count }}
+                            </span>
+                        </a>
+                    @endfor
+                </div>
+            </div>
+
+            {{-- Danh sách đánh giá --}}
+            <div class="space-y-6">
+                @php
+                    $filteredReviews = $currentRating 
+                        ? $book->reviews->where('rating', $currentRating) 
+                        : $book->reviews;
+                @endphp
+
+                @forelse($filteredReviews as $review)
+                    <div class="border-b border-gray-200 pb-6 last:border-0">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center">
+                                <i class="fas fa-user-circle text-2xl text-gray-400 mr-3"></i>
+                                <div>
+                                    <p class="font-medium text-gray-900">{{ $review->user->name ?? 'Khách hàng' }}</p>
+                                    <div class="flex items-center">
+                                        @for($i = 1; $i <= 5; $i++)
+                                            <i class="fas fa-star text-{{ $i <= $review->rating ? 'yellow-400' : 'gray-300' }} text-sm"></i>
+                                        @endfor
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="text-sm text-gray-500">{{ $review->created_at->format('d/m/Y') }}</span>
+                        </div>
+                        <p class="text-gray-700 pl-11">{{ $review->comment }}</p>
+                    </div>
+                @empty
+                    <div class="text-center py-8">
+                        <i class="fas fa-comment-slash text-4xl text-gray-300 mb-2"></i>
+                        <p class="text-gray-500">Chưa có đánh giá nào cho sản phẩm này.</p>
+                    </div>
+                @endforelse
+            </div>
         </div>
 
         {{-- Sản phẩm liên quan --}}
@@ -222,7 +342,7 @@
                         <div class="relative aspect-[1/1.05] bg-gray-100 overflow-hidden">
                             <img src="{{ asset('storage/' . ($related->images->first()->image_url ?? 'default.jpg')) }}"
                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                                alt="{{$related->title}}">
+                                alt="{{ $related->title }}">
 
                             <!-- Icon trái tim -->
                             <div class="absolute top-2 right-2 z-10">
@@ -232,8 +352,8 @@
 
                         <!-- Thông tin sản phẩm -->
                         <div class="p-4 bg-white flex flex-col flex-1 justify-between">
-                            <h3 class="text-sm font-semibold text-gray-800">{{$related->title}}</h3>
-                            <p class="text-xs text-gray-500">{{$related->author->name ?? 'Không rõ'}}</p>
+                            <h3 class="text-sm font-semibold text-gray-800">{{ $related->title }}</h3>
+                            <p class="text-xs text-gray-500">{{ $related->author->name ?? 'Không rõ' }}</p>
                             <p class="text-red-500 font-bold text-sm mt-1">
                                 {{ number_format($related->formats->first()->price ?? 0, 0, ',', '.') }}₫
                             </p>
@@ -251,6 +371,13 @@
 @endsection
 
 @push('scripts')
+
+    <script>
+        function changeMainImage(imageUrl) {
+            document.getElementById('mainImage').src = imageUrl;
+        }
+    </script>
+
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script>
@@ -607,3 +734,4 @@
     }
 </script>
 @endpush
+

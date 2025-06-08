@@ -7,7 +7,7 @@ use App\Models\PaymentMethod;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
-class PaymentMethodController extends Controller
+class AdminPaymentMethodController extends Controller
 {
     public function index(Request $request)
     {

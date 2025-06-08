@@ -72,11 +72,12 @@ class BookController extends Controller
             $booksQuery->havingRaw('MAX(book_formats.price) <= ?', [$maxPrice]);
         }
 
+        // Các mốc lọc giá tiền VNĐ (nghìn đồng)
         $priceRanges = [
-            '1-10' => [1, 10],
-            '10-50' => [10, 50],
-            '50-100' => [50, 100],
-            '100+' => [100, null],
+            '1-10' => [0, 10000],
+            '10-50' => [10000, 50000],
+            '50-100' => [50000, 100000],
+            '100+' => [100000, null],
         ];
 
         $selectedPriceRange = $request->input('price_range');
