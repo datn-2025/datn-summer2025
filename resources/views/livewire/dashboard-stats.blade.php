@@ -64,7 +64,7 @@
             <div class="card-body">
                 <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Số dư</p>
                 <h4 class="fs-22 fw-semibold ff-secondary mb-4">₫{{ number_format($balance, 0, ',', '.') }}</h4>
-                <a href="{{ route('admin.users.index') }}" class="text-decoration-underline">Xem chi tiết</a>
+                <a href="{{ route('admin.balance-chart') }}" class="text-decoration-underline">Xem chi tiết</a>
                 <div class="avatar-sm flex-shrink-0 float-end">
                     <span class="avatar-title bg-primary-subtle rounded fs-3">
                         <i class="bx bx-credit-card text-primary"></i>
