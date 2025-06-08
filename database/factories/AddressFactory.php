@@ -14,8 +14,6 @@ class AddressFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
-            'recipient_name' => $this->faker->name,
-            'phone' => $this->faker->phoneNumber,
             'address_detail' => $this->faker->streetAddress,
             'ward' => $this->faker->city,
             'district' => $this->faker->city,

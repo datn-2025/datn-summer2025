@@ -338,7 +338,7 @@
                         
                         <!-- Checkout Button -->
                         <div class="mt-4">
-                            <a href="#" class="btn modern-checkout-btn w-100">
+                            <a href="{{route('orders.checkout')}}" class="btn modern-checkout-btn w-100">
                                 <i class="fas fa-credit-card me-2"></i>
                                 <span>Tiến hành thanh toán</span>
                                 <i class="fas fa-arrow-right ms-2"></i>
