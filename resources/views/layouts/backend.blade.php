@@ -12,6 +12,7 @@
     <!-- Favicon -->
     <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico') }}">
 
+
     <!-- ========== CSS ========== -->
 
     <!-- Local Vendor CSS -->
