@@ -11,7 +11,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <!-- Bootstrap CSS -->
-    {{-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" /> --}}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
@@ -25,6 +25,7 @@
 
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
 
     <!-- Toastr JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
@@ -56,50 +57,47 @@
     @stack('scripts')
     @include('layouts.partials.footer')
     <script>
-        $(document).ready(function() {
-        //Lấy tỉnh thành
-        $.getJSON('https://esgoo.net/api-tinhthanh/1/0.htm', function(data_tinh) {
-            if (data_tinh.error == 0) {
-                $.each(data_tinh.data, function(key_tinh, val_tinh) {
-                    $("#tinh").append('<option value="' + val_tinh.id + '">' + val_tinh.full_name + '</option>');
-                });
-                $("#tinh").change(function(e) {
-                    var idtinh = $(this).val();
-                    $("#ten_tinh").val($("#tinh option:selected").text()); // Đặt tên tỉnh vào input ẩn
-
-                    //Lấy quận huyện
-                    $.getJSON('https://esgoo.net/api-tinhthanh/2/' + idtinh + '.htm', function(data_quan) {
-                        if (data_quan.error == 0) {
-                            $("#quan").html('<option value="0">Quận Huyện</option>');
-                            $("#phuong").html('<option value="0">Phường Xã</option>');
-                            $.each(data_quan.data, function(key_quan, val_quan) {
-                                $("#quan").append('<option value="' + val_quan.id + '">' + val_quan.full_name + '</option>');
-                            });
-
-                            $("#quan").change(function(e) {
-                                var idquan = $(this).val();
-                                $("#ten_quan").val($("#quan option:selected").text()); // Đặt tên quận vào input ẩn
-
-                                //Lấy phường xã  
-                                $.getJSON('https://esgoo.net/api-tinhthanh/3/' + idquan + '.htm', function(data_phuong) {
-                                    if (data_phuong.error == 0) {
-                                        $("#phuong").html('<option value="0">Phường Xã</option>');
-                                        $.each(data_phuong.data, function(key_phuong, val_phuong) {
-                                            $("#phuong").append('<option value="' + val_phuong.id + '">' + val_phuong.full_name + '</option>');
-                                        });
-
-                                        $("#phuong").change(function(e) {
-                                            $("#ten_phuong").val($("#phuong option:selected").text()); // Đặt tên phường vào input ẩn
-                                        });
-                                    }
-                                });
-                            });
-                        }
-                    });
-                });
-            }
+       $(document).ready(function() {
+    // Lấy tỉnh thành
+    $.getJSON('https://provinces.open-api.vn/api/p/', function(provinces) {
+        provinces.forEach(function(province) {
+            $("#tinh").append(`<option value="${province.code}">${province.name}</option>`);
         });
     });
+
+    // Xử lý khi chọn tỉnh
+    $("#tinh").change(function() {
+        const provinceCode = $(this).val();
+        $("#ten_tinh").val($(this).find("option:selected").text());
+        
+        // Lấy quận/huyện
+        $.getJSON(`https://provinces.open-api.vn/api/p/${provinceCode}?depth=2`, function(provinceData) {
+            $("#quan").html('<option value="">Chọn Quận/Huyện</option>');
+            provinceData.districts.forEach(function(district) {
+                $("#quan").append(`<option value="${district.code}">${district.name}</option>`);
+            });
+        });
+    });
+
+    // Xử lý khi chọn quận
+    $("#quan").change(function() {
+        const districtCode = $(this).val();
+        $("#ten_quan").val($(this).find("option:selected").text());
+        
+        // Lấy phường/xã
+        $.getJSON(`https://provinces.open-api.vn/api/d/${districtCode}?depth=2`, function(districtData) {
+            $("#phuong").html('<option value="">Chọn Phường/Xã</option>');
+            districtData.wards.forEach(function(ward) {
+                $("#phuong").append(`<option value="${ward.code}">${ward.name}</option>`);
+            });
+        });
+    });
+
+    // Xử lý khi chọn phường
+    $("#phuong").change(function() {
+        $("#ten_phuong").val($(this).find("option:selected").text());
+    });
+});
     </script>
 </body>
 
