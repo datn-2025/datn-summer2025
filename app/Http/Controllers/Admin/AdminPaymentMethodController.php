@@ -97,6 +97,12 @@ class AdminPaymentMethodController extends Controller
         }
 
         $payment->payment_status_id = $status->id;
+
+        // ✅ Nếu trạng thái là "Đã Thanh Toán" thì cập nhật ngày thanh toán
+        if (mb_strtolower($status->name, 'UTF-8') === 'đã thanh toán') {
+            $payment->paid_at = now();
+        }
+
         $payment->save();
         Toastr::success('Cập nhật trạng thái thanh toán thành công!');
 
@@ -151,12 +157,11 @@ class AdminPaymentMethodController extends Controller
         if ($request->filled('search')) {
             $search = $request->search;
             $payments->where(function ($q) use ($search) {
-                // Tìm kiếm theo order_id
-                $q->where('order_id', 'LIKE', "%{$search}%")
-                    // Tìm kiếm theo order_code
-                    ->orWhereHas('order', function ($query) use ($search) {
-                        $query->where('order_code', 'LIKE', "%{$search}%");
-                    })
+                // Tìm kiếm theo order_code
+
+                $q->orWhereHas('order', function ($query) use ($search) {
+                    $query->where('order_code', 'LIKE', "%{$search}%");
+                })
                     // Tìm kiếm theo amount (kiểm tra nếu search là số)
                     ->orWhere(function ($query) use ($search) {
                         if (is_numeric(str_replace([',', '.'], '', $search))) {
@@ -177,12 +182,14 @@ class AdminPaymentMethodController extends Controller
                 $query->where('name', $request->payment_status);
             });
         }
+        // Ẩn các phương thức "Thanh toán khi nhận hàng"
+        $payments->whereHas('paymentMethod', function ($query) {
+            $query->where('name', '!=', 'Thanh toán khi nhận hàng');
+        });
 
 
         $payments = $payments->latest()->paginate(10);
 
         return view('admin.payment-methods.history', compact('payments'));
     }
-
 }
-

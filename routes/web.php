@@ -59,8 +59,8 @@ Route::post('/wishlist/delete', [WishlistController::class, 'delete'])->name('wi
 Route::post('/wishlist/delete-all', [WishlistController::class, 'deleteAll'])->name('wishlist.delete-all');
 Route::post('/wishlist/add-to-cart', [WishlistController::class, 'addToCartFromWishlist'])->name('wishlist.addToCart');
 // Hiển thị danh sách và danh mục
- // Đơn hàngAdd commentMore actions
- Route::prefix('orders')->name('orders.')->group(function () {
+// Đơn hàngAdd commentMore actions
+Route::prefix('orders')->name('orders.')->group(function () {
     Route::get('/', [\App\Http\Controllers\OrderController::class, 'index'])->name('index');
     Route::get('/checkout', [\App\Http\Controllers\OrderController::class, 'checkout'])->name('checkout');
     Route::get('/{order}', [\App\Http\Controllers\OrderController::class, 'show'])->name('show');
@@ -109,9 +109,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/restore/{id}', [AdminBookController::class, 'restore'])->name('restore');
         Route::delete('/force-delete/{id}', [AdminBookController::class, 'forceDelete'])->name('force-delete');
     });
-  
+
     // Admin Payment Methods
-    Route::prefix('payment-methods')->name('payment-methods.')->group(function () {@
+    Route::prefix('payment-methods')->name('payment-methods.')->group(function () {
         Route::get('/', [AdminPaymentMethodController::class, 'index'])->name('index');
         Route::get('/create', [AdminPaymentMethodController::class, 'create'])->name('create');
         Route::post('/', [AdminPaymentMethodController::class, 'store'])->name('store');
@@ -122,6 +122,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/trash', [AdminPaymentMethodController::class, 'trash'])->name('trash');
         Route::put('/{paymentMethod}/restore', [AdminPaymentMethodController::class, 'restore'])->name('restore');
         Route::delete('/{paymentMethod}/force-delete', [AdminPaymentMethodController::class, 'forceDelete'])->name('force-delete');
+
+        Route::get('/history', [AdminPaymentMethodController::class, 'history'])->name('history');
+        Route::put('/{id}/status', [AdminPaymentMethodController::class, 'updateStatus'])
+            ->name('updateStatus');
     });
 
     // Route admin/categories
@@ -217,7 +221,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     //     Route::put('/{paymentMethod}/restore', [PaymentMethodController::class, 'restore'])->name('restore');
     //     Route::delete('/{paymentMethod}/force-delete', [PaymentMethodController::class, 'forceDelete'])->name('force-delete');
     // });
-  
+
     // Route admin/categories
     Route::prefix('categories')->name('categories.')->group(function () {
         Route::get('/', [CategoryController::class, 'index'])->name('index');
@@ -313,7 +317,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::put('/{article}', [NewsArticleController::class, 'update'])->name('update');
         Route::delete('/{article}', [NewsArticleController::class, 'destroy'])->name('destroy');
     });
-}); 
+});
 Route::prefix('account')->name('account.')->group(function () {
     Route::get('activate', [LoginController::class, 'activate'])->name('activate');
     Route::get('/register', [LoginController::class, 'register'])->name('register');
@@ -354,10 +358,10 @@ Route::prefix('account')->name('account.')->group(function () {
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
 // Quên mật khẩu
-    Route::get('/forgot-password', [LoginController::class, 'showForgotPasswordForm'])->name('password.request');
-    Route::post('/forgot-password', [LoginController::class, 'sendResetLinkEmail'])->name('password.email');
-    Route::get('/reset-password/{token}/{email}', [LoginController::class, 'showResetPasswordForm'])->name('password.reset');
-    Route::post('/reset-password', [LoginController::class, 'handleResetPassword'])->name('password.update');
+Route::get('/forgot-password', [LoginController::class, 'showForgotPasswordForm'])->name('password.request');
+Route::post('/forgot-password', [LoginController::class, 'sendResetLinkEmail'])->name('password.email');
+Route::get('/reset-password/{token}/{email}', [LoginController::class, 'showResetPasswordForm'])->name('password.reset');
+Route::post('/reset-password', [LoginController::class, 'handleResetPassword'])->name('password.update');
 
 
 Route::middleware('auth')->group(function () {
