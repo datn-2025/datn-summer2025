@@ -52,7 +52,7 @@ class BookSeeder extends Seeder
                 if (fake()->boolean(70)) {
                     BookFormat::factory()->create([
                         'book_id' => $book->id,
-                        'name' => 'Sách Vật Lý',
+                        'format_name' => 'Sách Vật Lý',
                     ]);
                 }
 
@@ -60,7 +60,7 @@ class BookSeeder extends Seeder
                 if (fake()->boolean(50)) {
                     BookFormat::factory()->create([
                         'book_id' => $book->id,
-                        'name' => 'Ebook'
+                        'format_name' => 'Ebook'
                     ]);
                 }
 
