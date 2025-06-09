@@ -12,16 +12,16 @@ use App\Models\Category;
 use App\Models\Author;
 use App\Models\Brand;
 use Illuminate\Support\Str;
+use Faker\Factory as Faker;
 
 class BookSeeder extends Seeder
 {
     public function run(): void
     {
-        // Đảm bảo có dữ liệu cần thiết trước khi tạo sách
-        $categories = Category::all();
+        $faker = Faker::create('vi_VN');
         $authors = Author::all();
         $brands = Brand::all();
-
+        $categories = Category::all();
         if ($categories->isEmpty() || $authors->isEmpty() || $brands->isEmpty()) {
             $this->command->error('Vui lòng chạy CategorySeeder, AuthorSeeder và BrandSeeder trước!');
             return;
@@ -49,7 +49,7 @@ class BookSeeder extends Seeder
                 ]);
 
                 // 70% sách có bản bìa cứng
-                if (fake()->boolean(70)) {
+                if (fake()->boolean(30)) {
                     BookFormat::factory()->create([
                         'book_id' => $book->id,
                         'format_name' => 'Sách Vật Lý',
@@ -57,7 +57,7 @@ class BookSeeder extends Seeder
                 }
 
                 // 50% sách có bản ebook
-                if (fake()->boolean(50)) {
+                if (fake()->boolean(10)) {
                     BookFormat::factory()->create([
                         'book_id' => $book->id,
                         'format_name' => 'Ebook'

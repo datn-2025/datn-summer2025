@@ -59,6 +59,10 @@
                       border-bottom: 1px solid #eee; white-space: nowrap;">
                             <i class="fas fa-user-circle" style="margin-right: 8px;"></i> Tài khoản
                         </a>
+                        <a href="{{ route('orders.index') }}" style="display: block; padding: 8px 15px; color: #333; text-decoration: none;
+                      border-bottom: 1px solid #eee; white-space: nowrap;">
+                            <i class="fas fa-user-circle" style="margin-right: 8px;"></i> Đơn Hàng Của Tôi
+                        </a>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button type="submit" style="width: 100%; text-align: left; padding: 8px 15px; 

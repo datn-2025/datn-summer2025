@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-       Schema::table('users', function (Blueprint $table) {
-    $table->string('activation_token')->nullable();
-    $table->timestamp('activation_expires')->nullable();
-});
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('activation_token')->nullable();
+            $table->timestamp('activation_expires')->nullable();
+        });
     }
 
     /**

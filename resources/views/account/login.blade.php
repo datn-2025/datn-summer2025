@@ -295,7 +295,7 @@
                     </div>
                 @endif
                 <form method="POST" action="{{ route('login.submit') }}">
-                    @csrf
+                    @csrf   
                     <div class="form-group">
                         <input type="email" name="email" class="form-control" placeholder="Email" required autofocus
                             value="{{ old('email') }}" />

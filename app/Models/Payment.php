@@ -36,6 +36,10 @@ class Payment extends Model
     {
         return $this->belongsTo(PaymentMethod::class);
     }
+    public function paymentStatus(): BelongsTo
+    {
+        return $this->belongsTo(PaymentStatus::class, 'payment_status_id');
+    }
 
     protected static function boot()
     {
