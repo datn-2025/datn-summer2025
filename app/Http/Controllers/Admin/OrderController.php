@@ -14,7 +14,6 @@ use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use App\Jobs\SendOrderStatusUpdatedMail;
 
@@ -80,15 +79,18 @@ class OrderController extends Controller
 
         // Get order items with their attribute values
         $orderItems = OrderItem::where('order_id', $id)
-            ->with(['book', 'attributeValues.attribute'])
+            ->with(['book', 'attributeValues.attribute', 'bookFormat'])
             ->get();
-
+        foreach ($orderItems as $item) {
+            $bookFormat = optional($item->bookFormat)->format_name;  // Safely access 'name' of 'bookFormat'
+        }
+        // dd($bookFormat);
         // Generate QR code if not exists
         // if (!$order->qr_code) {
         //     $this->generateQrCode($order);
         // }
 
-        return view('admin.orders.show', compact('order', 'orderItems'));
+        return view('admin.orders.show', compact('order', 'orderItems', 'bookFormat'));
     }
 
     public function edit($id)

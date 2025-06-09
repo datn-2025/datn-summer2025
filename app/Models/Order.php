@@ -18,17 +18,21 @@ class Order extends Model
         'address_id',
         'voucher_id',
         'total_amount',
-        'shipping_fee',
         'order_code',
         'order_status_id',
         'payment_method_id',
         'payment_status_id',
-        'qr_code'
+        'qr_code',
+        'shipping_fee',
+        'note',
+        'discount_amount',
+        'recipient_name',
+        'recipient_phone',
+        
     ];
 
     protected $casts = [
-        'total_amount' => 'decimal:2',
-        'shipping_fee' => 'decimal:2'
+        'total_amount' => 'decimal:2'
     ];
 
     public $incrementing = false;
@@ -84,6 +88,11 @@ class Order extends Model
         return $this->hasMany(OrderItem::class);
     }
 
+     public function shipping()
+    {
+        return $this->hasOne(Shipping::class);
+    }
+
     protected static function boot()
     {
         parent::boot();
@@ -93,5 +102,22 @@ class Order extends Model
                 $model->id = (string) Str::uuid();
             }
         });
+    }
+    
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    public function shippingAddress()
+    {
+        // Giả sử bạn có trường shipping_address_id trong bảng orders
+        return $this->belongsTo(Address::class, 'shipping_address_id');
+    }
+
+    public function billingAddress()
+    {
+        // Giả sử bạn có trường billing_address_id trong bảng orders
+        return $this->belongsTo(Address::class, 'billing_address_id');
     }
 }
