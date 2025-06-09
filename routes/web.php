@@ -62,6 +62,15 @@ Route::prefix('cart')->group(function () {
     Route::post('/remove-voucher', [CartController::class, 'removeVoucher'])->name('cart.remove-voucher');
 });
 
+// Đơn hàng Add commentMore actions
+Route::prefix('orders')->name('orders.')->group(function () {
+    Route::get('/', [\App\Http\Controllers\OrderController::class, 'index'])->name('index');
+    Route::get('/checkout', [\App\Http\Controllers\OrderController::class, 'checkout'])->name('checkout');
+    Route::get('/{order}', [\App\Http\Controllers\OrderController::class, 'show'])->name('show');
+    Route::post('/store', [\App\Http\Controllers\OrderController::class, 'store'])->name('store');
+    Route::post('/apply-voucher', [\App\Http\Controllers\OrderController::class, 'applyVoucher'])->name('apply-voucher');
+});
+
 // danh sach yeu thich
 Route::get('/wishlist', [WishlistController::class, 'getWishlist'])->name('wishlist.index');
 Route::post('/wishlist/add', [WishlistController::class, 'add'])->name('wishlist.add');
@@ -72,6 +81,15 @@ Route::post('/wishlist/add-to-cart', [WishlistController::class, 'addToCartFromW
 // lien he 
 Route::get('/news', [NewsController::class, 'index'])->name('news.index');
 Route::get('/news/{id}', [NewsController::class, 'show'])->name('news.show');
+
+// Login và tài khoản
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
+// Quên mật khẩu
+Route::get('/forgot-password', [LoginController::class, 'showForgotPasswordForm'])->name('password.request');
+Route::post('/forgot-password', [LoginController::class, 'sendResetLinkEmail'])->name('password.email');
+Route::get('/reset-password/{token}/{email}', [LoginController::class, 'showResetPasswordForm'])->name('password.reset');
+Route::post('/reset-password', [LoginController::class, 'handleResetPassword'])->name('password.update');
 
 Route::prefix('account')->name('account.')->group(function () {
     Route::get('activate', [LoginController::class, 'activate'])->name('activate');
@@ -99,17 +117,6 @@ Route::prefix('account')->name('account.')->group(function () {
         Route::post('/password/change', [LoginController::class, 'changePassword'])->name('password.change');
     });
 });
-
-// Login và tài khoản
-Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
-// Quên mật khẩu
-Route::get('/forgot-password', [LoginController::class, 'showForgotPasswordForm'])->name('password.request');
-Route::post('/forgot-password', [LoginController::class, 'sendResetLinkEmail'])->name('password.email');
-Route::get('/reset-password/{token}/{email}', [LoginController::class, 'showResetPasswordForm'])->name('password.reset');
-Route::post('/reset-password', [LoginController::class, 'handleResetPassword'])->name('password.update');
-
-
 Route::middleware('auth')->group(function () {
     // Đăng xuất
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
@@ -143,23 +150,15 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-// Đơn hàng Add commentMore actions
-Route::prefix('orders')->name('orders.')->group(function () {
-    Route::get('/', [\App\Http\Controllers\OrderController::class, 'index'])->name('index');
-    Route::get('/checkout', [\App\Http\Controllers\OrderController::class, 'checkout'])->name('checkout');
-    Route::get('/{order}', [\App\Http\Controllers\OrderController::class, 'show'])->name('show');
-    Route::post('/store', [\App\Http\Controllers\OrderController::class, 'store'])->name('store');
-    Route::post('/apply-voucher', [\App\Http\Controllers\OrderController::class, 'applyVoucher'])->name('apply-voucher');
-});
-
 // Route đăng nhập admin (chỉ cho khách)
 Route::middleware('guest.admin')->group(function () {
     Route::get('/admin/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
     Route::post('/admin/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
 });
 Route::middleware(['auth:admin', 'admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/', [AdminDashboard::class, 'index'])->name('dashboard');
     Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
+
+    Route::get('/', [AdminDashboard::class, 'index'])->name('dashboard');
 
     // Route admin/contacts
     Route::resource('contacts', \App\Http\Controllers\Admin\ContactController::class);
@@ -228,6 +227,9 @@ Route::middleware(['auth:admin', 'admin'])->prefix('admin')->name('admin.')->gro
         Route::get('/trash', [AdminPaymentMethodController::class, 'trash'])->name('trash');
         Route::put('/{paymentMethod}/restore', [AdminPaymentMethodController::class, 'restore'])->name('restore');
         Route::delete('/{paymentMethod}/force-delete', [AdminPaymentMethodController::class, 'forceDelete'])->name('force-delete');
+
+        Route::get('/history', [AdminPaymentMethodController::class, 'history'])->name('history');
+        Route::put('/{id}/status', [AdminPaymentMethodController::class, 'updateStatus'])->name('updateStatus');
     });
 
     // routes admin/reviews
