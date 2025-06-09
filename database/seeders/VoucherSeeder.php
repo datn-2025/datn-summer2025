@@ -34,4 +34,8 @@ class VoucherSeeder extends Seeder
 
 
     }
+
+    public function run(){
+        $this->generateUniqueCode('TEST');
+    }
 }
