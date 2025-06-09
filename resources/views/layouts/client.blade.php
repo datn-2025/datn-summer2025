@@ -109,7 +109,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('account.logout') }}">
+                            <a class="nav-link" href="{{ route('logout') }}">
                                 <i class="fas fa-sign-out-alt me-1"></i>Đăng xuất
                             </a>
                         </li>

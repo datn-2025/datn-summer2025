@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\OrderStatusHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -13,8 +14,8 @@ use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use App\Jobs\SendOrderStatusUpdatedMail;
 
 class OrderController extends Controller
 {
@@ -26,18 +27,18 @@ class OrderController extends Controller
         $paymentStatuses = PaymentStatus::query()->get();
         // tìm kiếm đơn hàng
         // dd($request->all());
-        if ($request->has('search')) {
-            $query->whereHas('user', function($q) use ($request) {
+        if ($request->has('search') ) {
+            $query->whereHas('user', function ($q) use ($request) {
                 $q->where('name', 'like', '%' . $request->search . '%');
             });
         }
         if ($request->has('status')) {
-            $query->whereHas('orderStatus', function($q) use ($request) {
+            $query->whereHas('orderStatus', function ($q) use ($request) {
                 $q->where('name', $request->status);
             });
         }
         if ($request->has('payment')) {
-            $query->whereHas('paymentStatus', function($q) use ($request) {
+            $query->whereHas('paymentStatus', function ($q) use ($request) {
                 $q->where('name', $request->payment);
             });
         }
@@ -46,59 +47,64 @@ class OrderController extends Controller
         }
 
         $orders = $query->paginate(10);
-        
+
         // lấy ra số đơn hàng theo trạng thái
         $orderCounts = [
             'total' => Order::count(),
-            'Chờ Xác Nhận' => Order::whereHas('orderStatus', function($q) {
+            'Chờ Xác Nhận' => Order::whereHas('orderStatus', function ($q) {
                 $q->where('name', 'Chờ Xác Nhận');
             })->count(),
-            'Đã Giao Thành Công' => Order::whereHas('orderStatus', function($q) {
+            'Đã Giao Thành Công' => Order::whereHas('orderStatus', function ($q) {
                 $q->where('name', 'Đã Giao Thành Công');
             })->count(),
-            'Đã Hủy' => Order::whereHas('orderStatus', function($q) {
+            'Đã Hủy' => Order::whereHas('orderStatus', function ($q) {
                 $q->where('name', 'Đã Hủy');
             })->count(),
         ];
-        
+
         return view('admin.orders.index', compact('orders', 'orderCounts', 'orderStatuses', 'paymentStatuses'));
     }
 
     public function show($id)
     {
         $order = Order::with([
-            'user', 
-            'address', 
-            'orderStatus', 
-            'paymentStatus', 
+            'user',
+            'address',
+            'orderStatus',
+            'paymentStatus',
             'voucher',
             'payments',
             'invoice',
         ])->findOrFail($id);
-        
+
         // Get order items with their attribute values
         $orderItems = OrderItem::where('order_id', $id)
-            ->with(['book', 'attributeValues.attribute'])
+            ->with(['book', 'attributeValues.attribute', 'bookFormat'])
             ->get();
-        
-        // Generate QR code if not exists
-        if (!$order->qr_code) {
-            $this->generateQrCode($order);
+        foreach ($orderItems as $item) {
+            $bookFormat = optional($item->bookFormat)->format_name;  // Safely access 'name' of 'bookFormat'
         }
+        // dd($bookFormat);
+        // Generate QR code if not exists
+        // if (!$order->qr_code) {
+        //     $this->generateQrCode($order);
+        // }
 
-        return view('admin.orders.show', compact('order', 'orderItems'));
+        return view('admin.orders.show', compact('order', 'orderItems', 'bookFormat'));
     }
 
     public function edit($id)
     {
         $order = Order::with(['user', 'address', 'orderStatus', 'paymentStatus'])->findOrFail($id);
-        $orderStatuses = OrderStatus::all();
+        $currentStatus = $order->orderStatus->name;
+        $allowedNames = OrderStatusHelper::getNextStatuses($currentStatus);
+        $orderStatuses = OrderStatus::whereIn('name', $allowedNames)->get();
         $paymentStatuses = PaymentStatus::all();
-        
+
         // Generate QR code if not exists
-        if (!$order->qr_code) {
-            $this->generateQrCode($order);
-        }
+        // if (!$order->qr_code) {
+        //     $this->generateQrCode($order);
+        // }
 
         return view('admin.orders.edit', compact('order', 'orderStatuses', 'paymentStatuses'));
     }
@@ -114,55 +120,66 @@ class OrderController extends Controller
             DB::beginTransaction();
 
             $order = Order::findOrFail($id);
-            $oldOrderStatus = $order->orderStatus->name;
-            $newOrderStatus = OrderStatus::find($request->order_status_id)->name;
-            
+            $currentStatus = $order->orderStatus->name;
+            $newStatus = OrderStatus::findOrFail($request->order_status_id)->name;
+            $allowed = OrderStatusHelper::getNextStatuses($currentStatus);
+
+            // ✅ Kiểm tra hợp lệ TRƯỚC khi cập nhật
+            if (!in_array($newStatus, $allowed)) {
+                Toastr::error("Trạng thái mới không hợp lệ với trạng thái hiện tại", 'Lỗi');
+                return back()->withInput();
+            }
+
             $order->update([
                 'order_status_id' => $request->order_status_id,
                 'payment_status_id' => $request->payment_status_id,
             ]);
-            
-            // Log the status change
-            Log::info("Order {$order->id} status changed from {$oldOrderStatus} to {$newOrderStatus} by admin");
+
+            // Ghi log
+            Log::info("Order {$order->id} status changed from {$currentStatus} to {$newStatus} by admin");
 
             DB::commit();
-            
+
+            // Gửi mail thông báo cập nhật trạng thái đơn hàng qua queue
+            dispatch(new SendOrderStatusUpdatedMail($order, $newStatus));
+
             Toastr::success('Cập nhật trạng thái đơn hàng thành công', 'Thành công');
             return redirect()->route('admin.orders.show', $order->id);
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error updating order status: ' . $e->getMessage());
-            
+
             Toastr::error('Lỗi khi cập nhật trạng thái đơn hàng. Vui lòng thử lại.', 'Lỗi');
             return back();
         }
     }
-    
-//    tạo qr cho đơn hàng
-    private function generateQrCode(Order $order)
-    {
-        try {
-            // Create QR code with order information
-            $orderInfo = [
-                'id' => $order->id,
-                'customer' => $order->user->name ?? 'N/A',
-                'total' => $order->total_amount,
-                'date' => $order->created_at->format('Y-m-d H:i:s')
-            ];
-            
-            $qrCode = QrCode::format('png')
-                ->size(200)
-                ->errorCorrection('H')
-                ->generate(json_encode($orderInfo));
-            
-            $filename = 'order_qr/order_' . substr($order->id, 0, 8) . '.png';
-            Storage::disk('public')->put($filename, $qrCode);
-            
-            // Update order with QR code path
-            $order->update(['qr_code' => $filename]);
-            
-        } catch (\Exception $e) {
-            Log::error('Error generating QR code: ' . $e->getMessage());
-        }
-    }
+
+
+    //    tạo qr cho đơn hàng
+    // private function generateQrCode(Order $order)
+    // {
+    //     try {
+    //         // Create QR code with order information
+    //         $orderInfo = [
+    //             'id' => $order->id,
+    //             'customer' => $order->user->name ?? 'N/A',
+    //             'total' => $order->total_amount,
+    //             'date' => $order->created_at->format('Y-m-d H:i:s')
+    //         ];
+
+    //         $qrCode = QrCode::format('png')
+    //             ->size(200)
+    //             ->errorCorrection('H')
+    //             ->generate(json_encode($orderInfo));
+
+    //         $filename = 'order_qr/order_' . substr($order->id, 0, 8) . '.png';
+    //         Storage::disk('public')->put($filename, $qrCode);
+
+    //         // Update order with QR code path
+    //         $order->update(['qr_code' => $filename]);
+
+    //     } catch (\Exception $e) {
+    //         Log::error('Error generating QR code: ' . $e->getMessage());
+    //     }
+    // }
 }

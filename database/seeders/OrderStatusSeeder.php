@@ -12,10 +12,14 @@ class OrderStatusSeeder extends Seeder
         $statuses = [
             ['name' => 'Chờ xác nhận'],
             ['name' => 'Đã xác nhận'],
+            ['name' => 'Đang chuẩn bị'],
             ['name' => 'Đang giao hàng'],
-            ['name' => 'Đã giao hàng'],
+            ['name' => 'Đã giao thành công'],
+            ['name' => 'Đã nhận hàng'],
+            ['name' => 'Thành công'],
+            ['name' => 'Giao thất bại'],
             ['name' => 'Đã hủy'],
-            ['name' => 'Hoàn trả'],
+            ['name' => 'Hoàn tiền'],
         ];
 
         foreach ($statuses as $status) {

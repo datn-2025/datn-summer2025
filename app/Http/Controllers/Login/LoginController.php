@@ -140,60 +140,77 @@ class LoginController extends Controller
     }
 
     // Xử lý đăng ký
-    public function handleRegister(Request $request)
-    {
-        // dd($request->all());
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:8|confirmed',
-        ], [
-            'name.required' => 'Vui lòng nhập tên đăng nhập.',
-            'name.max' => 'Tên đăng nhập tối đa 255 ký tự.',
-            'email.required' => 'Vui lòng nhập email.',
-            'email.email' => 'Email không đúng định dạng.',
-            'email.unique' => 'Email đã tồn tại.',
-            'password.required' => 'Vui lòng nhập mật khẩu.',
-            'password.min' => 'Mật khẩu tối thiểu 8 ký tự.',
-            'password.confirmed' => 'Xác nhận mật khẩu không khớp.',
-        ]);
 
-        // Lấy role_id của quyền "User"
-        $userRole = Role::where('name', 'User')->first();
-        if (!$userRole) {
-            Toastr::error('Không tìm thấy quyền User trong hệ thống!', 'Lỗi');
-            return back()->withErrors(['role' => 'Không tìm thấy quyền User trong hệ thống!']);
-        }
+ public function handleRegister(Request $request)
+{
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role_id' => $userRole->id,
-            'status' => 'Chưa kích Hoạt',
-        ]);
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:users,email',
+        'password' => 'required|string|min:8|confirmed',
+    ], [
+        'name.required' => 'Vui lòng nhập tên đăng nhập.',
+        'name.max' => 'Tên đăng nhập tối đa 255 ký tự.',
+        'email.required' => 'Vui lòng nhập email.',
+        'email.email' => 'Email không đúng định dạng.',
+        'email.unique' => 'Email đã tồn tại. Vui lòng đăng ký bằng email khác!',
+        'password.required' => 'Vui lòng nhập mật khẩu.',
+        'password.min' => 'Mật khẩu tối thiểu 8 ký tự.',
+        'password.confirmed' => 'Xác nhận mật khẩu không khớp.',
+    ]);
 
-        // Tạo activation token và url
-        $token = sha1($user->email);
-        $activationUrl = route('account.activate', [
-            'userId' => $user->id,
-            'token' => $token,
-            'expires' => now()->addHours(24)->timestamp
-        ]);
-
-        // Gửi email kích hoạt
-        try {
-            Mail::to($user->email)->send(new ActivationMail($activationUrl, $user->name));
-            Toastr::success('Đăng ký tài khoản thành công! Vui lòng kiểm tra email để kích hoạt tài khoản.', 'Thành công');
-        } catch (\Exception $e) {
-            dd($e);
-            Toastr::error('Không thể gửi email kích hoạt. Vui lòng thử lại sau.', 'Lỗi');
-            $user->delete(); // Xóa user nếu không gửi được email
-            return back()->withInput();
-        }
-
-        return redirect()->route('account.index');
+    $userRole = Role::where('name', 'User')->first();
+    if (!$userRole) {
+        Toastr::error('Không tìm thấy quyền User trong hệ thống!', 'Lỗi');
+        return back()->withErrors(['role' => 'Không tìm thấy quyền User trong hệ thống!']);
     }
+
+    $token = sha1($request->email);
+
+    $user = User::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => Hash::make($request->password),
+        'role_id' => $userRole->id,
+        'status' => 'Chưa kích Hoạt',
+        'activation_token' => $token,
+        'activation_expires' => now()->addHours(24),
+    ]);
+    
+
+    $activationUrl = route('account.activate', [
+        'userId' => $user->id,
+        'token' => $token,
+    ]);
+    // dd($activationUrl);
+    
+
+    try {
+        Mail::to($user->email)->send(new ActivationMail($activationUrl, $user->name));
+        Toastr::success('Đăng ký tài khoản thành công! Vui lòng kiểm tra email để kích hoạt tài khoản.', 'Thành công');
+    } catch (\Exception $e) {
+        $user->delete();
+        Toastr::error('Không thể gửi email kích hoạt. Vui lòng thử lại sau.', 'Lỗi');
+        return back()->withInput();
+    }
+
+    return redirect()->route('login');
+}
+public function activate(Request $request)
+{
+    $user = User::find($request->userId);
+
+    if (!$user || $user->activation_token !== $request->token || now()->greaterThan($user->activation_expires)) {
+        return redirect()->route('login')->with('error', 'Liên kết không hợp lệ hoặc đã hết hạn.');
+    }
+
+    $user->status = 'Hoạt Động';
+    $user->activation_token = null;
+    $user->activation_expires = null;
+    $user->save();
+    return redirect()->route('login')->with('success', 'Tài khoản đã được kích hoạt thành công.');
+}
+
 
     // Đăng xuất
     // public function logout(Request $request)
@@ -236,7 +253,7 @@ class LoginController extends Controller
         $user->save();
 
 
-        $resetLink = route('account.password.reset', ['token' => $resetToken , 'email' => $request->email]);
+        $resetLink = route('password.reset', ['token' => $resetToken , 'email' => $request->email]);
 
 
         try {

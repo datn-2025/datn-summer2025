@@ -71,8 +71,7 @@
     <!-- custom Css-->
     <link href="{{ asset('assets/css/custom.min.css') }}" rel="stylesheet" type="text/css" />
 
-    {{-- toastr notification --}}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+    {{-- Toastr CSS đã được tải ở head --}}
 
     <!--Swiper slider css-->
     <link href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" rel="stylesheet" type="text/css" />
@@ -723,47 +722,17 @@
                     <ul class="navbar-nav" id="navbar-nav">
                         <li class="menu-title"><span data-key="t-menu">Menu</span></li>
                         <li class="nav-item">
-                            <a class="nav-link menu-link" href="{{ route('admin.dashboard.index') }}">
+                            <a class="nav-link menu-link" href="{{ route('admin.dashboard') }}">
                                 <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Báo cáo tổng quan</span>
                             </a>
                         </li> <!-- end Dashboard Menu -->
 
                         <li class="nav-item">
-
-                            <a class="nav-link menu-link" href="#sidebarAuth" data-bs-toggle="collapse"
-                                role="button" aria-expanded="false" aria-controls="sidebarAuth">
+                            <a class="nav-link menu-link" href="{{ route('admin.users.index') }}">
                                 <i class="ri-account-circle-line"></i> <span data-key="t-authentication">Quản lý người
                                     dùng </span>
                             </a>
-                            <div class="collapse menu-dropdown" id="sidebarAuth">
-                                <ul class="nav nav-sm flex-column">
-                                    <li class="nav-item">
-
-                                        <a href="{{ route('admin.users.index') }}" class="nav-link"
-                                            data-key="t-signin"> Danh sách
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
                         </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link menu-link" href="#sidebarLayouts" data-bs-toggle="collapse"
-                                role="button" aria-expanded="false" aria-controls="sidebarLayouts">
-                                <i class="ri-layout-3-line"></i> <span data-key="t-layouts">Quản lý cửa hàng</span>
-                            </a>
-                            <div class="collapse menu-dropdown" id="sidebarLayouts">
-                                <ul class="nav nav-sm flex-column">
-                                    <li class="nav-item">
-                                        <a href="" class="nav-link" data-key="t-horizontal">Danh sách</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="" class="nav-link" data-key="t-detached">Thêm</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li> <!-- end Dashboard Menu -->
-
                         <li class="nav-item">
                             <a class="nav-link menu-link" href="#sidebarApps" data-bs-toggle="collapse"
                                 role="button" aria-expanded="false" aria-controls="sidebarApps">
@@ -809,7 +778,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link menu-link" href="{{ route('admin.orders.index') }}">
+                            <a class="nav-link menu-link" href="{{route('admin.orders.index')}}">
                                 <i class="ri-pages-line"></i> <span data-key="t-pages">Quản lý đơn hàng</span>
                             </a>
                         </li>
@@ -832,6 +801,7 @@
                                 </ul>
                             </div>
                         </li>
+                        
                         <li class="nav-item">
                             <a class="nav-link menu-link" href="#sidebarContacts" data-bs-toggle="collapse"
                                 role="button" aria-expanded="false" aria-controls="sidebarContacts">
@@ -850,8 +820,6 @@
                                 </ul>
                             </div>
                         </li>
-
-
                         <li class="nav-item">
                             <a class="nav-link menu-link" href="#sidebarAdvanceUI" data-bs-toggle="collapse"
                                 role="button" aria-expanded="false" aria-controls="sidebarAdvanceUI">
@@ -1648,7 +1616,7 @@
 
     {{-- định dang sách from thêm sách --}}
     <!-- JAVASCRIPT -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    {{-- Bootstrap JS (bundle.min.js) đã được tải ở head --}}
     <script src="https://cdn.jsdelivr.net/npm/simplebar@6.2.5/dist/simplebar.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.29.1/dist/feather.min.js"></script>
@@ -1670,6 +1638,7 @@
 
     <!-- App js -->
     <script src="{{ asset('assets/js/app.js') }}"></script>
+        <script src="{{asset('assets/js/custom.js')}}"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/2.3.1/list.min.js"></script>
@@ -1681,8 +1650,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.5/dist/sweetalert2.all.min.js"></script>
 
     {{-- toastr notification --}}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    {{-- jQuery (3.7.1) và Toastr JS đã được tải ở head --}}
     {!! Toastr::message() !!}
     <script>
         // Nếu trang được tải từ bộ nhớ cache (back/forward)
