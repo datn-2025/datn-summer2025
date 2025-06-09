@@ -36,8 +36,4 @@ class VoucherSeeder extends Seeder
     {
         return $prefix . strtoupper(Str::random(8));
     }
-
-    public function run(){
-        $this->generateUniqueCode('TEST');
-    }
 }
