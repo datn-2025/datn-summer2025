@@ -43,6 +43,8 @@ Route::get('storage/private/{filename}', function ($filename) {
     abort(404);
 })->where('filename', '.*');
 
+// VNPay routes
+Route::get('/vnpay/return', [\App\Http\Controllers\OrderController::class, 'vnpayReturn'])->name('vnpay.return');
 // Route public cho books (categoryId optional)
 Route::get('/', [HomeController::class, 'index'])->name('home');
 // Hiển thị danh sách và danh mục
@@ -168,7 +170,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     Route::get('/revenue-report', RevenueReport::class)->name('revenue-report');
     Route::get('/balance-chart', BalanceChart::class)->name('balance-chart');
-
 });
 //---------------------------------------------------
 
