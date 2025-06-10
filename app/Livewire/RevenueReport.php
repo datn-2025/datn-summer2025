@@ -59,6 +59,11 @@ class RevenueReport extends Component
     public function loadData()
     {
         $query = Order::query();
+        
+        $query->whereHas('orderStatus', fn($q) =>
+            $q->where('name', 'Thành công'))
+            ->whereHas('paymentStatus', fn($q) =>
+            $q->where('name', 'Đã Thanh Toán'));
 
         if ($this->timeRange === 'all' && $this->fromDate && $this->toDate) {
             $orders = $query
