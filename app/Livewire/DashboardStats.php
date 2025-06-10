@@ -21,11 +21,6 @@ class DashboardStats extends Component
         $this->updateStats();
     }
 
-    public function updatedTimePeriod()
-    {
-        $this->updateStats();
-    }
-
     public function updateStats()
     {
         $queryOrder = Order::query();
@@ -66,22 +61,27 @@ class DashboardStats extends Component
         })->count();
 
         // Doanh thu thực nhận (chỉ đơn đã thanh toán & thành công)
-        $this->revenue = Order::whereHas('orderStatus', fn($q) =>
+        $revenueQuery = Order::whereHas('orderStatus', fn($q) =>
         $q->where('name', 'Thành công'))
             ->whereHas('paymentStatus', fn($q) =>
             $q->where('name', 'Đã Thanh Toán'));
 
         if ($this->timePeriod) {
-            $this->revenue->whereBetween('created_at', [$start, $end]);
+            $revenueQuery->whereBetween('created_at', [$start, $end]);
         }
 
-        $this->revenue = $this->revenue->sum('total_amount');
+        $this->revenue = $revenueQuery->sum('total_amount');
 
         // Số dư: tổng tiền tất cả các đơn
-        $this->balance = Payment::whereHas('paymentStatus', fn($q) =>
+        $balanceQuery = Payment::whereHas('paymentStatus', fn($q) =>
         $q->where('name', 'Đã thanh toán'))
             ->whereNotNull('paid_at');
-        $this->balance = $this->balance->sum('amount');
+
+        if ($this->timePeriod) {
+            $balanceQuery ->whereBetween('created_at', [$start, $end]);
+        }
+
+        $this->balance = $balanceQuery ->sum('amount');
     }
 
     public function render()
