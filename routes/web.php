@@ -67,6 +67,9 @@ Route::prefix('orders')->name('orders.')->group(function () {
     Route::post('/store', [\App\Http\Controllers\OrderController::class, 'store'])->name('store');
     Route::post('/apply-voucher', [\App\Http\Controllers\OrderController::class, 'applyVoucher'])->name('apply-voucher');
 });
+
+// VNPay routes
+Route::get('/vnpay/return', [\App\Http\Controllers\OrderController::class, 'vnpayReturn'])->name('vnpay.return');
 // Route public cho books (categoryId optional)
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -575,3 +578,5 @@ Route::middleware('auth')->group(function () {
 //         });
 //     });
 // });
+       //Cổng thanh toán
+       Route::post('vnpay_payment', [PaymentController::class, 'vnpay_payment']);
