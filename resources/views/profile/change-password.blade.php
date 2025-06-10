@@ -167,7 +167,7 @@
             <div class="main-content">
                 <h2 class="mb-3">Đổi mật khẩu</h2>
                 <p class="text-muted mb-4">Để bảo mật tài khoản, vui lòng không chia sẻ mật khẩu cho người khác</p>
-                    <form method="POST" action="{{ route('account.password.update') }}">
+                    <form method="POST" action="{{ route('account.password.change') }}">
                         @csrf
 
                         <div class="form-group mb-3">

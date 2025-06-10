@@ -13,9 +13,11 @@ class PaymentService
         return Payment::create([
             'id' => (string) Str::uuid(),
             'order_id' => $data['order_id'],
+            'transaction_id' => $data['transaction_id'],
             'payment_method_id' => $data['payment_method_id'],
             'amount' => $data['amount'],
-            'payment_status_id' => PaymentStatus::where('name', 'Chờ thanh toán')->first()->id
+            'paid_at' => now(),
+            'payment_status_id' => PaymentStatus::where('name', 'Chờ Xử Lý')->first()->id
         ]);
     }
 
