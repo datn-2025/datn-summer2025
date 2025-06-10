@@ -2,7 +2,6 @@
 @section('title', 'dashboard')
 
 @section('content')
-
     <div class="container-fluid">
         <div class="row">
             <div class="col">
@@ -12,9 +11,10 @@
                         <div class="col-12">
                             <div class="d-flex align-items-lg-center flex-lg-row flex-column">
                                 <div class="flex-grow-1">
-                                    <h4 class="fs-18 mb-1">Xin chào, {{ Auth::user()->name }}!</h4>
-                                    <p class="text-muted mb-0">Chào mừng bạn đến với hệ thống quản trị BookBee. Dưới đây là
-                                        tổng quan cửa hàng sách hôm nay.</p>
+                                    {{-- @if (auth()->check() && auth()->user()->isAdmin())
+                                <h4 class="fs-18 mb-1">Xin chào, {{auth()->user()->name}} !</h4>
+                                <p class="text-muted mb-0">Chào mừng bạn đến với hệ thống quản trị BookBee. Dưới đây là tổng quan cửa hàng sách hôm nay.</p>
+                            @else --}}
                                 </div>
                                 <div class="mt-3 mt-lg-0">
                                     <form action="#">
@@ -29,18 +29,18 @@
                                                         <i class="ri-calendar-2-line"></i>
                                                     </div>
                                                 </div>
+                                                <div class="col-auto">
+                                                    <a href="{{ route('admin.books.create') }}" class="btn btn-success">
+                                                        <i class="ri-add-circle-line align-middle me-1"></i> Thêm sách
+                                                    </a>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <button type="button"
+                                                        class="btn btn-info btn-icon layout-rightside-btn">
+                                                        <i class="ri-bar-chart-2-line"></i>
+                                                    </button>
+                                                </div>
                                             </div>
-                                            <div class="col-auto">
-                                                <a href="{{ route('admin.books.create') }}" class="btn btn-success">
-                                                    <i class="ri-add-circle-line align-middle me-1"></i> Thêm sách
-                                                </a>
-                                            </div>
-                                            <div class="col-auto">
-                                                <button type="button" class="btn btn-info btn-icon layout-rightside-btn">
-                                                    <i class="ri-bar-chart-2-line"></i>
-                                                </button>
-                                            </div>
-                                        </div>
                                     </form>
                                 </div>
                                 <!-- Tiêu đề -->
@@ -109,6 +109,6 @@
                     {{-- @include('admin.dashboard.sales-graph') --}}
                     {{-- @include('admin.dashboard.top-books') --}}
                 </div> <!-- end .h-100 -->
+            </div>
         </div>
-    </div>
-@endsection
+    @endsection
