@@ -92,7 +92,7 @@
                                         <tbody class="list form-check-all">
                                             @foreach ($categories as $key => $category)
                                                 <tr>
-                                                    <td>{{ ++$key }}</td>
+                                                    <td>{{ $categories->firstItem() + $key }}</td>
                                                     <td>{{ $category->name }}</td>
                                                     <td>
                                                         @if ($category->image)
