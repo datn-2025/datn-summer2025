@@ -2,7 +2,7 @@
     <!-- Bộ lọc thời gian -->
     <div class="col-12 mb-3 d-flex justify-content-end">
         <select wire:model="timePeriod" wire:change='updateStats' class="form-select w-auto">
-            <option value="">Tất cả</option> <!-- 👈 tùy chọn mới -->
+            <option value="">Tất cả</option>
             <option value="day">Hôm nay</option>
             <option value="week">Tuần này</option>
             <option value="month">Tháng này</option>
