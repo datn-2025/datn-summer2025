@@ -122,6 +122,7 @@ Route::middleware('auth')->prefix('account')->name('account.')->group(function (
 // lỗi nè
     return redirect()->route('admin.orders.show', $order->id)->with('success', 'QR Code generated successfully!');
 });   
+    
 // Route đăng nhập chỉnh ở đây nha, sửa thì sửa vào đây, không được xóa có gì liên hệ Tuyết
 Route::middleware('auth')->group(function () {
     // Đăng xuất
@@ -327,6 +328,7 @@ Route::middleware(['auth:admin', 'admin'])->prefix('admin')->name('admin.')->gro
         Route::put('/{article}', [NewsArticleController::class, 'update'])->name('update');
         Route::delete('/{article}', [NewsArticleController::class, 'destroy'])->name('destroy');
     });
+
 
     // Route admin/orders
     Route::prefix('orders')->name('orders.')->group(function () {
