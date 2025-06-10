@@ -52,6 +52,7 @@ class BookController extends Controller
                 'brands.name as brand_name',
                 DB::raw('MIN(book_formats.price) as min_price'),
                 DB::raw('MAX(book_formats.price) as max_price'),
+                DB::raw('SUM(book_formats.stock) as total_stock'),
                 DB::raw('AVG(reviews.rating) as avg_rating')
             )
             ->when($category, fn($query) => $query->where('books.category_id', $category->id))

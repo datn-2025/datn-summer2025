@@ -3501,8 +3501,6 @@
                 "source": "https://github.com/ramsey/uuid/tree/4.8.1"
             },
             "time": "2025-06-01T06:28:46+00:00"
-<<<<<<< HEAD
-=======
         },
         {
             "name": "simplesoftwareio/simple-qrcode",
@@ -3571,7 +3569,6 @@
                 "source": "https://github.com/SimpleSoftwareIO/simple-qrcode/tree/4.2.0"
             },
             "time": "2021-02-08T20:43:55+00:00"
->>>>>>> 912c75bf40b8e3206f47c163362a946c483f08e2
         },
         {
             "name": "symfony/clock",
