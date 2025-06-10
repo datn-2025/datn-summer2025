@@ -62,15 +62,6 @@ Route::prefix('cart')->group(function () {
     Route::post('/remove-voucher', [CartController::class, 'removeVoucher'])->name('cart.remove-voucher');
 });
 
-// Đơn hàng Add commentMore actions
-Route::prefix('orders')->name('orders.')->group(function () {
-    Route::get('/', [\App\Http\Controllers\OrderController::class, 'index'])->name('index');
-    Route::get('/checkout', [\App\Http\Controllers\OrderController::class, 'checkout'])->name('checkout');
-    Route::get('/{order}', [\App\Http\Controllers\OrderController::class, 'show'])->name('show');
-    Route::post('/store', [\App\Http\Controllers\OrderController::class, 'store'])->name('store');
-    Route::post('/apply-voucher', [\App\Http\Controllers\OrderController::class, 'applyVoucher'])->name('apply-voucher');
-});
-
 // danh sach yeu thich
 Route::get('/wishlist', [WishlistController::class, 'getWishlist'])->name('wishlist.index');
 Route::post('/wishlist/add', [WishlistController::class, 'add'])->name('wishlist.add');
@@ -91,6 +82,8 @@ Route::post('/forgot-password', [LoginController::class, 'sendResetLinkEmail'])-
 Route::get('/reset-password/{token}/{email}', [LoginController::class, 'showResetPasswordForm'])->name('password.reset');
 Route::post('/reset-password', [LoginController::class, 'handleResetPassword'])->name('password.update');
 
+//------------------------------------------------------
+// Ai fix đi nhó
 Route::prefix('account')->name('account.')->group(function () {
     Route::get('activate', [LoginController::class, 'activate'])->name('activate');
     Route::get('/register', [LoginController::class, 'register'])->name('register');
@@ -99,47 +92,54 @@ Route::prefix('account')->name('account.')->group(function () {
     // Kích hoạt tài khoản
     Route::get('/activate/{token}', [ActivationController::class, 'activate'])->name('activate.token');
     Route::post('/resend-activation', [ActivationController::class, 'resendActivation'])->name('resend.activation');
-
     // profile
     Route::get('/showUser', [LoginController::class, 'showUser'])->name('showUser');
+
+});
+// Protected routes that require authentication
+Route::middleware('auth')->prefix('account')->name('account.')->group(function () {
+    // Dashboard
+    Route::get('/', [LoginController::class, 'index'])->name('index');
+    
+    // Profile management
+    Route::get('/profile', [LoginController::class, 'showUser'])->name('profile');
     Route::put('/profile/update', [LoginController::class, 'updateProfile'])->name('profile.update');
 
-    Route::middleware('auth')->group(function () {
-        Route::get('/', [LoginController::class, 'index'])->name('index');
-        Route::get('/showUser', [LoginController::class, 'showUser'])->name('showUser');
-        Route::put('/profile/update', [LoginController::class, 'updateProfile'])->name('profile.update');
-        // profile
-        Route::get('/showUser', [LoginController::class, 'showUser'])->name('showUser');
-        Route::put('/profile/update', [LoginController::class, 'updateProfile'])->name('profile.update');
+    
+    // Password change
+    Route::get('/password/change', [LoginController::class, 'showChangePasswordForm'])->name('changePassword');
+    Route::post('/password/change', [LoginController::class, 'changePassword'])->name('password.update');
+    
+    // Orders management
+    Route::prefix('orders')->name('orders.')->group(function () {
+        Route::get('/', [ClientOrderController::class, 'index'])->name('index');
+        Route::get('/{id}', [ClientOrderController::class, 'show'])->name('show');
+        Route::put('/{id}', [ClientOrderController::class, 'update'])->name('update');
+        Route::delete('/{id}', [ClientOrderController::class, 'destroy'])->name('destroy');
+    });
+    
+    // Address management
+    Route::get('/addresses', [\App\Http\Controllers\AddressController::class, 'index'])->name('addresses');
+    Route::post('/addresses', [\App\Http\Controllers\AddressController::class, 'store'])->name('addresses.store');
+    Route::get('/addresses/{id}/edit', [\App\Http\Controllers\AddressController::class, 'edit'])->name('addresses.edit');
+    Route::put('/addresses/{id}', [\App\Http\Controllers\AddressController::class, 'update'])->name('addresses.update');
+    Route::delete('/addresses/{id}', [\App\Http\Controllers\AddressController::class, 'destroy'])->name('addresses.destroy');
+    Route::post('/addresses/{id}/set-default', [\App\Http\Controllers\AddressController::class, 'setDefault'])->name('addresses.setDefault');
 
-        // password change
-        Route::get('/password/change', [LoginController::class, 'showChangePasswordForm'])->name('password.change');
-        Route::post('/password/change', [LoginController::class, 'changePassword'])->name('password.change');
+    // User purchase and review routes
+    Route::get('/purchase', [UserClientController::class, 'index'])->name('purchase');
+    Route::post('/review', [UserClientController::class, 'storeReview'])->name('review.store');
+
+    Route::prefix('reviews')->name('reviews.')->group(function () {
+        Route::put('/{id}', [ClientReviewController::class, 'update'])->name('update');
+        Route::delete('/{id}', [ClientReviewController::class, 'destroy'])->name('destroy');
     });
 });
 Route::middleware('auth')->group(function () {
     // Đăng xuất
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-    // Trang tài khoản
-    Route::prefix('account')->name('account.')->group(function () {
-        Route::get('/', [LoginController::class, 'index'])->name('index');
-        Route::get('/purchase', [UserClientController::class, 'index'])->name('purchase');
-        Route::post('/review', [UserClientController::class, 'storeReview'])->name('review.store');
-
-        Route::prefix('orders')->name('orders.')->group(function () {
-            Route::get('/', [ClientOrderController::class, 'index'])->name('index');
-            Route::get('/{id}', [ClientOrderController::class, 'show'])->name('show');
-            Route::put('/{id}', [ClientOrderController::class, 'update'])->name('update');
-            Route::delete('/{id}', [ClientOrderController::class, 'destroy'])->name('destroy');
-        });
-
-        Route::prefix('reviews')->name('reviews.')->group(function () {
-            Route::put('/{id}', [ClientReviewController::class, 'update'])->name('update');
-            Route::delete('/{id}', [ClientReviewController::class, 'destroy'])->name('destroy');
-        });
-    });
-    // Đơn hàngAdd commentMore actions
+    // Đơn hàng checkout và store
     Route::prefix('orders')->name('orders.')->group(function () {
         Route::get('/', [\App\Http\Controllers\OrderController::class, 'index'])->name('index');
         Route::get('/checkout', [\App\Http\Controllers\OrderController::class, 'checkout'])->name('checkout');
@@ -149,7 +149,16 @@ Route::middleware('auth')->group(function () {
         Route::post('/apply-voucher', [\App\Http\Controllers\OrderController::class, 'applyVoucher'])->name('apply-voucher');
     });
 });
+// Đơn hàng Add commentMore actions
+Route::prefix('orders')->name('orders.')->group(function () {
+    Route::get('/', [\App\Http\Controllers\OrderController::class, 'index'])->name('index');
+    Route::get('/checkout', [\App\Http\Controllers\OrderController::class, 'checkout'])->name('checkout');
+    Route::get('/{order}', [\App\Http\Controllers\OrderController::class, 'show'])->name('show');
+    Route::post('/store', [\App\Http\Controllers\OrderController::class, 'store'])->name('store');
+    Route::post('/apply-voucher', [\App\Http\Controllers\OrderController::class, 'applyVoucher'])->name('apply-voucher');
+});
 
+//---------------------------------------------------
 // Route đăng nhập admin (chỉ cho khách)
 Route::middleware('guest.admin')->group(function () {
     Route::get('/admin/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
