@@ -37,7 +37,7 @@
                                 <a href="{{ route('admin.categories.create') }}" class="btn btn-success btn-sm">
                                     <i class="ri-add-line me-1"></i> Thêm danh mục
                                 </a>
-                                <a href="{{ route('admin.categories.trash') }}" class="btn btn-danger btn-sm">
+                                <a href="{{ route('admin.categories.trash') }}" class="btn btn-danger btn-sm px-4">
                                     <i class="ri-delete-bin-line me-1"></i> Thùng rác
                                     @if ($trashCount > 0)
                                         <span class="badge bg-light text-danger ms-1">{{ $trashCount }}</span>
@@ -51,10 +51,10 @@
                                         placeholder="Tên danh mục" value="{{ $searchName ?? '' }}"
                                         style="width: 200px; ">
 
-                                    <button type="submit" class="btn btn-primary">
+                                    <button type="submit" class="btn btn-primary px-4">
                                         <i class="ri-search-2-line"></i> Tìm kiếm
                                     </button>
-                                    <a href="{{ route('admin.categories.index') }}" class="btn btn-light">
+                                    <a href="{{ route('admin.categories.index') }}"  class="btn btn-outline-secondary px-4">
                                         <i class="ri-refresh-line"></i> Đặt lại
                                     </a>
                                 </form>
