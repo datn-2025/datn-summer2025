@@ -134,12 +134,10 @@
                                                                 </form>
                                                                 <form
                                                                     action="{{ route('admin.categories.force-delete', $category->id) }}"
-                                                                    method="POST" class="d-inline">
+                                                                    method="POST" onsubmit="return confirm('Bạn có chắc muốn xóa vĩnh viễn danh mục này? Nếu danh mục có sách, bạn sẽ không thể xóa vĩnh viễn.')" class="d-inline">
                                                                     @csrf
                                                                     @method('DELETE')
-                                                                    <button type="submit" class="btn btn-sm btn-danger"
-                                                                        onclick="return confirm('Bạn có chắc muốn xóa vĩnh viễn danh mục này? Nếu danh mục có sách, bạn sẽ không thể xóa vĩnh viễn.')"
-                                                                        title="Xóa vĩnh viễn">
+                                                                    <button type="submit" class="btn btn-sm btn-danger" title="Xóa vĩnh viễn">
                                                                         <i class="las la-trash"></i>
                                                                     </button>
                                                                 </form>
