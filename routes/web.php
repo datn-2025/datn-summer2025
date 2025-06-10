@@ -343,7 +343,7 @@ Route::middleware('auth')->prefix('account')->name('account.')->group(function (
     Route::get('/', [LoginController::class, 'index'])->name('index');
     
     // Profile management
-    Route::get('/profile', [LoginController::class, 'showUser'])->name('profile');
+    Route::get('/profile', [LoginController::class, 'showUser'])->name('showUser');
     Route::put('/profile/update', [LoginController::class, 'updateProfile'])->name('profile.update');
 
     
