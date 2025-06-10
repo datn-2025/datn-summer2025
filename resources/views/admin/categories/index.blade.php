@@ -24,7 +24,7 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h4 class="card-title mb-0">Quản lý loại sách</h4>
+                    <h4 class="card-title mb-0">Quản lý danh mục loại sách</h4>
                 </div>
 
                 <div class="card-body">
