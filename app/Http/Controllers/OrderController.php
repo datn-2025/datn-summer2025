@@ -79,14 +79,14 @@ class OrderController extends Controller
             'shipping_method' => 'required|in:standard,express',
             'shipping_fee_applied' => 'required|numeric',
             'note' => 'nullable|string|max:500',
-            
+
             // Address rules
             'address_id' => [
                 'required_without:new_address_city_name', // Bắt buộc khi không có địa chỉ mới
                 'nullable',
                 'exists:addresses,id,user_id,' . ($user ? $user->id : 'NULL')
             ],
-            
+
             // New address rules (chỉ bắt buộc khi không có address_id)
             'new_recipient_name' => [
                 'required_without:address_id',
@@ -153,7 +153,7 @@ class OrderController extends Controller
 
             // Lấy thông tin giỏ hàng của người dùng
             $cartItems = $user->cart()->with(['book.images', 'bookFormat'])->get();
-            
+
             if ($cartItems->isEmpty()) {
                 DB::rollBack();
                 return redirect()->back()->with('error', 'Giỏ hàng của bạn đang trống.');
@@ -169,7 +169,7 @@ class OrderController extends Controller
             $actualDiscountAmount = $request->discount_amount_applied;
             if ($request->filled('applied_voucher_code')) {
                 $voucher = Voucher::where('code', $request->applied_voucher_code)->first();
-                // dd($voucher->id);   
+                // dd($voucher->id);
                 if ($voucher) {
                     Log::info("Attempting to validate voucher: {$voucher->code}");
                     $now = now();
@@ -177,27 +177,27 @@ class OrderController extends Controller
                         Toastr::error('Mã giảm giá không còn hiệu lực');
                         return redirect()->back();
                     }
-                    
+
                     if ($voucher->quantity !== null && $voucher->quantity <= 0) {
                         Toastr::error('Mã giảm giá đã hết số lượng áp dụng');
                         return redirect()->back();
                     }
-                    
+
                     if ($voucher->start_date && $voucher->start_date > $now) {
                         Toastr::error('Mã giảm giá chỉ có hiệu lực từ ngày ' . $voucher->start_date->format('d/m/Y'));
                         return redirect()->back();
                     }
-                    
+
                     if ($voucher->end_date && $voucher->end_date < $now) {
                         Toastr::error('Mã giảm giá đã hết hạn sử dụng');
                         return redirect()->back();
                     }
-                    
+
                     if ($voucher->min_purchase_amount && $subtotal < $voucher->min_purchase_amount) {
                         Toastr::error('Đơn hàng chưa đạt giá trị tối thiểu ' . number_format($voucher->min_purchase_amount) . 'đ để áp dụng mã');
                         return redirect()->back();
                     }
-                    
+
                     $voucherId = $voucher->id;
                 } else {
                     Log::warning("Voucher '{$request->voucher_code}' not found.");
@@ -221,7 +221,7 @@ class OrderController extends Controller
                 'shipping_fee' => $request->shipping_fee_applied,
                 'discount_amount' => (int) $actualDiscountAmount,
             ]);
-            
+
             // Create OrderItems
             foreach ($cartItems as $cartItem) {
                 $orderItem = OrderItem::create([
@@ -238,7 +238,7 @@ class OrderController extends Controller
                 // IMPORTANT: Adjust '$cartItem->attribute_value_ids' if your cart item structure is different
                 // For example, if attributes are in $cartItem->options['selected_attributes']
                 // then use: $attributeValueIds = $cartItem->options['selected_attributes'] ?? [];
-                $attributeValueIds = $cartItem->attribute_value_ids ?? []; 
+                $attributeValueIds = $cartItem->attribute_value_ids ?? [];
                 // dd($attributeValueIds);
                 if (!empty($attributeValueIds) && is_array($attributeValueIds)) {
                     foreach ($attributeValueIds as $attributeValueId) {
@@ -252,10 +252,14 @@ class OrderController extends Controller
                         }
                     }
                 } else {
-                    Toastr::error('Lỗi Thuộc Tính' . $attributeValueIds);
+                    OrderItemAttributeValue::create([
+                        'id' => (string) Str::uuid(),
+                        'order_item_id' => $orderItem->id,
+                        'attribute_value_id' => 0,  // Save null into the attribute_value_id column
+                    ]);
                 }
             }
-            
+
             $payment = $this->paymentService->createPayment([
                 'order_id' => $order->id,
                 // gán transaction_id = order_code
@@ -286,7 +290,7 @@ class OrderController extends Controller
                 foreach ($order->orderItems as $item) {
                     $productName = $item->book ? $item->book->title : 'Sản phẩm không xác định';
                     $formatName = $item->bookFormat ? ' (' . $item->bookFormat->format_name . ')' : '';
-                    
+
                     $attributesString = '';
                     if ($item->attributeValues && $item->attributeValues->count() > 0) {
                         $attrParts = [];
@@ -321,7 +325,7 @@ class OrderController extends Controller
 
                 $qrCodeFileName = 'order_' . $order->id . '_' . $order->order_code . '.png'; // Removed 'qrcodes/' prefix
                 $path = storage_path('app/private/qrcodes/' . $qrCodeFileName);
-                
+
                 // Sử dụng Simple Qrcode để tạo mã QR và lưu vào tệp
                 QrCode::encoding('UTF-8')->size(250)->generate($qrDataString, $path);
                 // Lưu đường dẫn của mã QR vào cơ sở dữ liệu
@@ -352,7 +356,7 @@ class OrderController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Lỗi khi tạo đơn hàng 2' . $e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine());
-            Toastr::error('Lỗi khi tạo đơn hàng 2' . $e->getMessage());
+            Toastr::error('Lỗi khi tạo đơn hàng 2' . $e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine());
             return redirect()->back()
                 ->with('error', 'Có lỗi xảy ra khi đặt hàng: ' . $e->getMessage());
         }
@@ -397,7 +401,7 @@ class OrderController extends Controller
     //         'voucher_code' => 'required|exists:vouchers,code',
     //         'subtotal' => 'required|numeric|min:0'
     //     ]);
-        
+
     //     $voucher = Voucher::where('code', $request->voucher_code)->first();
     //     // dd($voucher);
     //     $discount = $this->voucherService->calculateDiscount($voucher, $request->subtotal);
@@ -460,7 +464,7 @@ class OrderController extends Controller
 
         // Check if order status allows cancellation (e.g., not 'Đang giao hàng', 'Đã giao', 'Đã hủy')
         // You might need to adjust these status names based on your OrderStatusSeeder
-        $cancellableStatuses = ['Chờ xác nhận']; 
+        $cancellableStatuses = ['Chờ xác nhận'];
         if (!in_array($order->orderStatus->name, $cancellableStatuses)) {
             Toastr::error('Không thể hủy đơn hàng ở trạng thái hiện tại: ' . $order->orderStatus->name);
             return redirect()->back()->with('error', 'Không thể hủy đơn hàng ở trạng thái hiện tại: ' . $order->orderStatus->name);
