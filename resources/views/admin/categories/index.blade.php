@@ -149,12 +149,10 @@
                                                                 </a>
                                                                 <form
                                                                     action="{{ route('admin.categories.destroy', $category->id) }}"
-                                                                    method="POST" class="d-inline">
+                                                                    method="POST" onsubmit="return confirm('<?php if ($category->books()->count() > 0) echo 'Danh mục này vẫn còn sách liên kết. ' ?>Bạn có chắc muốn xóa tạm thời danh mục này?')" class="d-inline">
                                                                     @csrf
                                                                     @method('DELETE')
-                                                                    <button type="submit" class="btn btn-sm"
-                                                                        onclick="return confirm('<?php if ($category->books()->count() > 0) echo 'Danh mục này vẫn còn sách liên kết. ' ?>Bạn có chắc muốn xóa tạm thời danh mục này?')"
-                                                                        title="Xóa tạm thời">
+                                                                    <button type="submit" class="btn btn-sm" title="Xóa tạm thời">
                                                                         <i class="ri-delete-bin-fill align-bottom me-2"></i>
                                                                     </button>
                                                                 </form>
