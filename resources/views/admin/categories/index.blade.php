@@ -123,7 +123,7 @@
                                                             <!-- Danh mục đang hoạt động -->
                                                             <a href="{{ route('admin.categories.edit', $category->id) }}"
                                                                 class="btn btn-sm btn-light" title="Chỉnh sửa">
-                                                                <i class="ri-pencil-fill text-muted"></i>
+                                                                <i class="ri-edit-2-line align-bottom"></i>
                                                             </a>
                                                             <form
                                                                 action="{{ route('admin.categories.destroy', $category->id) }}"
