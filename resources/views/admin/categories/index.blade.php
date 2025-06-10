@@ -25,17 +25,6 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h4 class="card-title mb-0">Quản lý loại sách</h4>
-                        <div class="d-flex gap-2">
-                            <a href="{{ route('admin.categories.create') }}" class="btn btn-success btn-sm">
-                                <i class="ri-add-line me-1"></i> Thêm danh mục
-                            </a>
-                            <a href="{{ route('admin.categories.trash') }}" class="btn btn-danger btn-sm">
-                                <i class="ri-delete-bin-line me-1"></i> Thùng rác
-                                @if ($trashCount > 0)
-                                    <span class="badge bg-light text-danger ms-1">{{ $trashCount }}</span>
-                                @endif
-                            </a>
-                        </div>
                     </div>
 
                     <div class="card-body">
@@ -43,20 +32,31 @@
                             <div class="alert alert-danger">{{ session('error') }}</div>
                         @endif
 
-                        <!-- Tìm kiếm -->
                         <div class="row g-4 mb-3">
-                            <div class="col-sm">
+                            <div class="col-md-6 d-flex align-items-center gap-2">
+                                <a href="{{ route('admin.categories.create') }}" class="btn btn-success btn-sm">
+                                    <i class="ri-add-line me-1"></i> Thêm danh mục
+                                </a>
+                                <a href="{{ route('admin.categories.trash') }}" class="btn btn-danger btn-sm">
+                                    <i class="ri-delete-bin-line me-1"></i> Thùng rác
+                                    @if ($trashCount > 0)
+                                        <span class="badge bg-light text-danger ms-1">{{ $trashCount }}</span>
+                                    @endif
+                                </a>
+                            </div>
+                            <div class="col-md-6">
                                 <form method="GET" action="{{ route('admin.categories.index') }}"
-                                    class="d-flex justify-content-sm-end">
-                                    <input type="text" name="search_name_category" class="form-control me-2"
+                                    class="d-flex justify-content-md-end align-items-center gap-2">
+                                    <input type="text" name="search_name_category" class="form-control"
                                         placeholder="Tên danh mục" value="{{ $searchName ?? '' }}"
-                                        style="width: 200px; height: 36px;">
-                                        <button type="submit" class="btn btn-primary me-2">
-                                            <i class="ri-search-2-line"></i> Tìm kiếm
-                                        </button>
-                                        <a href="{{ route('admin.orders.index') }}" class="btn btn-light me-2">
-                                            <i class="ri-refresh-line"></i> Đặt lại
-                                        </a>
+                                        style="width: 200px; ">
+
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="ri-search-2-line"></i> Tìm kiếm
+                                    </button>
+                                    <a href="{{ route('admin.categories.index') }}" class="btn btn-light">
+                                        <i class="ri-refresh-line"></i> Đặt lại
+                                    </a>
                                 </form>
                             </div>
                         </div>
