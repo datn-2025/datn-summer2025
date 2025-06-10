@@ -51,8 +51,7 @@
                                     <input type="text" name="search_name_category" class="form-control me-2"
                                         placeholder="Tên danh mục" value="{{ $searchName ?? '' }}"
                                         style="width: 200px; height: 36px;">
-                                        <button type="submit" class="btn btn-primary me-2"
-                                            style="background-color:#405189; border-color: #405189">
+                                        <button type="submit" class="btn btn-primary me-2">
                                             <i class="ri-search-2-line"></i> Tìm kiếm
                                         </button>
                                         <a href="{{ route('admin.orders.index') }}" class="btn btn-light me-2">
