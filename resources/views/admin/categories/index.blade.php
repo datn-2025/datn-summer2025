@@ -48,13 +48,12 @@
                                 <form method="GET" action="{{ route('admin.categories.index') }}"
                                     class="d-flex justify-content-md-end align-items-center gap-2">
                                     <input type="text" name="search_name_category" class="form-control"
-                                        placeholder="Tên danh mục" value="{{ $searchName ?? '' }}"
-                                        style="width: 200px; ">
+                                        placeholder="Tên danh mục" value="{{ $searchName ?? '' }}" style="width: 200px; ">
 
                                     <button type="submit" class="btn btn-primary px-4">
                                         <i class="ri-search-2-line"></i> Tìm kiếm
                                     </button>
-                                    <a href="{{ route('admin.categories.index') }}"  class="btn btn-outline-secondary px-4">
+                                    <a href="{{ route('admin.categories.index') }}" class="btn btn-outline-secondary px-4">
                                         <i class="ri-refresh-line"></i> Đặt lại
                                     </a>
                                 </form>
@@ -94,7 +93,7 @@
                                                 <td class="text-center">{{ $category->books_count }}</td>
                                                 <td>{{ $category->created_at->format('d/m/Y') }}</td>
                                                 <td>
-                                                    <div class="btn-group">
+                                                    <div class="btn-group gap-2">
                                                         @if ($category->deleted_at)
                                                             <!-- Danh mục đã bị xóa mềm -->
                                                             <form
@@ -132,9 +131,9 @@
                                                                 class="d-inline">
                                                                 @csrf
                                                                 @method('DELETE')
-                                                                <button type="submit" class="btn btn-sm"
+                                                                <button type="submit" class="btn btn-sm btn-danger"
                                                                     title="Xóa tạm thời">
-                                                                    <i class="ri-delete-bin-fill text-danger"></i>
+                                                                    <i class="ri-delete-bin-fill"></i>
                                                                 </button>
                                                             </form>
                                                         @endif
