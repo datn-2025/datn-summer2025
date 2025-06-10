@@ -77,25 +77,31 @@
                   </svg>
                   <span>Tài khoản của tôi</span>
                 </div>
-              </a>
-              <a href="#" class="block px-4 py-2 text-sm text-black hover:bg-gray-100">
-                <div class="flex items-center space-x-3">
-                  <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
-                  </svg>
-                  <span>Đơn hàng</span>
-                </div>
-              </a>
-              <a href="#" class="block px-4 py-2 text-sm text-black hover:bg-gray-100">
-                <div class="flex items-center space-x-3">
-                  <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                  </svg>
-                  <span>Yêu thích</span>
-                </div>
-              </a>
-              <div class="border-t border-gray-100 my-2"></div>
-              <form method="POST" action="{{ route('logout') }}">
+
+                <!-- <i class="far fa-user hover:text-black cursor-pointer"></i> -->
+               <!-- Thay thế phần user icon cũ bằng code này -->
+<div style="position: relative; display: inline-block;">
+    <a href="{{ auth()->check() ? '#' : route('login') }}" 
+       style="text-decoration: none; color: inherit;"
+       onmouseover="this.nextElementSibling.style.display='block'"
+       onmouseout="this.nextElementSibling.style.display='none'">
+        <i class="far fa-user"></i>
+        @auth
+            <span style="margin-left: 5px;">{{ Auth::user()->name }}</span>
+        @endauth
+    </a>
+    
+    <div style="position: absolute; right: 0; background: white; 
+                border: 1px solid #ddd; border-radius: 4px; display: none;"
+         onmouseover="this.style.display='block'"
+         onmouseout="this.style.display='none'">
+        @auth
+            <a href="{{ route('account.profile') }}" 
+               style="display: block; padding: 8px 15px; color: #333; text-decoration: none;
+                      border-bottom: 1px solid #eee; white-space: nowrap;">
+                <i class="fas fa-user-circle" style="margin-right: 8px;"></i> Tài khoản
+            </a>
+            <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button type="submit" class="w-full text-left px-4 py-2 text-sm text-black hover:bg-gray-100">
                   <div class="flex items-center space-x-3">
