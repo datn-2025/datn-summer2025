@@ -12,7 +12,7 @@
                 <div class="page-title-right">
                     <ol class="breadcrumb m-0">
                         <li class="breadcrumb-item"><a href="#">Quản lý</a></li>
-                        <li class="breadcrumb-item active">Danh mục sách</li>
+                        <li class="breadcrumb-item active">Danh mục loại sách</li>
                     </ol>
                 </div>
             </div>
