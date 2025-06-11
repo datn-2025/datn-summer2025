@@ -93,13 +93,12 @@ class Book extends Model
     {
         return $this->hasMany(InvoiceItem::class);
     }
-    public function getAverageRatingAttribute()
-    {
-        return $this->reviews()->avg('rating') ?? 0;
-    }
-    
     public function orderItems()
     {
         return $this->hasMany(OrderItem::class);
+    }
+    public function getAverageRatingAttribute()
+    {
+        return $this->reviews()->avg('rating') ?? 0;
     }
 }
