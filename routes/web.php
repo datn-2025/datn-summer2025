@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\Auth\AdminAuthController;
 use App\Http\Controllers\Admin\BookController as AdminBookController;
 use App\Http\Controllers\Admin\ContactController as AdminContactController;
 use App\Http\Controllers\Admin\AdminCategoryController;
+use App\Http\Controllers\Admin\AdminChatRealTimeController;
 use App\Http\Controllers\Admin\AdminReviewController;
 use App\Http\Controllers\Admin\AdminPaymentMethodController;
 use App\Http\Controllers\Admin\CategoryController;
@@ -128,6 +129,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
             ->name('updateStatus');
     });
 
+    // Route chat real time
+   Route::prefix('chat')->name('chat.')->group(function () {
+        Route::get('/', [AdminChatRealTimeController::class, 'index'])->name('index');
+        Route::post('/store', [AdminChatRealTimeController::class, 'store'])->name('store');
+    });
     // Route admin/categories
     Route::prefix('categories')->name('categories.')->group(function () {
         Route::get('/', [AdminCategoryController::class, 'index'])->name('index');
