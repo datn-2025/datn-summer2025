@@ -110,7 +110,7 @@
                                                 <img src="{{ $category->image ? asset('storage/' . $category->image) : asset('images/default-category.png') }}"
                                                     alt="{{ $category->name }}" width="50" height="50" class="rounded object-fit-cover">
                                             </td>
-                                            <td class="text-center">{{ $category->books_count }}</td>
+                                            <td class="text-center">{{ $category->books_count }} quyển</td>
                                             <td>{{ $category->created_at->format('d/m/Y H:i') }}</td>
                                             <td>{{ $category->deleted_at->format('d/m/Y H:i') }}</td>
                                             <td>
