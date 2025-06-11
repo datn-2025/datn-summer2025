@@ -34,25 +34,24 @@
 
                         <!-- Thanh công cụ -->
                         <div class="row g-4 mb-3">
-                            <!-- Bên trái: nút thêm + thùng rác -->
                             <div class="col-md-6 d-flex align-items-center gap-2">
                                 <a href="{{ route('admin.categories.create') }}" class="btn btn-success btn-sm">
                                     <i class="ri-add-line me-1"></i> Thêm danh mục
                                 </a>
                                 <a href="{{ route('admin.categories.trash') }}" class="btn btn-danger btn-sm px-4">
                                     <i class="ri-delete-bin-line me-1"></i> Thùng rác
-                                    @if ($trashCount > 0)
+                                    @if ($trashCount)
                                         <span class="badge bg-light text-danger ms-1">{{ $trashCount }}</span>
                                     @endif
                                 </a>
                             </div>
 
-                            <!-- Bên phải: form tìm kiếm -->
                             <div class="col-md-6">
                                 <form method="GET" action="{{ route('admin.categories.index') }}"
                                     class="d-flex justify-content-md-end align-items-center gap-2">
                                     <input type="text" name="search_name_category" class="form-control"
-                                        placeholder="Tên danh mục" value="{{ $searchName ?? '' }}" style="width: 200px;">
+                                        placeholder="Tìm theo tên danh mục" value="{{ $searchName ?? '' }}"
+                                        style="width: 220px;">
                                     <button type="submit" class="btn btn-primary px-4">
                                         <i class="ri-search-2-line"></i> Tìm kiếm
                                     </button>
@@ -67,12 +66,13 @@
                         <div class="table-responsive table-card mt-3 mb-1">
                             @if ($categories->isEmpty())
                                 <div class="noresult text-center py-5">
-                                    @if (request()->has('search_name_category') && request()->filled('search_name_category'))
-                                        <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
+                                    @if (filled(request()->get('search_name_category')))
+                                        <lord-icon src="{{ $iconNotFound }}" trigger="loop"
                                             colors="primary:#121331,secondary:#08a88a" style="width:75px;height:75px">
                                         </lord-icon>
                                         <h5 class="mt-3 text-danger">Không tìm thấy danh mục phù hợp</h5>
-                                        <p class="text-muted">>Không có danh mục nào khớp với từ khóa
+                                        <p class="text-muted">
+                                            Không có danh mục nào khớp với từ khóa
                                             <strong>"{{ request()->get('search_name_category') }}"</strong>.<br>
                                             Vui lòng kiểm tra lại từ khóa hoặc thử tìm kiếm khác.
                                         </p>
@@ -81,8 +81,8 @@
                                             colors="primary:#405189,secondary:#0ab39c" style="width:100px;height:100px">
                                         </lord-icon>
                                         <h5 class="mt-3 text-muted">Danh sách danh mục loại sách hiện đang trống</h5>
-                                        <p class="text-muted">Hãy nhấn <strong>“Thêm danh mục”</strong> để bắt đầu quản
-                                            lý danh mục loại sách.</p>
+                                        <p class="text-muted">Hãy nhấn <strong>“Thêm danh mục”</strong> để bắt đầu quản lý
+                                            danh mục loại sách.</p>
                                     @endif
                                 </div>
                             @else
@@ -116,9 +116,8 @@
                                                         </a>
                                                         <form
                                                             action="{{ route('admin.categories.destroy', $category->id) }}"
-                                                            method="POST"
-                                                            onsubmit="return confirm('Bạn có chắc muốn xóa tạm thời danh mục này?')"
-                                                            class="d-inline">
+                                                            method="POST" class="d-inline"
+                                                            onsubmit="return confirm('Bạn có chắc muốn xóa tạm thời danh mục này?')">
                                                             @csrf
                                                             @method('DELETE')
                                                             <button type="submit" class="btn btn-sm btn-danger"
