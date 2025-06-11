@@ -865,6 +865,12 @@
                                 </ul>
                             </div>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link menu-link" href="#sidebarForm" data-bs-toggle="collapse"
+                                role="button" aria-expanded="false" aria-controls="sidebarForm">
+                                <i class="ri-file-list-3-line"></i> <span data-key="t-forms">Chat</span>
+                            </a>
+                        </li>
                     </ul>
                 </div>
                 <!-- Sidebar -->
