@@ -550,7 +550,7 @@
                     <div class="space-y-4">
                         <button id="addToCartBtn" class="adidas-btn-enhanced w-full h-16 bg-black text-white font-bold text-lg uppercase tracking-wider transition-all duration-300 flex items-center justify-center">
                             <i class="fas fa-shopping-bag mr-3"></i>
-                            THÊM VÀO GIỎ HÀNG
+                            THÊM VÀO GIỎ HÀNG 1
                         </button>
                         
                         <!-- Wishlist Button -->
