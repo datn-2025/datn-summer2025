@@ -342,7 +342,7 @@
                     <span>Trang chủ</span>
                 </a>
                 <span class="text-gray-400">/</span>
-                <a href="" class="breadcrumb-item hover:text-black transition-colors duration-300">
+                <a href="{{ route('books.index') }}" class="breadcrumb-item hover:text-black transition-colors duration-300">
                     {{ $book->category->name ?? 'Danh mục' }}
                 </a>
                 <span class="text-gray-400">/</span>
@@ -544,7 +544,7 @@
                     <div class="space-y-4">
                         <button id="addToCartBtn" class="adidas-btn-enhanced w-full h-16 bg-black text-white font-bold text-lg uppercase tracking-wider transition-all duration-300 flex items-center justify-center">
                             <i class="fas fa-shopping-bag mr-3"></i>
-                            THÊM VÀO GIỎ HÀNG 1
+                            THÊM VÀO GIỎ HÀNG 
                         </button>
                         
                         <!-- Wishlist Button -->
@@ -579,161 +579,6 @@
                            target="_blank" class="share-btn-enhanced w-12 h-12 flex items-center justify-center">
                             <i class="fab fa-telegram-plane"></i>
                         </a>
-                    </div>
-                {{-- Số lượng --}}
-                <div class="mt-4 flex items-center justify-start space-x-2">
-                    <label for="quantity" class="text-sm font-semibold">Số lượng:</label>
-                    <div class="flex items-center space-x-2">
-                        <button id="decrementBtn" class="bg-gray-300 hover:bg-gray-400 text-xl px-3 py-1 rounded-lg">-</button>
-                        <input type="number" id="quantity" value="1" min="1"
-                               class="w-16 text-center border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" />
-                        <button id="incrementBtn" class="bg-gray-300 hover:bg-gray-400 text-xl px-3 py-1 rounded-lg">+</button>
-                    </div>
-                </div>
-
-                <div class="mt-4">
-                    <button class="bg-black text-white px-6 py-3 rounded hover:bg-gray-800 transition" id="addToCartBtn">
-                        Thêm vào giỏ
-                    </button>
-
-                </div>
-            </div>
-        </div>
-        {{-- Enhanced Description Section --}}
-        <div class="mt-20 space-y-8">
-            <!-- Section Header with Adidas Style -->
-            <div class="relative">
-                <div class="flex items-center space-x-4 mb-8">
-                    <div class="w-1 h-12 bg-black"></div>
-                    <div>
-                        <h2 class="text-3xl font-bold text-black uppercase tracking-wider adidas-font">
-                            Thông tin sản phẩm
-                        </h2>
-                        <p class="text-sm text-gray-600 uppercase tracking-wide font-medium mt-1">Chi tiết và mô tả</p>
-                    </div>
-                </div>
-            </div>
-            <!-- Enhanced Description Container -->
-            <div class="bg-white border-2 border-gray-100 relative overflow-hidden group">
-                <!-- Header with Icon -->
-                <div class="bg-black text-white px-8 py-4 flex items-center justify-between">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-8 h-8 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-                            <i class="fas fa-book text-sm"></i>
-                        </div>
-                        <span class="font-bold uppercase tracking-wider text-sm">Mô tả chi tiết</span>
-                    </div>
-                    <div class="w-6 h-6 border border-white border-opacity-30 rounded-full flex items-center justify-center">
-                        <i class="fas fa-info text-xs"></i>
-                    </div>
-                </div>
-
-                <!-- Content Area -->
-                <div class="p-8 space-y-6">
-                    <!-- Description Text -->
-                    <div class="relative">
-                        <div id="bookDescription" 
-                             class="text-gray-800 leading-loose text-lg font-light transition-all duration-500"
-                             data-full="{{ e($book->description) }}"
-                             data-short="{{ Str::limit(strip_tags($book->description), 250, '...') }}">
-                            {{ Str::limit(strip_tags($book->description), 250, '...') }}
-                        </div>
-                        
-                        <!-- Fade overlay when collapsed -->
-                        <div id="fadeOverlay" class="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white to-transparent pointer-events-none transition-opacity duration-500"></div>
-                    </div>
-
-                    <!-- Enhanced Show More Button -->
-                    <div class="flex justify-center pt-6 border-t border-gray-100">
-                        <button id="showMoreBtn" 
-                                class="group/btn bg-black text-white px-8 py-3 uppercase font-bold text-sm tracking-wider transition-all duration-300 relative overflow-hidden hover:bg-gray-900 hover:transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2">
-                            <!-- Button background effect -->
-                            <span class="absolute inset-0 bg-white transform scale-x-0 group-hover/btn:scale-x-100 transition-transform duration-300 origin-left"></span>
-                            
-                            <!-- Button content -->
-                            <span class="relative flex items-center space-x-2 group-hover/btn:text-black transition-colors duration-300">
-                                <span id="btnText">Xem thêm</span>
-                                <i id="btnIcon" class="fas fa-chevron-down transform group-hover/btn:rotate-180 transition-transform duration-300"></i>
-                            </span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Side accent -->
-                <div class="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-black via-gray-600 to-black"></div>
-            </div>
-
-            <!-- Additional Info Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-                <!-- Key Features Card -->
-                <div class="bg-gray-50 border border-gray-200 p-6 group hover:bg-black hover:text-white transition-all duration-300 cursor-pointer">
-                    <div class="flex items-center space-x-3 mb-4">
-                        <div class="w-10 h-10 bg-black group-hover:bg-white rounded-full flex items-center justify-center transition-colors duration-300">
-                            <i class="fas fa-star text-white group-hover:text-black text-sm"></i>
-                        </div>
-                        <h3 class="font-bold uppercase tracking-wider text-sm">Điểm nổi bật</h3>
-                    </div>
-                    <ul class="space-y-2 text-sm">
-                        <li class="flex items-center space-x-2">
-                            <i class="fas fa-check w-3"></i>
-                            <span>Chất lượng cao</span>
-                        </li>
-                        <li class="flex items-center space-x-2">
-                            <i class="fas fa-check w-3"></i>
-                            <span>Nội dung phong phú</span>
-                        </li>
-                        <li class="flex items-center space-x-2">
-                            <i class="fas fa-check w-3"></i>
-                            <span>Thiết kế hiện đại</span>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Specifications Card -->
-                <div class="bg-gray-50 border border-gray-200 p-6 group hover:bg-black hover:text-white transition-all duration-300 cursor-pointer">
-                    <div class="flex items-center space-x-3 mb-4">
-                        <div class="w-10 h-10 bg-black group-hover:bg-white rounded-full flex items-center justify-center transition-colors duration-300">
-                            <i class="fas fa-cog text-white group-hover:text-black text-sm"></i>
-                        </div>
-                        <h3 class="font-bold uppercase tracking-wider text-sm">Thông số</h3>
-                    </div>
-                    <div class="space-y-2 text-sm">
-                        <div class="flex justify-between">
-                            <span>Số trang:</span>
-                            <span class="font-semibold">{{ $book->page_count }}</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span>Ngôn ngữ:</span>
-                            <span class="font-semibold">Tiếng Việt</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span>Định dạng:</span>
-                            <span class="font-semibold">{{ $book->formats->first()->format_name ?? 'Bìa mềm' }}</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Delivery Info Card -->
-                <div class="bg-gray-50 border border-gray-200 p-6 group hover:bg-black hover:text-white transition-all duration-300 cursor-pointer">
-                    <div class="flex items-center space-x-3 mb-4">
-                        <div class="w-10 h-10 bg-black group-hover:bg-white rounded-full flex items-center justify-center transition-colors duration-300">
-                            <i class="fas fa-truck text-white group-hover:text-black text-sm"></i>
-                        </div>
-                        <h3 class="font-bold uppercase tracking-wider text-sm">Giao hàng</h3>
-                    </div>
-                    <div class="space-y-2 text-sm">
-                        <div class="flex items-center space-x-2">
-                            <i class="fas fa-shipping-fast w-3"></i>
-                            <span>Giao hàng nhanh 24h</span>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <i class="fas fa-shield-alt w-3"></i>
-                            <span>Đảm bảo chất lượng</span>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <i class="fas fa-undo w-3"></i>
-                            <span>Đổi trả dễ dàng</span>
-                        </div>
                     </div>
                 </div>
             </div>
