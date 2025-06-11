@@ -12,20 +12,23 @@ class AdminMiddleware
     {
         $guard = Auth::guard('admin');
         if (!$guard->check()) {
-            abort(403, 'Bạn chưa đăng nhập');
+            return redirect()->route('admin.login')
+                ->with('error', 'Bạn chưa đăng nhập');
         }
         
         $user = $guard->user();
         if (!$user->isAdmin()) {
             $guard->logout();
-           abort(403, 'Bạn không có quyền truy cập vào trang quản trị');
+          return redirect()->route('admin.login')
+                ->with('error', 'Bạn không có quyền truy cập vào trang quản trị');
         }
 
         if (!$user->isActive()) {
             $guard->logout();
-            abort(403, 'Tài khoản của bạn đã bị khoá hoặc chưa kích hoạt');
+             return redirect()->route('admin.login')
+                ->with('error', 'Tài khoản của bạn đã bị khóa hoặc chưa được kích hoạt');
         }
-
+        
         return $next($request);
     }
 }
