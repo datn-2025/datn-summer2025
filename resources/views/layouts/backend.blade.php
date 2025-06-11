@@ -28,6 +28,12 @@
     <!-- Toastr JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 
+   <!-- 📌 Thêm vào phần <head> của layout -->
+<link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fg-emoji-picker@1.3.4/dist/FgEmojiPicker.min.css" />
+
+
+
     <script>
         // Cấu hình toastr
         toastr.options = {
@@ -866,7 +872,7 @@
                             </div>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link menu-link" href="#sidebarForm" data-bs-toggle="collapse"
+                            <a class="nav-link menu-link" href="{{route('admin.chat.index')}}" data-bs-toggle="collapse"
                                 role="button" aria-expanded="false" aria-controls="sidebarForm">
                                 <i class="ri-file-list-3-line"></i> <span data-key="t-forms">Chat</span>
                             </a>
@@ -1631,6 +1637,24 @@
     <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.29.1/dist/feather.min.js"></script>
     <script src="{{ asset('assets/js/pages/plugins/lord-icon-2.1.0.js') }}"></script>
     <script src="{{ asset('assets/js/plugins.js') }}"></script>
+    
+    {{-- Nhúng thư viện đúng đường dẫn --}}
+    {{-- <script src="{{ asset('assets/libs/fg-emoji-picker/fgEmojiPicker.min.js') }}"></script> --}}
+    <script src="{{ asset('assets/libs/glightbox/glightbox.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/flatpickr/flatpickr.min.js') }}"></script>
+    {{-- <script src="{{ asset('assets/libs/choices.js/public/assets/scripts/choices.min.js') }}"></script> --}}
+
+    {{-- JS chính --}}
+    <script src="{{ asset('assets/js/app.js') }}"></script>
+    <script src="{{ asset('assets/js/custom.js') }}"></script>
+    <script src="{{ asset('assets/js/pages/chat.init.js') }}"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/fg-emoji-picker@latest/dist/FgEmojiPicker.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+
+
+
+
 
     <!-- apexcharts -->
     <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.45.1/dist/apexcharts.min.js"></script>
@@ -1653,10 +1677,21 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/2.3.1/list.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/list.pagination.js/0.1.1/list.pagination.min.js"></script>
 
-    <!-- listjs init -->
+
 
     <!-- Sweet Alerts js -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.5/dist/sweetalert2.all.min.js"></script>
+    {{-- <script src="https://cdn.jsdelivr.net/npm/fg-emoji-picker@1.3.4/dist/FgEmojiPicker.min.js"></script> --}}
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        new FgEmojiPicker({
+            trigger: ['#emoji-btn'],
+            insertInto: '#chat-input',
+            position: ['top', 'right']
+        });
+    });
+</script>
+
 
     {{-- toastr notification --}}
     {{-- jQuery (3.7.1) và Toastr JS đã được tải ở head --}}
