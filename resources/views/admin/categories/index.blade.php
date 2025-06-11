@@ -106,7 +106,7 @@
                                                     <img src="{{ $category->image ? asset('storage/' . $category->image) : asset('images/default-category.png') }}"
                                                         alt="{{ $category->name }}" width="50">
                                                 </td>
-                                                <td class="text-center">{{ $category->books_count }}</td>
+                                                <td class="text-center">{{ $category->books_count }} quyển</td>
                                                 <td>{{ $category->created_at->format('d/m/Y') }}</td>
                                                 <td>
                                                     <div class="btn-group gap-2">
