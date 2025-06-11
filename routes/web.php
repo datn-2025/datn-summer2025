@@ -122,7 +122,7 @@ Route::middleware('auth')->prefix('account')->name('account.')->group(function (
     Route::delete('/addresses/{id}', [\App\Http\Controllers\AddressController::class, 'destroy'])->name('addresses.destroy');
     Route::post('/addresses/{id}/set-default', [\App\Http\Controllers\AddressController::class, 'setDefault'])->name('addresses.setDefault');
 // lỗi nè
-    return redirect()->route('admin.orders.show', $order->id)->with('success', 'QR Code generated successfully!');
+    // return redirect()->route('admin.orders.show', $order->id)->with('success', 'QR Code generated successfully!');
 });   
 
 // Route đăng nhập chỉnh ở đây nha, sửa thì sửa vào đây, không được xóa có gì liên hệ Tuyết
