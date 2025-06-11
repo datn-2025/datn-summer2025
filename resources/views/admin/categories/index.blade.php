@@ -98,25 +98,6 @@
                                             <td>{{ $category->created_at->format('d/m/Y') }}</td>
                                             <td>
                                                 <div class="btn-group gap-2">
-                                                    @if ($category->deleted_at)
-                                                        <form action="{{ route('admin.categories.restore', $category->id) }}"
-                                                              method="POST" class="d-inline">
-                                                            @csrf
-                                                            @method('PUT')
-                                                            <button type="submit" class="btn btn-sm btn-success" title="Khôi phục">
-                                                                <i class="las la-undo"></i>
-                                                            </button>
-                                                        </form>
-                                                        <form action="{{ route('admin.categories.force-delete', $category->id) }}"
-                                                              method="POST" onsubmit="return confirm('Bạn có chắc muốn xóa vĩnh viễn danh mục này?')"
-                                                              class="d-inline">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit" class="btn btn-sm btn-danger" title="Xóa vĩnh viễn">
-                                                                <i class="las la-trash"></i>
-                                                            </button>
-                                                        </form>
-                                                    @else
                                                         <a href="{{ route('admin.categories.edit', $category->id) }}"
                                                            class="btn btn-sm btn-warning" title="Chỉnh sửa">
                                                             <i class="ri-edit-2-line"></i>
@@ -130,7 +111,6 @@
                                                                 <i class="ri-delete-bin-fill"></i>
                                                             </button>
                                                         </form>
-                                                    @endif
                                                 </div>
                                             </td>
                                         </tr>
