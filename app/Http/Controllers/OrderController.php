@@ -684,7 +684,8 @@ class OrderController extends Controller
         $vnp_TmnCode = config('services.vnpay.tmn_code');
         $vnp_HashSecret = config('services.vnpay.hash_secret');
         $vnp_Url = config('services.vnpay.url');
-        $vnp_Returnurl = "http://127.0.0.1:8000/orders/{$data['order_id']}"; // Đúng route xử lý callback
+//        $vnp_Returnurl = "http://127.0.0.1:8000/orders/{$data['order_id']}"; // Đúng route xử lý callback
+        $vnp_Returnurl = route("vnpay.return"); // Đúng route xử lý callback
         $vnp_TxnRef = $data['order_code']; // Sử dụng order_code làm transaction reference
         $vnp_OrderInfo = $data['order_info'];
         $vnp_Amount = (int)($data['amount'] * 100); // VNPay yêu cầu amount * 100
