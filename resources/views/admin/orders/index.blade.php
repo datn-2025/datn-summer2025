@@ -172,7 +172,8 @@
                                         <th scope="col">Địa chỉ</th>
                                         <th scope="col">Tổng tiền</th>
                                         <th scope="col">Trạng thái đơn hàng</th>
-                                        <th scope="col">Ngày đặt</th>
+                                        <th scope="col">QR</th>
+                                        <th scope="col">Ngày Tạo</th>
                                         <th scope="col">Thao tác</th>
                                     </tr>
                                 </thead>
@@ -182,7 +183,7 @@
                                         <td>{{$order->order_code }}</td>
                                         <td class="text-center">
                                             @if($order->qr_code)
-                                            <img src="{{ asset('storage/' . $order->qr_code) }}" alt="QR Code"
+                                            <img src="{{ url('storage/private/' . $order->qr_code) }}" alt="QR Code"
                                                 class="avatar-sm rounded">
                                             @else
                                             <span class="badge bg-light text-muted">Không có</span>
@@ -233,6 +234,14 @@
                                                 {{ $order->orderStatus->name ?? 'N/A' }}
                                             </span>
                                         </td>
+
+                                        <td class="text-center">
+                                            @if ($order->qr_code_path)
+                                                <a href="{{ route('admin.orders.show', $order->id) }}" title="Xem QR Code">
+                                                    <i class="ri-qr-code-line fs-16"></i>
+                                                </a>
+                                            @endif
+                                        </td>
                                         <td>{{ $order->created_at->format('d/m/Y') }}</td>
                                         <td>
                                             <div class="dropdown d-inline-block">
@@ -268,7 +277,7 @@
                                     </tr>
                                     @empty
                                     <tr>
-                                        <td colspan="9" class="text-center">
+                                        <td colspan="10" class="text-center">
                                             <div class="py-4">
                                                 <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
                                                     colors="primary:#405189,secondary:#0ab39c"

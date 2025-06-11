@@ -23,7 +23,7 @@ class BookFormatFactory extends Factory
 
         return [
             'book_id' => Book::factory(),
-            'name' => $format,
+            'format_name' => $format,
             'price' => $this->faker->numberBetween($priceRange[0], $priceRange[1]),
             'discount' => $this->faker->optional(0.3)->numberBetween(5, 25), // 30% chance of having a discount
             'stock' => $isPhysical ? $this->faker->numberBetween(10, 100) : null, // Chỉ format vật lý mới có stock

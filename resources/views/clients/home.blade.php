@@ -86,11 +86,6 @@
         </div>
     </div>
 </section>
-
-
-
-
-
 <section class="bg-white py-20 md:py-24 relative overflow-hidden" data-aos="fade-up">
     <!-- Enhanced Background Elements -->
     <div class="absolute inset-0 pointer-events-none">
@@ -116,7 +111,37 @@
                 IMPOSSIBLE IS NOTHING
             </h2>
         </div>
+        {{-- Nội dung từng tab --}}
+        @foreach ($categories as $index => $category)
+            <div id="tab-tab-{{$category->id}}" class="tab-content {{ $index === 0 ? 'block' : 'hidden'}} relative">
+                <div class="swiper categorySwiper" id="swiper-{{ $category->id}}">
+                    <div class="swiper-wrapper">
+                        @foreach ($category->books as $book)
+                            <div class="swiper-slide pb-6">
+                                <div onclick="window.location='{{ route('books.show', ['slug' => $book->slug]) }}'"
+                                    class="group bg-white border border-transparent hover:border-black rounded transition duration-300 overflow-hidden flex flex-col h-[510px]">
+                                    <div class="relative aspect-[1/1.05] bg-gray-100 overflow-hidden">
+                                        <img src="{{asset('storage/images/' . $book->image)}}" alt="{{$book->title}}">
+                                        <div class="absolute top-2 right-2 z-10">
+                                            <i class="far fa-heart text-2xl text-gray-700 hover:text-red-500 cursor-pointer"></i>
+                                        </div>
+                                    </div>
+                                    <div class="p-4 flex flex-col justify-between flex-1">
+                                        <p class="text-red-500 font-bold">
+                                            Giá tiền {{ number_format($book->formats->first()->price ?? 0, 0, ',', '.') }}₫
+                                        </p>
+                                        <h3 class="text-sm font-semibold mt-1">{{$book->title}}</h3>
+                                        <p class="text-xs text-gray-500 mt-1">
+                                            {{$category->name ?? 'Chưa có danh mục'}}
+                                        </p>
+                                        <a href="#"
+                                            class="mt-4 inline-block bg-black text-white px-4 py-2 rounded text-sm hover:bg-gray-800 text-center w-full">
+                                            Thêm vào giỏ hàng →
+                                        </a>
+                                    </div>
 
+                                </div>
+                            </div>
         <!-- Enhanced Features Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <!-- Feature 1: Free Shipping -->
@@ -588,6 +613,17 @@
                                 Mới
                             </span>
                         </div>
+                    </div>
+                    <div class="p-4 bg-white flex flex-col flex-1 justify-between h-[180px]">
+                        <h3 class="text-base font-semibold text-gray-800">{{$book->title}}</h3>
+                        <p class="text-sm text-gray-500">{{$book->author?->name ?? 'Không rõ'}}</p>
+                        <p class="text-red-500 font-bold">
+                            Giá tiền {{ number_format($book->formats->first()->price ?? 0, 0, ',', '.') }}₫
+                        </p>
+                        <a href="#"
+                            class="mt-4 inline-block bg-black text-white px-4 py-2 rounded text-sm hover:bg-gray-800 text-center w-full">
+                            Thêm vào giỏ hàng →
+                        </a>
                     </div>
 
                     <!-- Product Info -->

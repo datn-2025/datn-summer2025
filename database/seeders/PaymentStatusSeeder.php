@@ -10,10 +10,10 @@ class PaymentStatusSeeder extends Seeder
     public function run()
     {
         $statuses = [
-            ['name' => 'Chờ thanh toán'],
-            ['name' => 'Đã thanh toán'],
-            ['name' => 'Thanh toán thất bại'],
-            ['name' => 'Hoàn tiền'],
+            ['name' => 'Chờ Xử Lý'],
+            ['name' => 'Chưa thanh toán'],
+            ['name' => 'Đã Thanh Toán'],
+            ['name' => 'Thất Bại'],
         ];
 
         foreach ($statuses as $status) {

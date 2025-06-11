@@ -25,7 +25,7 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="d-flex align-items-center">
-                            <h5 class="card-title flex-grow-1 mb-0">Mã đơn hàng: #{{ substr($order->id, 0, 8) }}</h5>
+                            <h5 class="card-title flex-grow-1 mb-0">Mã đơn hàng: #{{ $order->order_code }}</h5>
                             <div class="flex-shrink-0">
                                 <div class="d-flex gap-2">
                                     <a href="{{ route('admin.orders.edit', $order->id) }}" class="btn btn-success btn-sm">
@@ -51,7 +51,7 @@
                                                 </div>
                                                 <div class="flex-grow-1 ms-3">
                                                     <h6 class="fs-15 mb-1">{{ $order->user->name ?? 'N/A' }}</h6>
-                                                    <p class="text-muted mb-0">Khách hàng</p>
+                                                    <p class="text-muted mb-0">Người Đặt</p>
                                                 </div>
                                             </div>
                                             <ul class="list-unstyled mb-0 vstack gap-2">
@@ -65,17 +65,24 @@
                                                         </div>
                                                     </div>
                                                 </li>
-                                                <li>
-                                                    <div class="d-flex">
-                                                        <div class="flex-shrink-0 text-muted">
-                                                            <i class="ri-phone-line me-1 fs-16 align-middle"></i>
-                                                        </div>
-                                                        <div class="flex-grow-1">
-                                                            <span>{{ $order->user->phone ?? 'N/A' }}</span>
-                                                        </div>
-                                                    </div>
-                                                </li>
                                             </ul>
+                                        </div>
+                                    </div>
+                                    <div class="card border shadow-none mb-3">
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between ">
+                                                <div>
+                                                    <p class="text-muted mb-2">Người nhận</p>
+                                                    <div class="d-flex align-items-center">
+                                                        <i class="fa-solid fa-signature"></i>
+                                                        <h6 class="fs-15 mb-0 ms-2">{{ $order->recipient_name ?? 'N/A' }}</h6>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex align-items-center">
+                                                <i class="ri-phone-line me-2 fs-16 text-muted"></i>
+                                                <span>{{ $order->recipient_phone ?? 'N/A' }}</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -100,22 +107,22 @@
                                                 <li>
                                                     <div class="d-flex">
                                                         <div class="flex-shrink-0 text-muted">
-                                                            <i class="ri-building-line me-1 fs-16 align-middle"></i>
+                                                            <i class="ri-mail-send-line me-1 fs-16 align-middle"></i>
                                                         </div>
                                                         <div class="flex-grow-1">
-                                                            <h6 class="mb-1 fs-14">Thành phố:</h6>
-                                                            <p class="text-muted mb-0">{{ $order->address->city }}</p>
+                                                            <h6 class="mb-1 fs-14">Huyện:</h6>
+                                                            <p class="text-muted mb-0">{{ $order->address->district . ', ' .  $order->address->ward }}</p>
                                                         </div>
                                                     </div>
                                                 </li>
                                                 <li>
                                                     <div class="d-flex">
                                                         <div class="flex-shrink-0 text-muted">
-                                                            <i class="ri-mail-send-line me-1 fs-16 align-middle"></i>
+                                                            <i class="ri-building-line me-1 fs-16 align-middle"></i>
                                                         </div>
                                                         <div class="flex-grow-1">
-                                                            <h6 class="mb-1 fs-14">Huyện:</h6>
-                                                            <p class="text-muted mb-0">{{ $order->address->district . ', ' .  $order->address->ward }}</p>
+                                                            <h6 class="mb-1 fs-14">Thành phố:</h6>
+                                                            <p class="text-muted mb-0">{{ $order->address->city }}</p>
                                                         </div>
                                                     </div>
                                                 </li>
@@ -130,7 +137,7 @@
                                     <div class="card border shadow-none mb-2">
                                         <div class="card-body text-center">
                                             @if($order->qr_code)
-                                                <img src="{{ asset('storage/' . $order->qr_code) }}" alt="QR Code" class="img-fluid rounded" style="max-width: 180px">
+                                                <img src="{{ url('storage/private/' . $order->qr_code) }}" alt="QR Code" class="img-fluid rounded" style="max-width: 150px">
                                                 <p class="text-muted mt-3 mb-0">Quét mã QR để xem thông tin đơn hàng</p>
                                             @else
                                                 <div class="avatar-lg mx-auto">
@@ -229,7 +236,7 @@
                                                     $subtotal = $item->price * $item->quantity;
                                                     $total += $subtotal;
                                                     $book = $item->book;
-                                                    $format = $book ? $book->formats->first() : null;
+                                                    $format = $bookFormat;
                                                 @endphp
                                                 <tr>
                                                     <td>{{ $index + 1 }}</td>
@@ -251,8 +258,8 @@
                                                         @endif
                                                     </td>
                                                     <td>
-                                                        @if($format)
-                                                            <span class="badge bg-info">{{ $format->format_name }}</span>
+                                                        @if($bookFormat)
+                                                            <span class="badge bg-info">{{ $bookFormat }}</span>
                                                         @else
                                                             <span class="text-muted">N/A</span>
                                                         @endif
@@ -325,11 +332,15 @@
                                             <td>{{ number_format($total ?? $order->total_amount, 0, ',', '.') }}đ</td>
                                         </tr>
                                         @if($order->voucher)
-                                        <tr>
-                                            <th colspan="6" class="text-end">Giảm giá ({{ $order->voucher->code }}):</th>
-                                            <td>- {{ number_format($order->voucher->discount_amount, 0, ',', '.') }}đ</td>
-                                        </tr>
+                                            <tr>
+                                                <th colspan="6" class="text-end">Giảm giá ({{ $order->voucher->code }}):</th>
+                                                <td> {{ number_format($order->discount_amount, 0, ',', '.') }}đ</td>
+                                            </tr>
                                         @endif
+                                        <tr>
+                                            <th colspan="6" class="text-end">Vận Chuyển ({{ $order->shipping_fee == 20000 ? 'Giao Hàng Tiết Kiệm' : 'Giao Hàng Nhanh' }}):</th>
+                                            <td> {{ number_format($order->shipping_fee, 0, ',', '.') }}đ</td>
+                                        </tr>
                                         <tr class="fw-bold">
                                             <th colspan="6" class="text-end">Tổng thanh toán:</th>
                                             <td>{{ number_format($order->total_amount, 0, ',', '.') }}đ</td>
@@ -442,6 +453,18 @@
                         </div>
                     </div>
                 </div>
+
+                {{-- QR Code Display --}}
+                @if ($order->qr_code_path)
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Mã QR Đơn Hàng</h5>
+                    </div>
+                    <div class="card-body text-center">
+                        <img src="{{ asset('storage/' . $order->qr_code_path) }}" alt="Order QR Code" class="img-fluid" style="max-width: 200px; border: 1px solid #ddd; padding: 5px;">
+                    </div>
+                </div>
+                @endif
             </div>
         </div>
 @endsection

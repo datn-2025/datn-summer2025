@@ -1,6 +1,5 @@
 @extends('layouts.app')
 @section('title', $book->title)
-
 @push('styles')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <link href="https://fonts.googleapis.com/css2?family=AdihausDIN:wght@400;700&family=TitilliumWeb:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -332,7 +331,6 @@
         }
     </style>
 @endpush
-
 @section('content')
 <div class="product-detail-page">
     {{-- Breadcrumb --}}
@@ -385,7 +383,6 @@
                     </div>
                 @endif
             </div>
-
             {{-- Enhanced Product Info --}}
             <div class="space-y-8 adidas-font lg:pl-8">
                 <!-- Product Header -->
@@ -427,9 +424,9 @@
                         </div>
                     </div>
                 </div>
-
                 @php
-                    $defaultFormat = $book->formats->first();
+                    $formats = $book->formats->sortByDesc(fn($f) => $f->format_name === 'Ebook');
+                    $defaultFormat = $formats->first();
                     $defaultPrice = $defaultFormat->price ?? $book->price;
                     $defaultStock = $defaultFormat->stock ?? $book->stock;
                     $discount = $defaultFormat->discount ?? 0;
@@ -501,7 +498,6 @@
                         </div>
                     </div>
                 @endif
-
                 <!-- Enhanced Attributes -->
                 @if ($book->attributeValues->count())
                     <div class="attributes-section space-y-6">
@@ -533,7 +529,6 @@
                         @endforeach
                     </div>
                 @endif
-
                 <!-- Enhanced Quantity & Add to Cart Section -->
                 <div class="purchase-section space-y-6 pt-6">
                     <div class="quantity-section space-y-3">
@@ -545,7 +540,6 @@
                             <button id="incrementBtn" class="quantity-btn-enhanced w-14 h-14 border-l border-gray-300 flex items-center justify-center font-bold text-lg">+</button>
                         </div>
                     </div>
-
                     <!-- Enhanced Add to Cart Button -->
                     <div class="space-y-4">
                         <button id="addToCartBtn" class="adidas-btn-enhanced w-full h-16 bg-black text-white font-bold text-lg uppercase tracking-wider transition-all duration-300 flex items-center justify-center">
@@ -586,10 +580,25 @@
                             <i class="fab fa-telegram-plane"></i>
                         </a>
                     </div>
+                {{-- Số lượng --}}
+                <div class="mt-4 flex items-center justify-start space-x-2">
+                    <label for="quantity" class="text-sm font-semibold">Số lượng:</label>
+                    <div class="flex items-center space-x-2">
+                        <button id="decrementBtn" class="bg-gray-300 hover:bg-gray-400 text-xl px-3 py-1 rounded-lg">-</button>
+                        <input type="number" id="quantity" value="1" min="1"
+                               class="w-16 text-center border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+                        <button id="incrementBtn" class="bg-gray-300 hover:bg-gray-400 text-xl px-3 py-1 rounded-lg">+</button>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <button class="bg-black text-white px-6 py-3 rounded hover:bg-gray-800 transition" id="addToCartBtn">
+                        Thêm vào giỏ
+                    </button>
+
                 </div>
             </div>
         </div>
-
         {{-- Enhanced Description Section --}}
         <div class="mt-20 space-y-8">
             <!-- Section Header with Adidas Style -->
@@ -604,7 +613,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- Enhanced Description Container -->
             <div class="bg-white border-2 border-gray-100 relative overflow-hidden group">
                 <!-- Header with Icon -->
@@ -1022,15 +1030,6 @@
 @endsection
 
 @push('scripts')
-
-    <script>
-        function changeMainImage(imageUrl) {
-            document.getElementById('mainImage').src = imageUrl;
-        }
-    </script>
-
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script>
     // Wait for toastr to load
     $(document).ready(function() {
@@ -1529,4 +1528,3 @@
     }
 </script>
 @endpush
-

@@ -12,7 +12,7 @@ class Author extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['name', 'biography', 'image'];
+    protected $fillable = ['name', 'slug', 'description', 'image', 'status'];
 
     public function books(): HasMany
     {
@@ -30,6 +30,6 @@ class Author extends Model
         });
     }
 
-    public $incrementing = false; 
+    public $incrementing = false;
     protected $keyType = 'string';
 }
