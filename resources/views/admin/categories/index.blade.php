@@ -67,7 +67,7 @@
                             @if ($categories->isEmpty())
                                 <div class="noresult text-center py-5">
                                     @if (filled(request()->get('search_name_category')))
-                                        <lord-icon src="{{ $iconNotFound }}" trigger="loop"
+                                        <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
                                             colors="primary:#121331,secondary:#08a88a" style="width:75px;height:75px">
                                         </lord-icon>
                                         <h5 class="mt-3 text-danger">Không tìm thấy danh mục phù hợp</h5>
