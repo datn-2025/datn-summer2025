@@ -11,10 +11,11 @@
                         <div class="col-12">
                             <div class="d-flex align-items-lg-center flex-lg-row flex-column">
                                 <div class="flex-grow-1">
-                                    {{-- @if (auth()->check() && auth()->user()->isAdmin())
-                                <h4 class="fs-18 mb-1">Xin chào, {{auth()->user()->name}} !</h4>
-                                <p class="text-muted mb-0">Chào mừng bạn đến với hệ thống quản trị BookBee. Dưới đây là tổng quan cửa hàng sách hôm nay.</p>
-                            @else --}}
+                                    @if (auth()->check() && auth()->user()->isAdmin())
+                                        <h4 class="fs-18 mb-1">Xin chào, {{ auth()->user()->name }} !</h4>
+                                        <p class="text-muted mb-0">Chào mừng bạn đến với hệ thống quản trị BookBee. Dưới đây
+                                            là tổng quan cửa hàng sách hôm nay.</p>
+                                    @else
                                 </div>
                                 <div class="mt-3 mt-lg-0">
                                     <form action="#">
@@ -70,6 +71,7 @@
                                         </div>
                                     </div>
                                 </div>
+
                                 <!-- 4 Thẻ thống kê chính -->
                                 <livewire:dashboard-stats />
 
