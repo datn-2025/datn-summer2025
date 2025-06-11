@@ -44,6 +44,9 @@ class DatabaseSeeder extends Seeder
             OrderSeeder::class,
             InvoiceSeeder::class,
             InvoiceItemSeeder::class,
+            ConversationSeeder::class,
+            MessageSeeder::class,
+            MessageReadSeeder::class,
         ]);
     }
 }
