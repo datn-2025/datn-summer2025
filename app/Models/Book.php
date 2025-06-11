@@ -101,4 +101,5 @@ class Book extends Model
     {
         return $this->reviews()->avg('rating') ?? 0;
     }
+    
 }
