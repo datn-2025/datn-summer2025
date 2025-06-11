@@ -581,6 +581,10 @@
       <div class="col-md-3">
         <div class="sidebar">
           <a href="#"><i class="fas fa-user"></i>Hồ Sơ Của Tôi</a>
+                          <a href="{{ route('account.addresses') }}">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Quản lý địa chỉ</span>
+                </a>
           <a href="{{ url('/account/password/change') }}"><i class="fas fa-key"></i>Đổi Mật Khẩu</a>
         </div>
       </div>

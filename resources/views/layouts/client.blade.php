@@ -104,7 +104,7 @@
                 <ul class="navbar-nav ms-auto">
                     @auth
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('account.showUser') }}">
+                            <a class="nav-link" href="{{ route('account.profile') }}">
                                 <i class="fas fa-user me-1"></i>{{ Auth::user()->name }}
                             </a>
                         </li>

@@ -1,489 +1,658 @@
 <!DOCTYPE html>
-<html>
-  
-<!-- Mirrored from demo.templatesjungle.com/bookly/shop.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 20 May 2025 06:24:41 GMT -->
+<html lang="en" class="scroll-smooth">
 <head>
-  <title>Bookly - Bookstore eCommerce Website Template</title>
+  <title>BookBee - Premium Bookstore</title>
   <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="format-detection" content="telephone=no" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="author" content="" />
-  <meta name="keywords" content="" />
-  <meta name="description" content="" />
   <meta name="csrf-token" content="{{ csrf_token() }}" />
-
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
-
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'adidas-black': '#000000',
+            'adidas-white': '#ffffff',
+            'adidas-gray': '#767677',
+            'adidas-light-gray': '#f4f4f4',
+            'adidas-blue': '#1e3a8a',
+            'adidas-dark-gray': '#2d2d2d',
+            'adidas-silver': '#c4c4c4',
+            'adidas-red': '#d71921',
+            'adidas-green': '#69be28',
+          },
+          fontFamily: {
+            'adidas': ['AdihausDIN', 'Arial', 'Helvetica', 'sans-serif'],
+          },
+          animation: {
+            'slide-in': 'slideIn 0.25s ease-out',
+            'fade-in': 'fadeIn 0.15s ease-in',
+            'bounce-soft': 'bounceSoft 1s infinite',
+          }
+        }
+      }
+    }
+  </script>
+  
   <!-- Toastr CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+  
+  <!-- Custom CSS -->
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap');
+    
+    * {
+      font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    
+    .adidas-hover:hover {
+      transform: translateY(-0.25px);
+      transition: transform 0.04s ease;
+    }
+    
+    .adidas-btn {
+      transition: transform 0.025s ease;
+    }
+    
+    .adidas-btn:hover {
+      transform: scale(1.005);
+    }
+    
+    .book-card {
+      transition: transform 0.025s ease, box-shadow 0.025s ease;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    
+    .book-card:hover {
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      transform: translateY(-0.25px);
+    }
+    
+    .filter-section {
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      backdrop-filter: blur(10px);
+    }
 
-  <!-- Your custom styles -->
-  <link rel="stylesheet" href="{{ asset('css/style.css') }}" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
-
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com/" />
-  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&amp;display=swap" rel="stylesheet" />
+    .scale-102 {
+      transform: scale(1.02);
+    }
+    
+    .line-clamp-2 {
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+    }
+    
+    /* Adidas-style loading animation */
+    @keyframes adidasPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    
+    @keyframes slideIn {
+      from { transform: translateX(-100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    @keyframes bounceSoft {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-2px); }
+      60% { transform: translateY(-1px); }
+    }
+    
+    .adidas-loading {
+      animation: adidasPulse 1s infinite;
+    }
+  </style>
 </head>
-<body>
-  <!-- Your body content -->
-
-  <!-- jQuery (nếu toastr cần, nếu không có thể bỏ) -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-  <!-- Toastr JS -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
-  <!-- Bootstrap JS (nếu bạn dùng các thành phần JS của bootstrap) -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-..." crossorigin="anonymous"></script>
-
-  <!-- Your custom scripts -->
-  <script src="{{ asset('js/app.js') }}"></script>
-</body>
-
-  <body>
-    {{-- icon  --}}
-    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
-      <symbol id="search" xmlns="http://www.w3.org/2000/symbolsvg" viewBox="0 0 24 24">
-        <path fill="currentColor" fill-rule="evenodd" d="M11.5 2.75a8.75 8.75 0 1 0 0 17.5a8.75 8.75 0 0 0 0-17.5M1.25 11.5c0-5.66 4.59-10.25 10.25-10.25S21.75 5.84 21.75 11.5c0 2.56-.939 4.902-2.491 6.698l3.271 3.272a.75.75 0 1 1-1.06 1.06l-3.272-3.271A10.21 10.21 0 0 1 11.5 21.75c-5.66 0-10.25-4.59-10.25-10.25" clip-rule="evenodd" />
-      </symbol>
-      <symbol id="user" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-        <path fill="currentColor" fill-rule="evenodd" d="M12 1.25a4.75 4.75 0 1 0 0 9.5a4.75 4.75 0 0 0 0-9.5M8.75 6a3.25 3.25 0 1 1 6.5 0a3.25 3.25 0 0 1-6.5 0M12 12.25c-2.313 0-4.445.526-6.024 1.414C4.42 14.54 3.25 15.866 3.25 17.5v.102c-.001 1.162-.002 2.62 1.277 3.662c.629.512 1.51.877 2.7 1.117c1.192.242 2.747.369 4.773.369s3.58-.127 4.774-.369c1.19-.24 2.07-.605 2.7-1.117c1.279-1.042 1.277-2.5 1.276-3.662V17.5c0-1.634-1.17-2.96-2.725-3.836c-1.58-.888-3.711-1.414-6.025-1.414M4.75 17.5c0-.851.622-1.775 1.961-2.528c1.316-.74 3.184-1.222 5.29-1.222c2.104 0 3.972.482 5.288 1.222c1.34.753 1.961 1.677 1.961 2.528c0 1.308-.04 2.044-.724 2.6c-.37.302-.99.597-2.05.811c-1.057.214-2.502.339-4.476.339c-1.974 0-3.42-.125-4.476-.339c-1.06-.214-1.68-.509-2.05-.81c-.684-.557-.724-1.293-.724-2.601" clip-rule="evenodd" />
-      </symbol>
-      <symbol id="heart" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-        <path fill="currentColor" fill-rule="evenodd" d="M5.624 4.424C3.965 5.182 2.75 6.986 2.75 9.137c0 2.197.9 3.891 2.188 5.343c1.063 1.196 2.349 2.188 3.603 3.154c.298.23.594.459.885.688c.526.415.995.778 1.448 1.043c.452.264.816.385 1.126.385c.31 0 .674-.12 1.126-.385c.453-.265.922-.628 1.448-1.043c.29-.23.587-.458.885-.687c1.254-.968 2.54-1.959 3.603-3.155c1.289-1.452 2.188-3.146 2.188-5.343c0-2.15-1.215-3.955-2.874-4.713c-1.612-.737-3.778-.542-5.836 1.597a.75.75 0 0 1-1.08 0C9.402 3.882 7.236 3.687 5.624 4.424M12 4.46C9.688 2.39 7.099 2.1 5 3.059C2.786 4.074 1.25 6.426 1.25 9.138c0 2.665 1.11 4.699 2.567 6.339c1.166 1.313 2.593 2.412 3.854 3.382c.286.22.563.434.826.642c.513.404 1.063.834 1.62 1.16c.557.325 1.193.59 1.883.59s1.326-.265 1.883-.59c.558-.326 1.107-.756 1.62-1.16a78.6 78.6 0 0 1 .826-.642c1.26-.97 2.688-2.07 3.854-3.382c1.457-1.64 2.567-3.674 2.567-6.339c0-2.712-1.535-5.064-3.75-6.077c-2.099-.96-4.688-.67-7 1.399" clip-rule="evenodd" />
-      </symbol>
-      <symbol id="cart" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-        <path fill="currentColor" fill-rule="evenodd" d="M2.249 2.292a.75.75 0 1 0-.498 1.416l.262.091c.667.235 1.106.39 1.429.549c.303.149.437.27.525.398c.09.132.16.314.2.677c.04.38.041.875.041 1.615V9.76c0 1.453.014 2.5.151 3.3c.146.854.438 1.466.985 2.042c.594.627 1.346.9 2.243 1.026c.858.122 1.948.122 3.293.122h5.406c.742 0 1.366 0 1.87-.062c.537-.065 1.025-.209 1.452-.556c.426-.348.665-.797.837-1.309c.163-.482.289-1.093.439-1.82l.508-2.469l.002-.005l.01-.052c.165-.825.303-1.519.338-2.077c.036-.586-.031-1.164-.413-1.66c-.235-.306-.565-.479-.866-.584a4.617 4.617 0 0 0-1.002-.21c-.687-.076-1.522-.076-2.34-.076H5.667a5.932 5.932 0 0 0-.01-.108c-.054-.497-.17-.95-.453-1.362c-.284-.416-.662-.682-1.102-.899c-.412-.202-.936-.386-1.553-.603zm3.46 4.578h11.38c.856 0 1.61.001 2.205.067c.296.034.517.08.672.134a.56.56 0 0 1 .176.086c.062.082.128.23.102.651c-.027.444-.143 1.036-.321 1.926v.002l-.5 2.42c-.16.783-.27 1.303-.399 1.688c-.123.366-.239.523-.364.625c-.125.102-.303.184-.685.23c-.404.05-.935.051-1.734.051h-5.303c-1.417 0-2.4-.002-3.14-.107c-.716-.101-1.093-.285-1.366-.573c-.32-.338-.493-.668-.595-1.263c-.11-.65-.129-1.558-.129-3.047zM7.5 21.75a2.25 2.25 0 1 1 0-4.5a2.25 2.25 0 0 1 0 4.5m-.75-2.25a.75.75 0 1 0 1.5 0a.75.75 0 0 0-1.5 0m9.75 2.25a2.25 2.25 0 1 1 0-4.5a2.25 2.25 0 0 1 0 4.5m-.75-2.25a.75.75 0 1 0 1.5 0a.75.75 0 0 0-1.5 0" clip-rule="evenodd" />
-      </symbol>
-      <symbol xmlns="http://www.w3.org/2000/svg" id="alt-arrow-right-outline" viewBox="0 0 24 24">
-        <path fill="currentColor" fill-rule="evenodd" d="M8.512 4.43a.75.75 0 0 1 1.057.082l6 7a.75.75 0 0 1 0 .976l-6 7a.75.75 0 0 1-1.138-.976L14.012 12L8.431 5.488a.75.75 0 0 1 .08-1.057" clip-rule="evenodd" />
-      </symbol>
-      <symbol xmlns="http://www.w3.org/2000/svg" id="alt-arrow-left-outline" viewBox="0 0 24 24">
-        <path fill="currentColor" fill-rule="evenodd" d="M15.488 4.43a.75.75 0 0 1 .081 1.058L9.988 12l5.581 6.512a.75.75 0 1 1-1.138.976l-6-7a.75.75 0 0 1 0-.976l6-7a.75.75 0 0 1 1.057-.081" clip-rule="evenodd" />
-      </symbol>
-      <symbol xmlns="http://www.w3.org/2000/svg" id="cart-outline" viewBox="0 0 16 16">
-        <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l.84 4.479 9.144-.459L13.89 4H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
-      </symbol>
-      <symbol xmlns="http://www.w3.org/2000/svg" id="quality" viewBox="0 0 16 16">
-        <path d="M9.669.864 8 0 6.331.864l-1.858.282-.842 1.68-1.337 1.32L2.6 6l-.306 1.854 1.337 1.32.842 1.68 1.858.282L8 12l1.669-.864 1.858-.282.842-1.68 1.337-1.32L13.4 6l.306-1.854-1.337-1.32-.842-1.68L9.669.864zm1.196 1.193.684 1.365 1.086 1.072L12.387 6l.248 1.506-1.086 1.072-.684 1.365-1.51.229L8 10.874l-1.355-.702-1.51-.229-.684-1.365-1.086-1.072L3.614 6l-.25-1.506 1.087-1.072.684-1.365 1.51-.229L8 1.126l1.356.702 1.509.229z" />
-        <path d="M4 11.794V16l4-1 4 1v-4.206l-2.018.306L8 13.126 6.018 12.1 4 11.794z" />
-      </symbol>
-      <symbol xmlns="http://www.w3.org/2000/svg" id="price-tag" viewBox="0 0 16 16">
-        <path d="M6 4.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm-1 0a.5.5 0 1 0-1 0 .5.5 0 0 0 1 0z" />
-        <path d="M2 1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 1 6.586V2a1 1 0 0 1 1-1zm0 5.586 7 7L13.586 9l-7-7H2v4.586z" />
-      </symbol>
-      <symbol xmlns="http://www.w3.org/2000/svg" id="shield-plus" viewBox="0 0 16 16">
-        <path d="M5.338 1.59a61.44 61.44 0 0 0-2.837.856.481.481 0 0 0-.328.39c-.554 4.157.726 7.19 2.253 9.188a10.725 10.725 0 0 0 2.287 2.233c.346.244.652.42.893.533.12.057.218.095.293.118a.55.55 0 0 0 .101.025.615.615 0 0 0 .1-.025c.076-.023.174-.061.294-.118.24-.113.547-.29.893-.533a10.726 10.726 0 0 0 2.287-2.233c1.527-1.997 2.807-5.031 2.253-9.188a.48.48 0 0 0-.328-.39c-.651-.213-1.75-.56-2.837-.855C9.552 1.29 8.531 1.067 8 1.067c-.53 0-1.552.223-2.662.524zM5.072.56C6.157.265 7.31 0 8 0s1.843.265 2.928.56c1.11.3 2.229.655 2.887.87a1.54 1.54 0 0 1 1.044 1.262c.596 4.477-.787 7.795-2.465 9.99a11.775 11.775 0 0 1-2.517 2.453 7.159 7.159 0 0 1-1.048.625c-.28.132-.581.24-.829.24s-.548-.108-.829-.24a7.158 7.158 0 0 1-1.048-.625 11.777 11.777 0 0 1-2.517-2.453C1.928 10.487.545 7.169 1.141 2.692A1.54 1.54 0 0 1 2.185 1.43 62.456 62.456 0 0 1 5.072.56z" />
-        <path d="M8 4.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V9a.5.5 0 0 1-1 0V7.5H6a.5.5 0 0 1 0-1h1.5V5a.5.5 0 0 1 .5-.5z" />
-      </symbol>
-      <symbol xmlns="http://www.w3.org/2000/svg" id="star-fill" viewBox="0 0 24 24">
-        <path fill="currentColor" d="M9.153 5.408C10.42 3.136 11.053 2 12 2c.947 0 1.58 1.136 2.847 3.408l.328.588c.36.646.54.969.82 1.182c.28.213.63.292 1.33.45l.636.144c2.46.557 3.689.835 3.982 1.776c.292.94-.546 1.921-2.223 3.882l-.434.507c-.476.557-.715.836-.822 1.18c-.107.345-.071.717.001 1.46l.066.677c.253 2.617.38 3.925-.386 4.506c-.766.582-1.918.051-4.22-1.009l-.597-.274c-.654-.302-.981-.452-1.328-.452c-.347 0-.674.15-1.328.452l-.596.274c-2.303 1.06-3.455 1.59-4.22 1.01c-.767-.582-.64-1.89-.387-4.507l.066-.676c.072-.744.108-1.116 0-1.46c-.106-.345-.345-.624-.821-1.18l-.434-.508c-1.677-1.96-2.515-2.941-2.223-3.882c.293-.941 1.523-1.22 3.983-1.776l.636-.144c.699-.158 1.048-.237 1.329-.45c.28-.213.46-.536.82-1.182z" />
-      </symbol>
-      <symbol xmlns="http://www.w3.org/2000/svg" id="star-empty" viewBox="0 0 16 16">
-        <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z" />
-      </symbol>
-      <symbol xmlns="http://www.w3.org/2000/svg" id="star-half" viewBox="0 0 16 16">
-        <path d="M5.354 5.119 7.538.792A.516.516 0 0 1 8 .5c.183 0 .366.097.465.292l2.184 4.327 4.898.696A.537.537 0 0 1 16 6.32a.548.548 0 0 1-.17.445l-3.523 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256a.52.52 0 0 1-.146.05c-.342.06-.668-.254-.6-.642l.83-4.73L.173 6.765a.55.55 0 0 1-.172-.403.58.58 0 0 1 .085-.302.513.513 0 0 1 .37-.245l4.898-.696zM8 12.027a.5.5 0 0 1 .232.056l3.686 1.894-.694-3.957a.565.565 0 0 1 .162-.505l2.907-2.77-4.052-.576a.525.525 0 0 1-.393-.288L8.001 2.223 8 2.226v9.8z" />
-      </symbol>
-      <symbol xmlns="http://www.w3.org/2000/svg" id="quote" viewBox="0 0 24 24">
-        <path fill="currentColor" d="m15 17l2-4h-4V6h7v7l-2 4h-3Zm-9 0l2-4H4V6h7v7l-2 4H6Z" />
-      </symbol>
-      <symbol xmlns="http://www.w3.org/2000/svg" id="facebook" viewBox="0 0 24 24">
-        <path fill="currentColor" d="M9.198 21.5h4v-8.01h3.604l.396-3.98h-4V7.5a1 1 0 0 1 1-1h3v-4h-3a5 5 0 0 0-5 5v2.01h-2l-.396 3.98h2.396v8.01Z" />
-      </symbol>
-      <symbol xmlns="http://www.w3.org/2000/svg" id="youtube" viewBox="0 0 32 32">
-        <path fill="currentColor" d="M29.41 9.26a3.5 3.5 0 0 0-2.47-2.47C24.76 6.2 16 6.2 16 6.2s-8.76 0-10.94.59a3.5 3.5 0 0 0-2.47 2.47A36.13 36.13 0 0 0 2 16a36.13 36.13 0 0 0 .59 6.74a3.5 3.5 0 0 0 2.47 2.47c2.18.59 10.94.59 10.94.59s8.76 0 10.94-.59a3.5 3.5 0 0 0 2.47-2.47A36.13 36.13 0 0 0 30 16a36.13 36.13 0 0 0-.59-6.74ZM13.2 20.2v-8.4l7.27 4.2Z" />
-      </symbol>
-      <symbol xmlns="http://www.w3.org/2000/svg" id="twitter" viewBox="0 0 256 256">
-        <path fill="currentColor" d="m245.66 77.66l-29.9 29.9C209.72 177.58 150.67 232 80 232c-14.52 0-26.49-2.3-35.58-6.84c-7.33-3.67-10.33-7.6-11.08-8.72a8 8 0 0 1 3.85-11.93c.26-.1 24.24-9.31 39.47-26.84a110.93 110.93 0 0 1-21.88-24.2c-12.4-18.41-26.28-50.39-22-98.18a8 8 0 0 1 13.65-4.92c.35.35 33.28 33.1 73.54 43.72V88a47.87 47.87 0 0 1 14.36-34.3A46.87 46.87 0 0 1 168.1 40a48.66 48.66 0 0 1 41.47 24H240a8 8 0 0 1 5.66 13.66Z" />
-      </symbol>
-      <symbol xmlns="http://www.w3.org/2000/svg" id="instagram" viewBox="0 0 256 256">
-        <path fill="currentColor" d="M128 80a48 48 0 1 0 48 48a48.05 48.05 0 0 0-48-48Zm0 80a32 32 0 1 1 32-32a32 32 0 0 1-32 32Zm48-136H80a56.06 56.06 0 0 0-56 56v96a56.06 56.06 0 0 0 56 56h96a56.06 56.06 0 0 0 56-56V80a56.06 56.06 0 0 0-56-56Zm40 152a40 40 0 0 1-40 40H80a40 40 0 0 1-40-40V80a40 40 0 0 1 40-40h96a40 40 0 0 1 40 40ZM192 76a12 12 0 1 1-12-12a12 12 0 0 1 12 12Z" />
-      </symbol>
-      <symbol xmlns="http://www.w3.org/2000/svg" id="linkedin" viewBox="0 0 24 24">
-        <path fill="currentColor" d="M6.94 5a2 2 0 1 1-4-.002a2 2 0 0 1 4 .002zM7 8.48H3V21h4V8.48zm6.32 0H9.34V21h3.94v-6.57c0-3.66 4.77-4 4.77 0V21H22v-7.93c0-6.17-7.06-5.94-8.72-2.91l.04-1.68z" />
-      </symbol>
-      <symbol xmlns="http://www.w3.org/2000/svg" id="nav-icon" viewBox="0 0 16 16">
-        <path d="M14 10.5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 .5-.5zm0-3a.5.5 0 0 0-.5-.5h-7a.5.5 0 0 0 0 1h7a.5.5 0 0 0 .5-.5zm0-3a.5.5 0 0 0-.5-.5h-11a.5.5 0 0 0 0 1h11a.5.5 0 0 0 .5-.5z" />
-      </symbol>
-      <symbol xmlns="http://www.w3.org/2000/svg" id="close" viewBox="0 0 16 16">
-        <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z" />
-      </symbol>
-      <symbol xmlns="http://www.w3.org/2000/svg" id="navbar-icon" viewBox="0 0 16 16">
-        <path d="M14 10.5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 .5-.5zm0-3a.5.5 0 0 0-.5-.5h-7a.5.5 0 0 0 0 1h7a.5.5 0 0 0 .5-.5zm0-3a.5.5 0 0 0-.5-.5h-11a.5.5 0 0 0 0 1h11a.5.5 0 0 0 .5-.5z" />
-      </symbol>
-    </svg>
-    <section class="hero-section position-relative padding-large" style="background-image: url(images/banner-image-bg-1.jpg); background-size: cover; background-repeat: no-repeat; background-position: center; height: 400px;">
-      <div class="hero-content">
-        <div class="container">
-          <div class="row">
-            <div class="text-center">
-              <h1>Shop</h1>
-              <div class="breadcrumbs">
-                <span class="item">
-                  <a href="index.html">Home > </a>
-                </span>
-                <span class="item text-decoration-underline">Shop</span>
+<body class="bg-adidas-white font-adidas antialiased">
+    {{-- Thay thế navbar cũ bằng navbar layout chung --}}
+    @include('layouts.partials.navbar')
+    
+    <!-- Enhanced Adidas-Style Hero Section -->
+    <section class="bg-adidas-black text-adidas-white py-20 relative overflow-hidden adidas-stripes">
+      <!-- Animated Background -->
+      <div class="absolute inset-0">
+        <div class="absolute inset-0 bg-gradient-to-br from-adidas-black via-adidas-dark-gray to-adidas-black opacity-90"></div>
+        <div class="absolute top-10 left-10 w-20 h-20 bg-adidas-white opacity-5 rounded-full floating"></div>
+        <div class="absolute bottom-20 right-20 w-16 h-16 bg-adidas-white opacity-5 rounded-full floating" style="animation-delay: 1s;"></div>
+        <div class="absolute top-1/2 left-1/4 w-12 h-12 bg-adidas-white opacity-5 rounded-full floating" style="animation-delay: 2s;"></div>
+      </div>
+      
+      <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center animate-fade-in">
+          <div class="mb-6">
+            <h1 class="text-6xl md:text-8xl lg:text-9xl font-black tracking-tighter mb-4 transform hover:scale-105 transition-transform duration-250">
+              <span class="inline-block animate-slide-in">BOOK</span><span class="text-adidas-white inline-block animate-slide-in" style="animation-delay: 0.1s;">BEE</span>
+            </h1>
+            <div class="h-1 w-24 bg-adidas-white mx-auto mb-6 animate-slide-in" style="animation-delay: 0.2s;"></div>
+          </div>
+          
+          <p class="text-xl md:text-3xl lg:text-4xl font-light text-adidas-gray mb-8 animate-slide-in tracking-widest" style="animation-delay: 0.3s;">
+            IMPOSSIBLE IS NOTHING
+          </p>
+          
+          <p class="text-lg md:text-xl text-adidas-silver mb-10 max-w-2xl mx-auto animate-slide-in" style="animation-delay: 0.4s;">
+            Discover the world's best books. Premium collection for passionate readers.
+          </p>
+          
+          <!-- Call to Action Buttons -->
+          <div class="flex flex-col sm:flex-row gap-4 justify-center mb-12 animate-slide-in" style="animation-delay: 0.5s;">
+            <button class="adidas-btn ripple bg-adidas-white text-adidas-black px-8 py-4 rounded-lg font-bold uppercase tracking-wide hover:bg-adidas-gray hover:text-adidas-white transition-all duration-150 neon-glow">
+              Shop Now
+            </button>
+            <button class="adidas-btn ripple border-2 border-adidas-white text-adidas-white px-8 py-4 rounded-lg font-bold uppercase tracking-wide hover:bg-adidas-white hover:text-adidas-black transition-all duration-150">
+              Explore Categories
+            </button>
+          </div>
+          
+          <!-- Breadcrumb -->
+          <div class="flex justify-center items-center space-x-3 text-sm uppercase tracking-wider animate-slide-in" style="animation-delay: 0.6s;">
+            <a href="/" class="text-adidas-gray hover:text-adidas-white transition-colors duration-100 hover:underline">Home</a>
+            <svg class="w-4 h-4 text-adidas-gray">
+              <use xlink:href="#alt-arrow-right-outline"></use>
+            </svg>
+            <span class="text-adidas-white font-semibold">Shop</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Enhanced Three Stripes Design Element -->
+      <div class="absolute top-0 right-0 w-40 h-full opacity-10 flex space-x-3">
+        <div class="w-8 h-full bg-gradient-to-b from-adidas-white to-transparent transform skew-x-12 animate-slide-in" style="animation-delay: 0.7s;"></div>
+        <div class="w-8 h-full bg-gradient-to-b from-adidas-white to-transparent transform skew-x-12 animate-slide-in" style="animation-delay: 0.8s;"></div>
+        <div class="w-8 h-full bg-gradient-to-b from-adidas-white to-transparent transform skew-x-12 animate-slide-in" style="animation-delay: 0.9s;"></div>
+      </div>
+      
+      <!-- Adidas-style geometric patterns -->
+      <div class="absolute bottom-0 left-0 w-full h-2 bg-gradient-to-r from-adidas-black via-adidas-white to-adidas-black opacity-20"></div>
+    </section>
+ 
+    <!-- Adidas-Style Stats Section -->
+    <section class="bg-adidas-light-gray py-12">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8">              <div class="text-center group">                <div class="bg-adidas-white p-6 rounded-lg shadow-sm group-hover:shadow-md transition-shadow duration-75 transform group-hover:-translate-y-1">
+                  <div class="text-3xl font-black text-adidas-black mb-2">10K+</div>
+                  <div class="text-sm text-adidas-gray uppercase tracking-wide">Books Available</div>
+                </div>
               </div>
-            </div>
+              <div class="text-center group">
+                <div class="bg-adidas-white p-6 rounded-lg shadow-sm group-hover:shadow-md transition-shadow duration-75 transform group-hover:-translate-y-1">
+                  <div class="text-3xl font-black text-adidas-black mb-2">5K+</div>
+                  <div class="text-sm text-adidas-gray uppercase tracking-wide">Happy Customers</div>
+                </div>
+              </div>
+              <div class="text-center group">
+                <div class="bg-adidas-white p-6 rounded-lg shadow-sm group-hover:shadow-md transition-shadow duration-75 transform group-hover:-translate-y-1">
+                  <div class="text-3xl font-black text-adidas-black mb-2">500+</div>
+                  <div class="text-sm text-adidas-gray uppercase tracking-wide">Authors</div>
+                </div>
+              </div>
+              <div class="text-center group">
+                <div class="bg-adidas-white p-6 rounded-lg shadow-sm group-hover:shadow-md transition-shadow duration-75 transform group-hover:-translate-y-1">
+                  <div class="text-3xl font-black text-adidas-black mb-2">24/7</div>
+                  <div class="text-sm text-adidas-gray uppercase tracking-wide">Support</div>
+                </div>
           </div>
         </div>
       </div>
     </section>
- 
-    {{-- main  --}}
-<div class="shopify-grid padding-large">
-  <div class="container">
-    <div class="row flex-row-reverse g-md-5">
 
-      {{-- danh sách sản phẩm --}}
-      <main class="col-md-9">
-        <div class="filter-shop d-flex flex-wrap justify-content-between mb-5">
-          <div class="showing-product">
-            <!-- Hiển thị số sách đang xem (theo phân trang) -->
-            <p>Showing {{ $books->firstItem() }}–{{ $books->lastItem() }} of {{ $books->total() }} results</p>
-          </div>
-        <div class="sort-by">
-  <select id="sorting" class="form-select" data-filter-sort="" data-filter-order="" style="display: none;">
-    <option value=""></option>
-    <option value="name_asc"></option>
-    <option value="name_desc"></option>
-    <option value="price_asc"></option>
-    <option value="price_desc"></option>
-    <option value="rating_desc"></option>
-    <option value="rating_asc"></option>
-  </select>
-</div>
+    <!-- Enhanced Adidas-Style Main Container -->
+    <div class="bg-gradient-to-b from-adidas-light-gray to-adidas-white min-h-screen">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="flex flex-col lg:flex-row gap-12">
 
-        </div>
-
-        {{-- Danh sách sách --}}
-        <div class="row product-content product-store">
-          @foreach($books as $book)
-          <div class="col-lg-4 col-md-4 mb-4">
-            <div class="card position-relative p-4 border rounded-3">
-
-              {{-- Nếu có discount (giảm giá), hiển thị --}}
-              @if(!empty($book->discount))
-              <div class="position-absolute">
-                <p class="bg-primary py-1 px-3 fs-6 text-white rounded-2">{{ $book->discount }}% off</p>
-              </div>
-              @endif
-
-              {{-- Ảnh bìa sách --}}
-            @php
-    $imagePath = public_path('images/' . $book->cover_image);
-        @endphp
-
-<img src="{{ file_exists($imagePath) ? asset('images/' . $book->cover_image) : asset('images/product-item1.png') }}" alt="{{ $book->title }}">
-
-              {{-- Tiêu đề sách --}}
-              <h6 class="mt-4 mb-0 fw-bold">
-                <a href="{{ route('books.show', $book->slug) }}">{{ $book->title }}</a>
-              </h6>
-
-              {{-- Tác giả và đánh giá sao --}}
-              <div class="review-content d-flex">
-                <p class="my-2 me-2 fs-6 text-black-50">{{ $book->author_name ?? 'Unknown Author' }}</p>
-                <div class="rating text-warning d-flex align-items-center">
-                  {{-- Hiển thị 5 sao dựa trên avg_rating làm tròn --}}
-                  @php
-                    $ratingRounded = round($book->avg_rating ?? 0);
-                  @endphp
-                  @for ($i = 1; $i <= 5; $i++)
-                  <svg class="star star-fill">
-                    @if($i <= $ratingRounded)
-                      <use xlink:href="#star-fill"></use>
-                    @else
-                      <use xlink:href="#star-empty"></use>
-                    @endif
-                  </svg>
-                  @endfor
+            <!-- Enhanced Adidas-Style Product Listing -->
+            <main class="flex-1 lg:order-2">
+              <!-- Header Controls -->
+              <div class="glass bg-adidas-white rounded-2xl shadow-lg p-8 mb-8 backdrop-blur-lg">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
+                  <div class="flex items-center space-x-6">
+                    <h2 class="text-3xl font-black text-adidas-black tracking-tight">
+                      BOOKS <span class="adidas-gradient-text">COLLECTION</span>
+                    </h2>
+                    <div class="h-8 w-px bg-gradient-to-b from-adidas-black to-adidas-gray"></div>
+                    <div class="bg-adidas-black text-adidas-white px-4 py-2 rounded-full text-sm font-bold">
+                      {{ $books->total() }} ITEMS
+                    </div>
+                  </div>
+                  <div class="flex items-center space-x-6">
+                    <span class="text-sm font-bold text-adidas-gray uppercase tracking-wider">Sort by:</span>
+                    <select onchange="location = this.value;" 
+                            class="bg-adidas-white border-2 border-adidas-light-gray rounded-xl px-6 py-3 text-adidas-black font-semibold focus:border-adidas-black focus:outline-none transition-all duration-100 shadow-sm">
+                      <option value="">Featured</option>
+                      <option value="name_asc">Name A-Z</option>
+                      <option value="name_desc">Name Z-A</option>
+                      <option value="price_asc">Price Low to High</option>
+                      <option value="price_desc">Price High to Low</option>
+                      <option value="rating_desc">Best Rating</option>
+                      <option value="rating_asc">Lowest Rating</option>
+                    </select>
+                  </div>
+                </div>
+                
+                <!-- Results info -->
+                <div class="mt-4 flex items-center justify-between text-sm text-adidas-gray">
+                  <span>Showing {{ $books->firstItem() }}–{{ $books->lastItem() }} of {{ $books->total() }} results</span>
+                  <div class="flex items-center space-x-2">
+                    <span>View:</span>
+                    <button class="p-2 bg-adidas-black text-adidas-white rounded-lg">
+                      <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M3 3h6v6H3V3zm8 0h6v6h-6V3zM3 11h6v6H3v-6zm8 0h6v6h-6v-6z"/>
+                      </svg>
+                    </button>
+                    <button class="p-2 bg-adidas-light-gray text-adidas-gray rounded-lg hover:bg-adidas-gray hover:text-adidas-white transition-colors">
+                      <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M3 4h18v2H3V4zm0 7h18v2H3v-2zm0 7h18v2H3v-2z"/>
+                      </svg>
+                    </button>
+                  </div>
                 </div>
               </div>
 
-              {{-- Giá sách --}}
-              <span class="price text-primary fw-bold mb-2 fs-5">
-                {{ number_format($book->min_price ?? 0, 0, ',', '.') }} đ
-              </span>
+              <!-- Enhanced Adidas-Style Product Grid -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                @foreach($books as $book)
+                <div class="book-card bg-adidas-white rounded-2xl overflow-hidden group cursor-pointer shadow-lg">
+                  <div class="relative overflow-hidden">
+                    <!-- Premium Badge -->
+                    <div class="absolute top-4 left-4 z-20">
+                      <span class="bg-gradient-to-r from-adidas-black to-adidas-dark-gray text-adidas-white px-3 py-1 text-xs font-black uppercase rounded-full shadow-lg">
+                        Premium
+                      </span>
+                    </div>
+                    
+                    <!-- Discount Badge -->
+                    @if(!empty($book->discount))
+                    <div class="absolute top-4 right-4 z-20">
+                      <span class="bg-adidas-red text-adidas-white px-3 py-1 text-xs font-black uppercase rounded-full shadow-lg animate-bounce-soft">
+                        -{{ $book->discount }}%
+                      </span>
+                    </div>
+                    @endif
 
-              {{-- Nút xem chi tiết và yêu thích --}}
-              <div class="card-concern position-absolute start-0 end-0 d-flex gap-2">
-                <a href="{{ route('books.show', $book->slug) }}" class="btn btn-dark" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="View details">
-                  <svg class="cart">
-                    <use xlink:href="#cart"></use>
-                  </svg>
-                </button>
-                <a href="#" class="btn btn-dark btn-wishlist" data-book-id="{{ $book->id }}">
-                  <span>
-                    <svg class="wishlist">
-                      <use xlink:href="#heart"></use>
-                    </svg>
-                  </span>
+                    <!-- Book Cover -->
+                    <div class="aspect-[3/4] overflow-hidden bg-gradient-to-br from-adidas-light-gray to-adidas-silver relative">
+                      @php
+                        $imagePath = public_path('images/' . $book->cover_image);
+                      @endphp
+                      <img src="{{ file_exists($imagePath) ? asset('images/' . $book->cover_image) : asset('images/product-item1.png') }}" 
+                           alt="{{ $book->title }}"
+                           class="w-full h-full object-cover group-hover:scale-102 transition-transform duration-75">
+                    </div>
+
+                    <!-- Hover Actions -->
+                    <div class="absolute inset-0 bg-adidas-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-75 flex items-center justify-center opacity-0 group-hover:opacity-100">
+                      <div class="flex space-x-3 transform translate-y-1 group-hover:translate-y-0 transition-transform duration-75">
+                        <a href="{{ route('books.show', $book->slug) }}" 
+                           class="bg-adidas-white text-adidas-black p-3 rounded-full hover:bg-adidas-black hover:text-adidas-white transition-all duration-50 shadow-lg">
+                          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5L21 21M7 13l-2.5 5"></path>
+                          </svg>
+                        </a>
+                        <button class="btn-wishlist bg-adidas-white text-adidas-black p-3 rounded-full hover:bg-adidas-red hover:text-adidas-white transition-all duration-50 shadow-lg" 
+                                data-book-id="{{ $book->id }}">
+                          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                          </svg>
+                        </button>
+                        <button class="bg-adidas-white text-adidas-black p-3 rounded-full hover:bg-adidas-blue hover:text-adidas-white transition-all duration-50 shadow-lg">
+                          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Product Info -->
+                  <div class="p-6">
+                    <!-- Category Tag -->
+                    <div class="mb-3">
+                      <span class="inline-block bg-adidas-light-gray text-adidas-black px-3 py-1 text-xs font-bold uppercase rounded-full">
+                        Fiction
+                      </span>
+                    </div>
+                    
+                    <!-- Book Title -->
+                    <h3 class="font-black text-xl text-adidas-black mb-3 group-hover:text-adidas-blue transition-colors duration-75 leading-tight">
+                      <a href="{{ route('books.show', $book->slug) }}" class="line-clamp-2 hover:underline">
+                        {{ $book->title }}
+                      </a>
+                    </h3>
+
+                    <!-- Author -->
+                    <p class="text-adidas-gray text-sm font-semibold uppercase tracking-wider mb-4">
+                      BY {{ strtoupper($book->author_name ?? 'Unknown Author') }}
+                    </p>
+
+                    <!-- Rating -->
+                    <div class="flex items-center justify-between mb-6">
+                      <div class="flex items-center space-x-2">
+                        <div class="flex space-x-1">
+                          @php
+                            $ratingRounded = round($book->avg_rating ?? 0);
+                          @endphp
+                          @for ($i = 1; $i <= 5; $i++)
+                          <svg class="w-5 h-5 {{ $i <= $ratingRounded ? 'text-yellow-400' : 'text-adidas-light-gray' }}" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                          </svg>
+                          @endfor
+                        </div>
+                        <span class="text-sm font-bold text-adidas-black">({{ number_format($book->avg_rating ?? 0, 1) }})</span>
+                      </div>
+                      <div class="flex items-center space-x-2">
+                        @php
+                          $totalStock = $book->total_stock ?? 0;
+                        @endphp
+                        @if($totalStock > 0)
+                          <span class="w-2 h-2 bg-adidas-green rounded-full"></span>
+                          <span class="text-xs text-adidas-gray font-medium">Còn {{ $totalStock }} cuốn</span>
+                        @else
+                          <span class="w-2 h-2 bg-adidas-red rounded-full"></span>
+                          <span class="text-xs text-adidas-red font-medium">Hết hàng</span>
+                        @endif
+                      </div>
+                    </div>
+
+                    <!-- Price -->
+                    <div class="text-center">
+                      <span class="text-2xl font-black text-adidas-black">
+                        {{ number_format($book->min_price ?? 0, 0, ',', '.') }}₫
+                      </span>
+                      @if(!empty($book->discount))
+                      <span class="text-sm text-adidas-gray line-through ml-2">
+                        {{ number_format(($book->min_price ?? 0) * 1.2, 0, ',', '.') }}₫
+                      </span>
+                      @endif
+                    </div>
+                  </div>
+                </div>
+                @endforeach
+              </div>
+
+              <!-- Enhanced Adidas-Style Pagination -->
+              <nav class="mt-16 flex justify-center">
+                <div class="bg-adidas-white rounded-2xl shadow-lg p-6">
+                  <div class="flex items-center space-x-3">
+                    <!-- Prev Button -->
+                    @if ($books->onFirstPage())
+                      <span class="px-6 py-3 text-adidas-gray cursor-not-allowed bg-adidas-light-gray rounded-xl">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                        </svg>
+                      </span>
+                    @else
+                      <a href="{{ $books->previousPageUrl() }}" 
+                         class="adidas-btn px-6 py-3 text-adidas-black hover:bg-adidas-black hover:text-adidas-white rounded-xl transition-all duration-100 font-semibold shadow-sm">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                        </svg>
+                      </a>
+                    @endif
+
+                    <!-- Page Numbers -->
+                    @foreach ($books->getUrlRange(1, $books->lastPage()) as $page => $url)
+                      @if ($page == $books->currentPage())
+                        <span class="px-6 py-3 bg-gradient-to-r from-adidas-black to-adidas-dark-gray text-adidas-white rounded-xl font-black shadow-lg">
+                          {{ $page }}
+                        </span>
+                      @else
+                        <a href="{{ $url }}" 
+                           class="adidas-btn px-6 py-3 text-adidas-black hover:bg-adidas-black hover:text-adidas-white rounded-xl transition-all duration-100 font-semibold shadow-sm">
+                          {{ $page }}
+                        </a>
+                      @endif
+                    @endforeach
+
+                    <!-- Next Button -->
+                    @if ($books->hasMorePages())
+                      <a href="{{ $books->nextPageUrl() }}" 
+                         class="adidas-btn px-6 py-3 text-adidas-black hover:bg-adidas-black hover:text-adidas-white rounded-xl transition-all duration-100 font-semibold shadow-sm">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                      </a>
+                    @else
+                      <span class="px-6 py-3 text-adidas-gray cursor-not-allowed bg-adidas-light-gray rounded-xl">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                      </span>
+                    @endif
+                  </div>
+                  
+                  <!-- Page info -->
+                  <div class="text-center mt-4 text-sm text-adidas-gray">
+                    Page {{ $books->currentPage() }} of {{ $books->lastPage() }}
+                  </div>
+                </div>
+              </nav>
+            </main>
+
+          <!-- Adidas-Style Sidebar Filters -->
+          <aside class="w-full lg:w-80 lg:order-1">
+            <div class="filter-section bg-adidas-white rounded-lg shadow-sm p-6 sticky top-8">
+              
+              <!-- Search Section -->
+              <div class="mb-8">
+                <h3 class="text-lg font-bold text-adidas-black mb-4 uppercase tracking-wide border-b-2 border-adidas-light-gray pb-2">
+                  Search Books
+                </h3>
+                <form method="GET" action="{{ url()->current() }}" role="search" class="relative">
+                  <input 
+                    name="search" 
+                    type="search" 
+                    placeholder="Search by title or author..." 
+                    aria-label="Search"
+                    value="{{ request('search') ?? '' }}"                          class="w-full px-4 py-3 pr-12 border-2 border-adidas-light-gray rounded-lg focus:border-adidas-black focus:outline-none transition-colors duration-100">
+                      <button type="submit" 
+                              class="absolute right-3 top-1/2 transform -translate-y-1/2 text-adidas-gray hover:text-adidas-black transition-colors duration-100">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                      </button>
+                </form>
+              </div>
+
+              <!-- Categories Filter -->
+              <div class="mb-8">
+                <h3 class="text-lg font-bold text-adidas-black mb-4 uppercase tracking-wide border-b-2 border-adidas-light-gray pb-2">
+                  Categories
+                </h3>
+                <select
+                  aria-label="Select category"
+                  onchange="location = this.value;"
+                  class="w-full px-4 py-3 border-2 border-adidas-light-gray rounded-lg focus:border-adidas-black focus:outline-none transition-colors duration-100 bg-adidas-white">
+                  <option value="{{ url('/books') . '?' . http_build_query(request()->except('category')) }}"
+                    {{ request()->segment(2) === null ? 'selected' : '' }}>
+                    All Categories
+                  </option>
+                  @foreach($categories as $cat)
+                    <option value="{{ url('/books/' . $cat->slug) . '?' . http_build_query(request()->except('authors', 'brands')) }}"
+                      {{ request()->segment(2) == $cat->slug ? 'selected' : '' }}>
+                      {{ $cat->name }}
+                    </option>
+                  @endforeach
+                </select>
+              </div>
+
+              <!-- Authors Filter -->
+              <div class="mb-8">
+                <h3 class="text-lg font-bold text-adidas-black mb-4 uppercase tracking-wide border-b-2 border-adidas-light-gray pb-2">
+                  Authors
+                </h3>
+                <select
+                  aria-label="Select author"
+                  onchange="location = this.value;"
+                  class="w-full px-4 py-3 border-2 border-adidas-light-gray rounded-lg focus:border-adidas-black focus:outline-none transition-colors duration-100 bg-adidas-white">
+                  <option value="{{ url()->current() . '?' . http_build_query(request()->except('authors')) }}">
+                    All Authors
+                  </option>
+                  @foreach ($authors as $author)
+                    <option value="{{ url()->current() }}?authors={{ $author->id }}"
+                      {{ in_array($author->id, (array) request('authors', [])) ? 'selected' : '' }}>
+                      {{ $author->name }}
+                    </option>
+                  @endforeach
+                </select>
+              </div>
+
+              <!-- Publishers Filter -->
+              <div class="mb-8">
+                <h3 class="text-lg font-bold text-adidas-black mb-4 uppercase tracking-wide border-b-2 border-adidas-light-gray pb-2">
+                  Publishers
+                </h3>
+                <select
+                  aria-label="Select publisher"
+                  onchange="location = this.value;"
+                  class="w-full px-4 py-3 border-2 border-adidas-light-gray rounded-lg focus:border-adidas-black focus:outline-none transition-colors duration-100 bg-adidas-white">
+                  <option value="{{ url()->current() . '?' . http_build_query(request()->except('brands')) }}">
+                    All Publishers
+                  </option>
+                  @foreach ($brands as $brand)
+                    <option value="{{ url()->current() }}?brands={{ $brand->id }}"
+                      {{ in_array($brand->id, (array) request('brands', [])) ? 'selected' : '' }}>
+                      {{ $brand->name }}
+                    </option>
+                  @endforeach
+                </select>
+              </div>
+
+              <!-- Price Filter -->
+              <div class="mb-8">
+                <h3 class="text-lg font-bold text-adidas-black mb-4 uppercase tracking-wide border-b-2 border-adidas-light-gray pb-2">
+                  Price Range
+                </h3>
+                <form method="GET" action="{{ url()->current() }}">
+                  <div class="space-y-3">
+                    <label class="flex items-center space-x-3 cursor-pointer group">
+                      <input type="radio" name="price_range" value="1-10" 
+                             {{ request('price_range') == '1-10' ? 'checked' : '' }}
+                             class="w-4 h-4 text-adidas-black focus:ring-adidas-black">
+                      <span class="text-adidas-gray group-hover:text-adidas-black transition-colors duration-100">0 - 10,000 ₫</span>
+                    </label>
+                    <label class="flex items-center space-x-3 cursor-pointer group">
+                      <input type="radio" name="price_range" value="10-50" 
+                             {{ request('price_range') == '10-50' ? 'checked' : '' }}
+                             class="w-4 h-4 text-adidas-black focus:ring-adidas-black">
+                      <span class="text-adidas-gray group-hover:text-adidas-black transition-colors duration-100">10,000 - 50,000 ₫</span>
+                    </label>
+                    <label class="flex items-center space-x-3 cursor-pointer group">
+                      <input type="radio" name="price_range" value="50-100" 
+                             {{ request('price_range') == '50-100' ? 'checked' : '' }}
+                             class="w-4 h-4 text-adidas-black focus:ring-adidas-black">
+                      <span class="text-adidas-gray group-hover:text-adidas-black transition-colors duration-100">50,000 - 100,000 ₫</span>
+                    </label>
+                    <label class="flex items-center space-x-3 cursor-pointer group">
+                      <input type="radio" name="price_range" value="100+" 
+                             {{ request('price_range') == '100+' ? 'checked' : '' }}
+                             class="w-4 h-4 text-adidas-black focus:ring-adidas-black">
+                      <span class="text-adidas-gray group-hover:text-adidas-black transition-colors duration-100">Over 100,000 ₫</span>
+                    </label>
+                  </div>
+                  <button type="submit" 
+                          class="adidas-btn w-full mt-4 bg-adidas-black text-adidas-white py-3 rounded-lg font-semibold uppercase tracking-wide hover:bg-adidas-blue transition-colors duration-100">
+                    Apply Filter
+                  </button>
+                </form>
+              </div>
+
+              <!-- Reset Filter -->
+              <div class="pt-6 border-t border-adidas-light-gray">
+                <a href="{{ url('/books') }}" 
+                   class="adidas-btn w-full block text-center bg-adidas-light-gray text-adidas-black py-3 rounded-lg font-semibold uppercase tracking-wide hover:bg-adidas-gray hover:text-adidas-white transition-colors duration-100">
+                  Reset All Filters
                 </a>
               </div>
-              <script>
-              document.querySelectorAll('.btn-wishlist').forEach(btn => {
-    btn.addEventListener('click', function(e) {
-    e.preventDefault();
 
-    if (this.disabled) return;
-
-    const button = this;
-    const bookId = button.dataset.bookId;
-
-    button.disabled = true;
-
-    fetch('/wishlist/add', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-      },
-      body: JSON.stringify({ book_id: bookId })
-    })
-    .then(res => res.json())
-    .then(data => {
-      if (data.success) {
-        toastr.success('Thêm yêu thích thành công!');
-        // Xóa class màu cũ và thêm class btn-danger (đỏ đậm)
-        button.classList.remove('btn-outline-secondary'); // hoặc class mặc định cũ
-        button.classList.add('btn-danger');
-      } else {
-        toastr.error(data.message || 'Lỗi khi thêm yêu thích!');
-
-        button.disabled = false;
-      }
-    })
-    .catch(() => {
-      alert('Lỗi kết nối server!');
-      button.disabled = false;
-    });
-  });
-});
-
-
-
-              </script>
             </div>
-          </div>
-          @endforeach
-        </div>
-
-        {{-- Phân trang --}}
-       <nav class="pagination-container d-flex justify-content-center py-4" style="margin-top:20px;">
-  <ul class="pagination" style="display:flex; list-style:none; padding-left:0; border-radius:0.375rem;">
-    {{-- Nút Prev --}}
-    @if ($books->onFirstPage())
-      <li class="page-item disabled" style="margin:0 4px;">
-        <span class="page-link" style="color:#ccc; pointer-events:none; background:#f8f9fa; border:1px solid #ddd; padding:8px 14px; font-size:1rem; border-radius:0.375rem; min-width:42px; text-align:center;">Prev</span>
-      </li>
-    @else
-      <li class="page-item" style="margin:0 4px;">
-        <a href="{{ $books->previousPageUrl() }}" class="page-link" style="color:#4a4a4a; border:1px solid #ddd; padding:8px 14px; font-size:1rem; border-radius:0.375rem; min-width:42px; text-align:center; text-decoration:none;"
-          onmouseover="this.style.backgroundColor='#0d6efd'; this.style.color='#fff'; this.style.borderColor='#0d6efd'; this.style.boxShadow='0 0 8px rgba(13,110,253,0.5)';"
-          onmouseout="this.style.backgroundColor=''; this.style.color='#4a4a4a'; this.style.borderColor='#ddd'; this.style.boxShadow='none';">Prev</a>
-      </li>
-    @endif
-
-    {{-- Các số trang --}}
-    @foreach ($books->getUrlRange(1, $books->lastPage()) as $page => $url)
-      @if ($page == $books->currentPage())
-        <li class="page-item active" aria-current="page" style="margin:0 4px;">
-          <span class="page-link" style="background:#0d6efd; border:1px solid #0d6efd; color:#fff; font-weight:600; box-shadow:0 0 8px rgba(13,110,253,0.7); padding:8px 14px; font-size:1rem; border-radius:0.375rem; min-width:42px; text-align:center;">{{ $page }}</span>
-        </li>
-      @else
-        <li class="page-item" style="margin:0 4px;">
-          <a href="{{ $url }}" class="page-link" style="color:#4a4a4a; border:1px solid #ddd; padding:8px 14px; font-size:1rem; border-radius:0.375rem; min-width:42px; text-align:center; text-decoration:none;"
-            onmouseover="this.style.backgroundColor='#0d6efd'; this.style.color='#fff'; this.style.borderColor='#0d6efd'; this.style.boxShadow='0 0 8px rgba(13,110,253,0.5)';"
-            onmouseout="this.style.backgroundColor=''; this.style.color='#4a4a4a'; this.style.borderColor='#ddd'; this.style.boxShadow='none';">{{ $page }}</a>
-        </li>
-      @endif
-    @endforeach
-
-    {{-- Nút Next --}}
-    @if ($books->hasMorePages())
-      <li class="page-item" style="margin:0 4px;">
-        <a href="{{ $books->nextPageUrl() }}" class="page-link" style="color:#4a4a4a; border:1px solid #ddd; padding:8px 14px; font-size:1rem; border-radius:0.375rem; min-width:42px; text-align:center; text-decoration:none;"
-          onmouseover="this.style.backgroundColor='#0d6efd'; this.style.color='#fff'; this.style.borderColor='#0d6efd'; this.style.boxShadow='0 0 8px rgba(13,110,253,0.5)';"
-          onmouseout="this.style.backgroundColor=''; this.style.color='#4a4a4a'; this.style.borderColor='#ddd'; this.style.boxShadow='none';">Next</a>
-      </li>
-    @else
-      <li class="page-item disabled" style="margin:0 4px;">
-        <span class="page-link" style="color:#ccc; pointer-events:none; background:#f8f9fa; border:1px solid #ddd; padding:8px 14px; font-size:1rem; border-radius:0.375rem; min-width:42px; text-align:center;">Next</span>
-      </li>
-    @endif
-  </ul>
-</nav>
-
-      </main>
-
-      {{-- Sidebar lọc --}}
-      <aside class="col-md-3">
-        <div class="sidebar ps-lg-5">
-
-          {{-- Search bar --}}
-          <div class="widget-menu">
-            <div class="widget-search-bar">
-              <form method="GET" action="{{ url()->current() }}" class="d-flex border rounded-3 p-2" role="search">
-                <input 
-                  name="search" 
-                  class="form-control border-0 me-2 py-2" 
-                  type="search" 
-                  placeholder="Search books by title or author" 
-                  aria-label="Search"
-                  value="{{ request('search') ?? '' }}">
-                <button class="btn rounded-3 p-3 d-flex align-items-center" type="submit">
-                  <svg class="search text-light" width="18" height="18">
-                    <use xlink:href="#search"></use>
-                  </svg>
-                </button>
-              </form>
-            </div>
-          </div>
-
-          {{-- Categories --}}
-          <div class="section-title overflow-hidden mb-2">
-            <h3 class="d-flex flex-column mb-3">Filter by Category</h3>
-          </div>
-          <select
-          class="form-select form-select-lg rounded-0 border border-3 border-secondary shadow
-                 hover:border-primary focus:border-primary focus:ring-3 focus:ring-primary focus:ring-opacity-50 transition duration-300 text-truncate"
-          aria-label="Select category"
-          onchange="location = this.value;"
-          style="background-image:
-            url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 4 5%27%3e%3cpath fill=%27%23666%27 d=%27M2 0L0 2h4L2 0zM2 5L0 3h4l-2 2z%27/%3e%3c/svg%3e');
-            background-repeat: no-repeat;
-            background-position: right 1rem center;
-            background-size: 8px 10px;
-            margin-bottom: 20px;">
-          
-          <option value="{{ url('/books') . '?' . http_build_query(request()->except('category')) }}"
-            {{ request()->segment(2) === null ? 'selected' : '' }}>
-            All Categories
-          </option>
-          @foreach($categories as $cat)
-            <option value="{{ url('/books/' . $cat->slug) . '?' . http_build_query(request()->except('authors', 'brands')) }}"
-              {{ request()->segment(2) == $cat->slug ? 'selected' : '' }}>
-              {{ $cat->name }}
-            </option>
-          @endforeach
-          </select>
-
-          {{-- Authors filter title --}}
-          <div class="section-title overflow-hidden mb-2">
-            <h3 class="d-flex flex-column mb-3">Filter by Author</h3>
-          </div>
-          {{-- Authors select --}}
-          <select
-          class="form-select form-select-lg rounded-0 border border-3 border-secondary shadow
-                 hover:border-primary focus:border-primary focus:ring-3 focus:ring-primary focus:ring-opacity-50 transition duration-300 text-truncate"
-          aria-label="Select author"
-          onchange="location = this.value;"
-          style="background-image:
-            url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 4 5%27%3e%3cpath fill=%27%23666%27 d=%27M2 0L0 2h4L2 0zM2 5L0 3h4l-2 2z%27/%3e%3c/svg%3e');
-            background-repeat: no-repeat;
-            background-position: right 1rem center;
-            background-size: 8px 10px;
-            margin-bottom: 20px;">
-            <option value="{{ url()->current() . '?' . http_build_query(request()->except('authors')) }}">
-              All Authors
-            </option>
-            @foreach ($authors as $author)
-              <option value="{{ url()->current() }}?authors={{ $author->id }}"
-                {{ in_array($author->id, (array) request('authors', [])) ? 'selected' : '' }}>
-                {{ $author->name }}
-              </option>
-            @endforeach
-          </select>
-
-          {{-- Publishers filter title --}}
-          <div class="section-title overflow-hidden mb-2">
-            <h3 class="d-flex flex-column mb-3">Filter by Publisher</h3>
-          </div>
-          {{-- Publishers select --}}
-          <select
-          class="form-select form-select-lg rounded-0 border border-3 border-secondary shadow
-                 hover:border-primary focus:border-primary focus:ring-3 focus:ring-primary focus:ring-opacity-50 transition duration-300 text-truncate"
-          aria-label="Select publisher"
-          onchange="location = this.value;"
-          style="background-image:
-            url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 4 5%27%3e%3cpath fill=%27%23666%27 d=%27M2 0L0 2h4L2 0zM2 5L0 3h4l-2 2z%27/%3e%3c/svg%3e');
-            background-repeat: no-repeat;
-            background-position: right 1rem center;
-            background-size: 8px 10px;
-            margin-bottom: 20px;">
-            <option value="{{ url()->current() . '?' . http_build_query(request()->except('brands')) }}">
-              All Publishers
-            </option>
-            @foreach ($brands as $brand)
-              <option value="{{ url()->current() }}?brands={{ $brand->id }}"
-                {{ in_array($brand->id, (array) request('brands', [])) ? 'selected' : '' }}>
-                {{ $brand->name }}
-              </option>
-            @endforeach
-          </select>
-
-          {{-- Price filter (tĩnh, bạn có thể chỉnh để gửi query param tương ứng) --}}
-         <div class="widget-price-filter pt-5">
-  <div class="section-title overflow-hidden mb-2">
-    <h3 class="d-flex flex-column mb-3">Filter by price</h3>
-  </div>
-  <form method="GET" action="{{ url()->current() }}">
-    <ul class="list-unstyled">
-      <li>
-        <input type="radio" name="price_range" value="1-10" id="price-1-10" {{ request('price_range') == '1-10' ? 'checked' : '' }}>
-        <label for="price-1-10">0 - 10.000 đ</label>
-      </li>
-      <li>
-        <input type="radio" name="price_range" value="10-50" id="price-10-50" {{ request('price_range') == '10-50' ? 'checked' : '' }}>
-        <label for="price-10-50">10.000 - 50.000 đ</label>
-      </li>
-      <li>
-        <input type="radio" name="price_range" value="50-100" id="price-50-100" {{ request('price_range') == '50-100' ? 'checked' : '' }}>
-        <label for="price-50-100">50.000 - 100.000 đ</label>
-      </li>
-      <li>
-        <input type="radio" name="price_range" value="100+" id="price-100+" {{ request('price_range') == '100+' ? 'checked' : '' }}>
-        <label for="price-100+">Trên 100.000 đ</label>
-      </li>
-    </ul>
-    <button type="submit" class="btn btn-primary">Apply</button>
-  </form>
-</div>
-
-{{-- Reset Filter Button --}}
-          <div class="mb-4" style="margin-top: 20px;">
-            <a href="{{ url('/books') }}" class="btn btn-outline-secondary w-100">
-              Đặt lại tìm kiếm
-            </a>
-          </div>
-
+          </aside>
 
         </div>
-      </aside>
-
+      </div>
     </div>
-  </div>
-</div>
 
+    <!-- Enhanced JavaScript for Premium Interactions -->
+    <script>
+      // Wishlist functionality with visual feedback
+      document.querySelectorAll('.btn-wishlist').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
 
-    {{-- phia sau  --}}
-   
-   <script src="https://cdn.jsdelivr.net/npm/jquery@1.11.0/dist/jquery.min.js"></script>
+          if (this.disabled) return;
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+          const button = this;
+          const bookId = button.dataset.bookId;
+          const originalHTML = button.innerHTML;
 
-<script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+          // Visual feedback
+          button.disabled = true;
+          button.innerHTML = '<svg class="w-5 h-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle><path fill="currentColor" d="m4 12a8 8 0 0 1 8-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 0 1 4 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>';
 
-<script src="{{ asset('js/script.js') }}"></script>
+          fetch('/wishlist/add', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            },
+            body: JSON.stringify({ book_id: bookId })
+          })
+          .then(res => res.json())
+          .then(data => {
+            if (data.success) {
+              button.classList.add('bg-adidas-red', 'text-adidas-white');
+              button.innerHTML = '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>';
+              showToast('Added to wishlist successfully!', 'success');
+            } else {
+              button.innerHTML = originalHTML;
+              button.disabled = false;
+              showToast(data.message || 'Error adding to wishlist!', 'error');
+            }
+          })
+          .catch(() => {
+            button.innerHTML = originalHTML;
+            button.disabled = false;
+            showToast('Connection error!', 'error');
+          });
+        });
+      });
+
+      // Simple toast notification system
+      function showToast(message, type = 'info') {
+        const toast = document.createElement('div');                        toast.className = `fixed top-4 right-4 z-50 p-4 rounded-xl shadow-lg transform transition-all duration-75 translate-x-full ${
+          type === 'success' ? 'bg-adidas-green text-white' : 
+          type === 'error' ? 'bg-adidas-red text-white' : 
+          'bg-adidas-black text-white'
+        }`;
+        toast.innerHTML = `<span class="font-semibold">${message}</span>`;
+        
+        document.body.appendChild(toast);
+        
+        setTimeout(() => toast.style.transform = 'translateX(0)', 50);
+        setTimeout(() => {
+          toast.style.transform = 'translateX(100%)';
+          setTimeout(() => document.body.removeChild(toast), 75);
+        }, 2000);
+      }
+    </script>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Toastr JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
   </body>
-
-<!-- Mirrored from demo.templatesjungle.com/bookly/shop.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 20 May 2025 06:24:41 GMT -->
 </html>
