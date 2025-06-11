@@ -71,15 +71,18 @@
                                         <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
                                             colors="primary:#121331,secondary:#08a88a" style="width:75px;height:75px">
                                         </lord-icon>
-                                        <h5 class="mt-3 text-danger">Không tìm thấy danh mục loại sách nào</h5>
-                                        <p class="text-muted">Vui lòng kiểm tra lại từ khóa hoặc thử tìm kiếm khác.</p>
+                                        <h5 class="mt-3 text-danger">Không tìm thấy danh mục phù hợp</h5>
+                                        <p class="text-muted">>Không có danh mục nào khớp với từ khóa
+                                            <strong>"{{ request()->get('search_name_category') }}"</strong>.<br>
+                                            Vui lòng kiểm tra lại từ khóa hoặc thử tìm kiếm khác.
+                                        </p>
                                     @else
                                         <lord-icon src="https://cdn.lordicon.com/nocovwne.json" trigger="loop"
                                             colors="primary:#405189,secondary:#0ab39c" style="width:100px;height:100px">
                                         </lord-icon>
-                                        <h5 class="mt-3 text-muted">Chưa có danh mục loại sách nào</h5>
+                                        <h5 class="mt-3 text-muted">Danh sách danh mục loại sách hiện đang trống</h5>
                                         <p class="text-muted">Hãy nhấn <strong>“Thêm danh mục”</strong> để bắt đầu quản
-                                            lý thư viện sách.</p>
+                                            lý danh mục loại sách.</p>
                                     @endif
                                 </div>
                             @else
