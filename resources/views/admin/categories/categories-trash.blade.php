@@ -49,8 +49,6 @@
 
                         <!-- Thanh công cụ tìm kiếm -->
                         <div class="row g-4 mb-3">
-                            <div class="col-md-6"></div>
-                            <div class="col-md-6">
                                 <form method="GET" action="{{ route('admin.categories.trash') }}"
                                     class="d-flex justify-content-md-end align-items-center gap-2">
                                     <input type="text" name="search_name_category" class="form-control"
@@ -63,7 +61,6 @@
                                         <i class="ri-refresh-line"></i> Đặt lại
                                     </a>
                                 </form>
-                            </div>
                         </div>
 
                         <!-- Bảng danh sách -->
