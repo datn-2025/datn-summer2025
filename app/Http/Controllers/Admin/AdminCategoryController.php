@@ -125,80 +125,6 @@ class AdminCategoryController extends Controller
         }
     }
 
-    // public function softDelete($id)
-    // {
-    //     try {
-    //         $category = Category::findOrFail($id);
-    //         $category->delete();
-
-    //         return response()->json([
-    //             'success' => true,
-    //             'message' => 'Đã chuyển danh mục vào thùng rác!'
-    //         ]);
-    //     } catch (\Exception $e) {
-    //         report($e);
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => 'Không thể xóa danh mục này.'
-    //         ], 500);
-    //     }
-    // }
-
-    // public function forceDelete($id)
-    // {
-    //     try {
-    //         $category = Category::withTrashed()->findOrFail($id);
-
-    //         if ($category->books()->exists()) {
-    //             return response()->json([
-    //                 'success' => false,
-    //                 'message' => 'Không thể xóa danh mục đang có sách.'
-    //             ], 422);
-    //         }
-
-    //         if ($category->image) {
-    //             Storage::disk('public')->delete($category->image);
-    //         }
-
-    //         $category->forceDelete();
-
-    //         return response()->json([
-    //             'success' => true,
-    //             'message' => 'Đã xóa vĩnh viễn danh mục!'
-    //         ]);
-    //     } catch (\Exception $e) {
-    //         report($e);
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => 'Đã xảy ra lỗi khi xóa danh mục.'
-    //         ], 500);
-    //     }
-    // }
-
-    // public function trash(Request $request)
-    // {
-    //     try {
-    //         $query = Category::onlyTrashed();
-
-    //         if (!empty($request['search_name'])) {
-    //             $query->where('name', 'like', '%' . $request['search_name'] . '%');
-    //         }
-
-    //         $deletedCategories = $query->withCount('books')->paginate(10);
-    //         // Giữ lại tham số tìm kiếm khi phân trang
-    //         $deletedCategories->appends(['search_name' => $request['search_name']]);
-
-    //         return view('admin.categories.categories-trash', [
-    //             'deletedCategories' => $deletedCategories,
-    //             'searchName' => $request['search_name'] ?? ''
-    //         ]);
-    //     } catch (\Throwable $e) {
-    //         report($e);
-    //         toastr()->error('Lỗi khi truy vấn danh mục đã xóa. Vui lòng thử lại sau.');
-    //         return back();
-    //     }
-    // }
-
     public function trash(Request $request)
     {
         try {
@@ -206,8 +132,8 @@ class AdminCategoryController extends Controller
             $query = Category::onlyTrashed();
             Log::info('Sau onlyTrashed');
 
-            if (!empty($request['search_name'])) {
-                $query->where('name', 'like', '%' . $request['search_name'] . '%');
+            if (!empty($request['search_name_category'])) {
+                $query->where('name', 'like', '%' . $request['search_name_category'] . '%');
             }
 
             $deletedCategories = $query->withCount('books')->paginate(10);
@@ -231,12 +157,6 @@ class AdminCategoryController extends Controller
     public function destroy(Category $category)
     {
         try {
-            // Kiểm tra xem tác giả có sách nào không
-            // if ($category->books()->count() > 0) {
-            //     toastr()->error('Không thể xóa danh mục đang có sách trong hệ thống.');
-            //     return back();
-            // }
-
             $category->delete();
             toastr()->success('Danh mục đã được xóa tạm thời thành công.');
             return back();

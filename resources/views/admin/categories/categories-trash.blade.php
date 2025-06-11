@@ -52,7 +52,7 @@
                     <div class="col-md-6">
                         <form action="{{ route('admin.categories.trash') }}" method="GET"
                               class="d-flex justify-content-md-end align-items-center gap-2">
-                            <input type="text" name="search_name" class="form-control"
+                            <input type="text" name="search_name_category" class="form-control"
                                    placeholder="Tìm theo tên danh mục"
                                    value="{{ $searchName ?? '' }}" style="width: 220px;">
                             <button type="submit" class="btn btn-primary px-4">
