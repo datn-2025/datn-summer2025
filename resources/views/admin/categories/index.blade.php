@@ -65,14 +65,17 @@
 
                         <!-- Bảng danh mục -->
                         <div class="table-responsive table-card mt-3 mb-1">
-                            @if ($categories->isEmpty())
+                             @if ($categories->isEmpty())
                                 <div class="noresult text-center">
-                                    <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
-                                        colors="primary:#121331,secondary:#08a88a" style="width:75px;height:75px">
-                                    </lord-icon>
                                     @if (request()->has('search_name_category') && request()->filled('search_name_category'))
+                                        <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
+                                            colors="primary:#121331,secondary:#08a88a" style="width:75px;height:75px">
+                                        </lord-icon>
                                         <h5 class="mt-2">Không tìm thấy danh mục nào</h5>
                                     @else
+                                        <lord-icon src="https://cdn.lordicon.com/nocovwne.json" trigger="loop"
+                                            colors="primary:#405189,secondary:#0ab39c" style="width:100px;height:100px">
+                                        </lord-icon>
                                         <h5 class="mt-2">Chưa có danh mục nào</h5>
                                     @endif
                                 </div>
