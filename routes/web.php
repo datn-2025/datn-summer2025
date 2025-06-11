@@ -24,11 +24,12 @@ use App\Http\Controllers\Wishlists\WishlistController;
 use App\Http\Controllers\Contact\ContactController;
 use App\Http\Controllers\Article\NewsController;
 use App\Http\Controllers\Admin\NewsArticleController;
-use App\Http\Controllers\Client\UserClientController;
-use App\Http\Controllers\Client\ClientReviewController;
-use App\Http\Controllers\Client\ClientOrderController;
+use App\Http\Controllers\Admin\PaymentMethodController;
 use App\Http\Controllers\cart\CartController;
 use App\Livewire\RevenueReport;
+use App\Http\Controllers\Client\ClientOrderController;
+use App\Http\Controllers\Client\ClientReviewController;
+use App\Http\Controllers\Client\UserClientController;
 
 // Route QR code
 Route::get('storage/private/{filename}', function ($filename) {
@@ -86,7 +87,6 @@ Route::post('/forgot-password', [LoginController::class, 'sendResetLinkEmail'])-
 Route::get('/reset-password/{token}/{email}', [LoginController::class, 'showResetPasswordForm'])->name('password.reset');
 Route::post('/reset-password', [LoginController::class, 'handleResetPassword'])->name('password.update');
 
-
 //------------------------------------------------------
 // Ai fix đi nhó
 Route::prefix('account')->name('account.')->group(function () {
@@ -124,7 +124,7 @@ Route::middleware('auth')->prefix('account')->name('account.')->group(function (
 // lỗi nè
     return redirect()->route('admin.orders.show', $order->id)->with('success', 'QR Code generated successfully!');
 });   
-    
+
 // Route đăng nhập chỉnh ở đây nha, sửa thì sửa vào đây, không được xóa có gì liên hệ Tuyết
 Route::middleware('auth')->group(function () {
     // Đăng xuất
@@ -147,7 +147,7 @@ Route::middleware('auth')->group(function () {
             Route::delete('/{id}', [ClientReviewController::class, 'destroy'])->name('destroy');
         });
     });
-    // Đơn hàng checkout và store
+    // Đơn hàng checkout và storex
     Route::prefix('orders')->name('orders.')->group(function () {
         Route::get('/', [\App\Http\Controllers\OrderController::class, 'index'])->name('index');
         Route::get('/checkout', [\App\Http\Controllers\OrderController::class, 'checkout'])->name('checkout');
@@ -173,6 +173,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 });
 //---------------------------------------------------
 
+
 // Route đăng nhập admin (chỉ cho khách)
 Route::middleware('guest.admin')->group(function () {
     Route::get('/admin/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
@@ -182,6 +183,8 @@ Route::middleware(['auth:admin', 'admin'])->prefix('admin')->name('admin.')->gro
     Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
 
     Route::get('/', [AdminDashboard::class, 'index'])->name('dashboard');
+     Route::get('/revenue-report', RevenueReport::class)->name('revenue-report');
+    Route::get('/balance-chart', BalanceChart::class)->name('balance-chart');
 
     // Route admin/contacts
     Route::resource('contacts', \App\Http\Controllers\Admin\ContactController::class);
@@ -329,8 +332,6 @@ Route::middleware(['auth:admin', 'admin'])->prefix('admin')->name('admin.')->gro
         Route::put('/{article}', [NewsArticleController::class, 'update'])->name('update');
         Route::delete('/{article}', [NewsArticleController::class, 'destroy'])->name('destroy');
     });
-
-
     // Route admin/orders
     Route::prefix('orders')->name('orders.')->group(function () {
         Route::get('/', [OrderController::class, 'index'])->name('index');
