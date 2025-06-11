@@ -65,18 +65,21 @@
 
                         <!-- Bảng danh mục -->
                         <div class="table-responsive table-card mt-3 mb-1">
-                             @if ($categories->isEmpty())
-                                <div class="noresult text-center">
+                            @if ($categories->isEmpty())
+                                <div class="noresult text-center py-5">
                                     @if (request()->has('search_name_category') && request()->filled('search_name_category'))
                                         <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
                                             colors="primary:#121331,secondary:#08a88a" style="width:75px;height:75px">
                                         </lord-icon>
-                                        <h5 class="mt-2">Không tìm thấy danh mục nào</h5>
+                                        <h5 class="mt-3 text-danger">Không tìm thấy danh mục loại sách nào</h5>
+                                        <p class="text-muted">Vui lòng kiểm tra lại từ khóa hoặc thử tìm kiếm khác.</p>
                                     @else
                                         <lord-icon src="https://cdn.lordicon.com/nocovwne.json" trigger="loop"
                                             colors="primary:#405189,secondary:#0ab39c" style="width:100px;height:100px">
                                         </lord-icon>
-                                        <h5 class="mt-2">Chưa có danh mục nào</h5>
+                                        <h5 class="mt-3 text-muted">Chưa có danh mục loại sách nào</h5>
+                                        <p class="text-muted">Hãy nhấn <strong>“Thêm danh mục”</strong> để bắt đầu quản
+                                            lý thư viện sách.</p>
                                     @endif
                                 </div>
                             @else
