@@ -4,11 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Toastr;
 
 class AdminCategoryController extends Controller
 {
@@ -68,13 +68,12 @@ class AdminCategoryController extends Controller
             }
 
             Category::create($categoryData);
-
-            return redirect()->route('admin.categories.index')
-                ->with('success', 'Thêm mới danh mục thành công!');
+            Toastr::success('Thêm mới danh mục thành công!');
+            return redirect()->route('admin.categories.index');
         } catch (\Throwable $e) {
             Log::error('Lỗi khi thêm danh mục: ' . $e->getMessage());
-            return back()->with('error', 'Đã xảy ra lỗi khi thêm danh mục. Vui lòng thử lại sau.')
-                ->withInput();
+            Toastr::error('Đã xảy ra lỗi khi thêm danh mục. Vui lòng thử lại sau.');
+            return back()->withInput();
         }
     }
 
