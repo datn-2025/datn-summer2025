@@ -107,7 +107,7 @@
                                                         <img src="{{ asset('storage/' . $category->image) }}"
                                                             alt="{{ $category->name }}" width="50">
                                                     @else
-                                                        <span class="text-muted fst-italic">Không có ảnh</span>
+                                                        <span class="text-muted">Không có ảnh</span>
                                                     @endif
                                                 </td>
                                                 <td class="text-center">{{ $category->books_count }} quyển</td>
