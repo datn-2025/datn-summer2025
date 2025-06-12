@@ -3,94 +3,43 @@
     data-sidebar-image="none">
 
 <head>
+    <!-- Meta & Title -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta content="BookBee Admin Dashboard" name="description" />
     <meta content="Your Team" name="author" />
     <title>BookBee Admin - @yield('title')</title>
-
-    <!-- App favicon -->
     <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico') }}">
 
-    <!-- jsvectormap css -->
-    <link href="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/css/jsvectormap.min.css" rel="stylesheet"
-        type="text/css" />
+    <!-- Core CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="{{ asset('assets/css/app.min.css') }}" rel="stylesheet" />
+    <link href="{{ asset('assets/css/custom.min.css') }}" rel="stylesheet" />
 
-    <!-- jQuery -->
+    <!-- Icon Fonts -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@7.3.67/css/materialdesignicons.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+    <link href="https://cdn.lineawesome.com/1.3.0/line-awesome/css/line-awesome.min.css" rel="stylesheet" />
+
+    <!-- Plugin CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/css/jsvectormap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+
+    <!-- JS Libraries -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Toastr CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
-
-    <!-- Toastr JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-
-    <script>
-        // Cấu hình toastr
-        toastr.options = {
-            "closeButton": true,
-            "progressBar": true,
-            "positionClass": "toast-top-right",
-            "timeOut": "3000",
-            "extendedTimeOut": "1000",
-            "preventDuplicates": true,
-            "showDuration": "300",
-            "hideDuration": "1000",
-            "showEasing": "swing",
-            "hideEasing": "linear",
-            "showMethod": "fadeIn",
-            "hideMethod": "fadeOut"
-        };
-
-        // Hiển thị thông báo từ session
-        @if(session('success'))
-            toastr.success("{{ session('success') }}");
-        @endif
-
-        @if(session('error'))
-            toastr.error("{{ session('error') }}");
-        @endif
+    <script src="//unpkg.com/alpinejs" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js">
     </script>
-
-    <!-- Layout config Js -->
     <script src="{{ asset('assets/js/layout.js') }}"></script>
 
-    <!-- Bootstrap Css -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        type="text/css" />
-    <!-- Icons Css -->
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@7.3.67/css/materialdesignicons.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
-    <!-- App Css-->
-    <link href="{{ asset('assets/css/app.min.css') }}" rel="stylesheet" type="text/css" />
-    <!-- custom Css-->
-    <link href="{{ asset('assets/css/custom.min.css') }}" rel="stylesheet" type="text/css" />
-
-    {{-- Toastr CSS đã được tải ở head --}}
-
-    <!--Swiper slider css-->
-    <link href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" rel="stylesheet" type="text/css" />
-    <script src="//unpkg.com/alpinejs" defer></script>
-
-    <!-- Line Awesome Icons -->
-    <link rel="stylesheet" href="https://cdn.lineawesome.com/1.3.0/line-awesome/css/line-awesome.min.css">
-
-    <style>
-        .collapse.show+a .toggle-icon,
-        .nav-link[aria-expanded="true"] .toggle-icon {
-            transform: rotate(180deg);
-            transition: transform 0.3s ease;
-        }
-    </style>
-    {{-- TinyMCE --}}
+    <!-- TinyMCE -->
     <script src="https://cdn.jsdelivr.net/npm/tinymce@6/tinymce.min.js"></script>
-    <<script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
     <script>
         tinymce.init({
             selector: '#description, #content',
@@ -101,7 +50,44 @@
             placeholder: 'Nhập mô tả chi tiết...'
         });
     </script>
+
+    <!-- Toastr Config -->
+    <script>
+        toastr.options = {
+            closeButton: true,
+            progressBar: true,
+            positionClass: "toast-top-right",
+            timeOut: "3000",
+            extendedTimeOut: "1000",
+            preventDuplicates: true,
+            showDuration: "300",
+            hideDuration: "1000",
+            showEasing: "swing",
+            hideEasing: "linear",
+            showMethod: "fadeIn",
+            hideMethod: "fadeOut"
+        };
+
+        @if (session('success'))
+            toastr.success("{{ session('success') }}");
+        @endif
+
+        @if (session('error'))
+            toastr.error("{{ session('error') }}");
+        @endif
+    </script>
+
+    <!-- Custom inline styles -->
+    <style>
+        .collapse.show+a .toggle-icon,
+        .nav-link[aria-expanded="true"] .toggle-icon {
+            transform: rotate(180deg);
+            transition: transform 0.3s ease;
+        }
+    </style>
+
     @livewireStyles
+
 </head>
 
 <body>
@@ -520,8 +506,10 @@
                                     <img class="rounded-circle header-profile-user"
                                         src="{{ asset('assets/images/users/avatar-1.jpg') }}" alt="Header Avatar">
                                     <span class="text-start ms-xl-2">
-                                        <span class="d-none d-xl-inline-block ms-1 fw-medium user-name-text">{{ auth()->user()->name }}</span>
-                                        <span class="d-none d-xl-block ms-1 fs-12 user-name-sub-text">{{ auth()->user()->email }}</span>
+                                        <span
+                                            class="d-none d-xl-inline-block ms-1 fw-medium user-name-text">{{ auth()->user()->name }}</span>
+                                        <span
+                                            class="d-none d-xl-block ms-1 fs-12 user-name-sub-text">{{ auth()->user()->email }}</span>
                                     </span>
                                 </span>
                             </button>
@@ -607,7 +595,7 @@
                     </span>
                 </a>
                 <!-- Light Logo-->
-                <a href="{{route('admin.dashboard')}}" class="logo logo-light">
+                <a href="{{ route('admin.dashboard') }}" class="logo logo-light">
                     <span class="logo-sm">
                         <img src="{{ asset('assets/images/logo-sm.png') }}" alt="" height="22">
                     </span>
@@ -629,7 +617,7 @@
                     <ul class="navbar-nav" id="navbar-nav">
                         <li class="menu-title"><span data-key="t-menu">Menu</span></li>
                         <li class="nav-item">
-                            <a class="nav-link menu-link" href="{{route('admin.dashboard')}}">
+                            <a class="nav-link menu-link" href="{{ route('admin.dashboard') }}">
                                 <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Báo cáo tổng
                                     quan</span>
                             </a>
@@ -670,7 +658,7 @@
                             <div class="collapse menu-dropdown" id="sidebarCate">
                                 <ul class="nav nav-sm flex-column">
                                     <li class="nav-item">
-                                        <a href="{{route('admin.categories.index')}}" class="nav-link"
+                                        <a href="{{ route('admin.categories.index') }}" class="nav-link"
                                             data-key="t-chat"> Loại sách </a>
                                     </li>
                                     <li class="nav-item">
@@ -679,7 +667,7 @@
                                     </li>
 
                                     <li class="nav-item">
-                                        <a href="{{route('admin.categories.brands.brand')}}" class="nav-link"
+                                        <a href="{{ route('admin.categories.brands.brand') }}" class="nav-link"
                                             data-key="t-chat"> Thương hiệu </a>
                                     </li>
                                 </ul>
@@ -687,14 +675,14 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link menu-link" href="{{route('admin.orders.index')}}">
+                            <a class="nav-link menu-link" href="{{ route('admin.orders.index') }}">
                                 <i class="ri-pages-line"></i> <span data-key="t-pages">Quản lý đơn hàng</span>
                             </a>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link menu-link" href="#sidebarNews" data-bs-toggle="collapse" role="button"
-                                aria-expanded="false" aria-controls="sidebarNews">
+                            <a class="nav-link menu-link" href="#sidebarNews" data-bs-toggle="collapse"
+                                role="button" aria-expanded="false" aria-controls="sidebarNews">
                                 <i class="ri-newspaper-line"></i> <span data-key="t-news">Quản lý tin tức</span>
                             </a>
                             <div class="collapse menu-dropdown" id="sidebarNews">
@@ -710,7 +698,7 @@
                                 </ul>
                             </div>
                         </li>
-                        
+
                         <li class="nav-item">
                             <a class="nav-link menu-link" href="#sidebarContacts" data-bs-toggle="collapse"
                                 role="button" aria-expanded="false" aria-controls="sidebarContacts">
@@ -762,16 +750,16 @@
                             <div class="collapse menu-dropdown" id="sidebarForms">
                                 <ul class="nav nav-sm flex-column">
                                     <li class="nav-item">
-                                        <a href="{{route('admin.payment-methods.index')}}" class="nav-link"
+                                        <a href="{{ route('admin.payment-methods.index') }}" class="nav-link"
                                             data-key="t-basic-elements">Danh
                                             sách</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="{{route('admin.payment-methods.create')}}" class="nav-link"
+                                        <a href="{{ route('admin.payment-methods.create') }}" class="nav-link"
                                             data-key="t-form-select"> Thêm </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="{{route('admin.payment-methods.history')}}" class="nav-link"
+                                        <a href="{{ route('admin.payment-methods.history') }}" class="nav-link"
                                             data-key="t-form-select"> Lịch sử thanh toán </a>
                                     </li>
                                 </ul>
@@ -1533,56 +1521,23 @@
         </div>
     </div>
 
-    {{-- định dang sách from thêm sách --}}
-    <!-- JAVASCRIPT -->
-    {{-- Bootstrap JS (bundle.min.js) đã được tải ở head --}}
+    {{-- ================= PLUGIN JS ================= --}}
     <script src="https://cdn.jsdelivr.net/npm/simplebar@6.2.5/dist/simplebar.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.29.1/dist/feather.min.js"></script>
-    <script src="{{ asset('assets/js/pages/plugins/lord-icon-2.1.0.js') }}"></script>
-    <script src="{{ asset('assets/js/plugins.js') }}"></script>
-
-    <!-- apexcharts -->
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.45.1/dist/apexcharts.min.js"></script>
-
-    <!-- Vector map-->
-    <script src="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/js/jsvectormap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/maps/world-merc.js"></script>
-
-    <!--Swiper slider js-->
-    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
-
-    <!-- Dashboard init -->
-    <script src="{{ asset('assets/js/pages/dashboard-ecommerce.init.js') }}"></script>
-
-    <!-- App js -->
-    <script src="{{ asset('assets/js/app.js') }}"></script>
-        <script src="{{asset('assets/js/custom.js')}}"></script>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/2.3.1/list.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/list.pagination.js/0.1.1/list.pagination.min.js"></script>
-
-    <!-- listjs init -->
-
-    <!-- Sweet Alerts js -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.5/dist/sweetalert2.all.min.js"></script>
 
-    {{-- toastr notification --}}
-    {{-- jQuery (3.7.1) và Toastr JS đã được tải ở head --}}
-    {!! Toastr::message() !!}
-    <script>
-        // Nếu trang được tải từ bộ nhớ cache (back/forward)
-        if (performance.getEntriesByType('navigation')[0]?.type === 'back_forward') {
-            // Xóa Toastr message hiện lại từ session cũ
-            const toastrContainer = document.querySelector('#toast-container');
-            if (toastrContainer) {
-                toastrContainer.remove();
-            }
-        }
-    </script>
+    {{-- ================= VECTOR MAP ================= --}}
+    <script src="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/js/jsvectormap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/maps/world-merc.js"></script>
 
+    {{-- ================= APEXCHART ================= --}}
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.45.1/dist/apexcharts.min.js"></script>
 
+    {{-- ================= SWIPER SLIDER ================= --}}
     <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
     <script>
         const thumbnailSlider = new Swiper(".thumbnail-slider", {
@@ -1591,9 +1546,15 @@
             freeMode: true,
             watchSlidesProgress: true,
             breakpoints: {
-                640: { slidesPerView: 4 },
-                768: { slidesPerView: 5 },
-                1024: { slidesPerView: 6 },
+                640: {
+                    slidesPerView: 4
+                },
+                768: {
+                    slidesPerView: 5
+                },
+                1024: {
+                    slidesPerView: 6
+                },
             },
         });
 
@@ -1604,13 +1565,32 @@
                 prevEl: ".swiper-button-prev"
             },
             thumbs: {
-                swiper: thumbnailSlider,
+                swiper: thumbnailSlider
             },
         });
     </script>
 
-    @yield('scripts')
+    {{-- ================= CORE SCRIPTS ================= --}}
+    <script src="{{ asset('assets/js/pages/plugins/lord-icon-2.1.0.js') }}"></script>
+    <script src="{{ asset('assets/js/plugins.js') }}"></script>
+    <script src="{{ asset('assets/js/pages/dashboard-ecommerce.init.js') }}"></script>
+    <script src="{{ asset('assets/js/app.js') }}"></script>
+    <script src="{{ asset('assets/js/custom.js') }}"></script>
+
+    {{-- ================= TOASTR + CLEAN SESSION ================= --}}
+    {!! Toastr::message() !!}
+    <script>
+        if (performance.getEntriesByType('navigation')[0]?.type === 'back_forward') {
+            const toastrContainer = document.querySelector('#toast-container');
+            if (toastrContainer) {
+                toastrContainer.remove();
+            }
+        }
+    </script>
+
+    {{-- ================= LIVEWIRE + YIELD ================= --}}
     @livewireScripts
+    @yield('scripts')
     @stack('scripts')
 </body>
 
