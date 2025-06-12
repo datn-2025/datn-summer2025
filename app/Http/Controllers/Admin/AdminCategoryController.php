@@ -155,7 +155,7 @@ class AdminCategoryController extends Controller
             $incoming = Arr::only($categoryData, ['name', 'description']);
 
             if ($original === $incoming && !$hasImageChanged) {
-                Toastr::info('Không có thay đổi nào được thực hiện.');
+                Toastr::info('Không có thay đổi nào cho danh mục.');
                 return redirect()->route('admin.categories.index');
             }
 
