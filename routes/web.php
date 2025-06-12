@@ -24,6 +24,7 @@ use App\Http\Controllers\Contact\ContactController;
 use App\Http\Controllers\Article\NewsController;
 use App\Http\Controllers\Admin\NewsArticleController;
 use App\Http\Controllers\Admin\PaymentMethodController;
+use App\Http\Controllers\Admin\WalletController;
 use App\Livewire\RevenueReport;
 use App\Http\Controllers\cart\CartController;
 use App\Http\Controllers\Client\ClientOrderController;
@@ -130,6 +131,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/history', [AdminPaymentMethodController::class, 'history'])->name('history');
         Route::put('/{id}/status', [AdminPaymentMethodController::class, 'updateStatus'])
             ->name('updateStatus');
+    });
+    
+    Route::prefix('wallets')->name('wallets.')->group(function () {
+        Route::get('/', [WalletController::class, 'index'])->name('index');
+        Route::get('/{wallet}', [WalletController::class, 'show'])->name('show');
     });
 
     // Route admin/categories
@@ -311,7 +317,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     //     Route::put('/{paymentMethod}/restore', [PaymentMethodController::class, 'restore'])->name('restore');
     //     Route::delete('/{paymentMethod}/force-delete', [PaymentMethodController::class, 'forceDelete'])->name('force-delete');
     // });
-  
+
     // Route admin/categories
     Route::prefix('categories')->name('categories.')->group(function () {
         Route::get('/', [CategoryController::class, 'index'])->name('index');
