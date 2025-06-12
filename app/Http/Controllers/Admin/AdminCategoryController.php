@@ -87,9 +87,9 @@ class AdminCategoryController extends Controller
         return view('admin.categories.edit', compact('category'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $slug)
     {
-        $category = Category::findOrFail($id);
+        $category = Category::where('slug', $slug)->firstOrFail();
 
         $validated = $request->validate([
             'name'          => 'required|string|max:255|unique:categories,name,' . $id,
