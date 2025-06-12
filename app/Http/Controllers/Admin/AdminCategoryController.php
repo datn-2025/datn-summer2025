@@ -93,7 +93,7 @@ class AdminCategoryController extends Controller
 
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:categories,name,' . $id,
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimetypes:image/jpeg,image/png,image/jpg,image/gif|max:2048',
             'description' => 'nullable|string|max:800',
             'remove_image' => 'nullable|boolean'
         ], [
