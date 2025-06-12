@@ -369,195 +369,159 @@
         </div><!-- /.modal -->
         <!-- ========== App Menu ========== -->
         <div class="app-menu navbar-menu">
-            <!-- LOGO -->
+            <!-- Logo -->
             <div class="navbar-brand-box">
-                <!-- Dark Logo-->
-                <a href="{{ route('admin.dashboard') }}" class="logo logo-dark">
-                    <span class="logo-sm">
-                        <img src="/images/logo-admin-layout-login.png" alt="" height="22">
-                    </span>
-                    <span class="logo-lg">
-                        <img src="/images/logo-admin-layout-login.png" alt="" height="17">
-                    </span>
-                </a>
-                <!-- Light Logo-->
-                <a href="{{ route('admin.dashboard') }}" class="logo logo-light">
-                    <span class="logo-sm">
-                        <img src="/images/logo-admin-layout-login.png" alt="" height="42">
-                    </span>
-                    <span class="logo-lg">
-                        <img src="/images/logo-admin-layout-login.png" alt="" height="37">
-                    </span>
-                </a>
+                @foreach (['dark', 'light'] as $mode)
+                    <a href="{{ route('admin.dashboard') }}" class="logo logo-{{ $mode }}">
+                        <span class="logo-sm">
+                            <img src="/images/logo-admin-layout-login.png" alt="Logo nhỏ"
+                                height="{{ $mode === 'dark' ? 12 : 42 }}">
+                        </span>
+                        <span class="logo-lg">
+                            <img src="/images/logo-admin-layout-login.png" alt="Logo lớn"
+                                height="{{ $mode === 'dark' ? 17 : 37 }}">
+                        </span>
+                    </a>
+                @endforeach
+
                 <button type="button" class="btn btn-sm p-0 fs-20 header-item float-end btn-vertical-sm-hover"
                     id="vertical-hover">
                     <i class="ri-record-circle-line"></i>
                 </button>
             </div>
-            {{-- Sidebar --}}
+
+            <!-- Sidebar content -->
             <div id="scrollbar">
                 <div class="container-fluid">
-
-                    <div id="two-column-menu">
-                    </div>
+                    <div id="two-column-menu"></div>
                     <ul class="navbar-nav" id="navbar-nav">
                         <li class="menu-title"><span data-key="t-menu">Menu</span></li>
+
                         <li class="nav-item">
                             <a class="nav-link menu-link" href="{{ route('admin.dashboard') }}">
                                 <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Báo cáo tổng
                                     quan</span>
                             </a>
-                        </li> <!-- end Dashboard Menu -->
+                        </li>
 
                         <li class="nav-item">
                             <a class="nav-link menu-link" href="{{ route('admin.users.index') }}">
                                 <i class="ri-account-circle-line"></i> <span data-key="t-authentication">Quản lý người
-                                    dùng </span>
+                                    dùng</span>
                             </a>
                         </li>
+
+                        <!-- Quản lý sản phẩm -->
                         <li class="nav-item">
                             <a class="nav-link menu-link" href="#sidebarApps" data-bs-toggle="collapse"
-                                role="button" aria-expanded="false" aria-controls="sidebarApps">
+                                aria-expanded="false">
                                 <i class="ri-apps-2-line"></i> <span data-key="t-apps">Quản lý sản phẩm</span>
                             </a>
                             <div class="collapse menu-dropdown" id="sidebarApps">
                                 <ul class="nav nav-sm flex-column">
-                                    <li class="nav-item">
-
-                                        <a href="{{ route('admin.books.index') }}" class="nav-link"
-                                            data-key="t-chat">
-                                            Danh sách </a>
+                                    <li><a href="{{ route('admin.books.index') }}" class="nav-link">Danh sách</a>
                                     </li>
-                                    <li class="nav-item">
-                                        <a href="{{ route('admin.attributes.index') }}" class="nav-link"> <span
-                                                data-key="t-file-manager">Thuộc tính</span></a>
-                                    </li>
+                                    <li><a href="{{ route('admin.attributes.index') }}" class="nav-link">Thuộc
+                                            tính</a></li>
                                 </ul>
                             </div>
                         </li>
+
+                        <!-- Quản lý danh mục -->
                         <li class="nav-item">
                             <a class="nav-link menu-link" href="#sidebarCate" data-bs-toggle="collapse"
-                                role="button" aria-expanded="false" aria-controls="sidebarCate">
-                                <i class="ri-apps-2-line"></i> <span data-key="t-apps">Quản lý danh mục sản
+                                aria-expanded="false">
+                                <i class="ri-apps-2-line"></i> <span data-key="t-categories">Quản lý danh mục sản
                                     phẩm</span>
                             </a>
                             <div class="collapse menu-dropdown" id="sidebarCate">
                                 <ul class="nav nav-sm flex-column">
-                                    <li class="nav-item">
-                                        <a href="{{ route('admin.categories.index') }}" class="nav-link"
-                                            data-key="t-chat"> Loại sách </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="{{ route('admin.categories.authors.index') }}" class="nav-link"
-                                            data-key="t-chat"> Tác giả </a>
-                                    </li>
-
-                                    <li class="nav-item">
-                                        <a href="{{ route('admin.categories.brands.brand') }}" class="nav-link"
-                                            data-key="t-chat"> Thương hiệu </a>
-                                    </li>
+                                    <li><a href="{{ route('admin.categories.index') }}" class="nav-link">Loại
+                                            sách</a></li>
+                                    <li><a href="{{ route('admin.categories.authors.index') }}" class="nav-link">Tác
+                                            giả</a></li>
+                                    <li><a href="{{ route('admin.categories.brands.brand') }}"
+                                            class="nav-link">Thương hiệu</a></li>
                                 </ul>
                             </div>
                         </li>
 
+                        <!-- Đơn hàng -->
                         <li class="nav-item">
                             <a class="nav-link menu-link" href="{{ route('admin.orders.index') }}">
-                                <i class="ri-pages-line"></i> <span data-key="t-pages">Quản lý đơn hàng</span>
+                                <i class="ri-pages-line"></i> <span data-key="t-orders">Quản lý đơn hàng</span>
                             </a>
                         </li>
 
+                        <!-- Tin tức -->
                         <li class="nav-item">
                             <a class="nav-link menu-link" href="#sidebarNews" data-bs-toggle="collapse"
-                                role="button" aria-expanded="false" aria-controls="sidebarNews">
+                                aria-expanded="false">
                                 <i class="ri-newspaper-line"></i> <span data-key="t-news">Quản lý tin tức</span>
                             </a>
                             <div class="collapse menu-dropdown" id="sidebarNews">
                                 <ul class="nav nav-sm flex-column">
-                                    <li class="nav-item">
-                                        <a href="{{ route('admin.news.index') }}" class="nav-link"
-                                            data-key="t-news-list">Danh sách</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="{{ route('admin.news.create') }}" class="nav-link"
-                                            data-key="t-news-create">Thêm mới</a>
-                                    </li>
+                                    <li><a href="{{ route('admin.news.index') }}" class="nav-link">Danh sách</a></li>
+                                    <li><a href="{{ route('admin.news.create') }}" class="nav-link">Thêm mới</a></li>
                                 </ul>
                             </div>
                         </li>
 
+                        <!-- Liên hệ -->
                         <li class="nav-item">
                             <a class="nav-link menu-link" href="#sidebarContacts" data-bs-toggle="collapse"
-                                role="button" aria-expanded="false" aria-controls="sidebarContacts">
-                                <i class="ri-mail-line"></i> <!-- icon thư, bạn có thể đổi icon khác -->
-                                <span data-key="t-contacts">Quản lý liên hệ</span>
+                                aria-expanded="false">
+                                <i class="ri-mail-line"></i> <span data-key="t-contacts">Quản lý liên hệ</span>
                             </a>
                             <div class="collapse menu-dropdown" id="sidebarContacts">
                                 <ul class="nav nav-sm flex-column">
-                                    <li class="nav-item">
-                                        <a href="{{ route('admin.contacts.index') }}" class="nav-link"
-                                            data-key="t-contacts-list">
-                                            Danh sách liên hệ
-                                        </a>
-                                    </li>
-
+                                    <li><a href="{{ route('admin.contacts.index') }}" class="nav-link">Danh sách liên
+                                            hệ</a></li>
                                 </ul>
                             </div>
                         </li>
+
+                        <!-- Khuyến mãi -->
                         <li class="nav-item">
                             <a class="nav-link menu-link" href="#sidebarAdvanceUI" data-bs-toggle="collapse"
-                                role="button" aria-expanded="false" aria-controls="sidebarAdvanceUI">
-
-                                <i class="ri-stack-line"></i> <span data-key="t-advance-ui">Quản lý khuyến mãi toàn
-                                    nền
-                                    tảng</span>
+                                aria-expanded="false">
+                                <i class="ri-stack-line"></i> <span data-key="t-promotions">Quản lý khuyến mãi toàn
+                                    nền tảng</span>
                             </a>
                             <div class="collapse menu-dropdown" id="sidebarAdvanceUI">
                                 <ul class="nav nav-sm flex-column">
-                                    <li class="nav-item">
-                                        <a href="{{ route('admin.vouchers.index') }}" class="nav-link">Danh sách</a>
+                                    <li><a href="{{ route('admin.vouchers.index') }}" class="nav-link">Danh sách</a>
                                     </li>
-                                    <li class="nav-item">
-
-                                        <a href="advance-ui-nestable.html" class="nav-link"
-                                            data-key="t-nestable-list">
-                                            Thêm</a>
-
-                                    </li>
+                                    <li><a href="advance-ui-nestable.html" class="nav-link">Thêm</a></li>
                                 </ul>
                             </div>
                         </li>
 
+                        <!-- Thanh toán -->
                         <li class="nav-item">
                             <a class="nav-link menu-link" href="#sidebarForms" data-bs-toggle="collapse"
-                                role="button" aria-expanded="false" aria-controls="sidebarForms">
-                                <i class="ri-file-list-3-line"></i> <span data-key="t-forms">Quản lý thanh toán và
-                                    phương thức thanh toán</span>
+                                aria-expanded="false">
+                                <i class="ri-file-list-3-line"></i> <span data-key="t-payments">Thanh toán & phương
+                                    thức</span>
                             </a>
                             <div class="collapse menu-dropdown" id="sidebarForms">
                                 <ul class="nav nav-sm flex-column">
-                                    <li class="nav-item">
-                                        <a href="{{ route('admin.payment-methods.index') }}" class="nav-link"
-                                            data-key="t-basic-elements">Danh
-                                            sách</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="{{ route('admin.payment-methods.create') }}" class="nav-link"
-                                            data-key="t-form-select"> Thêm </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="{{ route('admin.payment-methods.history') }}" class="nav-link"
-                                            data-key="t-form-select"> Lịch sử thanh toán </a>
-                                    </li>
+                                    <li><a href="{{ route('admin.payment-methods.index') }}" class="nav-link">Danh
+                                            sách</a></li>
+                                    <li><a href="{{ route('admin.payment-methods.create') }}"
+                                            class="nav-link">Thêm</a></li>
+                                    <li><a href="{{ route('admin.payment-methods.history') }}" class="nav-link">Lịch
+                                            sử thanh toán</a></li>
                                 </ul>
                             </div>
                         </li>
                     </ul>
                 </div>
-                <!-- Sidebar -->
             </div>
 
             <div class="sidebar-background"></div>
         </div>
+
         <!-- Left Sidebar End -->
         <!-- Vertical Overlay-->
         <div class="vertical-overlay"></div>
