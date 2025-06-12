@@ -81,9 +81,9 @@ class AdminCategoryController extends Controller
         }
     }
 
-    public function edit($id)
+    public function edit($slug)
     {
-        $category = Category::findOrFail($id);
+        $category = Category::where('slug', $slug)->firstOrFail();
         return view('admin.categories.edit', compact('category'));
     }
 
