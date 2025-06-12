@@ -103,8 +103,12 @@
                                                 <td>{{ $categories->firstItem() + $key }}</td>
                                                 <td>{{ $category->name }}</td>
                                                 <td>
-                                                    <img src="{{ $category->image ? asset('storage/' . $category->image) : asset('images/default-category.png') }}"
-                                                        alt="{{ $category->name }}" width="50">
+                                                    @if ($category->image)
+                                                        <img src="{{ asset('storage/' . $category->image) }}"
+                                                            alt="{{ $category->name }}" width="50">
+                                                    @else
+                                                        <span class="text-muted fst-italic">Không có ảnh</span>
+                                                    @endif
                                                 </td>
                                                 <td class="text-center">{{ $category->books_count }} quyển</td>
                                                 <td>{{ $category->created_at->format('d/m/Y') }}</td>
