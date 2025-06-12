@@ -515,6 +515,20 @@
                                 </ul>
                             </div>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link menu-link" href="#sidebarWallets" data-bs-toggle="collapse"
+                                role="button" aria-expanded="false" aria-controls="sidebarWallets">
+                                <i class="ri-file-list-3-line"></i> <span data-key="t-forms">Quản lý ví</span>
+                            </a>
+                            <div class="collapse menu-dropdown" id="sidebarWallets">
+                                <ul class="nav nav-sm flex-column">
+                                    <li class="nav-item">
+                                        <a href="{{route('admin.wallets.index')}}" class="nav-link" data-key="t-basic-elements">Danh
+                                            sách</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
                     </ul>
                 </div>
             </div>
