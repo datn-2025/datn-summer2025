@@ -26,8 +26,6 @@ use App\Http\Controllers\Article\NewsController;
 use App\Http\Controllers\Admin\NewsArticleController;
 use App\Http\Controllers\Admin\PaymentMethodController;
 use App\Http\Controllers\Admin\WalletController;
-use App\Livewire\RevenueReport;
-
 use App\Http\Controllers\cart\CartController;
 use App\Livewire\RevenueReport;
 use App\Http\Controllers\Client\ClientOrderController;
@@ -279,20 +277,7 @@ Route::middleware(['auth:admin', 'admin'])->prefix('admin')->name('admin.')->gro
         Route::get('/trash', [AdminPaymentMethodController::class, 'trash'])->name('trash');
         Route::put('/{paymentMethod}/restore', [AdminPaymentMethodController::class, 'restore'])->name('restore');
         Route::delete('/{paymentMethod}/force-delete', [AdminPaymentMethodController::class, 'forceDelete'])->name('force-delete');
-
-    // // Admin Payment Methods
-    // Route::prefix('payment-methods')->name('payment-methods.')->group(function () {
-    //     Route::get('/', [PaymentMethodController::class, 'index'])->name('index');
-    //     Route::get('/create', [PaymentMethodController::class, 'create'])->name('create');
-    //     Route::post('/', [PaymentMethodController::class, 'store'])->name('store');
-    //     Route::get('/{paymentMethod}/edit', [PaymentMethodController::class, 'edit'])->name('edit');
-    //     Route::put('/{paymentMethod}', [PaymentMethodController::class, 'update'])->name('update');
-    //     Route::delete('/{paymentMethod}', [PaymentMethodController::class, 'destroy'])->name('destroy');
-    //     // Thêm các route mới
-    //     Route::get('/trash', [PaymentMethodController::class, 'trash'])->name('trash');
-    //     Route::put('/{paymentMethod}/restore', [PaymentMethodController::class, 'restore'])->name('restore');
-    //     Route::delete('/{paymentMethod}/force-delete', [PaymentMethodController::class, 'forceDelete'])->name('force-delete');
-    // });
+    });
 
     // Route admin/categories
     Route::prefix('categories')->name('categories.')->group(function () {
