@@ -11,7 +11,6 @@
                     <h4 class="mb-sm-0">Thêm mới danh mục</h4>
                     <div class="page-title-right">
                         <ol class="breadcrumb m-0">
-                            <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Trang chủ</a></li>
                             <li class="breadcrumb-item"><a href="{{ route('admin.categories.index') }}">Danh mục sách</a>
                             </li>
                             <li class="breadcrumb-item active">Thêm mới</li>
@@ -55,9 +54,11 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="image" class="form-label">Ảnh đại diện</label>
+                                <label for="image" class="form-label">Ảnh danh mục</label>
                                 <input type="file" class="form-control @error('image') is-invalid @enderror"
                                     id="image" name="image" accept="image/*">
+                                <img id="preview" src="#" alt="Ảnh xem trước"
+                                    style="display:none; max-height: 120px; margin-top: 10px;" />
                                 @error('image')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -78,4 +79,24 @@
             </div>
         </div>
     </div>
+    @push('scripts')
+        <script>
+            document.getElementById("image").addEventListener("change", function(event) {
+                const file = event.target.files[0];
+                const preview = document.getElementById("preview");
+
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        preview.src = e.target.result;
+                        preview.style.display = "block";
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    preview.src = "#";
+                    preview.style.display = "none";
+                }
+            });
+        </script>
+    @endpush
 @endsection
