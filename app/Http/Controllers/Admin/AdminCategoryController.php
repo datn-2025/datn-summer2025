@@ -63,13 +63,15 @@ class AdminCategoryController extends Controller
             if ($request->hasFile('image')) {
                 $file = $request->file('image');
                 $filename = uniqid() . '.' . $file->extension();
-                $path = $file->store('images/admin/categories', $filename, 'public');
+                $path = $file->storeAs('images/admin/categories', $filename, 'public');
                 $categoryData['image'] = $path;
             }
 
             Category::create($categoryData);
+
             Toastr::success('Thêm mới danh mục thành công!');
             return redirect()->route('admin.categories.index');
+
         } catch (\Throwable $e) {
             Log::error('Lỗi khi thêm danh mục: ' . $e->getMessage());
             Toastr::error('Đã xảy ra lỗi khi thêm danh mục. Vui lòng thử lại sau.');
