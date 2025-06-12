@@ -45,13 +45,13 @@ class AdminCategoryController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:categories,name',
             'description' => 'nullable|string|max:800',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|file|mimes:jpeg,png,jpg,gif|max:2048',
         ], [
             'name.required' => 'Tên danh mục không được để trống.',
             'name.max' => 'Tên danh mục không được vượt quá 255 ký tự.',
             'name.unique' => 'Tên danh mục đã tồn tại.',
             'description.max' => 'Mô tả không được vượt quá 800 ký tự.',
-            'image.image' => 'Ảnh phải có định dạng jpeg, png, jpg, gif.',
+            'image.file'        => 'Phải chọn một file để upload.',
             'image.mimes' => 'Ảnh phải có định dạng jpeg, png, jpg, gif.',
             'image.max' => 'Ảnh không được vượt quá 2MB.',
         ]);
@@ -65,6 +65,11 @@ class AdminCategoryController extends Controller
 
             if ($request->hasFile('image')) {
                 $file = $request->file('image');
+                if (!str_starts_with($file->getMimeType(), 'image/')) {
+                    return back()
+                        ->withErrors(['image' => 'File tải lên không đúng định dạng ảnh.'])
+                        ->withInput();
+                }
                 $filename = uniqid() . '.' . $file->extension();
                 $path = $file->storeAs('images/admin/categories', $filename, 'public');
                 $categoryData['image'] = $path;
@@ -74,7 +79,6 @@ class AdminCategoryController extends Controller
 
             Toastr::success('Thêm mới danh mục thành công!');
             return redirect()->route('admin.categories.index');
-
         } catch (\Throwable $e) {
             Log::error('Lỗi khi thêm danh mục: ' . $e->getMessage());
             Toastr::error('Đã xảy ra lỗi khi thêm danh mục. Vui lòng thử lại sau.');
@@ -120,7 +124,7 @@ class AdminCategoryController extends Controller
             }
 
             if ($request->hasFile('image')) {
-                 $file = $request->file('image');
+                $file = $request->file('image');
                 $filename = uniqid() . '.' . $file->extension();
                 $path = $file->storeAs('images/admin/categories', $filename, 'public');
                 $categoryData['image'] = $path;
