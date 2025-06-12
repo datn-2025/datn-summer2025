@@ -118,8 +118,11 @@ class AdminCategoryController extends Controller
                 Storage::disk('public')->delete($category->image);
                 $categoryData['image'] = null;
             }
+            
             if ($request->hasFile('image')) {
-                $path = $request->file('image')->store('images/admin/categories', 'public');
+                 $file = $request->file('image');
+                $filename = uniqid() . '.' . $file->extension();
+                $path = $file->storeAs('images/admin/categories', $filename, 'public');
                 $categoryData['image'] = $path;
             }
 
