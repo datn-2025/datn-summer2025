@@ -39,9 +39,6 @@
             document.write('<script src="https://polyfill.io/v3/polyfill.min.js?features=IntersectionObserver"><\/script>');
         }
     </script>
-<<<<<<< HEAD
->>>>>>> 4210c9f2eaa61e640c56446bf28097f8faa0fc85
-=======
 
     <!-- Google Fonts Roboto -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
@@ -79,7 +76,6 @@
         background-clip: text;
       }
     </style>
->>>>>>> c9677efe0cb9a144a1aec506cd4fbbac9a7d2a12
 </head>
 
 <body style="margin:0; min-height:100vh;">
