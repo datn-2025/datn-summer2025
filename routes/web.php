@@ -232,8 +232,8 @@ Route::middleware(['auth:admin', 'admin'])->prefix('admin')->name('admin.')->gro
         Route::get('/', [AdminCategoryController::class, 'index'])->name('index');
         Route::get('/create', [AdminCategoryController::class, 'create'])->name('create');
         Route::post('/store', [AdminCategoryController::class, 'store'])->name('store');
-        Route::get('/edit/{id}', [AdminCategoryController::class, 'edit'])->name('edit');
-        Route::put('/update/{id}', [AdminCategoryController::class, 'update'])->name('update');
+        Route::get('/edit/{slug}', [AdminCategoryController::class, 'edit'])->name('edit');
+        Route::put('/update/{slug}', [AdminCategoryController::class, 'update'])->name('update');
         Route::get('/trash', [AdminCategoryController::class, 'trash'])->name('trash');
         Route::delete('/{category}', [AdminCategoryController::class, 'destroy'])->name('destroy');
         Route::put('/{id}/restore', [AdminCategoryController::class, 'restore'])->name('restore');
@@ -339,7 +339,7 @@ Route::middleware(['auth:admin', 'admin'])->prefix('admin')->name('admin.')->gro
         Route::put('/{article}', [NewsArticleController::class, 'update'])->name('update');
         Route::delete('/{article}', [NewsArticleController::class, 'destroy'])->name('destroy');
     });
-    
+
     // Route admin/orders
     Route::prefix('orders')->name('orders.')->group(function () {
         Route::get('/', [OrderController::class, 'index'])->name('index');
