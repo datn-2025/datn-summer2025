@@ -44,12 +44,13 @@ class AdminCategoryController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:categories,name',
-            'description' => 'nullable|string|max:1000',
+            'description' => 'nullable|string|max:800',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ], [
             'name.required' => 'Tên danh mục không được để trống.',
             'name.max' => 'Tên danh mục không được vượt quá 255 ký tự.',
             'name.unique' => 'Tên danh mục đã tồn tại.',
+            'description.max' => 'Mô tả không được vượt quá 800 ký tự.',
             'image.image' => 'Ảnh phải là file hình ảnh.',
             'image.mimes' => 'Ảnh phải có định dạng jpeg, png, jpg, gif.',
             'image.max' => 'Ảnh không được vượt quá 2MB.',
