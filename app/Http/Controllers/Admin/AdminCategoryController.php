@@ -7,6 +7,7 @@ use App\Models\Category;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 
@@ -143,6 +144,16 @@ class AdminCategoryController extends Controller
                 $filename = uniqid() . '.' . $file->extension();
                 $path = $file->storeAs('images/admin/categories', $filename, 'public');
                 $categoryData['image'] = $path;
+            }
+
+            $original = $category->only(['name', 'description']);
+            $incoming = Arr::only($categoryData, ['name', 'description']);
+
+            $hasImageChanged = array_key_exists('image', $categoryData);
+
+            if ($original === $incoming && !$hasImageChanged) {
+                Toastr::info('Không có thay đổi nào được thực hiện.');
+                return redirect()->route('admin.categories.edit', $category->slug);
             }
 
             $category->update($categoryData);
