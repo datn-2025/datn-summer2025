@@ -118,7 +118,7 @@ class AdminCategoryController extends Controller
                 Storage::disk('public')->delete($category->image);
                 $categoryData['image'] = null;
             }
-            
+
             if ($request->hasFile('image')) {
                  $file = $request->file('image');
                 $filename = uniqid() . '.' . $file->extension();
@@ -128,12 +128,12 @@ class AdminCategoryController extends Controller
 
             $category->update($categoryData);
 
-            return redirect()->route('admin.categories.index')
-                ->with('success', 'Cập nhật danh mục thành công!');
+            Toastr::success('Cập nhật danh mục thành công!');
+            return redirect()->route('admin.categories.index');
         } catch (\Throwable $e) {
             Log::error('Lỗi khi cập nhật danh mục: ' . $e->getMessage());
-            return back()->with('error', 'Đã xảy ra lỗi khi cập nhật danh mục.')
-                ->withInput();
+            Toastr::error('Đã xảy ra lỗi khi cập nhật danh mục. Vui lòng thử lại sau.');
+            return back()->withInput();
         }
     }
 
