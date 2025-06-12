@@ -43,34 +43,29 @@ class AdminCategoryController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:categories,name',
+            'name'        => 'required|string|max:255|unique:categories,name',
             'description' => 'nullable|string|max:800',
-            'image' => 'nullable|file|mimes:jpeg,png,jpg,gif|max:2048',
+            'image'       => 'nullable|image|mimetypes:image/jpeg,image/png,image/jpg,image/gif|max:2048',
         ], [
-            'name.required' => 'Tên danh mục không được để trống.',
-            'name.max' => 'Tên danh mục không được vượt quá 255 ký tự.',
-            'name.unique' => 'Tên danh mục đã tồn tại.',
-            'description.max' => 'Mô tả không được vượt quá 800 ký tự.',
-            'image.file'        => 'Phải chọn một file để upload.',
-            'image.mimes' => 'Ảnh phải có định dạng jpeg, png, jpg, gif.',
-            'image.max' => 'Ảnh không được vượt quá 2MB.',
+            'name.required'     => 'Tên danh mục không được để trống.',
+            'name.max'          => 'Tên danh mục không được vượt quá 255 ký tự.',
+            'name.unique'       => 'Tên danh mục đã tồn tại.',
+            'description.max'   => 'Mô tả không được vượt quá 800 ký tự.',
+            'image.image'       => 'File tải lên phải là hình ảnh.',
+            'image.mimes'       => 'Ảnh phải có định dạng jpeg, png, jpg, gif.',
+            'image.max'         => 'Ảnh không được vượt quá 2MB.',
         ]);
 
         try {
             $categoryData = [
-                'name' => $validated['name'],
-                'slug' => Str::slug($validated['name']) . '-' . Str::random(6),
-                'description' => $validated['description'] ?? null,
+                'name'          => $validated['name'],
+                'slug'          => Str::slug($validated['name']) . '-' . Str::random(6),
+                'description'   => $validated['description'] ?? null,
             ];
 
             if ($request->hasFile('image')) {
                 $file = $request->file('image');
-                if (!str_starts_with($file->getMimeType(), 'image/')) {
-                    return back()
-                        ->withErrors(['image' => 'File tải lên không đúng định dạng ảnh.'])
-                        ->withInput();
-                }
-                $filename = uniqid() . '.' . $file->extension();
+                $filename = uniqid('cat_', true) . '.' . $file->extension();
                 $path = $file->storeAs('images/admin/categories', $filename, 'public');
                 $categoryData['image'] = $path;
             }
