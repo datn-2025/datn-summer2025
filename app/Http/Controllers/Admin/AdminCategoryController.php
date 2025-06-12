@@ -109,9 +109,12 @@ class AdminCategoryController extends Controller
         try {
             $categoryData = [
                 'name'          => $validated['name'],
-                'slug'          => Str::slug($validated['name']),
                 'description'   => $validated['description'] ?? null,
             ];
+
+            if ($validated['name'] !== $category->name) {
+                $categoryData['slug'] = Str::slug($validated['name']);
+            }
 
             if (($request->hasFile('image') || $request->boolean('remove_image')) && $category->image) {
                 Storage::disk('public')->delete($category->image);
