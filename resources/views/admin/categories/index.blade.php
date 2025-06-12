@@ -114,7 +114,7 @@
                                                 <td>{{ $category->created_at->format('d/m/Y') }}</td>
                                                 <td>
                                                     <div class="btn-group gap-2">
-                                                        <a href="{{ route('admin.categories.edit', $category->id) }}"
+                                                        <a href="{{ route('admin.categories.edit', $category->slug) }}"
                                                             class="btn btn-sm btn-warning" title="Chỉnh sửa">
                                                             <i class="ri-edit-2-line"></i>
                                                         </a>
