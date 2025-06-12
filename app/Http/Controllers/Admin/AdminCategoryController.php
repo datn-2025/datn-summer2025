@@ -95,11 +95,13 @@ class AdminCategoryController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:categories,name,' . $id,
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'description' => 'nullable|string|max:800',
             'remove_image' => 'nullable|boolean'
         ], [
             'name.required' => 'Tên danh mục không được để trống.',
             'name.max' => 'Tên danh mục không được vượt quá 255 ký tự.',
             'name.unique' => 'Tên danh mục đã tồn tại.',
+            'description.max' => 'Mô tả không được vượt quá 800 ký tự.',
             'image.image' => 'File tải lên phải là hình ảnh.',
             'image.mimes' => 'Ảnh phải có định dạng: jpeg, png, jpg, gif.',
             'image.max' => 'Ảnh không được vượt quá 2MB.',
@@ -108,7 +110,8 @@ class AdminCategoryController extends Controller
         try {
             $categoryData = [
                 'name' => $validated['name'],
-                'slug' => Str::slug($validated['name'])
+                'slug' => Str::slug($validated['name']),
+                'description' => $validated['description'] ?? null,
             ];
 
             if (($request->hasFile('image') || $request->boolean('remove_image')) && $category->image) {
