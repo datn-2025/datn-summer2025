@@ -27,7 +27,6 @@ use App\Http\Controllers\Admin\NewsArticleController;
 use App\Http\Controllers\Admin\PaymentMethodController;
 use App\Http\Controllers\Admin\WalletController;
 use App\Http\Controllers\cart\CartController;
-use App\Livewire\RevenueReport;
 use App\Http\Controllers\Client\ClientOrderController;
 use App\Http\Controllers\Client\ClientReviewController;
 use App\Http\Controllers\Client\UserClientController;
@@ -75,7 +74,7 @@ Route::post('/wishlist/delete', [WishlistController::class, 'delete'])->name('wi
 Route::post('/wishlist/delete-all', [WishlistController::class, 'deleteAll'])->name('wishlist.delete-all');
 Route::post('/wishlist/add-to-cart', [WishlistController::class, 'addToCartFromWishlist'])->name('wishlist.addToCart');
 
-// lien he 
+// lien he
 Route::get('/news', [NewsController::class, 'index'])->name('news.index');
 Route::get('/news/{id}', [NewsController::class, 'show'])->name('news.show');
 
@@ -106,15 +105,15 @@ Route::prefix('account')->name('account.')->group(function () {
 Route::middleware('auth')->prefix('account')->name('account.')->group(function () {
     // Dashboard
     Route::get('/', [LoginController::class, 'index'])->name('index');
-    
+
     // Profile management
     Route::get('/profile', [LoginController::class, 'showUser'])->name('profile');
     Route::put('/profile/update', [LoginController::class, 'updateProfile'])->name('profile.update');
-    
+
     // Password change
     Route::get('/password/change', [LoginController::class, 'showChangePasswordForm'])->name('changePassword');
     Route::post('/password/change', [LoginController::class, 'changePassword'])->name('password.update');
-    
+
     // Address management
     Route::get('/addresses', [\App\Http\Controllers\AddressController::class, 'index'])->name('addresses');
     Route::post('/addresses', [\App\Http\Controllers\AddressController::class, 'store'])->name('addresses.store');
@@ -124,7 +123,7 @@ Route::middleware('auth')->prefix('account')->name('account.')->group(function (
     Route::post('/addresses/{id}/set-default', [\App\Http\Controllers\AddressController::class, 'setDefault'])->name('addresses.setDefault');
 // lỗi nè
     // return redirect()->route('admin.orders.show', $order->id)->with('success', 'QR Code generated successfully!');
-});   
+});
 
 // Route đăng nhập chỉnh ở đây nha, sửa thì sửa vào đây, không được xóa có gì liên hệ Tuyết
 Route::middleware('auth')->group(function () {
@@ -184,7 +183,7 @@ Route::middleware(['auth:admin', 'admin'])->prefix('admin')->name('admin.')->gro
     Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
 
     Route::get('/', [AdminDashboard::class, 'index'])->name('dashboard');
-     Route::get('/revenue-report', RevenueReport::class)->name('revenue-report');
+    Route::get('/revenue-report', RevenueReport::class)->name('revenue-report');
     Route::get('/balance-chart', BalanceChart::class)->name('balance-chart');
 
     // Route admin/contacts
@@ -222,7 +221,7 @@ Route::middleware(['auth:admin', 'admin'])->prefix('admin')->name('admin.')->gro
         Route::put('/{id}/status', [AdminPaymentMethodController::class, 'updateStatus'])
             ->name('updateStatus');
     });
-    
+
     Route::prefix('wallets')->name('wallets.')->group(function () {
         Route::get('/', [WalletController::class, 'index'])->name('index');
         Route::get('/{wallet}', [WalletController::class, 'show'])->name('show');
@@ -265,7 +264,6 @@ Route::middleware(['auth:admin', 'admin'])->prefix('admin')->name('admin.')->gro
             Route::put('/{id}', [AuthorController::class, 'update'])->name('update');
         });
     });
-
     Route::prefix('payment-methods')->name('payment-methods.')->group(function () {
         Route::get('/', [AdminPaymentMethodController::class, 'index'])->name('index');
         Route::get('/create', [AdminPaymentMethodController::class, 'create'])->name('create');
@@ -389,4 +387,5 @@ Route::middleware(['auth:admin', 'admin'])->prefix('admin')->name('admin.')->gro
         Route::get('/edit/{id}', [OrderController::class, 'edit'])->name('edit');
         Route::put('/update/{id}', [OrderController::class, 'update'])->name('update');
     });
+});
 });
