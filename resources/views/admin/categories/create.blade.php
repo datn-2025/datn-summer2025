@@ -42,6 +42,17 @@
                             @enderror
                         </div>
 
+                        <!-- Mô tả danh mục -->
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Mô tả danh mục</label>
+                            <textarea id="description" name="description"
+                                      class="form-control @error('description') is-invalid @enderror"
+                                      rows="4">{{ old('description') }}</textarea>
+                            @error('description')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
                         <!-- Ảnh danh mục -->
                         <div class="mb-3">
                             <label for="image" class="form-label">Ảnh danh mục</label>
