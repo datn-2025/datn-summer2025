@@ -60,6 +60,7 @@ class AdminCategoryController extends Controller
             $categoryData = [
                 'name' => $validated['name'],
                 'slug' => Str::slug($validated['name']) . '-' . Str::random(6),
+                'description' => $validated['description'] ?? null,
             ];
 
             if ($request->hasFile('image')) {
