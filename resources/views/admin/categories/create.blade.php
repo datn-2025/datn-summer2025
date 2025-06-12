@@ -52,7 +52,6 @@
                                 @error('image')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
-                                <div class="form-text">Chấp nhận định dạng: jpeg, png, jpg, gif. Tối đa 2MB</div>
                             </div>
 
                             <div class="text-end">
@@ -69,6 +68,7 @@
             </div>
         </div>
     </div>
+    {!! Toastr::message() !!}
 @endsection
 
 @push('scripts')
