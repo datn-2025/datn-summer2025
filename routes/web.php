@@ -266,18 +266,17 @@ Route::middleware(['auth:admin', 'admin'])->prefix('admin')->name('admin.')->gro
             Route::put('/{id}', [AuthorController::class, 'update'])->name('update');
         });
     });
-    Route::prefix('payment-methods')->name('payment-methods.')->group(function () {
-        Route::get('/', [AdminPaymentMethodController::class, 'index'])->name('index');
-        Route::get('/create', [AdminPaymentMethodController::class, 'create'])->name('create');
-        Route::post('/', [AdminPaymentMethodController::class, 'store'])->name('store');
-        Route::get('/{paymentMethod}/edit', [AdminPaymentMethodController::class, 'edit'])->name('edit');
-        Route::put('/{paymentMethod}', [AdminPaymentMethodController::class, 'update'])->name('update');
-        Route::delete('/{paymentMethod}', [AdminPaymentMethodController::class, 'destroy'])->name('destroy');
-
-        Route::get('/trash', [AdminPaymentMethodController::class, 'trash'])->name('trash');
-        Route::put('/{paymentMethod}/restore', [AdminPaymentMethodController::class, 'restore'])->name('restore');
-        Route::delete('/{paymentMethod}/force-delete', [AdminPaymentMethodController::class, 'forceDelete'])->name('force-delete');
-
+//    Route::prefix('payment-methods')->name('payment-methods.')->group(function () {
+//        Route::get('/', [AdminPaymentMethodController::class, 'index'])->name('index');
+//        Route::get('/create', [AdminPaymentMethodController::class, 'create'])->name('create');
+//        Route::post('/', [AdminPaymentMethodController::class, 'store'])->name('store');
+//        Route::get('/{paymentMethod}/edit', [AdminPaymentMethodController::class, 'edit'])->name('edit');
+//        Route::put('/{paymentMethod}', [AdminPaymentMethodController::class, 'update'])->name('update');
+//        Route::delete('/{paymentMethod}', [AdminPaymentMethodController::class, 'destroy'])->name('destroy');
+//
+//        Route::get('/trash', [AdminPaymentMethodController::class, 'trash'])->name('trash');
+//        Route::put('/{paymentMethod}/restore', [AdminPaymentMethodController::class, 'restore'])->name('restore');
+//        Route::delete('/{paymentMethod}/force-delete', [AdminPaymentMethodController::class, 'forceDelete'])->name('force-delete');
     // // Admin Payment Methods
     // Route::prefix('payment-methods')->name('payment-methods.')->group(function () {
     //     Route::get('/', [PaymentMethodController::class, 'index'])->name('index');
@@ -402,5 +401,4 @@ Route::middleware(['auth:admin', 'admin'])->prefix('admin')->name('admin.')->gro
         Route::get('/edit/{id}', [OrderController::class, 'edit'])->name('edit');
         Route::put('/update/{id}', [OrderController::class, 'update'])->name('update');
     });
-});
 });
