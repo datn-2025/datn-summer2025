@@ -113,7 +113,19 @@ class AdminCategoryController extends Controller
             ];
 
             if ($validated['name'] !== $category->name) {
-                $categoryData['slug'] = Str::slug($validated['name']);
+                $baseSlug = Str::slug($validated['name']);
+                $slug = $baseSlug;
+
+                $slugExists = Category::query()
+                    ->where('slug', $baseSlug)
+                    ->whereKeyNot($category->id)
+                    ->exists();
+
+                if ($slugExists) {
+                    $slug = $baseSlug . '-' . Str::random(6);
+                }
+
+                $categoryData['slug'] = $slug;
             }
 
             if (($request->hasFile('image') || $request->boolean('remove_image')) && $category->image) {
