@@ -128,12 +128,11 @@
                     </div>
 
                     <div class="d-flex align-items-center">
-
-                        <!-- Search (mobile only) -->
+                        <!-- Search (Mobile Only) -->
                         <div class="dropdown d-md-none topbar-head-dropdown header-item">
                             <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle"
                                 id="page-header-search-dropdown" data-bs-toggle="dropdown" aria-haspopup="true"
-                                aria-expanded="false">
+                                aria-expanded="false" title="Tìm kiếm">
                                 <i class="bx bx-search fs-22"></i>
                             </button>
                             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
@@ -149,20 +148,20 @@
                                 </form>
                             </div>
                         </div>
-
-                        <!-- Fullscreen (desktop only) -->
+                        <!-- Fullscreen Toggle (Desktop Only) -->
                         <div class="ms-1 header-item d-none d-sm-flex">
                             <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle"
-                                data-toggle="fullscreen">
-                                <i class="bx bx-fullscreen fs-22" title="Fullscreen"></i>
+                                data-toggle="fullscreen" title="Toàn màn hình">
+                                <i class="bx bx-fullscreen fs-22"></i>
                             </button>
                         </div>
 
-                        <!-- Dark mode toggle (desktop only) -->
+                        <!-- Dark Mode Toggle (Desktop Only) -->
                         <div class="ms-1 header-item d-none d-sm-flex">
                             <button type="button"
-                                class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle light-dark-mode">
-                                <i class="bx bx-moon fs-22" title="Toggle Dark Mode"></i>
+                                class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle light-dark-mode"
+                                title="Chuyển chế độ sáng/tối">
+                                <i class="bx bx-moon fs-22"></i>
                             </button>
                         </div>
 
@@ -287,7 +286,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="dropdown ms-sm-3 header-item topbar-user">
                             <button type="button" class="btn" id="page-header-user-dropdown"
                                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -350,7 +348,6 @@
                                 </form>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
