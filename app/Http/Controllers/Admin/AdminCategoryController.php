@@ -52,7 +52,7 @@ class AdminCategoryController extends Controller
             'name.unique'       => 'Tên danh mục đã tồn tại.',
             'description.max'   => 'Mô tả không được vượt quá 800 ký tự.',
             'image.image'       => 'File tải lên phải là hình ảnh.',
-            'image.mimes'       => 'Ảnh phải có định dạng jpeg, png, jpg, gif.',
+            'image.mimetypes'       => 'Ảnh phải có định dạng jpeg, png, jpg, gif.',
             'image.max'         => 'Ảnh không được vượt quá 2MB.',
         ]);
 
@@ -102,7 +102,7 @@ class AdminCategoryController extends Controller
             'name.unique' => 'Tên danh mục đã tồn tại.',
             'description.max' => 'Mô tả không được vượt quá 800 ký tự.',
             'image.image' => 'File tải lên phải là hình ảnh.',
-            'image.mimes' => 'Ảnh phải có định dạng: jpeg, png, jpg, gif.',
+            'image.mimetypes' => 'Ảnh phải có định dạng: jpeg, png, jpg, gif.',
             'image.max' => 'Ảnh không được vượt quá 2MB.',
         ]);
 
