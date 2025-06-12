@@ -17,16 +17,19 @@ use App\Http\Controllers\Admin\VoucherController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\Login\ActivationController;
 use App\Http\Controllers\HomeController;
+use App\Livewire\BalanceChart;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Wishlists\WishlistController;
 use App\Http\Controllers\Contact\ContactController;
 use App\Http\Controllers\Article\NewsController;
 use App\Http\Controllers\Admin\NewsArticleController;
-use App\Http\Controllers\Client\UserClientController;
-use App\Http\Controllers\Client\ClientReviewController;
-use App\Http\Controllers\Client\ClientOrderController;
+use App\Http\Controllers\Admin\PaymentMethodController;
 use App\Http\Controllers\cart\CartController;
+use App\Livewire\RevenueReport;
+use App\Http\Controllers\Client\ClientOrderController;
+use App\Http\Controllers\Client\ClientReviewController;
+use App\Http\Controllers\Client\UserClientController;
 
 // Route QR code
 Route::get('storage/private/{filename}', function ($filename) {
@@ -41,6 +44,8 @@ Route::get('storage/private/{filename}', function ($filename) {
     abort(404);
 })->where('filename', '.*');
 
+// VNPay routes
+Route::get('/vnpay/return', [\App\Http\Controllers\OrderController::class, 'vnpayReturn'])->name('vnpay.return');
 // Route public cho books (categoryId optional)
 Route::get('/', [HomeController::class, 'index'])->name('home');
 // Hiển thị danh sách và danh mục
@@ -104,19 +109,10 @@ Route::middleware('auth')->prefix('account')->name('account.')->group(function (
     // Profile management
     Route::get('/profile', [LoginController::class, 'showUser'])->name('profile');
     Route::put('/profile/update', [LoginController::class, 'updateProfile'])->name('profile.update');
-
     
     // Password change
     Route::get('/password/change', [LoginController::class, 'showChangePasswordForm'])->name('changePassword');
     Route::post('/password/change', [LoginController::class, 'changePassword'])->name('password.update');
-    
-    // Orders management
-    Route::prefix('orders')->name('orders.')->group(function () {
-        Route::get('/', [ClientOrderController::class, 'index'])->name('index');
-        Route::get('/{id}', [ClientOrderController::class, 'show'])->name('show');
-        Route::put('/{id}', [ClientOrderController::class, 'update'])->name('update');
-        Route::delete('/{id}', [ClientOrderController::class, 'destroy'])->name('destroy');
-    });
     
     // Address management
     Route::get('/addresses', [\App\Http\Controllers\AddressController::class, 'index'])->name('addresses');
@@ -125,21 +121,33 @@ Route::middleware('auth')->prefix('account')->name('account.')->group(function (
     Route::put('/addresses/{id}', [\App\Http\Controllers\AddressController::class, 'update'])->name('addresses.update');
     Route::delete('/addresses/{id}', [\App\Http\Controllers\AddressController::class, 'destroy'])->name('addresses.destroy');
     Route::post('/addresses/{id}/set-default', [\App\Http\Controllers\AddressController::class, 'setDefault'])->name('addresses.setDefault');
+// lỗi nè
+    // return redirect()->route('admin.orders.show', $order->id)->with('success', 'QR Code generated successfully!');
+});   
 
-    // User purchase and review routes
-    Route::get('/purchase', [UserClientController::class, 'index'])->name('purchase');
-    Route::post('/review', [UserClientController::class, 'storeReview'])->name('review.store');
-
-    Route::prefix('reviews')->name('reviews.')->group(function () {
-        Route::put('/{id}', [ClientReviewController::class, 'update'])->name('update');
-        Route::delete('/{id}', [ClientReviewController::class, 'destroy'])->name('destroy');
-    });
-});
+// Route đăng nhập chỉnh ở đây nha, sửa thì sửa vào đây, không được xóa có gì liên hệ Tuyết
 Route::middleware('auth')->group(function () {
     // Đăng xuất
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-    // Đơn hàng checkout và store
+    Route::prefix('account')->name('account.')->group(function () {
+        Route::get('/', [LoginController::class, 'index'])->name('index');
+        Route::get('/purchase', [UserClientController::class, 'index'])->name('purchase');
+        Route::post('/review', [UserClientController::class, 'storeReview'])->name('review.store');
+
+        Route::prefix('orders')->name('orders.')->group(function () {
+            Route::get('/', [ClientOrderController::class, 'index'])->name('index');
+            Route::get('/{id}', [ClientOrderController::class, 'show'])->name('show');
+            Route::put('/{id}', [ClientOrderController::class, 'update'])->name('update');
+            Route::delete('/{id}', [ClientOrderController::class, 'destroy'])->name('destroy');
+        });
+
+        Route::prefix('reviews')->name('reviews.')->group(function () {
+            Route::put('/{id}', [ClientReviewController::class, 'update'])->name('update');
+            Route::delete('/{id}', [ClientReviewController::class, 'destroy'])->name('destroy');
+        });
+    });
+    // Đơn hàng checkout và storex
     Route::prefix('orders')->name('orders.')->group(function () {
         Route::get('/', [\App\Http\Controllers\OrderController::class, 'index'])->name('index');
         Route::get('/checkout', [\App\Http\Controllers\OrderController::class, 'checkout'])->name('checkout');
@@ -158,7 +166,14 @@ Route::prefix('orders')->name('orders.')->group(function () {
     Route::post('/apply-voucher', [\App\Http\Controllers\OrderController::class, 'applyVoucher'])->name('apply-voucher');
 });
 
+Route::prefix('admin')->name('admin.')->group(function () {
+
+    Route::get('/revenue-report', RevenueReport::class)->name('revenue-report');
+    Route::get('/balance-chart', BalanceChart::class)->name('balance-chart');
+});
 //---------------------------------------------------
+
+
 // Route đăng nhập admin (chỉ cho khách)
 Route::middleware('guest.admin')->group(function () {
     Route::get('/admin/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
@@ -168,6 +183,8 @@ Route::middleware(['auth:admin', 'admin'])->prefix('admin')->name('admin.')->gro
     Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
 
     Route::get('/', [AdminDashboard::class, 'index'])->name('dashboard');
+     Route::get('/revenue-report', RevenueReport::class)->name('revenue-report');
+    Route::get('/balance-chart', BalanceChart::class)->name('balance-chart');
 
     // Route admin/contacts
     Route::resource('contacts', \App\Http\Controllers\Admin\ContactController::class);
@@ -315,7 +332,6 @@ Route::middleware(['auth:admin', 'admin'])->prefix('admin')->name('admin.')->gro
         Route::put('/{article}', [NewsArticleController::class, 'update'])->name('update');
         Route::delete('/{article}', [NewsArticleController::class, 'destroy'])->name('destroy');
     });
-
     // Route admin/orders
     Route::prefix('orders')->name('orders.')->group(function () {
         Route::get('/', [OrderController::class, 'index'])->name('index');
