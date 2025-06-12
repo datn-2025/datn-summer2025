@@ -130,13 +130,16 @@ class AdminCategoryController extends Controller
                 if ($slugExists) {
                     $slug = $baseSlug . '-' . Str::random(6);
                 }
-
                 $categoryData['slug'] = $slug;
             }
+
+            // Xử lý ảnh
+            $hasImageChanged = false;
 
             if (($request->hasFile('image') || $request->boolean('remove_image')) && $category->image) {
                 Storage::disk('public')->delete($category->image);
                 $categoryData['image'] = null;
+                $hasImageChanged = true;
             }
 
             if ($request->hasFile('image')) {
@@ -144,16 +147,16 @@ class AdminCategoryController extends Controller
                 $filename = uniqid() . '.' . $file->extension();
                 $path = $file->storeAs('images/admin/categories', $filename, 'public');
                 $categoryData['image'] = $path;
+                $hasImageChanged = true;
             }
 
+            // So sánh dữ liệu
             $original = $category->only(['name', 'description']);
             $incoming = Arr::only($categoryData, ['name', 'description']);
 
-            $hasImageChanged = array_key_exists('image', $categoryData);
-
             if ($original === $incoming && !$hasImageChanged) {
                 Toastr::info('Không có thay đổi nào được thực hiện.');
-                return redirect()->route('admin.categories.edit', $category->slug);
+                return redirect()->route('admin.categories.index');
             }
 
             $category->update($categoryData);
