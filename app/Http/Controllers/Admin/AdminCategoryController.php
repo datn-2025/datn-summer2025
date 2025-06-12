@@ -64,7 +64,7 @@ class AdminCategoryController extends Controller
             }
             $categoryData = [
                 'name'          => $validated['name'],
-                'slug'          => Str::slug($validated['name']) . '-' . Str::random(6),
+                'slug'          => $slug,
                 'description'   => $validated['description'] ?? null,
             ];
 
