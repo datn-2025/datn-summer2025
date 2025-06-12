@@ -92,7 +92,7 @@ class AdminCategoryController extends Controller
         $category = Category::where('slug', $slug)->firstOrFail();
 
         $validated = $request->validate([
-            'name'          => 'required|string|max:255|unique:categories,name,' . $id,
+            'name'          => 'required|string|max:255|unique:categories,name,' . $category->id,
             'image'         => 'nullable|image|mimetypes:image/jpeg,image/png,image/jpg,image/gif|max:2048',
             'description'   => 'nullable|string|max:800',
             'remove_image'  => 'nullable|boolean'
