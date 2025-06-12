@@ -51,7 +51,7 @@ class AdminCategoryController extends Controller
             'name.max' => 'Tên danh mục không được vượt quá 255 ký tự.',
             'name.unique' => 'Tên danh mục đã tồn tại.',
             'description.max' => 'Mô tả không được vượt quá 800 ký tự.',
-            'image.image' => 'Ảnh phải là file hình ảnh.',
+            'image.image' => 'Ảnh phải có định dạng jpeg, png, jpg, gif.',
             'image.mimes' => 'Ảnh phải có định dạng jpeg, png, jpg, gif.',
             'image.max' => 'Ảnh không được vượt quá 2MB.',
         ]);
