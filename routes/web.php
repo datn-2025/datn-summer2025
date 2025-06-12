@@ -388,4 +388,3 @@ Route::middleware(['auth:admin', 'admin'])->prefix('admin')->name('admin.')->gro
         Route::put('/update/{id}', [OrderController::class, 'update'])->name('update');
     });
 });
-});
