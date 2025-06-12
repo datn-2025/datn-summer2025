@@ -147,11 +147,17 @@
         <!-- Sidebar -->
         <div class="col-md-3">
             <div class="sidebar">
-                <a href="{{ route('account.showUser') }}">
-                    <i class="fas fa-user"></i>Hồ sơ của tôi
+                <a href="{{ route('account.profile') }}">
+                    <i class="fas fa-user"></i>
+                    <span>Thông tin cá nhân</span>
                 </a>
-                <a href="{{ route('account.password.change') }}" class="active">
-                    <i class="fas fa-key"></i>Đổi mật khẩu
+                <a href="{{ route('account.addresses') }}">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Quản lý địa chỉ</span>
+                </a>
+                <a href="{{ route('account.changePassword') }}" class="active">
+                    <i class="fas fa-lock"></i>
+                    <span>Đổi mật khẩu</span>
                 </a>
             </div>
         </div>
@@ -161,7 +167,7 @@
             <div class="main-content">
                 <h2 class="mb-3">Đổi mật khẩu</h2>
                 <p class="text-muted mb-4">Để bảo mật tài khoản, vui lòng không chia sẻ mật khẩu cho người khác</p>
-                    <form method="POST" action="{{ route('account.password.update') }}">
+                    <form method="POST" action="{{ route('account.password.change') }}">
                         @csrf
 
                         <div class="form-group mb-3">
@@ -210,7 +216,7 @@
                         </div>
 
                         <div class="d-flex justify-content-between align-items-center">
-                            <a href="{{ route('account.showUser') }}" class="btn btn-outline-secondary">
+                            <a href="{{ route('account.profile') }}" class="btn btn-outline-secondary">
                                 <i class="fas fa-arrow-left me-1"></i>Quay lại
                             </a>
                             <button type="submit" class="btn btn-save">

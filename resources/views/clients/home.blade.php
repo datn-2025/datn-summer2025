@@ -1,6 +1,7 @@
 @extends('layouts.app')
 @section('title', 'BookBee')
 
+
 @section('content')
     <section class="w-full bg-cover bg-center bg-no-repeat py-40"
         style="background-image: url('{{asset('storage/images/banner-image-bg.jpg')}}')">
@@ -25,7 +26,12 @@
         </div>
 
 
+
+
     </section>
+
+
+
 
 
 
@@ -53,6 +59,10 @@
 
 
 
+
+
+
+
     <section class="px-4 py-6 max-w-screen-xl mx-auto">
         {{-- Tabs lựa chọn bộ sưu tập --}}
         <div class="flex items-center justify-between mb-6">
@@ -63,6 +73,7 @@
                         data-tab="tab-{{$category->id}}">
                         {{$category->name}}
                     </button>
+
 
                 @endforeach
             </div>
@@ -97,8 +108,10 @@
                                         </a>
                                     </div>
 
+
                                 </div>
                             </div>
+
 
                         @endforeach
                     </div>
@@ -116,8 +129,11 @@
                 </div>
             </div>
 
+
         @endforeach
     </section>
+
+
 
 
     <section class="w-full bg-cover bg-center bg-no-repeat py-40"
@@ -134,9 +150,11 @@
                 </h2>
                 <p class="text-xl md:text-2xl">Một hành trình tri thức đang chờ bạn khám phá!</p>
 
+
                 <!-- Hiển thị thời gian -->
                 <div class="text-5xl font-bold" id="clock-time">00:00:00</div>
                 <div class="text-lg mt-1" id="clock-date">Thứ..., 00/00/0000</div>
+
 
                 <a href="#"
                     class="inline-block bg-red-400 text-white px-8 py-4 rounded-full text-sm font-semibold hover:bg-red-600 transition duration-300">
@@ -145,14 +163,21 @@
             </div>
 
 
+
+
         </div>
+
+
 
 
     </section>
 
 
+
+
     <section class="bg-white py-16">
         <div class="max-w-screen-xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+
 
             <!-- Featured -->
             <div>
@@ -172,7 +197,9 @@
                     @endforeach
                 </div>
 
+
             </div>
+
 
             <!-- Mới nhất -->
             <div>
@@ -192,7 +219,9 @@
                     @endforeach
                 </div>
 
+
             </div>
+
 
             <!-- Đánh giá cao -->
             <div>
@@ -201,6 +230,7 @@
                     @foreach($bestReviewedBooks as $book)
                         @php
                             $rating = round($book->reviews->avg('rating'), 1);
+
 
                         @endphp
                         <div onclick="window.location='{{ route('books.show', ['slug' => $book->slug]) }}'"
@@ -216,7 +246,9 @@
                     @endforeach
                 </div>
 
+
             </div>
+
 
             <!-- Giảm giá -->
             <div>
@@ -248,10 +280,17 @@
                     @endforeach
                 </div>
 
+
             </div>
+
 
         </div>
     </section>
+
+
+
+
+
 
 
 
@@ -283,6 +322,7 @@
                         </a>
                     </div>
 
+
                 </div>
             @empty
                 <p class="col-span-4 text-center text-gray-500">Chưa có sản phẩm nào.</p>
@@ -292,9 +332,13 @@
 
 
 
+
+
+
     <section class="py-20 bg-cover bg-center bg-no-repeat"
         style="background-image: url('{{ asset('storage/images/banner-image-bg.jpg') }}')">
         <h2 class="text-center text-3xl md:text-4xl font-bold mb-10 text-gray-800">Khách hàng nói gì?</h2>
+
 
         <div class="swiper reviewSwiper max-w-4xl mx-auto px-4">
             <div class="swiper-wrapper">
@@ -309,6 +353,8 @@
                             <p class="text-xs text-gray-400 mb-2">
                                 Ngày: {{ $review->created_at?->format('d/m/Y') ?? 'Không rõ' }}
                             </p>
+
+
 
 
                             <p class="text-gray-700 italic mb-4">“{{ $review->comment ?? 'Không có nội dung.' }}”</p>
@@ -328,6 +374,8 @@
             <div class="swiper-pagination mt-6"></div>
         </div>
     </section>
+
+
 
 
     <section class="px-4 py-16 max-w-screen-xl mx-auto">
@@ -351,12 +399,14 @@
                             <h3 class=" text-lg font-bold mb-2 leading-snug">{{$article->title}}</h3>
                             <p class=" text-sm text-gray-600 mb-4">{{Str::limit($article->summary, 100)}}</p>
 
+
                         </div>
                         <div class="mt-4">
                             <a href="#" class=" inline-block text-sm text-red-500 hover:underline font-semibold">
                                 Đọc thêm →
                             </a>
                         </div>
+
 
                     </div>
                 </div>
@@ -369,4 +419,9 @@
 
 
 
+
+
+
+
 @endsection
+
