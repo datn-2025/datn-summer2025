@@ -36,7 +36,7 @@
                             <label for="name" class="form-label">Tên danh mục <span class="text-danger">*</span></label>
                             <input type="text" id="name" name="name" 
                                    class="form-control @error('name') is-invalid @enderror"
-                                   value="{{ old('name') }}" required>
+                                   value="{{ old('name') }}">
                             @error('name')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
