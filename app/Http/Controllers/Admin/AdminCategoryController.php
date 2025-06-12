@@ -57,7 +57,7 @@ class AdminCategoryController extends Controller
         try {
             $categoryData = [
                 'name' => $validated['name'],
-                'slug' => Str::slug($validated['name'])
+                'slug' => Str::slug($validated['name']) . '-' . uniqid(), // Thêm uniqid để đảm bảo slug duy nhất
             ];
 
             if ($request->hasFile('image')) {
