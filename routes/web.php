@@ -30,6 +30,7 @@ use App\Http\Controllers\cart\CartController;
 use App\Http\Controllers\Client\ClientOrderController;
 use App\Http\Controllers\Client\ClientReviewController;
 use App\Http\Controllers\Client\UserClientController;
+use App\Livewire\RevenueReport;
 
 // Route QR code
 Route::get('storage/private/{filename}', function ($filename) {
