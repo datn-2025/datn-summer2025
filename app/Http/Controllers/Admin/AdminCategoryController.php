@@ -61,7 +61,9 @@ class AdminCategoryController extends Controller
             ];
 
             if ($request->hasFile('image')) {
-                $path = $request->file('image')->store('images/admin/categories', 'public');
+                $file = $request->file('image');
+                $filename = uniqid() . '.' . $file->extension();
+                $path = $file->store('images/admin/categories', $filename, 'public');
                 $categoryData['image'] = $path;
             }
 
