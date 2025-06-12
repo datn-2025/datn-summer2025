@@ -52,7 +52,7 @@ class AdminCategoryController extends Controller
             'name.unique'       => 'Tên danh mục đã tồn tại.',
             'description.max'   => 'Mô tả không được vượt quá 800 ký tự.',
             'image.image'       => 'File tải lên phải là hình ảnh.',
-            'image.mimetypes'       => 'Ảnh phải có định dạng jpeg, png, jpg, gif.',
+            'image.mimetypes'   => 'Ảnh phải có định dạng jpeg, png, jpg, gif.',
             'image.max'         => 'Ảnh không được vượt quá 2MB.',
         ]);
 
@@ -92,25 +92,25 @@ class AdminCategoryController extends Controller
         $category = Category::findOrFail($id);
 
         $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:categories,name,' . $id,
-            'image' => 'nullable|image|mimetypes:image/jpeg,image/png,image/jpg,image/gif|max:2048',
-            'description' => 'nullable|string|max:800',
-            'remove_image' => 'nullable|boolean'
+            'name'          => 'required|string|max:255|unique:categories,name,' . $id,
+            'image'         => 'nullable|image|mimetypes:image/jpeg,image/png,image/jpg,image/gif|max:2048',
+            'description'   => 'nullable|string|max:800',
+            'remove_image'  => 'nullable|boolean'
         ], [
-            'name.required' => 'Tên danh mục không được để trống.',
-            'name.max' => 'Tên danh mục không được vượt quá 255 ký tự.',
-            'name.unique' => 'Tên danh mục đã tồn tại.',
-            'description.max' => 'Mô tả không được vượt quá 800 ký tự.',
-            'image.image' => 'File tải lên phải là hình ảnh.',
-            'image.mimetypes' => 'Ảnh phải có định dạng: jpeg, png, jpg, gif.',
-            'image.max' => 'Ảnh không được vượt quá 2MB.',
+            'name.required'     => 'Tên danh mục không được để trống.',
+            'name.max'          => 'Tên danh mục không được vượt quá 255 ký tự.',
+            'name.unique'       => 'Tên danh mục đã tồn tại.',
+            'description.max'   => 'Mô tả không được vượt quá 800 ký tự.',
+            'image.image'       => 'File tải lên phải là hình ảnh.',
+            'image.mimetypes'   => 'Ảnh phải có định dạng: jpeg, png, jpg, gif.',
+            'image.max'         => 'Ảnh không được vượt quá 2MB.',
         ]);
 
         try {
             $categoryData = [
-                'name' => $validated['name'],
-                'slug' => Str::slug($validated['name']),
-                'description' => $validated['description'] ?? null,
+                'name'          => $validated['name'],
+                'slug'          => Str::slug($validated['name']),
+                'description'   => $validated['description'] ?? null,
             ];
 
             if (($request->hasFile('image') || $request->boolean('remove_image')) && $category->image) {
