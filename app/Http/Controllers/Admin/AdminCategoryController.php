@@ -57,6 +57,11 @@ class AdminCategoryController extends Controller
         ]);
 
         try {
+            $slug = Str::slug($validated['name']);
+
+            if (Category::where('slug', $slug)->exists()) {
+                $slug .= '-' . Str::random(6);
+            }
             $categoryData = [
                 'name'          => $validated['name'],
                 'slug'          => Str::slug($validated['name']) . '-' . Str::random(6),
@@ -65,7 +70,7 @@ class AdminCategoryController extends Controller
 
             if ($request->hasFile('image')) {
                 $file = $request->file('image');
-                $filename = uniqid('cat_', true) . '.' . $file->extension();
+                $filename = uniqid('cat_', true);
                 $path = $file->storeAs('images/admin/categories', $filename, 'public');
                 $categoryData['image'] = $path;
             }
