@@ -243,7 +243,7 @@
                                                 <tr>
                                                     <td>{{ $index + 1 }}</td>
                                                     <td>
-                                                       <a href="{{route('admin.books.show', $book->id)}}" style="text-decoration: none; color: #0a0c0d">
+                                                       <a href="{{route('admin.books.show', [$book->id, $book->slug])}}" style="text-decoration: none; color: #0a0c0d">
 {{--                                                            Hiển thị thông tin sách--}}
                                                            @if($book)
                                                                <div class="d-flex align-items-center">
