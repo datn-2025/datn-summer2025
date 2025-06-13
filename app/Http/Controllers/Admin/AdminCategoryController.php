@@ -112,8 +112,8 @@ class AdminCategoryController extends Controller
                 'unique:categories,name,' . $category->id,
                 'not_regex:/<.*?>/i'
             ],
-            'image'         => 'nullable|image|mimetypes:image/jpeg,image/png,image/jpg,image/gif|max:2048',
             'description'   => 'nullable|string|max:800',
+            'image'         => 'nullable|image|mimetypes:image/jpeg,image/png,image/jpg,image/gif|max:2048',
             'remove_image'  => 'nullable|boolean'
         ], [
             'name.required'     => 'Tên danh mục không được để trống.',
@@ -134,17 +134,16 @@ class AdminCategoryController extends Controller
 
             if ($validated['name'] !== $category->name) {
                 $baseSlug = Str::slug($validated['name']);
-                $slug = $baseSlug;
+                $newSlug = $baseSlug;
 
-                $slugExists = Category::query()
-                    ->where('slug', $baseSlug)
+                if (
+                   Category::where('slug', $baseSlug)
                     ->whereKeyNot($category->id)
-                    ->exists();
-
-                if ($slugExists) {
-                    $slug = $baseSlug . '-' . Str::random(6);
+                    ->exists()
+                    ) {
+                    $newSlug = $baseSlug . '-' . Str::random(6);
                 }
-                $categoryData['slug'] = $slug;
+                $categoryData['slug'] = $newSlug;
             }
 
             // Xử lý ảnh
@@ -158,7 +157,7 @@ class AdminCategoryController extends Controller
 
             if ($request->hasFile('image')) {
                 $file = $request->file('image');
-                $filename = uniqid() . '.' . $file->extension();
+                $filename = uniqid('cat_', true) . '.' . $file->extension();
                 $path = $file->storeAs('images/admin/categories', $filename, 'public');
                 $categoryData['image'] = $path;
                 $hasImageChanged = true;
