@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 
 class AdminCategoryController extends Controller
 {
@@ -104,12 +105,17 @@ class AdminCategoryController extends Controller
     {
         $category = Category::where('slug', $slug)->firstOrFail();
 
+        if (!$category) {
+            Toastr::error('Danh mục không còn tồn tại hoặc đã được cập nhật.');
+            return redirect()->route('admin.categories.index');
+        }
+
         $validated = $request->validate([
             'name' => [
                 'required',
                 'string',
                 'max:255',
-                'unique:categories,name,' . $category->id,
+                Rule::unique('categories', 'name')->ignore($category->id),
                 'not_regex:/<.*?>/i'
             ],
             'description'   => 'nullable|string|max:800',
@@ -132,16 +138,17 @@ class AdminCategoryController extends Controller
                 'description'   => $validated['description'] ?? null,
             ];
 
+            // Chỉ đổi slug nếu tên thay đổi
             if ($validated['name'] !== $category->name) {
                 $baseSlug = Str::slug($validated['name']);
                 $newSlug = $baseSlug;
 
                 if (
-                   Category::where('slug', $baseSlug)
+                    Category::where('slug', $baseSlug)
                     ->whereKeyNot($category->id)
                     ->exists()
-                    ) {
-                    $newSlug = $baseSlug . '-' . Str::random(6);
+                ) {
+                    $newSlug .= '-' . Str::random(6);
                 }
                 $categoryData['slug'] = $newSlug;
             }
@@ -163,7 +170,7 @@ class AdminCategoryController extends Controller
                 $hasImageChanged = true;
             }
 
-            // So sánh dữ liệu
+            // Kiểm tra thay đổi
             $original = $category->only(['name', 'description']);
             $incoming = Arr::only($categoryData, ['name', 'description']);
 
