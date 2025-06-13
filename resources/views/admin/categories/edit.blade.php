@@ -104,36 +104,41 @@
 @endsection
 
 @push('scripts')
+    <style>
+        .spin {
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const form = document.querySelector("form");
             const submitBtn = form?.querySelector('button[type="submit"]');
-            let isSubmitting = false;
-
-            // 🔒 Ngăn gửi form nhiều lần liên tiếp
-            form?.addEventListener("submit", (e) => {
-                if (isSubmitting) {
-                    e.preventDefault(); // chặn gửi lại
-                    return; // không cần return false
-                }
-                isSubmitting = true;
-
-                if (submitBtn) {
-                    submitBtn.disabled = true;
-                    submitBtn.innerHTML = '<i class="ri-loader-4-line spin"></i> Đang cập nhật...';
-                }
-            });
-
-            // 👁️ Hiển thị xem trước ảnh
             const imageInput = document.getElementById("image");
             const previewImg = document.getElementById("preview");
 
-            imageInput?.addEventListener("change", (e) => {
-                const file = e.target.files?.[0];
+            // 🛡️ Ngăn submit nhiều lần
+            form?.addEventListener("submit", (e) => {
+                if (form.dataset.submitted === "true") {
+                    e.preventDefault();
+                    return;
+                }
+                form.dataset.submitted = "true";
+                submitBtn?.classList.add("disabled");
+                submitBtn.innerHTML = '<i class="ri-loader-4-line spin"></i> Đang cập nhật...';
+            });
+
+            // 👁️ Xem trước ảnh
+            imageInput?.addEventListener("change", ({ target }) => {
+                const file = target.files?.[0];
                 if (file?.type.startsWith("image/")) {
                     const reader = new FileReader();
-                    reader.onload = (event) => {
-                        previewImg.src = event.target.result;
+                    reader.onload = (e) => {
+                        previewImg.src = e.target.result;
                         previewImg.style.display = "block";
                     };
                     reader.readAsDataURL(file);
@@ -144,20 +149,4 @@
             });
         });
     </script>
-
-    <style>
-        .spin {
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-    </style>
 @endpush
