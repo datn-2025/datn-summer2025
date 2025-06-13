@@ -44,13 +44,20 @@ class AdminCategoryController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name'        => 'required|string|max:255|unique:categories,name',
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                'unique:categories,name',
+                'not_regex:/<.*?>/i'
+            ],
             'description' => 'nullable|string|max:800',
             'image'       => 'nullable|image|mimetypes:image/jpeg,image/png,image/jpg,image/gif|max:2048',
         ], [
             'name.required'     => 'Tên danh mục không được để trống.',
             'name.max'          => 'Tên danh mục không được vượt quá 255 ký tự.',
             'name.unique'       => 'Tên danh mục đã tồn tại.',
+            'name.not_regex'    => 'Tên danh mục không được chứa thẻ HTML.',
             'description.max'   => 'Mô tả không được vượt quá 800 ký tự.',
             'image.image'       => 'File tải lên phải là hình ảnh.',
             'image.mimetypes'   => 'Ảnh phải có định dạng jpeg, png, jpg, gif.',
@@ -99,9 +106,11 @@ class AdminCategoryController extends Controller
 
         $validated = $request->validate([
             'name' => [
-                'required','string','max:255',
+                'required',
+                'string',
+                'max:255',
                 'unique:categories,name,' . $category->id,
-                'not_regex:/<.*?>/i' 
+                'not_regex:/<.*?>/i'
             ],
             'image'         => 'nullable|image|mimetypes:image/jpeg,image/png,image/jpg,image/gif|max:2048',
             'description'   => 'nullable|string|max:800',
