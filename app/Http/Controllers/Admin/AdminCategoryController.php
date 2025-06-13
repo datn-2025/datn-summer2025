@@ -103,10 +103,10 @@ class AdminCategoryController extends Controller
 
     public function update(Request $request, $slug)
     {
-        $category = Category::where('slug', $slug)->firstOrFail();
+        $category = Category::where('slug', $slug)->first();
 
         if (!$category) {
-            Toastr::error('Danh mục không còn tồn tại hoặc đã được cập nhật.');
+            Toastr::info('Danh mục không còn tồn tại hoặc đã được cập nhật.');
             return redirect()->route('admin.categories.index');
         }
 
