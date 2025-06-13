@@ -98,7 +98,11 @@ class AdminCategoryController extends Controller
         $category = Category::where('slug', $slug)->firstOrFail();
 
         $validated = $request->validate([
-            'name'          => 'required|string|max:255|unique:categories,name,' . $category->id,
+            'name' => [
+                'required','string','max:255',
+                'unique:categories,name,' . $category->id,
+                'not_regex:/<.*?>/i' 
+            ],
             'image'         => 'nullable|image|mimetypes:image/jpeg,image/png,image/jpg,image/gif|max:2048',
             'description'   => 'nullable|string|max:800',
             'remove_image'  => 'nullable|boolean'
@@ -106,6 +110,7 @@ class AdminCategoryController extends Controller
             'name.required'     => 'Tên danh mục không được để trống.',
             'name.max'          => 'Tên danh mục không được vượt quá 255 ký tự.',
             'name.unique'       => 'Tên danh mục đã tồn tại.',
+            'name.not_regex'    => 'Tên danh mục không được chứa thẻ HTML.',
             'description.max'   => 'Mô tả không được vượt quá 800 ký tự.',
             'image.image'       => 'File tải lên phải là hình ảnh.',
             'image.mimetypes'   => 'Ảnh phải có định dạng: jpeg, png, jpg, gif.',
@@ -155,7 +160,7 @@ class AdminCategoryController extends Controller
             $incoming = Arr::only($categoryData, ['name', 'description']);
 
             if ($original === $incoming && !$hasImageChanged) {
-                Toastr::info('Không có thay đổi nào cho danh mục.');
+                Toastr::info('Không có thay đổi nào cho danh mục sách.');
                 return redirect()->route('admin.categories.index');
             }
 
