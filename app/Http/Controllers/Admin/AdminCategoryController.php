@@ -226,16 +226,18 @@ class AdminCategoryController extends Controller
         try {
             $category = Category::withTrashed()->findOrFail($id);
 
-            // Kiểm tra xem danh mục có sách nào không
             if ($category->books()->count() > 0) {
-                return back()->with('error', 'Không thể xóa vĩnh viễn danh mục đang có sách trong hệ thống. Vui lòng gán sách cho danh mục khác hoặc xóa mềm.');
+                Toastr::warning('Không thể xoá vĩnh viễn danh mục đang có sách. Vui lòng gán sách cho danh mục khác hoặc xoá mềm.');
+                return back();
             }
 
             $category->forceDelete();
-            return back()->with('success', 'Danh mục đã được xóa vĩnh viễn.');
+            Toastr::success('Danh mục đã được xoá vĩnh viễn.');
         } catch (\Throwable $e) {
-            report($e);
-            return back()->with('error', 'Không thể xóa vĩnh viễn danh mục. Vui lòng thử lại sau.');
+            Log::error('Lỗi khi xoá vĩnh viễn danh mục: ' . $e->getMessage());
+            Toastr::error('Không thể xoá vĩnh viễn danh mục. Vui lòng thử lại sau.');
         }
+
+        return back();
     }
 }
