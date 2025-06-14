@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Setting;
 use Brian2694\Toastr\Toastr;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class SettingController extends Controller
@@ -27,35 +29,61 @@ class SettingController extends Controller
             'favicon' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        $setting = Setting::first();
+        DB::beginTransaction();
 
-        if (!$setting) {
-            $setting = new Setting();
-        }
-
-        $setting->name_website = $request->name_website;
-        $setting->email = $request->email;
-        $setting->phone = $request->phone;
-        $setting->address = $request->address;
-
-        if ($request->hasFile('logo')) {
-            if ($setting->logo && Storage::disk('public')->exists($setting->logo)) {
-                Storage::disk('public')->delete($setting->logo);
+        try {
+            $setting = Setting::first();
+            if (!$setting) {
+                $setting = new Setting();
             }
-            $logoPath = $request->file('logo')->store('settings', 'public');
-            $setting->logo = $logoPath;
-        }
 
-        if ($request->hasFile('favicon')) {
-            if ($setting->favicon && Storage::disk('public')->exists($setting->favicon)) {
-                Storage::disk('public')->delete($setting->favicon);
+            $setting->name_website = $request->name_website;
+            $setting->email = $request->email;
+            $setting->phone = $request->phone;
+            $setting->address = $request->address;
+
+            // Xử lý logo
+            if ($request->hasFile('logo')) {
+                try {
+                    if ($setting->logo && Storage::disk('public')->exists($setting->logo)) {
+                        Storage::disk('public')->delete($setting->logo);
+                    }
+                    $logoPath = $request->file('logo')->store('settings', 'public');
+                    $setting->logo = $logoPath;
+                } catch (\Exception $e) {
+                    DB::rollBack();
+                    Log::error('Lỗi upload logo: ' . $e->getMessage());
+                    toastr()->error('Lỗi khi tải lên logo');
+                    return redirect()->back()->withInput();
+                }
             }
-            $faviconPath = $request->file('favicon')->store('settings', 'public');
-            $setting->favicon = $faviconPath;
-        }
 
-        $setting->save();
-        toastr()->success('Cập nhật cài đặt thành công');
-        return redirect()->route('admin.settings.index');
+            // Xử lý favicon
+            if ($request->hasFile('favicon')) {
+                try {
+                    if ($setting->favicon && Storage::disk('public')->exists($setting->favicon)) {
+                        Storage::disk('public')->delete($setting->favicon);
+                    }
+                    $faviconPath = $request->file('favicon')->store('settings', 'public');
+                    $setting->favicon = $faviconPath;
+                } catch (\Exception $e) {
+                    DB::rollBack();
+                    Log::error('Lỗi upload favicon: ' . $e->getMessage());
+                    toastr()->error('Lỗi khi tải lên favicon');
+                    return redirect()->back()->withInput();
+                }
+            }
+
+            $setting->save();
+
+            DB::commit();
+            toastr()->success('Cập nhật cài đặt thành công');
+            return redirect()->route('admin.settings.index');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Lỗi cập nhật cài đặt: ' . $e->getMessage());
+            toastr()->error('Đã xảy ra lỗi khi cập nhật cài đặt');
+            return redirect()->back()->withInput();
+        }
     }
 }
