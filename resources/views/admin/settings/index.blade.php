@@ -1,5 +1,5 @@
 @extends('layouts.backend')
-
+@section('title', 'Cấu hình website')
 @section('content')
 <div class="container-fluid">
     <!-- Page Heading -->
