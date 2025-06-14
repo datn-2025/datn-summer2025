@@ -98,7 +98,7 @@
                                         <td>{{ $category->deleted_at->format('d/m/Y H:i') }}</td>
                                         <td>
                                             <!-- Khôi phục -->
-                                            <form action="{{ route('admin.categories.restore', $category->id) }}"
+                                            <form action="{{ route('admin.categories.restore', $category->slug) }}"
                                                 method="POST" class="d-inline">
                                                 @csrf @method('PUT')
                                                 <button class="btn btn-sm btn-success" title="Khôi phục">
@@ -107,7 +107,7 @@
                                             </form>
 
                                             <!-- Xoá vĩnh viễn -->
-                                            <form action="{{ route('admin.categories.force-delete', $category->id) }}"
+                                            <form action="{{ route('admin.categories.force-delete', $category->slug) }}"
                                                 method="POST" class="d-inline">
                                                 @csrf @method('DELETE')
                                                 <button class="btn btn-sm btn-danger" title="Xoá vĩnh viễn"
