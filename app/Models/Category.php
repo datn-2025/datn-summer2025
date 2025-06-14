@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
+
 class Category extends Model
 {
     use HasFactory, SoftDeletes;
@@ -50,7 +51,6 @@ class Category extends Model
     // Sản phẩm thuộc danh mục
     public function products()
     {
-        return $this->hasMany(Book::class,'category_id');
+        return $this->hasMany(Book::class, 'category_id');
     }
-
 }
