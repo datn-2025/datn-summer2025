@@ -10,7 +10,7 @@
     <title>{{get_setting()->name_website ?? 'BookBee'}} - @yield('title')</title>
 
     <!-- App favicon -->
-    <link rel="shortcut icon" href="{{ asset('storage/'.  get_setting()->favicon) }}">
+    <link rel="shortcut icon" href="{{ asset('storage/' . (get_setting() ? get_setting()->favicon : 'default_favicon.ico')) }}" />
 
     <!-- jsvectormap css -->
     <link href="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/css/jsvectormap.min.css" rel="stylesheet"
@@ -581,7 +581,7 @@
             <div class="navbar-brand-box">
                 <a href="{{route('admin.dashboard')}}" class="logo logo-light">
                     <span class="logo-lg">
-                        <img src="{{ asset('storage/'.  get_setting()->logo) }}" alt="" width="200px">
+                        <img src="{{ asset('storage/' . (get_setting() ? get_setting()->logo : 'default_logo.png')) }}" alt="" width="200px">
                     </span>
                 </a>
                 <button type="button" class="btn btn-sm p-0 fs-20 header-item float-end btn-vertical-sm-hover"
