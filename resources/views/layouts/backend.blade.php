@@ -8,8 +8,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta content="BookBee Admin Dashboard" name="description" />
     <meta content="Your Team" name="author" />
-    <title>BookBee Admin - @yield('title')</title>
-    <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico') }}">
+    <title>{{ get_setting()->name_website ?? 'BookBee' }} - @yield('title')</title>
+
+    <!-- App favicon -->
+    <link rel="shortcut icon"
+        href="{{ asset('storage/' . (get_setting() ? get_setting()->favicon : 'default_favicon.ico')) }}" />
 
     <!-- Core CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
@@ -101,7 +104,7 @@
                     <div class="d-flex">
                         <!-- Logo (dark & light) -->
                         <div class="navbar-brand-box horizontal-logo">
-                            @foreach (['dark', 'light'] as $mode)
+                            {{-- @foreach (['dark', 'light'] as $mode)
                                 <a href="index.html" class="logo logo-{{ $mode }}" title="Trang chủ">
                                     <span class="logo-sm">
                                         <img src="{{ asset('assets/images/logo-sm.png') }}" alt="Logo nhỏ"
@@ -112,7 +115,7 @@
                                             alt="Logo {{ $mode }}" height="17">
                                     </span>
                                 </a>
-                            @endforeach
+                            @endforeach --}}
                         </div>
 
                         <!-- Toggle sidebar menu -->
@@ -300,33 +303,15 @@
 
                             <div class="dropdown-menu dropdown-menu-end">
                                 <h6 class="dropdown-header">Welcome {{ auth()->user()->name }}!</h6>
-                                <a class="dropdown-item" href="pages-profile.html">
-                                    <i class="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i> Profile
-                                </a>
-                                <a class="dropdown-item" href="apps-chat.html">
-                                    <i class="mdi mdi-message-text-outline text-muted fs-16 align-middle me-1"></i>
-                                    Messages
-                                </a>
-                                <a class="dropdown-item" href="apps-tasks-kanban.html">
-                                    <i class="mdi mdi-calendar-check-outline text-muted fs-16 align-middle me-1"></i>
-                                    Taskboard
-                                </a>
-                                <a class="dropdown-item" href="pages-faqs.html">
-                                    <i class="mdi mdi-lifebuoy text-muted fs-16 align-middle me-1"></i> Help
-                                </a>
+                                <!-- item-->
+                                <a class="dropdown-item" href="pages-profile.html"><i
+                                        class="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i> <span
+                                        class="align-middle">Tài Khoản</span></a>
+                                <a class="dropdown-item" href="apps-chat.html"><i
+                                        class="fa-solid fa-key text-muted fs-16 align-middle me-1"></i>
+                                    <span class="align-middle">Đổi Mật Khẩu</span></a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="pages-profile.html">
-                                    <i class="mdi mdi-wallet text-muted fs-16 align-middle me-1"></i> Balance:
-                                    <b>$5971.67</b>
-                                </a>
-                                <a class="dropdown-item" href="pages-profile-settings.html">
-                                    <span class="badge bg-success-subtle text-success mt-1 float-end">New</span>
-                                    <i class="mdi mdi-cog-outline text-muted fs-16 align-middle me-1"></i> Settings
-                                </a>
-                                <a class="dropdown-item" href="auth-lockscreen-basic.html">
-                                    <i class="mdi mdi-lock text-muted fs-16 align-middle me-1"></i> Lock screen
-                                </a>
-                                <form method="POST" action="{{ route('admin.logout') }}">
+                                <form method="POST" action="{{ route('admin.logout') }}" style="display: inline;">
                                     @csrf
                                     <button type="submit" class="dropdown-item">
                                         <i class="mdi mdi-logout text-muted fs-16 align-middle me-1"></i> Đăng xuất
@@ -371,19 +356,12 @@
         <div class="app-menu navbar-menu">
             <!-- Logo -->
             <div class="navbar-brand-box">
-                @foreach (['dark', 'light'] as $mode)
-                    <a href="{{ route('admin.dashboard') }}" class="logo logo-{{ $mode }}">
-                        <span class="logo-sm">
-                            <img src="/images/logo-admin-layout-login.png" alt="Logo nhỏ"
-                                height="{{ $mode === 'dark' ? 12 : 42 }}">
-                        </span>
-                        <span class="logo-lg">
-                            <img src="/images/logo-admin-layout-login.png" alt="Logo lớn"
-                                height="{{ $mode === 'dark' ? 17 : 37 }}">
-                        </span>
-                    </a>
-                @endforeach
-
+                <a href="{{ route('admin.dashboard') }}" class="logo logo-light">
+                    <span class="logo-lg">
+                        <img src="{{ asset('storage/' . (get_setting() ? get_setting()->logo : 'default_logo.png')) }}"
+                            alt="" width="200px">
+                    </span>
+                </a>
                 <button type="button" class="btn btn-sm p-0 fs-20 header-item float-end btn-vertical-sm-hover"
                     id="vertical-hover">
                     <i class="ri-record-circle-line"></i>
@@ -395,15 +373,14 @@
                 <div class="container-fluid">
                     <div id="two-column-menu"></div>
                     <ul class="navbar-nav" id="navbar-nav">
-                        <li class="menu-title"><span data-key="t-menu">Menu</span></li>
-
+                        <li class="menu-title"><span data-key="t-menu">Báo Cáo Thống Kê</span></li>
                         <li class="nav-item">
                             <a class="nav-link menu-link" href="{{ route('admin.dashboard') }}">
                                 <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Báo cáo tổng
                                     quan</span>
                             </a>
-                        </li>
-
+                        </li> <!-- end Dashboard Menu -->
+                        <li class="menu-title"><span data-key="t-menu">Quản Lý Hệ Thống</span></li>
                         <li class="nav-item">
                             <a class="nav-link menu-link" href="{{ route('admin.users.index') }}">
                                 <i class="ri-account-circle-line"></i> <span data-key="t-authentication">Quản lý người
@@ -485,8 +462,7 @@
                         <li class="nav-item">
                             <a class="nav-link menu-link" href="#sidebarAdvanceUI" data-bs-toggle="collapse"
                                 aria-expanded="false">
-                                <i class="ri-stack-line"></i> <span data-key="t-promotions">Quản lý khuyến mãi toàn
-                                    nền tảng</span>
+                                <i class="ri-stack-line"></i> <span data-key="t-promotions">Quản lý khuyến mãi</span>
                             </a>
                             <div class="collapse menu-dropdown" id="sidebarAdvanceUI">
                                 <ul class="nav nav-sm flex-column">
@@ -523,12 +499,22 @@
                             <div class="collapse menu-dropdown" id="sidebarWallets">
                                 <ul class="nav nav-sm flex-column">
                                     <li class="nav-item">
-                                        <a href="{{route('admin.wallets.index')}}" class="nav-link" data-key="t-basic-elements">Danh
+                                        <a href="{{ route('admin.wallets.index') }}" class="nav-link"
+                                            data-key="t-basic-elements">Danh
                                             sách</a>
                                     </li>
                                 </ul>
                             </div>
                         </li>
+                        <li class="menu-title"><span data-key="t-menu">Cấu Hình</span></li>
+
+                        <li class="nav-item">
+                            <a class="nav-link menu-link" href="{{ route('admin.settings.index') }}">
+                                <i class="ri-file-list-3-line"></i> <span data-key="t-forms">Cấu hình website</span>
+                            </a>
+                        </li>
+
+
                     </ul>
                 </div>
             </div>
@@ -560,7 +546,7 @@
                         <div class="col-sm-6">
                             <script>
                                 document.write(new Date().getFullYear())
-                            </script> © BookBee.
+                            </script> BookBee
                         </div>
                         <div class="col-sm-6">
                             <div class="text-sm-end d-none d-sm-block">
@@ -575,14 +561,6 @@
 
     </div>
     <!-- END layout-wrapper -->
-
-
-
-    <!--start back-to-top-->
-    {{-- <button onclick="topFunction()" class="btn btn-danger btn-icon" id="back-to-top">
-        <i class="ri-arrow-up-line"></i>
-    </button> --}}
-    <!--end back-to-top-->
 
     <!--preloader-->
     <div id="preloader"
@@ -600,7 +578,7 @@
         </button>
     </div>
 
-    <!-- Theme Settings -->
+    {{-- <!-- Theme Settings -->
     <div class="offcanvas offcanvas-end border-0" tabindex="-1" id="theme-settings-offcanvas">
         <div class="d-flex align-items-center bg-primary bg-gradient p-3 offcanvas-header">
             <h5 class="m-0 me-2 text-white">Theme Customizer</h5>
@@ -1283,26 +1261,57 @@
             </div>
 
         </div>
-    </div>
+    </div> --}}
 
-    {{-- ================= PLUGIN JS ================= --}}
+    {{-- ================== PLUGIN JS (EXTERNAL) ================== --}}
     <script src="https://cdn.jsdelivr.net/npm/simplebar@6.2.5/dist/simplebar.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.29.1/dist/feather.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.45.1/dist/apexcharts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/js/jsvectormap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/maps/world-merc.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/2.3.1/list.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/list.pagination.js/0.1.1/list.pagination.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.5/dist/sweetalert2.all.min.js"></script>
 
-    {{-- ================= VECTOR MAP ================= --}}
-    <script src="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/js/jsvectormap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/maps/world-merc.js"></script>
+    {{-- ================== INTERNAL PLUGINS ================== --}}
+    <script src="{{ asset('assets/js/pages/plugins/lord-icon-2.1.0.js') }}"></script>
+    <script src="{{ asset('assets/js/plugins.js') }}"></script>
+    <script src="{{ asset('assets/js/pages/dashboard-ecommerce.init.js') }}"></script>
+    <script src="{{ asset('assets/js/app.js') }}"></script>
+    <script src="{{ asset('assets/js/custom.js') }}"></script>
 
-    {{-- ================= APEXCHART ================= --}}
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.45.1/dist/apexcharts.min.js"></script>
+    {{-- ================== MENU ACTIVE HANDLER ================== --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentUrl = window.location.pathname;
+            document.querySelectorAll('.nav-link').forEach(item => {
+                const itemUrl = item.getAttribute('href');
+                if (!itemUrl) return;
+                const itemPath = new URL(itemUrl, window.location.origin).pathname;
+                if (currentUrl === itemPath) {
+                    item.classList.add('active');
+                    const parentCollapse = item.closest('.collapse');
+                    if (parentCollapse) {
+                        parentCollapse.classList.add('show');
+                        const toggleBtn = parentCollapse.closest('.nav-item')?.querySelector('.menu-link');
+                        if (toggleBtn) {
+                            toggleBtn.classList.remove('collapsed');
+                            toggleBtn.classList.add('active');
+                            toggleBtn.setAttribute('aria-expanded', 'true');
+                            const parentItem = toggleBtn.closest('.nav-item');
+                            parentItem?.classList.add('active');
+                            parentItem?.querySelector('.nav-link')?.classList.add('active');
+                        }
+                    }
+                }
+            });
+        });
+    </script>
 
-    {{-- ================= SWIPER SLIDER ================= --}}
-    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+    {{-- ================== SWIPER INIT ================== --}}
     <script>
         const thumbnailSlider = new Swiper(".thumbnail-slider", {
             spaceBetween: 10,
@@ -1330,29 +1339,19 @@
             },
             thumbs: {
                 swiper: thumbnailSlider
-            },
+            }
         });
     </script>
 
-    {{-- ================= CORE SCRIPTS ================= --}}
-    <script src="{{ asset('assets/js/pages/plugins/lord-icon-2.1.0.js') }}"></script>
-    <script src="{{ asset('assets/js/plugins.js') }}"></script>
-    <script src="{{ asset('assets/js/pages/dashboard-ecommerce.init.js') }}"></script>
-    <script src="{{ asset('assets/js/app.js') }}"></script>
-    <script src="{{ asset('assets/js/custom.js') }}"></script>
-
-    {{-- ================= TOASTR + CLEAN SESSION ================= --}}
+    {{-- ================== TOASTR + SESSION CLEANUP ================== --}}
     {!! Toastr::message() !!}
     <script>
         if (performance.getEntriesByType('navigation')[0]?.type === 'back_forward') {
-            const toastrContainer = document.querySelector('#toast-container');
-            if (toastrContainer) {
-                toastrContainer.remove();
-            }
+            document.querySelector('#toast-container')?.remove();
         }
     </script>
 
-    {{-- ================= LIVEWIRE + YIELD ================= --}}
+    {{-- ================== LIVEWIRE & PAGE-SPECIFIC SCRIPTS ================== --}}
     @livewireScripts
     @yield('scripts')
     @stack('scripts')
