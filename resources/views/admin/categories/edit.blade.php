@@ -29,7 +29,7 @@
                     </div>
                     <div class="card-body">
                         <form action="{{ route('admin.categories.update', $category->slug) }}" method="POST"
-                            enctype="multipart/form-data">
+                            enctype="multipart/form-data"  onsubmit="return disableSubmitOnce(this)">
                             @csrf
                             @method('PUT')
 
@@ -104,49 +104,42 @@
 @endsection
 
 @push('scripts')
-    <style>
-        .spin {
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    </style>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const imageInput = document.getElementById("image");
+        const previewImg = document.getElementById("preview");
 
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const form = document.querySelector("form");
-            const submitBtn = form?.querySelector('button[type="submit"]');
-            const imageInput = document.getElementById("image");
-            const previewImg = document.getElementById("preview");
+        if (!imageInput || !previewImg) return;
 
-            // 🛡️ Ngăn submit nhiều lần
-            form?.addEventListener("submit", (e) => {
-                if (form.dataset.submitted === "true") {
-                    e.preventDefault();
-                    return;
-                }
-                form.dataset.submitted = "true";
-                submitBtn?.classList.add("disabled");
-                submitBtn.innerHTML = '<i class="ri-loader-4-line spin"></i> Đang cập nhật...';
-            });
+        imageInput.addEventListener("change", (e) => {
+            const file = e.target.files?.[0];
 
-            // 👁️ Xem trước ảnh
-            imageInput?.addEventListener("change", ({ target }) => {
-                const file = target.files?.[0];
-                if (file?.type.startsWith("image/")) {
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        previewImg.src = e.target.result;
-                        previewImg.style.display = "block";
-                    };
-                    reader.readAsDataURL(file);
-                } else {
-                    previewImg.src = "#";
-                    previewImg.style.display = "none";
-                }
-            });
+            // Nếu có file và là ảnh
+            if (file && file.type.startsWith("image/")) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    previewImg.src = event.target.result;
+                    previewImg.style.display = "block";
+                };
+                reader.readAsDataURL(file);
+            } else {
+                // Không chọn hoặc không phải ảnh ⇒ ẩn preview
+                previewImg.src = "#";
+                previewImg.style.display = "none";
+            }
         });
-    </script>
+    });
+</script>
+    <script>
+    let submitted = false;
+    function disableSubmitOnce(form) {
+        if (submitted) return false;
+        submitted = true;
+        const btn = form.querySelector('button[type="submit"]');
+        btn.disabled = true;
+        btn.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> Đang xử lý...`;
+        return true;
+    }
+</script>
+
 @endpush
