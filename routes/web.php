@@ -293,7 +293,7 @@ Route::middleware(['auth:admin', 'admin'])->prefix('admin')->name('admin.')->gro
 
     // Route admin/categories
     Route::prefix('categories')->name('categories.')->group(function () {
-        Route::get('/', [CategoryController::class, 'index'])->name('index');
+        // Route::get('/', [CategoryController::class, 'index'])->name('index');
         // Route admin/brand
         Route::prefix('brands')->name('brands.')->group(function () {
             Route::get('/', [CategoryController::class, 'brand'])->name('brand');
