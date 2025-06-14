@@ -57,7 +57,8 @@
                                 style="width:75px;height:75px"></lord-icon>
                             <h5 class="mt-3 text-danger">Không tìm thấy danh mục</h5>
                             <p class="text-muted">Không có danh mục nào khớp với
-                                <strong>"{{ request('search_name_category') }}"</strong>.</p>
+                                <strong>"{{ request('search_name_category') }}"</strong>.
+                            </p>
                         @else
                             <lord-icon src="https://cdn.lordicon.com/jmkrnisz.json" trigger="loop"
                                 style="width:90px;height:90px"></lord-icon>
@@ -73,8 +74,7 @@
                                     <th>STT</th>
                                     <th>Tên</th>
                                     <th>Ảnh</th>
-                                    <th class="text-center">Sách</th>
-                                    <th>Ngày tạo</th>
+                                    <th class="text-center">Số lượng sách</th>
                                     <th>Ngày xoá</th>
                                     <th>Hành động</th>
                                 </tr>
@@ -94,7 +94,6 @@
                                             @endif
                                         </td>
                                         <td class="text-center">{{ $category->books_count }}</td>
-                                        <td>{{ $category->created_at->format('d/m/Y') }}</td>
                                         <td>{{ $category->deleted_at->format('d/m/Y H:i') }}</td>
                                         <td>
                                             <!-- Khôi phục -->
