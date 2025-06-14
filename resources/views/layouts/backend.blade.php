@@ -7,10 +7,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta content="BookBee Admin Dashboard" name="description" />
     <meta content="Your Team" name="author" />
-    <title>BookBee Admin - @yield('title')</title>
+    <title>{{get_setting()->name_website ?? 'BookBee'}} - @yield('title')</title>
 
     <!-- App favicon -->
-    <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico') }}">
+    <link rel="shortcut icon" href="{{ asset('storage/'.  get_setting()->favicon) }}">
 
     <!-- jsvectormap css -->
     <link href="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/css/jsvectormap.min.css" rel="stylesheet"
@@ -115,7 +115,7 @@
                     <div class="d-flex">
                         <!-- LOGO -->
                         <div class="navbar-brand-box horizontal-logo">
-                            <a href="index.html" class="logo logo-dark">
+                            {{-- <a href="index.html" class="logo logo-dark">
                                 <span class="logo-sm">
                                     <img src="{{ asset('assets/images/logo-sm.png') }}" alt="" height="22">
                                 </span>
@@ -132,7 +132,7 @@
                                     <img src="{{ asset('assets/images/logo-light.png') }}" alt=""
                                         height="17">
                                 </span>
-                            </a>
+                            </a> --}}
                         </div>
 
                         <button type="button"
@@ -527,30 +527,12 @@
                             </button>
                             <div class="dropdown-menu dropdown-menu-end">
                                 <!-- item-->
-                                <h6 class="dropdown-header">Welcome Anna!</h6>
                                 <a class="dropdown-item" href="pages-profile.html"><i
                                         class="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i> <span
-                                        class="align-middle">Profile</span></a>
-                                <a class="dropdown-item" href="apps-chat.html"><i
-                                        class="mdi mdi-message-text-outline text-muted fs-16 align-middle me-1"></i>
-                                    <span class="align-middle">Messages</span></a>
-                                <a class="dropdown-item" href="apps-tasks-kanban.html"><i
-                                        class="mdi mdi-calendar-check-outline text-muted fs-16 align-middle me-1"></i>
-                                    <span class="align-middle">Taskboard</span></a>
-                                <a class="dropdown-item" href="pages-faqs.html"><i
-                                        class="mdi mdi-lifebuoy text-muted fs-16 align-middle me-1"></i> <span
-                                        class="align-middle">Help</span></a>
+                                        class="align-middle">Tài Khoản</span></a>
+                                <a class="dropdown-item" href="apps-chat.html"><i class="fa-solid fa-key text-muted fs-16 align-middle me-1"></i>
+                                    <span class="align-middle">Đổi Mật Khẩu</span></a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="pages-profile.html"><i
-                                        class="mdi mdi-wallet text-muted fs-16 align-middle me-1"></i> <span
-                                        class="align-middle">Balance : <b>$5971.67</b></span></a>
-                                <a class="dropdown-item" href="pages-profile-settings.html"><span
-                                        class="badge bg-success-subtle text-success mt-1 float-end">New</span><i
-                                        class="mdi mdi-cog-outline text-muted fs-16 align-middle me-1"></i> <span
-                                        class="align-middle">Settings</span></a>
-                                <a class="dropdown-item" href="auth-lockscreen-basic.html"><i
-                                        class="mdi mdi-lock text-muted fs-16 align-middle me-1"></i> <span
-                                        class="align-middle">Lock screen</span></a>
                                 <form method="POST" action="{{ route('admin.logout') }}" style="display: inline;">
                                     @csrf
                                     <button type="submit" class="dropdown-item">
@@ -597,22 +579,9 @@
         <div class="app-menu navbar-menu">
             <!-- LOGO -->
             <div class="navbar-brand-box">
-                <!-- Dark Logo-->
-                <a href="index.html" class="logo logo-dark">
-                    <span class="logo-sm">
-                        <img src="{{ asset('assets/images/logo-sm.png') }}" alt="" height="22">
-                    </span>
-                    <span class="logo-lg">
-                        <img src="{{ asset('assets/images/logo-dark.png') }}" alt="" height="17">
-                    </span>
-                </a>
-                <!-- Light Logo-->
                 <a href="{{route('admin.dashboard')}}" class="logo logo-light">
-                    <span class="logo-sm">
-                        <img src="{{ asset('assets/images/logo-sm.png') }}" alt="" height="22">
-                    </span>
                     <span class="logo-lg">
-                        <img src="{{ asset('assets/images/logo-light.png') }}" alt="" height="17">
+                        <img src="{{ asset('storage/'.  get_setting()->logo) }}" alt="" width="200px">
                     </span>
                 </a>
                 <button type="button" class="btn btn-sm p-0 fs-20 header-item float-end btn-vertical-sm-hover"
@@ -627,14 +596,14 @@
                     <div id="two-column-menu">
                     </div>
                     <ul class="navbar-nav" id="navbar-nav">
-                        <li class="menu-title"><span data-key="t-menu">Menu</span></li>
+                        <li class="menu-title"><span data-key="t-menu">Báo Cáo Thống Kê</span></li>
                         <li class="nav-item">
                             <a class="nav-link menu-link" href="{{route('admin.dashboard')}}">
                                 <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Báo cáo tổng
                                     quan</span>
                             </a>
                         </li> <!-- end Dashboard Menu -->
-
+                        <li class="menu-title"><span data-key="t-menu">Quản Lý Hệ Thống</span></li>
                         <li class="nav-item">
                             <a class="nav-link menu-link" href="{{ route('admin.users.index') }}">
                                 <i class="ri-account-circle-line"></i> <span data-key="t-authentication">Quản lý người
@@ -733,9 +702,7 @@
                             <a class="nav-link menu-link" href="#sidebarAdvanceUI" data-bs-toggle="collapse"
                                 role="button" aria-expanded="false" aria-controls="sidebarAdvanceUI">
 
-                                <i class="ri-stack-line"></i> <span data-key="t-advance-ui">Quản lý khuyến mãi toàn
-                                    nền
-                                    tảng</span>
+                                <i class="ri-stack-line"></i> <span data-key="t-advance-ui">Quản lý khuyến mãi </span>
                             </a>
                             <div class="collapse menu-dropdown" id="sidebarAdvanceUI">
                                 <ul class="nav nav-sm flex-column">
@@ -791,6 +758,8 @@
                                 </ul>
                             </div>
                         </li>
+                        <li class="menu-title"><span data-key="t-menu">Cấu Hình</span></li>
+
                         <li class="nav-item">
                             <a class="nav-link menu-link" href="{{route('admin.settings.index')}}" >
                                 <i class="ri-file-list-3-line"></i> <span data-key="t-forms">Cấu hình website</span>
@@ -901,7 +870,7 @@
 
                 // Chuyển đổi href thành pathname để so sánh
                 const itemPath = new URL(itemUrl, window.location.origin).pathname;
-                
+
                 // Kiểm tra xem URL hiện tại có khớp với href của menu item không
                 if (currentUrl === itemPath) {
                     // Thêm class active cho menu item hiện tại
@@ -912,7 +881,7 @@
                     if (parentCollapse) {
                         // Mở menu cha
                         parentCollapse.classList.add('show');
-                        
+
                         // Tìm nút toggle của menu cha và active nó
                         const parentNavItem = parentCollapse.closest('.nav-item');
                         const toggleBtn = parentNavItem.querySelector('.menu-link');
@@ -920,7 +889,7 @@
                             toggleBtn.classList.remove('collapsed');
                             toggleBtn.classList.add('active');
                             toggleBtn.setAttribute('aria-expanded', 'true');
-                            
+
                             // Thêm class active cho menu cha
                             const parentListItem = toggleBtn.closest('.nav-item');
                             if (parentListItem) {
