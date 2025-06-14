@@ -153,17 +153,12 @@ class AdminCategoryController extends Controller
             }
 
             // Kiểm tra thay đổi
-            $original = $category->only(['name', 'description']);
-            $incoming = Arr::only($categoryData, ['name', 'description']);
+            $original = $category->only(['name', 'description', 'image']);
+            $incoming = array_merge($original, Arr::only($categoryData, ['name', 'description', 'image']));
 
-            if ($original === $incoming && !$hasImageChanged) {
+            if ($original === $incoming) {
                 Toastr::info('Không có thay đổi nào cho danh mục sách.');
                 return redirect()->route('admin.categories.index');
-            }
-
-            if ($category->isDirty()) {
-                $category->save();
-                Toastr::success('Cập nhật danh mục thành công!');
             }
 
             $category->update($categoryData);
