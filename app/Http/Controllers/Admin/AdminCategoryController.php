@@ -176,10 +176,6 @@ class AdminCategoryController extends Controller
     public function trash(Request $request)
     {
         try {
-            // Log::info('Bắt đầu hàm trash');
-            // $query = Category::onlyTrashed();
-            // Log::info('Sau onlyTrashed');
-
             $query = Category::onlyTrashed()->withCount('books');
 
             if (!empty($request['search_name_category'])) {
@@ -187,7 +183,6 @@ class AdminCategoryController extends Controller
             }
 
             $deletedCategories = $query->withCount('books')->paginate(10);
-            // Log::info('Sau withCount và paginate', ['count' => $deletedCategories->count()]);
 
             return view('admin.categories.categories-trash', [
                 'deletedCategories' => $deletedCategories,
@@ -195,7 +190,6 @@ class AdminCategoryController extends Controller
             ]);
         } catch (\Throwable $e) {
             Log::error('Lỗi trong hàm trash: ' . $e->getMessage());
-            report($e);
             Toastr::error('Đã xảy ra lỗi khi truy vấn danh mục. Vui lòng thử lại sau.');
             return back();
         }
