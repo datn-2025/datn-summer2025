@@ -175,20 +175,22 @@ class AdminCategoryController extends Controller
     public function trash(Request $request)
     {
         try {
-            Log::info('Bắt đầu hàm trash');
-            $query = Category::onlyTrashed();
-            Log::info('Sau onlyTrashed');
+            // Log::info('Bắt đầu hàm trash');
+            // $query = Category::onlyTrashed();
+            // Log::info('Sau onlyTrashed');
+
+            $query = Category::onlyTrashed()->withCount('books');
 
             if (!empty($request['search_name_category'])) {
                 $query->where('name', 'like', '%' . $request['search_name_category'] . '%');
             }
 
             $deletedCategories = $query->withCount('books')->paginate(10);
-            Log::info('Sau withCount và paginate', ['count' => $deletedCategories->count()]);
+            // Log::info('Sau withCount và paginate', ['count' => $deletedCategories->count()]);
 
             return view('admin.categories.categories-trash', [
                 'deletedCategories' => $deletedCategories,
-                'searchName' => $request['search_name'] ?? ''
+                'searchName' => $request['search_name_category'] ?? ''
             ]);
         } catch (\Throwable $e) {
             Log::error('Lỗi trong hàm trash: ' . $e->getMessage(), [
