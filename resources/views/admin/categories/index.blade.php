@@ -105,7 +105,8 @@
                                                 <td>
                                                     @if ($category->image)
                                                         <img src="{{ asset('storage/' . $category->image) }}"
-                                                            alt="{{ $category->name }}" width="50">
+                                                            alt="{{ $category->name }}" width="50"
+                                                            class="rounded object-fit-cover">
                                                     @else
                                                         <span class="text-muted">Không có ảnh</span>
                                                     @endif
