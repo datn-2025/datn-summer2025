@@ -67,10 +67,8 @@ class AdminCategoryController extends Controller
 
         try {
             $slug = Str::slug($validated['name']);
-
-            if (Category::where('slug', $slug)->exists()) {
-                $slug .= '-' . Str::random(6);
-            }
+            $slug = Category::where('slug', $slug)->exists()
+                ? $slug . '-' . Str::random(6) : $slug;
 
             $categoryData = [
                 'name'          => $validated['name'],
@@ -85,13 +83,8 @@ class AdminCategoryController extends Controller
                 $categoryData['image'] = $path;
             }
 
-            if (!Category::where('name', $categoryData['name'])->exists()) {
-                Category::create($categoryData);
-                Toastr::success('Thêm mới danh mục thành công!');
-            } else {
-                Toastr::warning('Danh mục này đã tồn tại!');
-            }
-
+            Category::create($categoryData);
+            Toastr::success('Thêm mới danh mục thành công!');
             return redirect()->route('admin.categories.index');
         } catch (\Throwable $e) {
             Log::error('Lỗi khi thêm danh mục: ' . $e->getMessage());
@@ -109,11 +102,6 @@ class AdminCategoryController extends Controller
     public function update(Request $request, $slug)
     {
         $category = Category::where('slug', $slug)->firstOrFail();
-
-        // if (!$category) {
-        //     Toastr::info('Danh mục không còn tồn tại hoặc đã được cập nhật.');
-        //     return redirect()->route('admin.categories.index');
-        // }
 
         $validated = $request->validate([
             'name' => [
@@ -146,33 +134,22 @@ class AdminCategoryController extends Controller
             // Chỉ đổi slug nếu tên thay đổi
             if ($validated['name'] !== $category->name) {
                 $baseSlug = Str::slug($validated['name']);
-                $newSlug = $baseSlug;
+                $slugUnique = Category::where('slug', $baseSlug)
+                    ->whereKeyNot($category->id)->exists()
+                    ? $baseSlug . '-' . Str::random(6) : $baseSlug;
 
-                if (
-                    Category::where('slug', $baseSlug)
-                    ->whereKeyNot($category->id)
-                    ->exists()
-                ) {
-                    $newSlug .= '-' . Str::random(6);
-                }
-                $categoryData['slug'] = $newSlug;
+                $categoryData['slug'] = $slugUnique;
             }
-
-            // Xử lý ảnh
-            $hasImageChanged = false;
 
             if (($request->hasFile('image') || $request->boolean('remove_image')) && $category->image) {
                 Storage::disk('public')->delete($category->image);
                 $categoryData['image'] = null;
-                $hasImageChanged = true;
             }
 
             if ($request->hasFile('image')) {
                 $file = $request->file('image');
                 $filename = uniqid('cat_', true) . '.' . $file->extension();
-                $path = $file->storeAs('images/admin/categories', $filename, 'public');
-                $categoryData['image'] = $path;
-                $hasImageChanged = true;
+                $categoryData['image'] = $file->storeAs('images/admin/categories', $filename, 'public');
             }
 
             // Kiểm tra thay đổi
