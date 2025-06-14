@@ -28,7 +28,7 @@
                     <h5 class="mb-0">Thông tin danh mục</h5>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('admin.categories.store') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('admin.categories.store') }}" method="POST" enctype="multipart/form-data" onsubmit="return disableSubmitOnce(this)">
                         @csrf
 
                         <!-- Tên danh mục -->
@@ -113,4 +113,18 @@
         });
     });
 </script>
+<script>
+    let submitted = false;
+    function disableSubmitOnce(form) {
+        if (submitted) return false; // Ngăn gửi lại
+
+        submitted = true;
+        const btn = form.querySelector('button[type="submit"]');
+        btn.disabled = true;
+        btn.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> Đang xử lý...`;
+
+        return true; // Cho phép gửi 1 lần đầu
+    }
+</script>
+
 @endpush
