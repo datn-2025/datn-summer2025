@@ -347,4 +347,10 @@ Route::middleware(['auth:admin', 'admin'])->prefix('admin')->name('admin.')->gro
         Route::get('/edit/{id}', [OrderController::class, 'edit'])->name('edit');
         Route::put('/update/{id}', [OrderController::class, 'update'])->name('update');
     });
+
+    // Route admin/settings
+    Route::prefix('settings')->name('settings.')->group(function () {
+        Route::get('/', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('index');
+        Route::post('/update', [App\Http\Controllers\Admin\SettingController::class, 'update'])->name('update');
+    });
 });
