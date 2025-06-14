@@ -120,7 +120,7 @@
                                                             <i class="ri-edit-2-line"></i>
                                                         </a>
                                                         <form
-                                                            action="{{ route('admin.categories.destroy', $category->id) }}"
+                                                            action="{{ route('admin.categories.destroy', $category->slug) }}"
                                                             method="POST" class="d-inline"
                                                             onsubmit="return confirm('{{ $category->books_count > 0 ? 'Danh mục này đang chứa sách!! Bạn có chắc muốn xoá tạm thời không?' : 'Bạn có chắc muốn xoá tạm thời danh mục này?' }}')">
                                                             @csrf
