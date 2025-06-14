@@ -122,7 +122,7 @@
                                                         <form
                                                             action="{{ route('admin.categories.destroy', $category->id) }}"
                                                             method="POST" class="d-inline"
-                                                            onsubmit="return confirm('Bạn có chắc muốn xóa tạm thời danh mục này?')">
+                                                            onsubmit="return confirm('{{ $category->books_count > 0 ? 'Danh mục này đang chứa sách!! Bạn có chắc muốn xoá tạm thời không?' : 'Bạn có chắc muốn xoá tạm thời danh mục này?' }}')">
                                                             @csrf
                                                             @method('DELETE')
                                                             <button type="submit" class="btn btn-sm btn-danger"
