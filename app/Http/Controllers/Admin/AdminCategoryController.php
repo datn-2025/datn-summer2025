@@ -33,7 +33,8 @@ class AdminCategoryController extends Controller
             ]);
         } catch (\Throwable $e) {
             Log::error('Lỗi khi lấy danh sách danh mục: ' . $e->getMessage());
-            return back()->with('error', 'Lỗi khi truy vấn danh mục. Vui lòng thử lại sau.');
+            Toastr::error('Không thể truy vấn danh mục. Vui lòng thử lại sau.');
+            return back();
         }
     }
 
@@ -193,12 +194,9 @@ class AdminCategoryController extends Controller
                 'searchName' => $request['search_name_category'] ?? ''
             ]);
         } catch (\Throwable $e) {
-            Log::error('Lỗi trong hàm trash: ' . $e->getMessage(), [
-                'exception' => $e,
-                'trace' => $e->getTraceAsString()
-            ]);
+            Log::error('Lỗi trong hàm trash: ' . $e->getMessage());
             report($e);
-            toastr()->error('Lỗi khi truy vấn danh mục đã xóa. Vui lòng thử lại sau: ' . $e->getMessage());
+            Toastr::error('Đã xảy ra lỗi khi truy vấn danh mục. Vui lòng thử lại sau.');
             return back();
         }
     }
