@@ -42,10 +42,10 @@
                         placeholder="Tìm theo tên danh mục" value="{{ request('search_name_category') }}"
                         style="width: 220px;">
                     <button type="submit" class="btn btn-primary px-4">
-                        <i class="ri-search-2-line"></i> Tìm
+                        <i class="ri-search-2-line"></i> Tìm kiếm
                     </button>
                     <a href="{{ route('admin.categories.trash') }}" class="btn btn-outline-secondary px-4">
-                        <i class="ri-refresh-line"></i>
+                        <i class="ri-refresh-line"></i> Làm mới
                     </a>
                 </form>
 
