@@ -5,8 +5,8 @@
 @section('content')
     <div class="container-fluid">
         <!-- Tiêu đề -->
-        <div class="row">
-            <div class="col-12 d-flex justify-content-between align-items-center mb-3">
+        <div class="row mb-3">
+            <div class="col-12 d-flex justify-content-between align-items-center">
                 <h4 class="mb-0">Thùng rác - Danh mục loại sách</h4>
                 <ol class="breadcrumb m-0">
                     <li class="breadcrumb-item"><a href="{{ route('admin.categories.index') }}">Danh mục</a></li>
@@ -15,8 +15,8 @@
             </div>
         </div>
 
-        <!-- Nội dung -->
         <div class="card">
+            <!-- Header -->
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="mb-0">Danh sách danh mục đã xoá</h5>
                 <a href="{{ route('admin.categories.index') }}" class="btn btn-primary btn-sm">
@@ -25,7 +25,7 @@
             </div>
 
             <div class="card-body">
-                <!-- Alert -->
+                <!-- Thông báo -->
                 @foreach (['success' => 'success', 'error' => 'danger'] as $key => $type)
                     @if (session($key))
                         <div class="alert alert-{{ $type }} alert-dismissible fade show" role="alert">
@@ -81,15 +81,8 @@
                             </thead>
                             <tbody>
                                 @foreach ($deletedCategories as $key => $category)
-                                    @php
-                                        $stt = $deletedCategories->firstItem() + $key;
-                                        $confirm =
-                                            $category->books_count > 0
-                                                ? "alert('Danh mục này có sách, không thể xóa vĩnh viễn.'); return false;"
-                                                : "return confirm('Xóa vĩnh viễn danh mục này?')";
-                                    @endphp
                                     <tr>
-                                        <td>{{ $stt }}</td>
+                                        <td>{{ $deletedCategories->firstItem() + $key }}</td>
                                         <td>{{ $category->name }}</td>
                                         <td>
                                             @if ($category->image)
@@ -104,6 +97,7 @@
                                         <td>{{ $category->created_at->format('d/m/Y') }}</td>
                                         <td>{{ $category->deleted_at->format('d/m/Y H:i') }}</td>
                                         <td>
+                                            <!-- Khôi phục -->
                                             <form action="{{ route('admin.categories.restore', $category->id) }}"
                                                 method="POST" class="d-inline">
                                                 @csrf @method('PUT')
@@ -111,11 +105,13 @@
                                                     <i class="ri-reply-line"></i>
                                                 </button>
                                             </form>
+
+                                            <!-- Xoá vĩnh viễn -->
                                             <form action="{{ route('admin.categories.force-delete', $category->id) }}"
                                                 method="POST" class="d-inline">
                                                 @csrf @method('DELETE')
                                                 <button class="btn btn-sm btn-danger" title="Xoá vĩnh viễn"
-                                                    onclick="{{ $confirm }}"
+                                                    onclick="return confirm('Xoá vĩnh viễn danh mục này?')"
                                                     {{ $category->books_count > 0 ? 'disabled' : '' }}>
                                                     <i class="ri-delete-bin-fill"></i>
                                                 </button>
