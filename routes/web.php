@@ -235,9 +235,9 @@ Route::middleware(['auth:admin', 'admin'])->prefix('admin')->name('admin.')->gro
         Route::get('/edit/{slug}', [AdminCategoryController::class, 'edit'])->name('edit');
         Route::put('/update/{slug}', [AdminCategoryController::class, 'update'])->name('update');
         Route::get('/trash', [AdminCategoryController::class, 'trash'])->name('trash');
-        Route::delete('/{category}', [AdminCategoryController::class, 'destroy'])->name('destroy');
-        Route::put('/{id}/restore', [AdminCategoryController::class, 'restore'])->name('restore');
-        Route::delete('/{id}/force', [AdminCategoryController::class, 'forceDelete'])->name('force-delete');
+        Route::delete('/{slug}', [AdminCategoryController::class, 'destroy'])->name('destroy');
+        Route::put('/{slug}/restore', [AdminCategoryController::class, 'restore'])->name('restore');
+        Route::delete('/{slug}/force', [AdminCategoryController::class, 'forceDelete'])->name('force-delete');
 
         // Route admin/brand
         Route::prefix('brands')->name('brands.')->group(function () {
