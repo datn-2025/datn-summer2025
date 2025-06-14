@@ -56,7 +56,7 @@
                                         <i class="ri-search-2-line"></i> Tìm kiếm
                                     </button>
                                     <a href="{{ route('admin.categories.index') }}" class="btn btn-outline-secondary px-4">
-                                        <i class="ri-refresh-line"></i> Đặt lại
+                                        <i class="ri-refresh-line"></i> Làm mới
                                     </a>
                                 </form>
                             </div>
