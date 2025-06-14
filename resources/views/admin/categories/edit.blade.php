@@ -104,42 +104,35 @@
 @push('scripts')
 <script>
     document.addEventListener("DOMContentLoaded", () => {
-        const imageInput = document.getElementById("image");
-        const previewImg = document.getElementById("preview");
+        // Xem trước ảnh
+        const input = document.getElementById("image");
+        const preview = document.getElementById("preview");
 
-        if (!imageInput || !previewImg) return;
-
-        imageInput.addEventListener("change", ({ target }) => {
-            const file = target.files?.[0];
-
+        input?.addEventListener("change", e => {
+            const file = e.target.files?.[0];
             if (file?.type.startsWith("image/")) {
                 const reader = new FileReader();
-                reader.onload = e => {
-                    previewImg.src = e.target.result;
-                    previewImg.style.display = "block";
+                reader.onload = ev => {
+                    preview.src = ev.target.result;
+                    preview.style.display = "block";
                 };
                 reader.readAsDataURL(file);
             } else {
-                previewImg.src = "#";
-                previewImg.style.display = "none";
+                preview.style.display = "none";
             }
         });
+
+        // Ngăn submit nhiều lần
+        document.querySelectorAll("form[onsubmit]").forEach(form => {
+            form.onsubmit = () => {
+                const btn = form.querySelector("button[type=submit]");
+                if (btn) {
+                    btn.disabled = true;
+                    btn.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> Đang xử lý...`;
+                }
+                return true;
+            };
+        });
     });
-</script>
-
-<script>
-    let submitted = false;
-    function disableSubmitOnce(form) {
-        if (submitted) return false;
-        submitted = true;
-
-        const btn = form.querySelector('button[type="submit"]');
-        if (btn) {
-            btn.disabled = true;
-            btn.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> Đang xử lý...`;
-        }
-
-        return true;
-    }
 </script>
 @endpush
