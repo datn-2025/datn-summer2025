@@ -199,11 +199,12 @@ class AdminCategoryController extends Controller
     {
         try {
             $category->delete();
-            toastr()->success('Danh mục đã được xóa tạm thời thành công.');
+            Toastr::success('Danh mục đã được xóa tạm thời thành công.');
             return back();
         } catch (\Throwable $e) {
-            report($e);
-            return back()->with('error', 'Không thể xóa danh mục. Vui lòng thử lại sau.');
+            Log::error('Lỗi khi xóa danh mục: ' . $e->getMessage());
+            Toastr::error('Đã xảy ra lỗi khi xóa danh mục. Vui lòng thử lại sau.');
+            return back();
         }
     }
 
