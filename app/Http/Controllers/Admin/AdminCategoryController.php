@@ -108,12 +108,12 @@ class AdminCategoryController extends Controller
 
     public function update(Request $request, $slug)
     {
-        $category = Category::where('slug', $slug)->first();
+        $category = Category::where('slug', $slug)->firstOrFail();
 
-        if (!$category) {
-            Toastr::info('Danh mục không còn tồn tại hoặc đã được cập nhật.');
-            return redirect()->route('admin.categories.index');
-        }
+        // if (!$category) {
+        //     Toastr::info('Danh mục không còn tồn tại hoặc đã được cập nhật.');
+        //     return redirect()->route('admin.categories.index');
+        // }
 
         $validated = $request->validate([
             'name' => [
@@ -182,6 +182,11 @@ class AdminCategoryController extends Controller
             if ($original === $incoming && !$hasImageChanged) {
                 Toastr::info('Không có thay đổi nào cho danh mục sách.');
                 return redirect()->route('admin.categories.index');
+            }
+
+            if ($category->isDirty()) {
+                $category->save();
+                Toastr::success('Cập nhật danh mục thành công!');
             }
 
             $category->update($categoryData);
