@@ -195,9 +195,10 @@ class AdminCategoryController extends Controller
         }
     }
 
-    public function destroy(Category $category)
+    public function destroy($slug)
     {
         try {
+            $category = Category::where('slug', $slug)->firstOrFail();
             $category->delete();
             Toastr::success('Đã tạm thời xoá danh mục thành công.');
         } catch (\Throwable $e) {
@@ -208,10 +209,11 @@ class AdminCategoryController extends Controller
         return back();
     }
 
-    public function restore($id)
+    public function restore($slug)
     {
         try {
-            Category::onlyTrashed()->findOrFail($id)->restore();
+            $category = Category::onlyTrashed()->where('slug', $slug)->firstOrFail();
+            $category->restore();
             Toastr::success('Danh mục đã được khôi phục thành công.');
         } catch (\Throwable $e) {
             Log::error('Lỗi khi khôi phục danh mục: ' . $e->getMessage());
@@ -221,10 +223,10 @@ class AdminCategoryController extends Controller
         return back();
     }
 
-    public function forceDelete($id)
+    public function forceDelete($slug)
     {
         try {
-            $category = Category::withTrashed()->findOrFail($id);
+            $category = Category::withTrashed()->where('slug', $slug)->firstOrFail();
 
             if ($category->books()->count() > 0) {
                 Toastr::warning('Không thể xoá vĩnh viễn danh mục đang có sách. Vui lòng gán sách cho danh mục khác hoặc xoá mềm.');
