@@ -211,14 +211,14 @@ class AdminCategoryController extends Controller
     public function restore($id)
     {
         try {
-            Category::withTrashed()->findOrFail($id)->restore();
-            toastr()->success('Danh mục đã được khôi phục thành công.');
-            return back();
+            Category::onlyTrashed()->findOrFail($id)->restore();
+            Toastr::success('Danh mục đã được khôi phục thành công.');
         } catch (\Throwable $e) {
-            report($e);
-            toastr()->error('Không thể khôi phục danh mục. Vui lòng thử lại sau.');
-            return back();
+            Log::error('Lỗi khi khôi phục danh mục: ' . $e->getMessage());
+            Toastr::error('Không thể khôi phục danh mục. Vui lòng thử lại sau.');
         }
+
+        return back();
     }
 
     public function forceDelete($id)
