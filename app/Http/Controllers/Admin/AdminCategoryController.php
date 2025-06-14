@@ -71,6 +71,7 @@ class AdminCategoryController extends Controller
             if (Category::where('slug', $slug)->exists()) {
                 $slug .= '-' . Str::random(6);
             }
+
             $categoryData = [
                 'name'          => $validated['name'],
                 'slug'          => $slug,
@@ -79,14 +80,18 @@ class AdminCategoryController extends Controller
 
             if ($request->hasFile('image')) {
                 $file = $request->file('image');
-                $filename = uniqid('cat_', true);
+                $filename = uniqid('cat_', true) . '.' . $file->extension();
                 $path = $file->storeAs('images/admin/categories', $filename, 'public');
                 $categoryData['image'] = $path;
             }
 
-            Category::create($categoryData);
+            if (!Category::where('name', $categoryData['name'])->exists()) {
+                Category::create($categoryData);
+                Toastr::success('Thêm mới danh mục thành công!');
+            } else {
+                Toastr::warning('Danh mục này đã tồn tại!');
+            }
 
-            Toastr::success('Thêm mới danh mục thành công!');
             return redirect()->route('admin.categories.index');
         } catch (\Throwable $e) {
             Log::error('Lỗi khi thêm danh mục: ' . $e->getMessage());
