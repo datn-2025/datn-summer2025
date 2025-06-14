@@ -710,7 +710,7 @@
                                 </ul>
                             </div>
                         </li>
-                        
+
                         <li class="nav-item">
                             <a class="nav-link menu-link" href="#sidebarContacts" data-bs-toggle="collapse"
                                 role="button" aria-expanded="false" aria-controls="sidebarContacts">
@@ -791,6 +791,13 @@
                                 </ul>
                             </div>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link menu-link" href="{{route('admin.settings.index')}}" >
+                                <i class="ri-file-list-3-line"></i> <span data-key="t-forms">Cấu hình website</span>
+                            </a>
+                        </li>
+
+
                     </ul>
                 </div>
                 <!-- Sidebar -->
