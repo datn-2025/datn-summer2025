@@ -27,9 +27,7 @@ class HomeController extends Controller
             }])
             ->take(3)
             ->get();
-
-
-
+            
 
         $featuredBooks = Book::with(['formats' => function ($q) {
             $q->orderByDesc('price');
