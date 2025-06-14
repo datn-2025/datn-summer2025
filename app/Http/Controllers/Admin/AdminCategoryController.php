@@ -182,7 +182,7 @@ class AdminCategoryController extends Controller
                 $query->where('name', 'like', '%' . $request['search_name_category'] . '%');
             }
 
-            $deletedCategories = $query->withCount('books')->paginate(10);
+            $deletedCategories = $query->orderBy('deleted_at', 'desc')->paginate(10);
 
             return view('admin.categories.categories-trash', [
                 'deletedCategories' => $deletedCategories,
