@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
 use App\Services\EmailService;
 use App\Services\OrderService;
 use App\Services\PaymentService;
+use App\Services\QrCodeService;
 use App\Services\VoucherService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -33,17 +34,20 @@ class OrderController extends Controller
     protected $voucherService;
     protected $paymentService;
     protected $emailService;
+    protected $qrCodeService;
 
     public function __construct(
         OrderService $orderService,
         VoucherService $voucherService,
         PaymentService $paymentService,
-        EmailService $emailService
+        EmailService $emailService,
+        QrCodeService $qrCodeService
     ) {
         $this->orderService = $orderService;
         $this->voucherService = $voucherService;
         $this->paymentService = $paymentService;
         $this->emailService = $emailService;
+        $this->qrCodeService = $qrCodeService;
     }
 
     public function checkout(Request $request)
@@ -63,7 +67,7 @@ class OrderController extends Controller
 
         foreach ($cartItems as $item) {
             if ($item->bookFormat) {
-                // Kiểm tra format_name để xác định loại sách
+                // Kiểm tra format_name đ��� xác định loại sách
                 if (strtolower($item->bookFormat->format_name) === 'ebook') {
                     $hasEbook = true;
                 } else {
@@ -288,10 +292,11 @@ class OrderController extends Controller
                     }
                 }
 
+                // Tạo mã QR cho đơn hàng
+                $this->qrCodeService->generateOrderQrCode($order);
                 // Commit transaction trước khi chuyển đến VNPay
                 DB::commit();
-
-                // Dữ liệu để truyền cho VNPay
+                // Dữ liệu để truy��n cho VNPay
                 $vnpayData = [
                     'order_id' => $order->id,
                     'payment_status_id' => $order->payment_status_id,
@@ -301,73 +306,6 @@ class OrderController extends Controller
                     'order_info' => "Thanh toán đơn hàng " . $order->order_code,
                 ];
 //                dd($vnpayData);
-                try {
-                    $order->load([
-                        'orderItems.book',
-                        'orderItems.bookFormat',
-                        'orderItems.attributeValues.attribute', // For attributes
-                        'voucher', // For voucher code
-                        'paymentMethod', // For payment method name
-                        'paymentStatus', // For payment status name
-                        'address'
-                    ]);
-
-                    $qrDataLines = [
-                        "Mã đơn hàng: " . $order->order_code,
-                        "Ngày đặt: " . $order->created_at->format('d/m/Y H:i'),
-                        "--- Sản phẩm ---"
-                    ];
-
-                    foreach ($order->orderItems as $item) {
-                        $productName = $item->book ? $item->book->title : 'Sản phẩm không xác định';
-                        $formatName = $item->bookFormat ? ' (' . $item->bookFormat->format_name . ')' : '';
-
-                        $attributesString = '';
-                        if ($item->attributeValues && $item->attributeValues->count() > 0) {
-                            $attrParts = [];
-                            foreach ($item->attributeValues as $av) {
-                                if ($av->attribute) {
-                                    $attrParts[] = $av->attribute->name . ': ' . $av->value ?? '';
-                                }
-                            }
-                            if (!empty($attrParts)) {
-                                $attributesString = ' (' . implode(', ', $attrParts) . ')';
-                            }
-                        }
-                        $qrDataLines[] = "- " . $productName . $formatName . $attributesString . ": " . $item->quantity . " x " . number_format($item->price, 0, ',', '.') . "đ";
-                    }
-
-                    $qrDataLines[] = "--- Thông tin giao hàng ---";
-                    $qrDataLines[] = "Người nhận: " . $order->recipient_name;
-                    $qrDataLines[] = "Điện thoại: " . $order->recipient_phone;
-                    $qrDataLines[] = "Địa chỉ: " . $order->address->ward . ', ' . $order->address->district . ', ' . $order->address->city . ($order->address->address_detail ? ', ' . $order->address->address_detail : '');
-
-                    $qrDataLines[] = "--- Thanh toán ---";
-                    $qrDataLines[] = "Phí vận chuyển: " . number_format($order->shipping_fee, 0, ',', '.') . "đ";
-                    if ($order->voucher) { // Use loaded voucher relation
-                        $discountAmount = $order->discount_amount ?? 0;
-                        $qrDataLines[] = "Khuyến mãi (" . $order->voucher->code . "): -" . number_format($discountAmount, 0, ',', '.') . "đ";
-                    }
-                    $qrDataLines[] = "Tổng tiền: " . number_format($order->total_amount, 0, ',', '.') . "đ";
-                    $qrDataLines[] = "Phương thức TT: " . ($order->paymentMethod ? $order->paymentMethod->name : 'N/A');
-                    $qrDataLines[] = "Trạng thái TT: " . ($order->paymentStatus ? $order->paymentStatus->name : 'N/A');
-
-                    $qrDataString = implode("\n", $qrDataLines);
-
-                    $qrCodeFileName = 'order_' . $order->id . '_' . $order->order_code . '.png'; // Removed 'qrcodes/' prefix
-                    $path = storage_path('app/private/qrcodes/' . $qrCodeFileName);
-
-                    // Sử dụng Simple Qrcode để tạo mã QR và lưu vào tệp
-                    QrCode::encoding('UTF-8')->size(250)->generate($qrDataString, $path);
-                    // Lưu đường dẫn của mã QR vào cơ sở dữ liệu
-                    $order->qr_code = 'qrcodes/' . $qrCodeFileName;
-                    $order->save(); // Lưu lại đơn hàng với đường dẫn mã QR
-
-                } catch (\Exception $e) {
-                    dd('Error generating QR Code for order ' . $order->id . ': ' . $e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine());
-                    // Optionally, you might want to notify someone or handle this error more gracefully
-                    // For now, we'll let the order proceed without a QR code if generation fails
-                }
                 return $this->vnpay_payment($vnpayData);
             }
             $finalTotalAmount = $subtotal + $request->shipping_fee_applied - $actualDiscountAmount;
@@ -436,75 +374,8 @@ class OrderController extends Controller
             ]);
             DB::commit();
 
-            // Generate and save QR Code
-            try {
-                $order->load([
-                    'orderItems.book',
-                    'orderItems.bookFormat',
-                    'orderItems.attributeValues.attribute', // For attributes
-                    'voucher', // For voucher code
-                    'paymentMethod', // For payment method name
-                    'paymentStatus', // For payment status name
-                    'address'
-                ]);
-
-                $qrDataLines = [
-                    "Mã đơn hàng: " . $order->order_code,
-                    "Ngày đặt: " . $order->created_at->format('d/m/Y H:i'),
-                    "--- Sản phẩm ---"
-                ];
-
-                foreach ($order->orderItems as $item) {
-                    $productName = $item->book ? $item->book->title : 'Sản phẩm không xác định';
-                    $formatName = $item->bookFormat ? ' (' . $item->bookFormat->format_name . ')' : '';
-
-                    $attributesString = '';
-                    if ($item->attributeValues && $item->attributeValues->count() > 0) {
-                        $attrParts = [];
-                        foreach ($item->attributeValues as $av) {
-                            if ($av->attribute) {
-                                $attrParts[] = $av->attribute->name . ': ' . $av->value;
-                            }
-                        }
-                        if (!empty($attrParts)) {
-                            $attributesString = ' (' . implode(', ', $attrParts) . ')';
-                        }
-                    }
-                    $qrDataLines[] = "- " . $productName . $formatName . $attributesString . ": " . $item->quantity . " x " . number_format($item->price, 0, ',', '.') . "đ";
-                }
-
-                $qrDataLines[] = "--- Thông tin giao hàng ---";
-                $qrDataLines[] = "Người nhận: " . $order->recipient_name;
-                $qrDataLines[] = "Điện thoại: " . $order->recipient_phone;
-                $qrDataLines[] = "Địa chỉ: " . $order->address->ward . ', ' . $order->address->district . ', ' . $order->address->city . ($order->address->address_detail ? ', ' . $order->address->address_detail : '');
-
-                $qrDataLines[] = "--- Thanh toán ---";
-                $qrDataLines[] = "Phí vận chuyển: " . number_format($order->shipping_fee, 0, ',', '.') . "đ";
-                if ($order->voucher) { // Use loaded voucher relation
-                    $discountAmount = $order->discount_amount ?? 0;
-                    $qrDataLines[] = "Khuyến mãi (" . $order->voucher->code . "): -" . number_format($discountAmount, 0, ',', '.') . "đ";
-                }
-                $qrDataLines[] = "Tổng tiền: " . number_format($order->total_amount, 0, ',', '.') . "đ";
-                $qrDataLines[] = "Phương thức TT: " . ($order->paymentMethod ? $order->paymentMethod->name : 'N/A');
-                $qrDataLines[] = "Trạng thái TT: " . ($order->paymentStatus ? $order->paymentStatus->name : 'N/A');
-
-                $qrDataString = implode("\n", $qrDataLines);
-
-                $qrCodeFileName = 'order_' . $order->id . '_' . $order->order_code . '.png'; // Removed 'qrcodes/' prefix
-                $path = storage_path('app/private/qrcodes/' . $qrCodeFileName);
-
-                // Sử dụng Simple Qrcode để tạo mã QR và lưu vào tệp
-                QrCode::encoding('UTF-8')->size(250)->generate($qrDataString, $path);
-                // Lưu đường dẫn của mã QR vào cơ sở dữ liệu
-                $order->qr_code = 'qrcodes/' . $qrCodeFileName;
-                $order->save(); // Lưu lại đơn hàng với đường dẫn mã QR
-
-            } catch (\Exception $e) {
-                dd('Error generating QR Code for order ' . $order->id . ': ' . $e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine());
-                // Optionally, you might want to notify someone or handle this error more gracefully
-                // For now, we'll let the order proceed without a QR code if generation fails
-            }
-
+            // Generate and save QR Code using QrCodeService
+            $this->qrCodeService->generateOrderQrCode($order);
             $this->emailService->sendOrderConfirmation($order);
             $successMessage = 'Đặt hàng thành công!';
 
@@ -647,7 +518,7 @@ class OrderController extends Controller
             // Create OrderCancellation record
             OrderCancellation::create([
                 'order_id' => $order->id,
-                'reason' => implode(", ", $selectedReasons), // Lưu danh sách lý do dưới dạng chuỗi
+                'reason' => implode(", ", $selectedReasons), // Lưu danh s��ch lý do dưới dạng chuỗi
                 'cancelled_by' => $user->id,
                 'cancelled_at' => now(),
                 // 'refund_status' will use its default 'not_applicable'
@@ -725,75 +596,6 @@ class OrderController extends Controller
         ]);
 
         return redirect($vnp_Url);
-    }
-
-
-
-    private function generateQrCode($order)
-    {
-        try {
-            $order->load([
-                'orderItems.book',
-                'orderItems.bookFormat',
-                'orderItems.attributeValues.attribute',
-                'voucher',
-                'paymentMethod',
-                'paymentStatus',
-                'address'
-            ]);
-
-            $qrDataLines = [
-                "Mã đơn hàng: " . $order->order_code,
-                "Ngày đặt: " . $order->created_at->format('d/m/Y H:i'),
-                "--- Sản phẩm ---"
-            ];
-
-            foreach ($order->orderItems as $item) {
-                $productName = $item->book ? $item->book->title : 'Sản phẩm không xác định';
-                $formatName = $item->bookFormat ? ' (' . $item->bookFormat->format_name . ')' : '';
-
-                $attributesString = '';
-                if ($item->attributeValues && $item->attributeValues->count() > 0) {
-                    $attrParts = [];
-                    foreach ($item->attributeValues as $av) {
-                        if ($av->attribute) {
-                            $attrParts[] = $av->attribute->name . ': ' . $av->value;
-                        }
-                    }
-                    if (!empty($attrParts)) {
-                        $attributesString = ' (' . implode(', ', $attrParts) . ')';
-                    }
-                }
-                $qrDataLines[] = "- " . $productName . $formatName . $attributesString . ": " . $item->quantity . " x " . number_format($item->price, 0, ',', '.') . "đ";
-            }
-
-            $qrDataLines[] = "--- Thông tin giao hàng ---";
-            $qrDataLines[] = "Người nhận: " . $order->recipient_name;
-            $qrDataLines[] = "Điện thoại: " . $order->recipient_phone;
-            $qrDataLines[] = "Địa chỉ: " . $order->address->ward . ', ' . $order->address->district . ', ' . $order->address->city . ($order->address->address_detail ? ', ' . $order->address->address_detail : '');
-
-            $qrDataLines[] = "--- Thanh toán ---";
-            $qrDataLines[] = "Phí vận chuyển: " . number_format($order->shipping_fee, 0, ',', '.') . "đ";
-            if ($order->voucher) {
-                $discountAmount = $order->discount_amount ?? 0;
-                $qrDataLines[] = "Khuyến mãi (" . $order->voucher->code . "): -" . number_format($discountAmount, 0, ',', '.') . "đ";
-            }
-            $qrDataLines[] = "Tổng tiền: " . number_format($order->total_amount, 0, ',', '.') . "đ";
-            $qrDataLines[] = "Phương thức TT: " . ($order->paymentMethod ? $order->paymentMethod->name : 'N/A');
-            $qrDataLines[] = "Trạng thái TT: " . ($order->paymentStatus ? $order->paymentStatus->name : 'N/A');
-
-            $qrDataString = implode("\n", $qrDataLines);
-
-            $qrCodeFileName = 'order_' . $order->id . '_' . $order->order_code . '.png';
-            $path = storage_path('app/private/qrcodes/' . $qrCodeFileName);
-
-            QrCode::encoding('UTF-8')->size(250)->generate($qrDataString, $path);
-            $order->qr_code = 'qrcodes/' . $qrCodeFileName;
-            $order->save();
-
-        } catch (\Exception $e) {
-            Log::error('Error generating QR Code for order ' . $order->id . ': ' . $e->getMessage());
-        }
     }
 
     public function vnpayReturn(Request $request)
@@ -878,7 +680,7 @@ class OrderController extends Controller
 
                 DB::commit();
 
-                Toastr::success('Thanh toán thành công! Đơn hàng của bạn đã được xác nhận.');
+                Toastr::success('Thanh toán thành công! Đơn hàng của b��n đã được xác nhận.');
                 return redirect()->route('orders.show', $order->id);
 
             } else {
