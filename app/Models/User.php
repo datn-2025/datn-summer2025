@@ -30,8 +30,8 @@ class User extends Authenticatable
         'reset_token',
         'avatar',
         'activation_token',
-        'activation_expires'
-
+        'activation_expires',
+        'google_id'
     ];
 
     /**
@@ -56,7 +56,7 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-    
+
     public function isAdmin()
     {
         return isset($this->role) && strtolower($this->role->name) === 'admin';

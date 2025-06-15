@@ -280,7 +280,7 @@
             <div class="form-container">
                 <h2>Đăng nhập</h2>
                 <div class="social-buttons">
-                    <a href="#" class="social-button google">
+                    <a href="{{ route('auth.google') }}" class="social-button google">
                         <i class="fab fa-google"></i>
                     </a>
                 </div>
@@ -295,7 +295,7 @@
                     </div>
                 @endif
                 <form method="POST" action="{{ route('login.submit') }}">
-                    @csrf   
+                    @csrf
                     <div class="form-group">
                         <input type="email" name="email" class="form-control" placeholder="Email" required autofocus
                             value="{{ old('email') }}" />
