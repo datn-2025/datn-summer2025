@@ -16,6 +16,7 @@ use App\Http\Controllers\Login\LoginController;
 use App\Http\Controllers\Admin\VoucherController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\Login\ActivationController;
+use App\Http\Controllers\Login\GoogleController;
 use App\Http\Controllers\HomeController;
 use App\Livewire\BalanceChart;
 use Brian2694\Toastr\Facades\Toastr;
@@ -26,12 +27,11 @@ use App\Http\Controllers\Article\NewsController;
 use App\Http\Controllers\Admin\NewsArticleController;
 use App\Http\Controllers\Admin\PaymentMethodController;
 use App\Http\Controllers\Admin\WalletController;
-use App\Livewire\RevenueReport;
-
 use App\Http\Controllers\cart\CartController;
 use App\Http\Controllers\Client\ClientOrderController;
 use App\Http\Controllers\Client\ClientReviewController;
 use App\Http\Controllers\Client\UserClientController;
+use App\Livewire\RevenueReport;
 
 // Route QR code
 Route::get('storage/private/{filename}', function ($filename) {
@@ -220,10 +220,9 @@ Route::middleware(['auth:admin', 'admin'])->prefix('admin')->name('admin.')->gro
         Route::delete('/{paymentMethod}/force-delete', [AdminPaymentMethodController::class, 'forceDelete'])->name('force-delete');
 
         Route::get('/history', [AdminPaymentMethodController::class, 'history'])->name('history');
-        Route::put('/{id}/status', [AdminPaymentMethodController::class, 'updateStatus'])
-            ->name('updateStatus');
+        Route::put('/{id}/status', [AdminPaymentMethodController::class, 'updateStatus'])->name('updateStatus');
     });
-
+    
     Route::prefix('wallets')->name('wallets.')->group(function () {
         Route::get('/', [WalletController::class, 'index'])->name('index');
         Route::get('/{wallet}', [WalletController::class, 'show'])->name('show');
@@ -234,66 +233,13 @@ Route::middleware(['auth:admin', 'admin'])->prefix('admin')->name('admin.')->gro
         Route::get('/', [AdminCategoryController::class, 'index'])->name('index');
         Route::get('/create', [AdminCategoryController::class, 'create'])->name('create');
         Route::post('/store', [AdminCategoryController::class, 'store'])->name('store');
-        Route::get('/edit/{id}', [AdminCategoryController::class, 'edit'])->name('edit');
-        Route::put('/update/{id}', [AdminCategoryController::class, 'update'])->name('update');
+        Route::get('/edit/{slug}', [AdminCategoryController::class, 'edit'])->name('edit');
+        Route::put('/update/{slug}', [AdminCategoryController::class, 'update'])->name('update');
         Route::get('/trash', [AdminCategoryController::class, 'trash'])->name('trash');
-        Route::delete('/{category}', [AdminCategoryController::class, 'destroy'])->name('destroy');
-        Route::put('/{id}/restore', [AdminCategoryController::class, 'restore'])->name('restore');
-        Route::delete('/{id}/force', [AdminCategoryController::class, 'forceDelete'])->name('force-delete');
+        Route::delete('/{slug}', [AdminCategoryController::class, 'destroy'])->name('destroy');
+        Route::put('/{slug}/restore', [AdminCategoryController::class, 'restore'])->name('restore');
+        Route::delete('/{slug}/force', [AdminCategoryController::class, 'forceDelete'])->name('force-delete');
 
-        // Route admin/brand
-        Route::prefix('brands')->name('brands.')->group(function () {
-            Route::get('/', [CategoryController::class, 'brand'])->name('brand');
-            Route::get('/create', [CategoryController::class, 'BrandCreate'])->name('create');
-            Route::post('/', [CategoryController::class, 'BrandStore'])->name('store');
-            Route::get('/trash', [CategoryController::class, 'BrandTrash'])->name('trash');
-            Route::delete('/{author}', [CategoryController::class, 'BrandDestroy'])->name('destroy');
-            Route::put('/{id}/restore', [CategoryController::class, 'BrandRestore'])->name('restore');
-            Route::delete('/{id}/force', [CategoryController::class, 'BrandForceDelete'])->name('force-delete');
-            Route::get('/{id}/edit', [CategoryController::class, 'BrandEdit'])->name('edit');
-            Route::put('/{id}', [CategoryController::class, 'BrandUpdate'])->name('update');
-        });
-        // Route admin/authors
-        Route::prefix('authors')->name('authors.')->group(function () {
-            Route::get('/', [AuthorController::class, 'index'])->name('index');
-            Route::get('/create', [AuthorController::class, 'create'])->name('create');
-            Route::post('/', [AuthorController::class, 'store'])->name('store');
-            Route::get('/trash', [AuthorController::class, 'trash'])->name('trash');
-            Route::delete('/{author}', [AuthorController::class, 'destroy'])->name('destroy');
-            Route::put('/{id}/restore', [AuthorController::class, 'restore'])->name('restore');
-            Route::delete('/{id}/force', [AuthorController::class, 'forceDelete'])->name('force-delete');
-            Route::get('/{id}/edit', [AuthorController::class, 'edit'])->name('edit');
-            Route::put('/{id}', [AuthorController::class, 'update'])->name('update');
-        });
-    });
-//    Route::prefix('payment-methods')->name('payment-methods.')->group(function () {
-//        Route::get('/', [AdminPaymentMethodController::class, 'index'])->name('index');
-//        Route::get('/create', [AdminPaymentMethodController::class, 'create'])->name('create');
-//        Route::post('/', [AdminPaymentMethodController::class, 'store'])->name('store');
-//        Route::get('/{paymentMethod}/edit', [AdminPaymentMethodController::class, 'edit'])->name('edit');
-//        Route::put('/{paymentMethod}', [AdminPaymentMethodController::class, 'update'])->name('update');
-//        Route::delete('/{paymentMethod}', [AdminPaymentMethodController::class, 'destroy'])->name('destroy');
-//
-//        Route::get('/trash', [AdminPaymentMethodController::class, 'trash'])->name('trash');
-//        Route::put('/{paymentMethod}/restore', [AdminPaymentMethodController::class, 'restore'])->name('restore');
-//        Route::delete('/{paymentMethod}/force-delete', [AdminPaymentMethodController::class, 'forceDelete'])->name('force-delete');
-    // // Admin Payment Methods
-    // Route::prefix('payment-methods')->name('payment-methods.')->group(function () {
-    //     Route::get('/', [PaymentMethodController::class, 'index'])->name('index');
-    //     Route::get('/create', [PaymentMethodController::class, 'create'])->name('create');
-    //     Route::post('/', [PaymentMethodController::class, 'store'])->name('store');
-    //     Route::get('/{paymentMethod}/edit', [PaymentMethodController::class, 'edit'])->name('edit');
-    //     Route::put('/{paymentMethod}', [PaymentMethodController::class, 'update'])->name('update');
-    //     Route::delete('/{paymentMethod}', [PaymentMethodController::class, 'destroy'])->name('destroy');
-    //     // Thêm các route mới
-    //     Route::get('/trash', [PaymentMethodController::class, 'trash'])->name('trash');
-    //     Route::put('/{paymentMethod}/restore', [PaymentMethodController::class, 'restore'])->name('restore');
-    //     Route::delete('/{paymentMethod}/force-delete', [PaymentMethodController::class, 'forceDelete'])->name('force-delete');
-    // });
-
-    // Route admin/categories
-    Route::prefix('categories')->name('categories.')->group(function () {
-        // Route::get('/', [CategoryController::class, 'index'])->name('index');
         // Route admin/brand
         Route::prefix('brands')->name('brands.')->group(function () {
             Route::get('/', [CategoryController::class, 'brand'])->name('brand');
@@ -394,6 +340,7 @@ Route::middleware(['auth:admin', 'admin'])->prefix('admin')->name('admin.')->gro
         Route::put('/{article}', [NewsArticleController::class, 'update'])->name('update');
         Route::delete('/{article}', [NewsArticleController::class, 'destroy'])->name('destroy');
     });
+
     // Route admin/orders
     Route::prefix('orders')->name('orders.')->group(function () {
         Route::get('/', [OrderController::class, 'index'])->name('index');
@@ -407,4 +354,11 @@ Route::middleware(['auth:admin', 'admin'])->prefix('admin')->name('admin.')->gro
         Route::get('/', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('index');
         Route::post('/update', [App\Http\Controllers\Admin\SettingController::class, 'update'])->name('update');
     });
+});
+
+
+// login with google
+Route::controller(GoogleController::class)->group(function(){
+    Route::get('auth/google', 'redirectToGoogle')->name('auth.google');
+    Route::get('auth/google/callback', 'handleGoogleCallback');
 });
