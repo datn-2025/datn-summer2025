@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AuthorController;
+use App\Http\Controllers\Admin\InvoiceController;
 use App\Http\Controllers\Login\LoginController;
 use App\Http\Controllers\Admin\VoucherController;
 use App\Http\Controllers\BookController;
@@ -354,6 +355,12 @@ Route::middleware(['auth:admin', 'admin'])->prefix('admin')->name('admin.')->gro
         Route::get('/', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('index');
         Route::post('/update', [App\Http\Controllers\Admin\SettingController::class, 'update'])->name('update');
     });
+
+    Route::prefix('invoices')->name('invoices.')->group(function () {
+    Route::get('/', [InvoiceController::class, 'index'])->name('index');
+    Route::get('/{id}', [InvoiceController::class, 'show'])->name('show');
+    Route::get('/{id}/pdf', [InvoiceController::class, 'generatePdf'])->name('generate-pdf');
+});
 });
 
 
