@@ -120,7 +120,7 @@
                                     <tbody>
                                         <tr>
                                             <th style="width: 200px;">Mã đơn hàng:</th>
-                                            <td>{{ substr($order->id, 0, 8) }}</td>
+                                            <td>{{ $order->order_code }}</td>
                                         </tr>
                                         <tr>
                                             <th>Khách hàng:</th>
@@ -144,11 +144,11 @@
                                             <th style="width: 200px;">Trạng thái hiện tại:</th>
                                             <td>
                                                 <span class="badge rounded-pill fs-12
-                                                   @if($order->orderStatus->name == 'Đã giao thành công') bg-success 
+                                                   @if($order->orderStatus->name == 'Đã giao thành công') bg-success
                                                     @elseif($order->orderStatus->name == 'Đang xử lý') bg-warning text-dark
-                                                    @elseif($order->orderStatus->name == 'Đang giao hàng') bg-info 
-                                                    @elseif($order->orderStatus->name == 'Giao thất bại') bg-danger 
-                                                    @elseif($order->orderStatus->name == 'Chờ xác nhận') bg-secondary 
+                                                    @elseif($order->orderStatus->name == 'Đang giao hàng') bg-info
+                                                    @elseif($order->orderStatus->name == 'Giao thất bại') bg-danger
+                                                    @elseif($order->orderStatus->name == 'Chờ xác nhận') bg-secondary
                                                     @else bg-dark  @endif">
                                                     {{ $order->orderStatus->name ?? 'N/A' }}
                                                 </span>
@@ -158,9 +158,9 @@
                                             <th>Trạng thái thanh toán:</th>
                                             <td>
                                                 <span class="badge rounded-pill fs-12
-                                                    @if($order->paymentStatus->name == 'Đã Thanh Toán') bg-success 
+                                                    @if($order->paymentStatus->name == 'Đã Thanh Toán') bg-success
                                                     @elseif($order->paymentStatus->name == 'Chưa Thanh Toán') bg-warning text-dark
-                                                    @elseif($order->paymentStatus->name == 'Thất Bại') bg-danger 
+                                                    @elseif($order->paymentStatus->name == 'Thất Bại') bg-danger
                                                     @else bg-secondary  @endif">
                                                     {{ $order->paymentStatus->name ?? 'N/A' }}
                                                 </span>
@@ -215,7 +215,7 @@
                                 <div class="flex-grow-1 ms-3">
                                     <h6 class="mb-1 fs-15">Trạng thái đơn hàng:</h6>
                                     <p class="text-muted mb-0">
-                                        <span class="badge 
+                                        <span class="badge
                                             @if($order->orderStatus->name == 'Đã giao hàng') bg-success
                                             @elseif($order->orderStatus->name == 'Đang xử lý') bg-warning
                                             @elseif($order->orderStatus->name == 'Đang giao hàng') bg-info
@@ -235,7 +235,7 @@
                                 <div class="flex-grow-1 ms-3">
                                     <h6 class="mb-1 fs-15">Trạng thái thanh toán:</h6>
                                     <p class="text-muted mb-0">
-                                        <span class="badge 
+                                        <span class="badge
                                             @if($order->paymentStatus->name == 'Đã thanh toán') bg-success
                                             @elseif($order->paymentStatus->name == 'Chưa thanh toán') bg-warning
                                             @elseif($order->paymentStatus->name == 'Đã hủy') bg-danger
