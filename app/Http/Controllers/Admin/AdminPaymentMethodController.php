@@ -122,6 +122,13 @@ class AdminPaymentMethodController extends Controller
         }
 
         $payment->save();
+
+        // Cập nhật trạng thái cho đơn hàng
+        if ($payment->order) {
+            $payment->order->payment_status_id = $status->id;
+            $payment->order->save();
+        }
+
         Toastr::success('Cập nhật trạng thái thanh toán thành công!');
 
         return redirect()->back()->with('success', 'Cập nhật trạng thái thanh toán thành công');

@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>{{ get_setting()->name_website ?? 'BookBee' }} - @yield('title')</title>
-    <link rel="shortcut icon" href=" {{ asset('storage/'.  get_setting()->favicon) }}" />
+    <link rel="shortcut icon" href="{{ asset('storage/' . (get_setting() ? get_setting()->favicon : 'default_favicon.ico')) }}" />
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
