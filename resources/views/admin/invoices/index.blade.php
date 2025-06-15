@@ -138,7 +138,7 @@
                                                 </td>                                <td>
                                     <span class="badge bg-light text-dark">
                                         <i class="fas fa-money-bill-wave me-1"></i>
-                                        {{ $invoice->order->paymentMethod->name }}
+                                        {{ $invoice->order->paymentMethod->name ?? 'Không Xác Định' }}
                                     </span>
                                 </td>
                                                 <td class="text-center">
