@@ -440,6 +440,7 @@ class OrderController extends Controller
                 'order_id' => $order->id,
                 'transaction_id' => $order->order_code,
                 'payment_method_id' => $request->payment_method_id,
+                'payment_status_id' => $order->payment_status_id,
                 'amount' => $order->total_amount,
                 'paid_at' => now() // Set paid_at ngay lập tức cho thanh toán thường
             ]);
@@ -695,7 +696,7 @@ class OrderController extends Controller
         $vnp_HashSecret = config('services.vnpay.hash_secret');
         $vnp_Url = config('services.vnpay.url');
 //        $vnp_Returnurl = "http://127.0.0.1:8000/orders/{$data['order_id']}"; // Đúng route xử lý callback
-        $vnp_Returnurl = route("vnpay.return"); // Đúng route xử lý callback
+        $vnp_Returnurl = route("vnpay.return"); // Đúng route xử lý callbackz
         $vnp_TxnRef = $data['order_code']; // Sử dụng order_code làm transaction reference
         $vnp_OrderInfo = $data['order_info'];
         $vnp_Amount = (int)($data['amount'] * 100); // VNPay yêu cầu amount * 100
@@ -730,8 +731,10 @@ class OrderController extends Controller
         $this->paymentService->createPayment([
             'order_id' => $data['order_id'],
             'payment_method_id' => $data['payment_method_id'],
-            'transaction_id' => $vnp_TxnRef,
-            'amount' => $data['amount']
+            'payment_status_id' => $data['payment_status_id'],
+            'transaction_id' => $data['order_code'],
+            'amount' => $data['amount'],
+            'paid_at' => now()
         ]);
 
         return redirect($vnp_Url);
