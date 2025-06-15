@@ -16,6 +16,7 @@ use App\Http\Controllers\Login\LoginController;
 use App\Http\Controllers\Admin\VoucherController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\Login\ActivationController;
+use App\Http\Controllers\Login\GoogleController;
 use App\Http\Controllers\HomeController;
 use App\Livewire\BalanceChart;
 use Brian2694\Toastr\Facades\Toastr;
@@ -407,4 +408,11 @@ Route::middleware(['auth:admin', 'admin'])->prefix('admin')->name('admin.')->gro
         Route::get('/', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('index');
         Route::post('/update', [App\Http\Controllers\Admin\SettingController::class, 'update'])->name('update');
     });
+});
+
+
+// login with google
+Route::controller(GoogleController::class)->group(function(){
+    Route::get('auth/google', 'redirectToGoogle')->name('auth.google');
+    Route::get('auth/google/callback', 'handleGoogleCallback');
 });
