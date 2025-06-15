@@ -98,12 +98,19 @@ class AdminPaymentMethodController extends Controller
 
         $payment->payment_status_id = $status->id;
 
-        // ✅ Nếu trạng thái là "Đã Thanh Toán" thì cập nhật ngày thanh toán
+        // Nếu trạng thái là "Đã Thanh Toán" thì cập nhật ngày thanh toán
         if (mb_strtolower($status->name, 'UTF-8') === 'đã thanh toán') {
             $payment->paid_at = now();
         }
 
         $payment->save();
+
+        // Cập nhật trạng thái cho đơn hàng
+        if ($payment->order) {
+            $payment->order->payment_status_id = $status->id;
+            $payment->order->save();
+        }
+
         Toastr::success('Cập nhật trạng thái thanh toán thành công!');
 
         return redirect()->back()->with('success', 'Cập nhật trạng thái thanh toán thành công');
