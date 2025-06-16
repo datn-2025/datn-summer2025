@@ -184,7 +184,9 @@
                                     </div>
                                     @endif
                                 </td>
-                                <td class="text-center">{{ $book->category->name }}</td>
+                                <td class="text-center">
+                                    {{ $book->category ? $book->category->name : 'Không có danh mục' }}
+                                </td>
                                 <td>{{ number_format($book->page_count) }} trang</td>
                                 <td>
                                     @if($book->formats->isNotEmpty())
