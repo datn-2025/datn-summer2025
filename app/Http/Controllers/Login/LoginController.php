@@ -397,6 +397,6 @@ public function activate(Request $request)
         }
 
         session()->flash('success', 'Bạn đã thay đổi mật khẩu thành công!');
-        return redirect()->route('account.showUser');
+        return redirect()->route('account.profile');
     }
 }
