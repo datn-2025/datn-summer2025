@@ -58,7 +58,7 @@
                 border: 1px solid #ddd; border-radius: 4px; display: none;" onmouseover="this.style.display='block'"
                         onmouseout="this.style.display='none'">
                         @auth
-                        <a href="{{ route('account.showUser') }}" style="display: block; padding: 8px 15px; color: #333; text-decoration: none;
+                        <a href="{{ route('account.profile') }}" style="display: block; padding: 8px 15px; color: #333; text-decoration: none;
                       border-bottom: 1px solid #eee; white-space: nowrap;">
                             <i class="fas fa-user-circle" style="margin-right: 8px;"></i> Tài khoản
                         </a>
@@ -78,7 +78,7 @@
                       border-bottom: 1px solid #eee; white-space: nowrap;">
                             <i class="fas fa-sign-in-alt" style="margin-right: 8px;"></i> Đăng nhập
                         </a>
-                        <a href="{{ route('account.register') }}"
+                        <a href="{{ route('register') }}"
                             style="display: block; padding: 8px 15px; color: #333; text-decoration: none;">
                             <i class="fas fa-user-plus" style="margin-right: 8px;"></i> Đăng ký
                         </a>
