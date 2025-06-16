@@ -122,4 +122,23 @@ class User extends Authenticatable
     {
         return $this->hasMany(Cart::class);
     }
+    public function conversationsAsCustomer()
+    {
+        return $this->hasMany(Conversation::class, 'customer_id');
+    }
+
+    public function conversationsAsAdmin()
+    {
+        return $this->hasMany(Conversation::class, 'admin_id');
+    }
+
+    public function messages()
+    {
+        return $this->hasMany(Message::class, 'sender_id');
+    }
+
+    public function messageReads()
+    {
+        return $this->hasMany(MessageRead::class, 'user_id');
+    }
 }
