@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <title>Hóa đơn #{{ $invoice->order->order_code }}</title>
@@ -10,12 +11,14 @@
             font-weight: normal;
             font-style: normal;
         }
+
         @font-face {
             font-family: 'Roboto';
             src: url({{ storage_path('fonts/Roboto-Bold.ttf') }}) format('truetype');
             font-weight: bold;
             font-style: normal;
         }
+
         body {
             font-family: 'Roboto', 'DejaVu Sans', sans-serif;
             line-height: 1.6;
@@ -23,34 +26,41 @@
             margin: 0;
             padding: 20px;
         }
+
         .header {
             text-align: center;
             margin-bottom: 30px;
             padding-bottom: 20px;
             border-bottom: 2px solid #4A5568;
         }
+
         .logo {
             max-width: 200px;
             margin-bottom: 10px;
         }
+
         .invoice-title {
             color: #2D3748;
             font-size: 28px;
             font-weight: bold;
             margin: 0;
         }
+
         .invoice-number {
             color: #718096;
             font-size: 16px;
             margin: 5px 0;
         }
+
         .invoice-date {
             color: #718096;
             font-size: 14px;
         }
+
         .section {
             margin-bottom: 30px;
         }
+
         .section-title {
             color: #4A5568;
             font-size: 18px;
@@ -59,30 +69,36 @@
             padding-bottom: 5px;
             border-bottom: 1px solid #E2E8F0;
         }
+
         .info-grid {
             margin-bottom: 30px;
         }
+
         .info-box {
             background-color: #F7FAFC;
             padding: 15px;
             border-radius: 8px;
             margin-bottom: 20px;
         }
+
         .info-box h3 {
             color: #4A5568;
             font-size: 16px;
             margin: 0 0 10px 0;
         }
+
         .info-box p {
             margin: 5px 0;
             color: #4A5568;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 30px;
             background-color: white;
         }
+
         th {
             background-color: #F7FAFC;
             color: #4A5568;
@@ -91,24 +107,29 @@
             padding: 12px;
             border-bottom: 2px solid #E2E8F0;
         }
+
         td {
             padding: 12px;
             border-bottom: 1px solid #E2E8F0;
             color: #4A5568;
         }
+
         .text-right {
             text-align: right;
         }
+
         .totals {
             float: right;
             width: 350px;
         }
+
         .total-row {
             display: flex;
             justify-content: space-between;
             padding: 8px 0;
             border-bottom: 1px solid #E2E8F0;
         }
+
         .total-row.final {
             border-top: 2px solid #4A5568;
             border-bottom: 2px solid #4A5568;
@@ -118,6 +139,7 @@
             padding: 12px 0;
             margin-top: 10px;
         }
+
         .footer {
             margin-top: 50px;
             text-align: center;
@@ -126,6 +148,7 @@
             padding-top: 20px;
             border-top: 1px solid #E2E8F0;
         }
+
         .status-badge {
             display: inline-block;
             padding: 5px 10px;
@@ -133,29 +156,35 @@
             font-size: 12px;
             font-weight: bold;
         }
+
         .status-paid {
             background-color: #C6F6D5;
             color: #2F855A;
         }
+
         .status-pending {
             background-color: #FEEBC8;
             color: #C05621;
         }
+
         .highlight {
             color: #4A5568;
             font-weight: bold;
         }
+
         .book-title {
             color: #2D3748;
             font-weight: bold;
             margin-bottom: 4px;
         }
+
         .book-author {
             color: #718096;
             font-size: 12px;
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
@@ -178,7 +207,8 @@
                 <h3>THÔNG TIN ĐƠN HÀNG</h3>
                 <p><strong>Phương thức thanh toán:</strong><br>{{ $invoice->order->payment_method }}</p>
                 <p><strong>Trạng thái thanh toán:</strong><br>
-                    <span class="status-badge {{ $invoice->order->payment_status == 'paid' ? 'status-paid' : 'status-pending' }}">
+                    <span
+                        class="status-badge {{ $invoice->order->payment_status == 'paid' ? 'status-paid' : 'status-pending' }}">
                         {{ $invoice->order->payment_status == 'paid' ? 'Đã thanh toán' : 'Chưa thanh toán' }}
                     </span>
                 </p>
@@ -198,28 +228,29 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($invoice->items as $item)
-                    <tr>
-                        <td>
-                            <div class="book-title">{{ $item->book->title }}</div>
-                            <div class="book-author">Tác giả: {{ $item->book->author->name }}</div>
-                        </td>
-                        <td>{{ number_format($item->price) }}đ</td>
-                        <td class="text-center">{{ $item->quantity }}</td>
-                        <td class="text-right">{{ number_format($item->quantity * $item->price) }}đ</td>
-                    </tr>
+                    @foreach ($invoice->items as $item)
+                        <tr>
+                            <td>
+                                <div class="book-title">{{ $item->book->title }}</div>
+                                <div class="book-author">Tác giả: {{ $item->book->author->name }}</div>
+                            </td>
+                            <td>{{ number_format($item->price) }}đ</td>
+                            <td class="text-center">{{ $item->quantity }}</td>
+                            <td class="text-right">{{ number_format($item->quantity * $item->price) }}đ</td>
+                        </tr>
                     @endforeach
                 </tbody>
-            </table>            <div class="totals">
+            </table>
+            <div class="totals">
                 <div class="total-row">
                     <span>Tổng tiền hàng:</span>
                     <span>{{ number_format($invoice->subtotal) }}đ</span>
                 </div>
-                @if($invoice->discount > 0)
-                <div class="total-row">
-                    <span>Giảm giá:</span>
-                    <span>-{{ number_format($invoice->discount) }}đ</span>
-                </div>
+                @if ($invoice->discount > 0)
+                    <div class="total-row">
+                        <span>Giảm giá:</span>
+                        <span>-{{ number_format($invoice->discount) }}đ</span>
+                    </div>
                 @endif
                 <div class="total-row">
                     <span>Phí vận chuyển:</span>
@@ -241,4 +272,5 @@
         </div>
     </div>
 </body>
+
 </html>
