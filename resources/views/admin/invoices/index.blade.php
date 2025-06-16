@@ -13,10 +13,8 @@
                                 <i class="fas fa-file-invoice me-2"></i>Quản lý hóa đơn
                             </h5>
                             <div>
-                                <a href="{{ route('admin.dashboard') }}" 
-                                   class="btn btn-outline-secondary btn-sm"
-                                   data-bs-toggle="tooltip" 
-                                   title="Quay lại Dashboard">
+                                <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-secondary btn-sm"
+                                    data-bs-toggle="tooltip" title="Quay lại Dashboard">
                                     <i class="fas fa-arrow-left me-1"></i>Quay lại
                                 </a>
                             </div>
@@ -29,29 +27,28 @@
 
                         @if (session('error'))
                             <div class="alert alert-danger">{{ session('error') }}</div>
-                        @endif                        <!-- Thanh công cụ -->                        <div class="mb-4">
+                        @endif <!-- Thanh công cụ -->
+                        <div class="mb-4">
                             <form method="GET" action="{{ route('admin.invoices.index') }}" class="row g-3">
                                 <div class="col-md-3">
                                     <div class="input-group">
                                         <span class="input-group-text bg-light">
                                             <i class="fas fa-search text-primary"></i>
                                         </span>
-                                        <input type="text" 
-                                               name="search_order_code" 
-                                               class="form-control"
-                                               placeholder="Nhập mã đơn hàng..." 
-                                               value="{{ request()->get('search_order_code') }}">
+                                        <input type="text" name="search_order_code" class="form-control"
+                                            placeholder="Nhập mã đơn hàng..."
+                                            value="{{ request()->get('search_order_code') }}">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="input-group">
                                         <span class="input-group-text bg-light">
                                             <i class="fas fa-wallet text-primary"></i>
-                                        </span>                        <select name="payment_method" class="form-select">
+                                        </span> <select name="payment_method" class="form-select">
                                             <option value="">-- Phương thức thanh toán --</option>
-                                            @foreach($paymentMethods as $method)
-                                                <option value="{{ $method->id }}" 
-                                                        {{ request()->get('payment_method') == $method->id ? 'selected' : '' }}>
+                                            @foreach ($paymentMethods as $method)
+                                                <option value="{{ $method->id }}"
+                                                    {{ request()->get('payment_method') == $method->id ? 'selected' : '' }}>
                                                     {{ $method->name }}
                                                 </option>
                                             @endforeach
@@ -65,10 +62,12 @@
                                         </span>
                                         <select name="payment_status" class="form-select">
                                             <option value="">-- Trạng thái thanh toán --</option>
-                                            <option value="paid" {{ request()->get('payment_status') == 'paid' ? 'selected' : '' }}>
+                                            <option value="paid"
+                                                {{ request()->get('payment_status') == 'paid' ? 'selected' : '' }}>
                                                 Đã thanh toán
                                             </option>
-                                            <option value="unpaid" {{ request()->get('payment_status') == 'unpaid' ? 'selected' : '' }}>
+                                            <option value="unpaid"
+                                                {{ request()->get('payment_status') == 'unpaid' ? 'selected' : '' }}>
                                                 Chưa thanh toán
                                             </option>
                                         </select>
@@ -76,16 +75,12 @@
                                 </div>
                                 <div class="col-md-auto">
                                     <div class="d-flex gap-2">
-                                        <button type="submit" 
-                                                class="btn btn-primary"
-                                                data-bs-toggle="tooltip" 
-                                                title="Tìm kiếm hóa đơn">
+                                        <button type="submit" class="btn btn-primary" data-bs-toggle="tooltip"
+                                            title="Tìm kiếm hóa đơn">
                                             <i class="fas fa-search me-1"></i>Tìm kiếm
                                         </button>
-                                        <a href="{{ route('admin.invoices.index') }}" 
-                                           class="btn btn-outline-secondary"
-                                           data-bs-toggle="tooltip"
-                                           title="Xóa bộ lọc">
+                                        <a href="{{ route('admin.invoices.index') }}" class="btn btn-outline-secondary"
+                                            data-bs-toggle="tooltip" title="Xóa bộ lọc">
                                             <i class="fas fa-redo me-1"></i>Làm mới
                                         </a>
                                     </div>
@@ -105,7 +100,8 @@
                                         </p>
                                     @endif
                                 </div>
-                            @else                                <table class="table table-hover align-middle">
+                            @else
+                                <table class="table table-hover align-middle">
                                     <thead class="table-light">
                                         <tr>
                                             <th width="5%">#</th>
@@ -135,14 +131,15 @@
                                                             {{ $invoice->order->user->email }}
                                                         </small>
                                                     </div>
-                                                </td>                                <td>
-                                    <span class="badge bg-light text-dark">
-                                        <i class="fas fa-money-bill-wave me-1"></i>
-                                        {{ $invoice->order->paymentMethod->name ?? 'Không Xác Định' }}
-                                    </span>
-                                </td>
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-light text-dark">
+                                                        <i class="fas fa-money-bill-wave me-1"></i>
+                                                        {{ $invoice->order->paymentMethod->name ?? 'Không Xác Định' }}
+                                                    </span>
+                                                </td>
                                                 <td class="text-center">
-                                                    @if($invoice->order->payment_status == 'paid')
+                                                    @if ($invoice->order->payment_status == 'paid')
                                                         <span class="badge bg-success">
                                                             <i class="fas fa-check-circle me-1"></i>Đã thanh toán
                                                         </span>
@@ -153,7 +150,8 @@
                                                     @endif
                                                 </td>
                                                 <td class="text-end">
-                                                    <span class="fw-medium">{{ number_format($invoice->total_amount) }}đ</span>
+                                                    <span
+                                                        class="fw-medium">{{ number_format($invoice->total_amount) }}đ</span>
                                                 </td>
                                                 <td>
                                                     <span class="text-muted">
@@ -164,16 +162,13 @@
                                                 <td>
                                                     <div class="d-flex justify-content-center gap-1">
                                                         <a href="{{ route('admin.invoices.show', $invoice->id) }}"
-                                                           class="btn btn-sm btn-info"
-                                                           data-bs-toggle="tooltip"
-                                                           title="Xem chi tiết hóa đơn">
+                                                            class="btn btn-sm btn-info" data-bs-toggle="tooltip"
+                                                            title="Xem chi tiết hóa đơn">
                                                             <i class="fas fa-eye"></i>
                                                         </a>
                                                         <a href="{{ route('admin.invoices.generate-pdf', $invoice->id) }}"
-                                                           class="btn btn-sm btn-primary"
-                                                           data-bs-toggle="tooltip"
-                                                           title="Tải PDF hóa đơn"
-                                                           target="_blank">
+                                                            class="btn btn-sm btn-primary" data-bs-toggle="tooltip"
+                                                            title="Tải PDF hóa đơn" target="_blank">
                                                             <i class="fas fa-file-pdf"></i>
                                                         </a>
                                                     </div>
@@ -181,7 +176,7 @@
                                             </tr>
                                         @endforeach
                                     </tbody>
-                                </table>                                <!-- Phân trang -->
+                                </table> <!-- Phân trang -->
                                 <div class="d-flex justify-content-between align-items-center mt-4">
                                     <div class="text-muted">
                                         <span class="badge bg-light text-dark">
@@ -204,12 +199,12 @@
     </div>
 
     @push('scripts')
-    <script>
-        // Khởi tạo tooltips
-        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl)
-        })
-    </script>
+        <script>
+            // Khởi tạo tooltips
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+            var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl)
+            })
+        </script>
     @endpush
 @endsection
