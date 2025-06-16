@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use PDF;
 use Brian2694\Toastr\Facades\Toastr;
 
-class InvoiceController extends Controller
+class AdminInvoiceController extends Controller
 {    public function index(Request $request)
     {        $query = Invoice::query();
         $query->with([
