@@ -134,8 +134,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     // Route chat real time
    Route::prefix('chat')->name('chat.')->group(function () {
-        Route::get('/', [AdminChatRealTimeController::class, 'index'])->name('index');
-        Route::post('/store', [AdminChatRealTimeController::class, 'store'])->name('store');
+        // Route mặc định: chưa chọn ai
+    Route::get('/', [AdminChatRealTimeController::class, 'index'])->name('default');
+
+    // Route có conversation ID
+    Route::get('/{conversation}', [AdminChatRealTimeController::class, 'show'])->name('index');
     });
     // Route admin/categories
     Route::prefix('categories')->name('categories.')->group(function () {
