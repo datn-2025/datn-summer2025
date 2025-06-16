@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Invoice;
 use Illuminate\Http\Request;
 use PDF;
-use Brian2694\Toastr\Facades\Toastr;
 
 class AdminInvoiceController extends Controller
 {    public function index(Request $request)
