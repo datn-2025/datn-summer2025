@@ -7,16 +7,14 @@ use App\Models\Brand;
 use App\Models\Author;
 use App\Models\Category;
 use App\Models\Attribute;
-use App\Models\Review;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use App\Models\AttributeValue;
 use App\Models\BookAttributeValue;
 use App\Http\Controllers\Controller;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Storage;
 
-class BookController extends Controller
+class AdminBookController extends Controller
 {
     public function index(Request $request)
     {
