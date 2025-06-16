@@ -76,6 +76,7 @@
     <link href="{{ asset('assets/css/app.min.css') }}" rel="stylesheet" type="text/css" />
     <!-- custom Css-->
     <link href="{{ asset('assets/css/custom.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('css/chat.css') }}" rel="stylesheet" type="text/css" />
 
     {{-- Toastr CSS đã được tải ở head --}}
 
@@ -86,6 +87,7 @@
     <link rel="stylesheet" href="https://cdn.lineawesome.com/1.3.0/line-awesome/css/line-awesome.min.css">
 
     <style>
+        
         .collapse.show+a .toggle-icon,
         .nav-link[aria-expanded="true"] .toggle-icon {
             transform: rotate(180deg);
@@ -872,7 +874,7 @@
                             </div>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link menu-link" href="{{route('admin.chat.index')}}" data-bs-toggle="collapse"
+                            <a class="nav-link menu-link" href="javascript:void(0);" data-bs-toggle="collapse"
                                 role="button" aria-expanded="false" aria-controls="sidebarForm">
                                 <i class="ri-file-list-3-line"></i> <span data-key="t-forms">Chat</span>
                             </a>
@@ -1681,16 +1683,7 @@
 
     <!-- Sweet Alerts js -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.5/dist/sweetalert2.all.min.js"></script>
-    {{-- <script src="https://cdn.jsdelivr.net/npm/fg-emoji-picker@1.3.4/dist/FgEmojiPicker.min.js"></script> --}}
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        new FgEmojiPicker({
-            trigger: ['#emoji-btn'],
-            insertInto: '#chat-input',
-            position: ['top', 'right']
-        });
-    });
-</script>
+
 
 
     {{-- toastr notification --}}
