@@ -3,11 +3,15 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Mail\EbookPurchaseConfirmation;
 use App\Models\Payment;
 use App\Models\PaymentMethod;
 use App\Models\PaymentStatus;
+use App\Models\BookFormat;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
 class AdminPaymentMethodController extends Controller
@@ -97,7 +101,34 @@ class AdminPaymentMethodController extends Controller
         }
 
         $payment->payment_status_id = $status->id;
+
+        // Nếu trạng thái là "Đã Thanh Toán" thì cập nhật ngày thanh toán và gửi email
+        if (mb_strtolower($status->name, 'UTF-8') === 'đã thanh toán') {
+            $payment->paid_at = now();
+            
+            // Kiểm tra nếu đơn hàng có sách ebook
+            $order = $payment->order;
+            $hasEbook = $order->orderItems()
+                ->whereHas('book.formats', function($query) {
+                    $query->where('format_name', 'Ebook');
+                })
+                ->exists();
+
+            if ($hasEbook) {
+                // Gửi email xác nhận mua ebook
+                Mail::to($order->user->email)
+                    ->send(new EbookPurchaseConfirmation($order));
+            }
+        }
+
         $payment->save();
+
+        // Cập nhật trạng thái cho đơn hàng
+        if ($payment->order) {
+            $payment->order->payment_status_id = $status->id;
+            $payment->order->save();
+        }
+
         Toastr::success('Cập nhật trạng thái thanh toán thành công!');
 
         return redirect()->back()->with('success', 'Cập nhật trạng thái thanh toán thành công');
@@ -151,12 +182,11 @@ class AdminPaymentMethodController extends Controller
         if ($request->filled('search')) {
             $search = $request->search;
             $payments->where(function ($q) use ($search) {
-                // Tìm kiếm theo order_id
-                $q->where('order_id', 'LIKE', "%{$search}%")
-                    // Tìm kiếm theo order_code
-                    ->orWhereHas('order', function ($query) use ($search) {
-                        $query->where('order_code', 'LIKE', "%{$search}%");
-                    })
+                // Tìm kiếm theo order_code
+
+                $q->orWhereHas('order', function ($query) use ($search) {
+                    $query->where('order_code', 'LIKE', "%{$search}%");
+                })
                     // Tìm kiếm theo amount (kiểm tra nếu search là số)
                     ->orWhere(function ($query) use ($search) {
                         if (is_numeric(str_replace([',', '.'], '', $search))) {
@@ -177,12 +207,14 @@ class AdminPaymentMethodController extends Controller
                 $query->where('name', $request->payment_status);
             });
         }
+        // Ẩn các phương thức "Thanh toán khi nhận hàng"
+        $payments->whereHas('paymentMethod', function ($query) {
+            $query->where('name', '!=', 'Thanh toán khi nhận hàng');
+        });
 
 
         $payments = $payments->latest()->paginate(10);
 
         return view('admin.payment-methods.history', compact('payments'));
     }
-
 }
-
