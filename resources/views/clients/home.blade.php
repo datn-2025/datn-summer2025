@@ -111,7 +111,7 @@
                 IMPOSSIBLE IS NOTHING
             </h2>
         </div>
-        {{-- Nội dung từng tab --}}
+        {{-- Enhanced Tab Content Section --}}
         @foreach ($categories as $index => $category)
             <div id="tab-tab-{{$category->id}}" class="tab-content {{ $index === 0 ? 'block' : 'hidden'}} relative">
                 <div class="swiper categorySwiper" id="swiper-{{ $category->id}}">
@@ -139,9 +139,14 @@
                                             Thêm vào giỏ hàng →
                                         </a>
                                     </div>
-
                                 </div>
                             </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        @endforeach
+
         <!-- Enhanced Features Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <!-- Feature 1: Free Shipping -->
