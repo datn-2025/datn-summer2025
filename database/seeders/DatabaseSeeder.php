@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
+            SettingsSeeder::class,      // Thêm Settings trước
             RoleSeeder::class,
             ActiveUserSeeder::class,
             UserSeeder::class,
