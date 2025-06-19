@@ -199,19 +199,26 @@ class CartController extends Controller
                 ]);
             }
 
-            // Kiểm tra tồn kho
-            if ($bookInfo->stock <= 0) {
-                return response()->json([
-                    'error' => 'Sản phẩm hiện tại đã hết hàng',
-                    'available_stock' => $bookInfo->stock
-                ], 422);
+            // Kiểm tra tồn kho (chỉ với sách vật lý, không phải ebook)
+            $isEbook = false;
+            if (isset($bookInfo->format_name)) {
+                $isEbook = stripos($bookInfo->format_name, 'ebook') !== false;
             }
 
-            if ($quantity > $bookInfo->stock) {
-                return response()->json([
-                    'error' => "Số lượng yêu cầu vượt quá số lượng tồn kho. Tồn kho hiện tại: {$bookInfo->stock}",
-                    'available_stock' => $bookInfo->stock
-                ], 422);
+            if (!$isEbook) {
+                if ($bookInfo->stock <= 0) {
+                    return response()->json([
+                        'error' => 'Sản phẩm hiện tại đã hết hàng',
+                        'available_stock' => $bookInfo->stock
+                    ], 422);
+                }
+
+                if ($quantity > $bookInfo->stock) {
+                    return response()->json([
+                        'error' => "Số lượng yêu cầu vượt quá số lượng tồn kho. Tồn kho hiện tại: {$bookInfo->stock}",
+                        'available_stock' => $bookInfo->stock
+                    ], 422);
+                }
             }
 
             // Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa (bao gồm cả thuộc tính)
@@ -223,9 +230,9 @@ class CartController extends Controller
                 ->first();
 
             if ($existingCart) {
-                // Kiểm tra tổng số lượng sau khi thêm
+                // Kiểm tra tổng số lượng sau khi thêm (chỉ với sách vật lý)
                 $newQuantity = $existingCart->quantity + $quantity;
-                if ($newQuantity > $bookInfo->stock) {
+                if (!$isEbook && $newQuantity > $bookInfo->stock) {
                     return response()->json([
                         'error' => "Tổng số lượng vượt quá tồn kho. Tồn kho hiện tại: {$bookInfo->stock}",
                         'available_stock' => $bookInfo->stock,
