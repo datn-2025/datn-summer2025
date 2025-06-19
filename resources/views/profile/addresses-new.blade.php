@@ -13,7 +13,7 @@
         min-width: 250px;
         background: white;
         padding: 25px;
-        border-radius: 16px;
+        border-radius: 5px;
         box-shadow: 0 4px 20px rgba(0,0,0,0.05);
         position: sticky;
         top: 60px;
