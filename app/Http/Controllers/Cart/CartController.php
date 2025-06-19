@@ -171,51 +171,25 @@ class CartController extends Controller
                 return response()->json(['error' => 'Không tìm thấy sách hoặc định dạng sách'], 404);
             }
 
-            // Tính giá cuối cùng bao gồm thuộc tính và discount
-            $basePrice = $bookInfo->price;
-            $discount = $bookInfo->discount ?? 0;
-            
-            // Áp dụng discount cho base price
-            $discountedPrice = $basePrice - ($basePrice * ($discount / 100));
-            $finalPrice = $discountedPrice;
-            
-            // Thêm giá thuộc tính
-            if (!empty($validAttributeIds)) {
-                $attributeExtraCosts = DB::table('book_attribute_values')
-                    ->where('book_id', $bookId)
-                    ->whereIn('attribute_value_id', $validAttributeIds)
-                    ->sum('extra_price');
-                
-                $finalPrice += $attributeExtraCosts;
-                
-                // Log để debug
-                Log::info('Cart addToCart - Price calculation:', [
-                    'base_price' => $basePrice,
-                    'discount' => $discount,
-                    'discounted_price' => $discountedPrice,
-                    'attribute_extra_costs' => $attributeExtraCosts,
-                    'final_price' => $finalPrice,
-                    'attribute_ids' => $validAttributeIds
-                ]);
-            }
-
-            // Kiểm tra tồn kho (chỉ với sách vật lý, không phải ebook)
+            // Kiểm tra ebook
             $isEbook = false;
             if (isset($bookInfo->format_name)) {
                 $isEbook = stripos($bookInfo->format_name, 'ebook') !== false;
             }
+            // Nếu là ebook: luôn set quantity = 1, bỏ qua check tồn kho
+            if ($isEbook) {
+                $quantity = 1;
+            }
 
+            // Kiểm tra tồn kho (chỉ với sách vật lý, không phải ebook)
             if (!$isEbook) {
                 if ($bookInfo->stock <= 0) {
                     return response()->json([
-                        'error' => 'Sản phẩm hiện tại đã hết hàng',
                         'available_stock' => $bookInfo->stock
                     ], 422);
                 }
-
                 if ($quantity > $bookInfo->stock) {
                     return response()->json([
-                        'error' => "Số lượng yêu cầu vượt quá số lượng tồn kho. Tồn kho hiện tại: {$bookInfo->stock}",
                         'available_stock' => $bookInfo->stock
                     ], 422);
                 }
@@ -230,32 +204,44 @@ class CartController extends Controller
                 ->first();
 
             if ($existingCart) {
+                // Nếu là ebook: luôn giữ số lượng là 1
+                if ($isEbook) {
+                    DB::table('carts')
+                        ->where('id', $existingCart->id)
+                        ->update([
+                            'quantity' => 1,
+                            'updated_at' => now()
+                        ]);
+                    return response()->json([
+                        'success' => 'Đã thêm sách điện tử vào giỏ hàng',
+                        'stock' => $bookInfo->stock,
+                        'current_quantity' => 1
+                    ]);
+                }
                 // Kiểm tra tổng số lượng sau khi thêm (chỉ với sách vật lý)
                 $newQuantity = $existingCart->quantity + $quantity;
                 if (!$isEbook && $newQuantity > $bookInfo->stock) {
                     return response()->json([
-                        'error' => "Tổng số lượng vượt quá tồn kho. Tồn kho hiện tại: {$bookInfo->stock}",
-                        'available_stock' => $bookInfo->stock,
                         'current_cart_quantity' => $existingCart->quantity
                     ], 422);
                 }
-
                 // Cập nhật số lượng và giá (case giá có thể thay đổi)
                 DB::table('carts')
                     ->where('id', $existingCart->id)
                     ->update([
                         'quantity' => $newQuantity,
-                        'price' => $finalPrice, // Update price in case it changed
                         'updated_at' => now()
                     ]);
-
                 return response()->json([
                     'success' => 'Đã thêm ' . $quantity . ' sản phẩm "' . $bookInfo->title . '" vào giỏ hàng',
                     'stock' => $bookInfo->stock,
                     'current_quantity' => $newQuantity
                 ]);
             } else {
-                // Nếu chưa có, thêm mới
+                // Nếu là ebook: luôn set quantity = 1
+                if ($isEbook) {
+                    $quantity = 1;
+                }
                 DB::table('carts')->insert([
                     'id' => Str::uuid(),
                     'user_id' => Auth::id(),
@@ -267,14 +253,12 @@ class CartController extends Controller
                     'created_at' => now(),
                     'updated_at' => now()
                 ]);
-
                 return response()->json([
                     'success' => 'Đã thêm sản phẩm "' . $bookInfo->title . '" vào giỏ hàng',
                     'stock' => $bookInfo->stock,
                     'current_quantity' => $quantity
                 ]);
             }
-
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
                 'error' => 'Dữ liệu không hợp lệ: ' . implode(', ', $e->validator->errors()->all())
@@ -336,6 +320,26 @@ class CartController extends Controller
                 return response()->json(['error' => 'Không tìm thấy sách hoặc định dạng sách'], 404);
             }
 
+            // Kiểm tra ebook
+            $isEbook = false;
+            if (isset($bookInfo->format_name)) {
+                $isEbook = stripos($bookInfo->format_name, 'ebook') !== false;
+            }
+            // Nếu là ebook: luôn giữ số lượng là 1, không cho update số lượng
+            if ($isEbook) {
+                DB::table('carts')
+                    ->where('user_id', Auth::id())
+                    ->where('book_id', $bookId)
+                    ->update([
+                        'quantity' => 1,
+                        'updated_at' => now()
+                    ]);
+                return response()->json([
+                    'success' => 'Số lượng sách điện tử luôn là 1',
+                    'data' => []
+                ]);
+            }
+
             if ($quantity > $bookInfo->stock) {
                 return response()->json([
                     'error' => "Số lượng yêu cầu vượt quá số lượng tồn kho. Tồn kho hiện tại: {$bookInfo->stock}",
@@ -351,27 +355,15 @@ class CartController extends Controller
                         'quantity' => $quantity,
                         'updated_at' => now()
                     ]);
-
                 return response()->json([
                     'success' => 'Đã cập nhật số lượng sản phẩm',
-                    'data' => [
-                        'id' => $cartItem->id,
-                        'book_id' => $bookId,
-                        'quantity' => $quantity,
-                        'price' => $bookInfo->price,
-                        'total' => $bookInfo->price * $quantity,
-                        'book_title' => $bookInfo->title,
-                        'author_name' => $bookInfo->author_name,
-                        'format_name' => $bookInfo->format_name,
-                        'stock' => $bookInfo->stock
-                    ]
+                    'data' => [ ]
                 ]);
             } else {
                 DB::table('carts')
                     ->where('user_id', Auth::id())
                     ->where('book_id', $bookId)
                     ->delete();
-
                 return response()->json(['success' => 'Đã xóa sản phẩm khỏi giỏ hàng']);
             }
         } catch (\Exception $e) {
