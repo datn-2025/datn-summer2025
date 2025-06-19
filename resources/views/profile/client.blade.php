@@ -25,18 +25,6 @@
       --shadow: rgba(0,0,0,0.05);
     }
 
-    [data-theme="dark"] {
-      --primary: #818cf8;
-      --primary-hover: #6366f1;
-      --secondary: #c084fc;
-      --background: #1f2937;
-      --surface: #293548;
-      --text: #f3f4f6;
-      --text-light: #d1d5db;
-      --border: #374151;
-      --shadow: rgba(0,0,0,0.2);
-    }
-
     /* Add glass morphism effect */
     .glass {
       background: rgba(255, 255, 255, 0.1);
@@ -44,16 +32,11 @@
       border: 1px solid rgba(255, 255, 255, 0.2);
     }
 
-    [data-theme="dark"] .glass {
-      background: rgba(0, 0, 0, 0.2);
-    }
-
     body {
       font-family: 'Inter', sans-serif;
       background-color: var(--background);
       min-height: 100vh;
       color: var(--text);
-      transition: all 0.3s ease;
     }
 
     /* Modern 3D Card Effect */
@@ -78,27 +61,7 @@
     }
 
     /* Theme Switcher */
-    .theme-switch {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      z-index: 1000;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 4px 20px var(--shadow);
-      transition: all 0.3s ease;
-    }
-
-    .theme-switch:hover {
-      transform: scale(1.1);
-    }
+    /* Removed theme switch */
 
     /* Enhanced Navigation */
     .navbar-custom {
@@ -115,7 +78,7 @@
     .sidebar {
       background: var(--surface);
       padding: 25px;
-      border-radius: 16px;
+      border-radius: 5px;
       box-shadow: 0 4px 20px var(--shadow);
       position: sticky;
       top: 100px;
@@ -155,33 +118,31 @@
       background: linear-gradient(135deg, 
         rgba(var(--primary-rgb), 0.1) 0%, 
         rgba(var(--secondary-rgb), 0.1) 100%);
-      border-radius: 20px;
+      border-radius: 5px;
       padding: 30px;
-      transition: all 0.3s ease;
     }
 
     .avatar:hover {
-      transform: translateY(-5px);
+      /* Removed hover effect */
     }
 
     .avatar img {
       border: none;
-      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-      padding: 5px;
-      transition: all 0.5s ease;
+      background: transparent;
+      padding: 0;
     }
 
     .avatar img:hover {
-      transform: scale(1.1) rotate(10deg);
+      /* Removed hover effect */
     }
 
     /* Animated Button */
     .btn-save {
-      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      background: #000000;
       border: none;
       padding: 15px 40px;
       color: white;
-      border-radius: 12px;
+      border-radius: 5px;
       transition: all 0.3s ease;
       position: relative;
       overflow: hidden;
@@ -218,16 +179,17 @@
     }
 
     ::-webkit-scrollbar-track {
-      background: var(--background);
+      background: #f1f5f9;
+      border-radius: 5px;
     }
 
     ::-webkit-scrollbar-thumb {
-      background: var(--primary);
+      background: #374151;
       border-radius: 5px;
     }
 
     ::-webkit-scrollbar-thumb:hover {
-      background: var(--primary-hover);
+      background: #1f2937;
     }
 
     /* Loading Animation */
@@ -365,7 +327,7 @@
       min-width: 250px;
       background: white;
       padding: 25px;
-      border-radius: 16px;
+      border-radius: 5px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.05);
       position: sticky;
       top: 60px;
@@ -377,7 +339,7 @@
       margin-bottom: 8px;
       color: #4b5563;
       text-decoration: none;
-      border-radius: 10px;
+      border-radius: 5px;
       transition: all 0.3s ease;
       position: relative;
       overflow: hidden;
@@ -389,7 +351,7 @@
       top: 0;
       height: 100%;
       width: 3px;
-      background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+      background: linear-gradient(135deg, #000000 0%, #333333 100%);
       transform: scaleY(0);
       transition: transform 0.3s ease;
     }
@@ -403,7 +365,7 @@
     }
     .sidebar a:hover {
       background: #f3f4f6;
-      color: #6366f1;
+      color: #000000;
       transform: translateX(5px);
     }
     .sidebar a:hover i {
@@ -412,7 +374,7 @@
     .main-content {
       background: #fff;
       padding: 40px;
-      border-radius: 16px;
+      border-radius: 5px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.05);
       animation: fadeIn 0.5s ease;
     }
@@ -427,15 +389,15 @@
       }
     }
     .form-control, .form-select {
-      border-radius: 10px;
+      border-radius: 5px;
       border: 1.5px solid #e5e7eb;
       padding: 12px;
       transition: all 0.3s ease;
       background: #fff;
     }
     .form-control:focus, .form-select:focus {
-      border-color: #6366f1;
-      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+      border-color: #000000;
+      box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
       transform: translateY(-1px);
     }
     .form-control::placeholder {
@@ -450,151 +412,108 @@
       gap: 8px;
     }
     .form-label i {
-      color: #6366f1;
+      color: #000000;
       font-size: 0.9em;
     }
     .avatar {
       position: relative;
       padding: 12px;
-      background: 
-        linear-gradient(145deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.1) 100%),
-        linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%);
-      border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(15px);
-      box-shadow: 
-        0 3px 12px rgba(0, 0, 0, 0.05),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2);
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      background: transparent;
+      border-radius: 5px;
+      border: none;
       overflow: hidden;
     }
     .avatar::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(255, 255, 255, 0.2),
-        transparent
-      );
-      transition: left 0.8s ease;
+      /* Removed before effect */
     }
     .avatar:hover::before {
-      left: 100%;
+      /* Removed hover effect */
     }
     .avatar:hover {
-      transform: translateY(-6px);
-      box-shadow: 
-        0 15px 35px rgba(99, 102, 241, 0.2),
-        0 8px 16px rgba(0, 0, 0, 0.08),
-        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      /* Removed hover effect */
     }
     .avatar-container {
       position: relative;
       display: inline-block;
       margin-bottom: 15px;
+      cursor: pointer;
+    }
+    
+    .avatar-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      z-index: 3;
+      pointer-events: none;
+    }
+    
+    .avatar-container:hover .avatar-overlay {
+      opacity: 1;
+    }
+    
+    .avatar-overlay i {
+      color: white;
+      font-size: 24px;
     }
     .avatar-container::before {
-      content: '';
-      position: absolute;
-      top: -6px;
-      left: -6px;
-      right: -6px;
-      bottom: -6px;
-      background: linear-gradient(45deg, #6366f1, #a855f7, #10b981, #f59e0b);
-      border-radius: 50%;
-      z-index: -1;
-      animation: rotate 10s linear infinite;
-      opacity: 0;
-      transition: opacity 0.3s ease;
+      /* Removed background gradient effect */
     }
     .avatar-container:hover::before {
-      opacity: 0.5;
+      /* Removed hover effect */
     }
     @keyframes rotate {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+      /* Removed animation */
     }
     .avatar-image {
-      width: 110px;
-      height: 110px;
+      width: 200px;
+      height: 200px;
       object-fit: cover;
       border-radius: 50%;
-      border: 3px solid #fff;
-      padding: 3px;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 
-        0 6px 20px rgba(99, 102, 241, 0.2),
-        0 2px 6px rgba(0, 0, 0, 0.06),
-        inset 0 0 0 1px rgba(99, 102, 241, 0.08);
-      background: linear-gradient(135deg, #6366f1, #a855f7);
+      border: none;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
       position: relative;
       z-index: 2;
+      cursor: pointer;
     }
     .avatar-image::before {
-      content: '';
-      position: absolute;
-      top: -6px;
-      left: -6px;
-      right: -6px;
-      bottom: -6px;
-      background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.5) 50%, transparent 70%);
-      border-radius: 50%;
-      z-index: -1;
-      opacity: 0;
-      transition: opacity 0.3s ease;
+      /* Removed before effect */
     }
     .avatar-image:hover::before {
-      opacity: 1;
-      animation: shine 1.5s ease-in-out;
+      /* Removed hover effect */
     }
     @keyframes shine {
-      0% { transform: scale(0.8) rotate(0deg); opacity: 0; }
-      50% { opacity: 1; }
-      100% { transform: scale(1.2) rotate(180deg); opacity: 0; }
+      /* Removed animation */
     }
     .avatar-image:hover {
-      transform: scale(1.05) rotateZ(3deg);
-      box-shadow: 
-        0 12px 32px rgba(99, 102, 241, 0.3),
-        0 6px 12px rgba(0, 0, 0, 0.12),
-        inset 0 0 0 2px rgba(99, 102, 241, 0.15);
+      /* Removed hover effect */
     }
     .avatar-badge {
       position: absolute;
-      bottom: 8px;
-      right: 8px;
-      width: 26px;
-      height: 26px;
-      background: linear-gradient(135deg, #10b981, #059669);
+      bottom: 15px;
+      right: 15px;
+      width: 35px;
+      height: 35px;
+      background: #000000;
       border-radius: 50%;
-      border: 2px solid #fff;
+      border: 3px solid #fff;
       display: flex;
       align-items: center;
       justify-content: center;
       box-shadow: 
-        0 3px 10px rgba(16, 185, 129, 0.25),
-        0 0 0 1px rgba(16, 185, 129, 0.08);
-      animation: heartbeat 2s infinite;
+        0 3px 10px rgba(0, 0, 0, 0.25),
+        0 0 0 1px rgba(0, 0, 0, 0.08);
       z-index: 3;
-      transition: all 0.3s ease;
     }
     .avatar-badge::before {
-      content: '';
-      position: absolute;
-      top: -6px;
-      left: -6px;
-      right: -6px;
-      bottom: -6px;
-      background: linear-gradient(45deg, #10b981, #059669);
-      border-radius: 50%;
-      z-index: -1;
-      opacity: 0;
-      animation: pulse-ring 2s infinite;
+      /* Removed pulse ring effect */
     }
     .avatar-badge i {
       color: white;
@@ -602,21 +521,19 @@
       text-shadow: 0 1px 2px rgba(0,0,0,0.2);
     }
     @keyframes heartbeat {
-      0%, 40%, 80%, 100% { transform: scale(1); }
-      20%, 60% { transform: scale(1.15); }
+      /* Removed animation */
     }
     @keyframes pulse-ring {
-      0% { transform: scale(0.8); opacity: 1; }
-      100% { transform: scale(2); opacity: 0; }
+      /* Removed animation */
     }
     .upload-section {
       margin-top: 15px;
       padding: 15px;
       background: 
         linear-gradient(145deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.1) 100%),
-        linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(168, 85, 247, 0.05) 100%);
-      border-radius: 12px;
-      border: 2px dashed rgba(99, 102, 241, 0.3);
+        linear-gradient(135deg, rgba(0, 0, 0, 0.05) 0%, rgba(51, 51, 51, 0.05) 100%);
+      border-radius: 5px;
+      border: 2px dashed rgba(0, 0, 0, 0.3);
       backdrop-filter: blur(8px);
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       position: relative;
@@ -632,7 +549,7 @@
       background: linear-gradient(
         90deg,
         transparent,
-        rgba(99, 102, 241, 0.1),
+        rgba(0, 0, 0, 0.1),
         transparent
       );
       transition: left 0.6s ease;
@@ -641,29 +558,29 @@
       left: 100%;
     }
     .upload-section:hover {
-      border-color: rgba(99, 102, 241, 0.6);
+      border-color: rgba(0, 0, 0, 0.6);
       background: 
         linear-gradient(145deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.2) 100%),
-        linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(168, 85, 247, 0.08) 100%);
+        linear-gradient(135deg, rgba(0, 0, 0, 0.08) 0%, rgba(51, 51, 51, 0.08) 100%);
       transform: translateY(-2px);
-      box-shadow: 0 6px 18px rgba(99, 102, 241, 0.12);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
     }
     .upload-section.dragover {
-      border-color: #6366f1;
+      border-color: #000000;
       background: 
         linear-gradient(145deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.3) 100%),
-        linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(168, 85, 247, 0.12) 100%);
+        linear-gradient(135deg, rgba(0, 0, 0, 0.12) 0%, rgba(51, 51, 51, 0.12) 100%);
       transform: scale(1.01) translateY(-3px);
       box-shadow: 
-        0 10px 25px rgba(99, 102, 241, 0.18),
-        inset 0 0 0 1px rgba(99, 102, 241, 0.15);
+        0 10px 25px rgba(0, 0, 0, 0.18),
+        inset 0 0 0 1px rgba(0, 0, 0, 0.15);
     }
     .upload-btn {
       position: relative;
       overflow: hidden;
       cursor: pointer;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      border-radius: 12px;
+      border-radius: 5px;
     }
     .upload-btn input[type="file"] {
       position: absolute;
@@ -676,9 +593,9 @@
       align-items: center;
       gap: 6px;
       padding: 12px 16px;
-      background: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
+      background: linear-gradient(135deg, #000000 0%, #333333 50%, #1f2937 100%);
       color: white;
-      border-radius: 10px;
+      border-radius: 5px;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       position: relative;
       overflow: hidden;
@@ -704,9 +621,9 @@
     .upload-btn:hover .upload-btn-content {
       transform: translateY(-2px) scale(1.01);
       box-shadow: 
-        0 8px 20px rgba(99, 102, 241, 0.3),
+        0 8px 20px rgba(0, 0, 0, 0.3),
         0 4px 8px rgba(0, 0, 0, 0.08);
-      background: linear-gradient(135deg, #4f46e5 0%, #9333ea 50%, #e11d48 100%);
+      background: linear-gradient(135deg, #000000 0%, #333333 50%, #1f2937 100%);
     }
     .upload-btn-content i {
       font-size: 16px;
@@ -756,43 +673,19 @@
       50% { opacity: 1; transform: translateY(-50px) scale(1); }
     }
     .avatar-glow {
-      position: absolute;
-      top: -20px;
-      left: -20px;
-      right: -20px;
-      bottom: -20px;
-      background: linear-gradient(45deg, #6366f1, #a855f7, #ec4899, #10b981);
-      border-radius: 50%;
-      z-index: -1;
-      opacity: 0;
-      filter: blur(20px);
-      animation: glow-pulse 4s ease-in-out infinite;
+      /* Removed glow effect */
     }
     @keyframes glow-pulse {
-      0%, 100% { opacity: 0; transform: scale(0.8); }
-      50% { opacity: 0.6; transform: scale(1.2); }
+      /* Removed animation */
     }
     .avatar-ring {
-      position: absolute;
-      top: -15px;
-      left: -15px;
-      right: -15px;
-      bottom: -15px;
-      border: 2px solid transparent;
-      border-radius: 50%;
-      background: linear-gradient(45deg, #6366f1, #a855f7) border-box;
-      mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
-      mask-composite: exclude;
-      animation: spin-ring 8s linear infinite;
-      opacity: 0;
-      transition: opacity 0.3s ease;
+      /* Removed ring effect */
     }
     .avatar-container:hover .avatar-ring {
-      opacity: 1;
+      /* Removed hover effect */
     }
     @keyframes spin-ring {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+      /* Removed animation */
     }
     .upload-info {
       text-align: center;
@@ -804,17 +697,17 @@
       color: #6b7280;
       background: rgba(255, 255, 255, 0.7);
       padding: 4px 8px;
-      border-radius: 12px;
+      border-radius: 5px;
       backdrop-filter: blur(4px);
-      border: 1px solid rgba(99, 102, 241, 0.08);
+      border: 1px solid rgba(0, 0, 0, 0.08);
     }
     .btn-save {
-      background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+      background: #000000;
       border: none;
       padding: 12px 30px;
       font-weight: 600;
       color: white;
-      border-radius: 10px;
+      border-radius: 5px;
       transition: all 0.3s ease;
       position: relative;
       overflow: hidden;
@@ -839,7 +732,8 @@
     }
     .btn-save:hover {
       transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(99, 102, 241, 0.3);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      background: #333333;
     }
     .disabled-input {
       background-color: #f3f4f6;
@@ -931,50 +825,44 @@
             <div class="row">
                 <!-- Avatar hiển thị -->
                 <div class="col-md-4 text-center avatar">
-                    <div class="particles"></div>
-                    <div class="avatar-container">
-                        <div class="avatar-glow"></div>
+                    <div class="avatar-container" onclick="document.getElementById('avatar-input').click()">
                         <img src="{{ Auth::user()->avatar ? asset('storage/' . Auth::user()->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode(Auth::user()->name) . '&background=6366f1&color=fff&size=200' }}" 
                              alt="Avatar" class="avatar-image">
-                        <div class="avatar-badge">
-                            <i class="fas fa-check"></i>
+                        <div class="avatar-overlay">
+                            <i class="fas fa-camera"></i>
                         </div>
-                        <div class="avatar-ring"></div>
+                        <div class="avatar-badge">
+                            <i class="fas fa-camera"></i>
+                        </div>
                     </div>
                     
-                    <!-- Upload ảnh mới -->
-                    <div class="upload-section">
-                        <div class="upload-btn" onclick="document.getElementById('avatar-input').click()">
-                            <input type="file" name="avatar" id="avatar-input" accept="image/jpeg,image/png" style="display: none;">
-                            <div class="upload-btn-content">
-                                <i class="fas fa-camera"></i>
-                                <span>Chọn ảnh</span>
-                            </div>
-                        </div>
-                        <div class="upload-info">
-                            <p class="text-muted">
-                                <i class="fas fa-info-circle me-1"></i>
-                                Tối đa 1MB. Định dạng: .JPEG, .PNG
-                            </p>
-                        </div>
+                    <!-- Hidden file input -->
+                    <input type="file" name="avatar" id="avatar-input" accept="image/jpeg,image/png" style="display: none;">
+                    
+                    <div class="upload-info text-center mt-3">
+                        <p class="text-muted small">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Click vào avatar để thay đổi ảnh<br>
+                            Tối đa 1MB. Định dạng: .JPEG, .PNG
+                        </p>
                     </div>
                 </div>
 
                 <div class="col-md-8">
                 <!-- Tên đăng nhập -->
                 <div class="mb-4">
-                    <label class="form-label">Tên đăng nhập</label>
+                    <label class="form-label">Tên đăng nhập :</label>
                     <input type="text" class="form-control" name="name" value="{{ Auth::user()->name }}" required>
                 </div>
 
                 <div class="mb-4">
-                    <label class="form-label">Email</label>
+                    <label class="form-label">Email :</label>
                     <input type="email" class="form-control" name="email" value="{{ Auth::user()->email }}" required>
                 </div>
 
                 <!-- Số điện thoại -->
                 <div class="mb-4">
-                    <label class="form-label">Số điện thoại</label>
+                    <label class="form-label">Số điện thoại :</label>
                     <input type="tel" class="form-control" name="phone" value="{{ Auth::user()->phone }}">
                 </div>
 
@@ -991,30 +879,8 @@
     </div>
   </div>
 
-  <div class="theme-switch">
-    <i class="fas fa-moon"></i>
-  </div>
-
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    // Theme Switching
-    const themeSwitch = document.querySelector('.theme-switch');
-    themeSwitch.addEventListener('click', () => {
-      const html = document.documentElement;
-      const currentTheme = html.getAttribute('data-theme');
-      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-      
-      html.setAttribute('data-theme', newTheme);
-      themeSwitch.innerHTML = `<i class="fas fa-${newTheme === 'light' ? 'moon' : 'sun'}"></i>`;
-      
-      localStorage.setItem('theme', newTheme);
-    });
-
-    // Load saved theme
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    document.documentElement.setAttribute('data-theme', savedTheme);
-    themeSwitch.innerHTML = `<i class="fas fa-${savedTheme === 'light' ? 'moon' : 'sun'}"></i>`;
-
     // Progress bar
     const progressBar = document.querySelector('.progress-bar');
     window.addEventListener('scroll', () => {
@@ -1145,8 +1011,6 @@
     // Image preview with enhanced functionality
     const imageInput = document.getElementById('avatar-input');
     const previewImage = document.querySelector('.avatar-image');
-    const uploadSection = document.querySelector('.upload-section');
-    const avatarContainer = document.querySelector('.avatar-container');
     
     // File input change handler
     imageInput.addEventListener('change', function() {
@@ -1180,16 +1044,12 @@
         reader.onload = function(e) {
           previewImage.src = e.target.result;
           
-          // Add loading effect
-          previewImage.style.opacity = '0.5';
-          previewImage.style.transform = 'scale(0.9)';
-          
-          setTimeout(() => {
-            previewImage.style.opacity = '1';
-            previewImage.style.transform = 'scale(1.05)';
-            
-            // Add success effect
-            avatarContainer.style.animation = 'none';
+          // Show success message
+          showToast('Ảnh đã được chọn thành công!');
+        };
+        reader.readAsDataURL(file);
+      }
+    });
             avatarContainer.offsetHeight; // Trigger reflow
             avatarContainer.style.animation = 'success-bounce 0.6s ease';
             
@@ -1205,40 +1065,7 @@
       }
     });
 
-    // Add success animation keyframes
-    const style = document.createElement('style');
-    style.textContent = `
-      @keyframes success-bounce {
-        0% { transform: scale(1); }
-        50% { transform: scale(1.1) rotateZ(5deg); }
-        100% { transform: scale(1) rotateZ(0deg); }
-      }
-    `;
-    document.head.appendChild(style);
-      }
-    });
-
-    // Drag and drop functionality
-    uploadSection.addEventListener('dragover', function(e) {
-      e.preventDefault();
-      this.classList.add('dragover');
-    });
-
-    uploadSection.addEventListener('dragleave', function(e) {
-      e.preventDefault();
-      this.classList.remove('dragover');
-    });
-
-    uploadSection.addEventListener('drop', function(e) {
-      e.preventDefault();
-      this.classList.remove('dragover');
-      
-      const files = e.dataTransfer.files;
-      if (files.length > 0) {
-        imageInput.files = files;
-        imageInput.dispatchEvent(new Event('change'));
-      }
-    });
+    // Remove old drag and drop functionality since we removed upload section
 
     // Smooth scroll with enhanced behavior
     document.querySelectorAll('.sidebar a').forEach(anchor => {
