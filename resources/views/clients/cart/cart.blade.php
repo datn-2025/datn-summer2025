@@ -43,6 +43,39 @@
                 <div class="adidas-cart-products-header">
                     <i class="fas fa-shopping-cart"></i>
                     <h4>Sản phẩm trong giỏ ({{ count($cart) }})</h4>
+                    @php
+                        $hasEbooks = false;
+                        $hasPhysical = false;
+                        foreach($cart as $item) {
+                            $isEbook = isset($item->format_name) && (stripos($item->format_name, 'ebook') !== false);
+                            if ($isEbook) {
+                                $hasEbooks = true;
+                            } else {
+                                $hasPhysical = true;
+                            }
+                        }
+                    @endphp
+                    @if($hasEbooks && $hasPhysical)
+                        <div class="cart-type-indicator mixed">
+                            <span class="badge badge-mixed">
+                                <i class="fas fa-mobile-alt"></i> Ebooks
+                                <span class="mx-2">+</span>
+                                <i class="fas fa-book"></i> Sách vật lý
+                            </span>
+                        </div>
+                    @elseif($hasEbooks)
+                        <div class="cart-type-indicator ebook">
+                            <span class="badge badge-ebook">
+                                <i class="fas fa-mobile-alt"></i> Chỉ Ebooks
+                            </span>
+                        </div>
+                    @else
+                        <div class="cart-type-indicator physical">
+                            <span class="badge badge-physical">
+                                <i class="fas fa-book"></i> Chỉ sách vật lý
+                            </span>
+                        </div>
+                    @endif
                 </div>
                 <div class="adidas-cart-products-list">
                 @foreach($cart as $item)
@@ -119,7 +152,7 @@
                                     <div class="adidas-cart-product-stock">
                                         <small>
                                             @if($isEbook)
-                                                <span><i class="fas fa-infinity"></i> Sách điện tử - Không giới hạn</span>
+                                                <span><i class="fas fa-infinity"></i> Ebook - Có sẵn</span>
                                             @else
                                                 <span><i class="fas fa-boxes"></i> Còn <span>{{ $item->stock ?? 0 }}</span> sản phẩm</span>
                                                 @if($item->quantity >= ($item->stock ?? 1))
@@ -131,7 +164,7 @@
                                 </div>
                                 <div class="adidas-cart-product-total">
                                     <small>Thành tiền</small>
-                                    <div>{{ number_format(($item->price ?? 0) * $item->quantity) }}đ</div>
+                                    <div class="item-total">{{ number_format(($item->price ?? 0) * $item->quantity) }}đ</div>
                                 </div>
                             </div>
                         </div>
@@ -210,4 +243,6 @@
     <script src="{{ asset('js/cart/cart_voucher.js') }}"></script>
     <script src="{{ asset('js/cart/cart_enhanced_ux.js') }}"></script>
     <script src="{{ asset('js/cart/cart_smart_ux.js') }}"></script>
+    <!-- Debug script - remove in production -->
+    <script src="{{ asset('js/cart/debug_cart.js') }}"></script>
 @endpush
