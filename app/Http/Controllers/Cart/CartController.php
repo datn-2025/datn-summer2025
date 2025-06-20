@@ -176,6 +176,23 @@ class CartController extends Controller
             if (isset($bookInfo->format_name)) {
                 $isEbook = stripos($bookInfo->format_name, 'ebook') !== false;
             }
+            
+            // Debug log
+            Log::info('Cart addToCart - Product type check:', [
+                'book_id' => $bookId,
+                'format_name' => $bookInfo->format_name ?? 'N/A',
+                'is_ebook' => $isEbook
+            ]);
+            
+            // Log thông tin sản phẩm đang thêm vào giỏ hàng (không còn kiểm tra xung đột loại sản phẩm)
+            Log::info('Cart addToCart - Adding product to cart:', [
+                'book_id' => $bookId,
+                'format_name' => $bookInfo->format_name ?? 'N/A',
+                'is_ebook' => $isEbook,
+                'quantity' => $quantity,
+                'user_id' => Auth::id()
+            ]);
+            
             // Nếu là ebook: luôn set quantity = 1, bỏ qua check tồn kho
             if ($isEbook) {
                 $quantity = 1;
