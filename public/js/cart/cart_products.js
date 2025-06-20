@@ -6,15 +6,34 @@
 const CartProducts = {
     // Initialize product management
     init() {
+        console.log('CartProducts init called');
         this.bindRemoveButtons();
         this.bindBulkActions();
+        this.initialized = true;
     },
 
-    // Bind individual product remove buttons
+    // Bind individual product remove buttons using event delegation
     bindRemoveButtons() {
-        const removeButtons = CartBase.dom.getAll('.remove-item');
+        console.log('Binding remove buttons with event delegation');
         
-        removeButtons.forEach(button => {
+        // Use event delegation on document body
+        document.body.addEventListener('click', (e) => {
+            if (e.target.closest('.adidas-cart-product-remove')) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const button = e.target.closest('.adidas-cart-product-remove');
+                console.log('Remove button clicked via delegation:', button);
+                this.removeItem(button);
+            }
+        });
+        
+        // Also bind directly for existing buttons
+        const removeButtons = document.querySelectorAll('.adidas-cart-product-remove');
+        console.log(`Found ${removeButtons.length} remove button(s) for direct binding`);
+        
+        removeButtons.forEach((button, index) => {
+            console.log(`Setting up remove button ${index}:`, button);
             this.setupRemoveButton(button);
         });
     },
@@ -23,9 +42,15 @@ const CartProducts = {
     setupRemoveButton(button) {
         if (!button) return;
         
-        CartBase.dom.on(button, 'click', () => {
+        console.log('Setting up remove button:', button);
+        
+        // Simple click handler
+        button.onclick = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('Button clicked directly:', button);
             this.removeItem(button);
-        });
+        };
     },
 
     // Remove individual item from cart
@@ -33,7 +58,12 @@ const CartProducts = {
         const cartItem = button.closest('.cart-item');
         const bookId = button.dataset.bookId;
         
-        if (!cartItem || !bookId) return;
+        console.log('Remove item called:', { cartItem, bookId, button });
+        
+        if (!cartItem || !bookId) {
+            console.error('Missing cart item or book ID');
+            return;
+        }
 
         // Show confirmation
         if (!CartBase.utils.showConfirm('Bạn có chắc muốn xóa sản phẩm này khỏi giỏ hàng?')) {
@@ -56,9 +86,11 @@ const CartProducts = {
                 _token: CartBase.utils.getCSRFToken()
             },
             success: (response) => {
+                console.log('Remove success:', response);
                 this.handleRemoveSuccess(response, cartItem);
             },
             error: (xhr) => {
+                console.error('Remove error:', xhr);
                 this.handleRemoveError(xhr, cartItem, controls);
             }
         });
@@ -292,8 +324,29 @@ const CartProducts = {
 
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded, checking CartBase...');
     if (window.CartBase) {
+        console.log('CartBase available, initializing CartProducts...');
         CartProducts.init();
+    } else {
+        console.error('CartBase not available');
+        // Try again after a delay
+        setTimeout(() => {
+            if (window.CartBase) {
+                console.log('CartBase available after delay, initializing CartProducts...');
+                CartProducts.init();
+            }
+        }, 100);
+    }
+});
+
+// Also try when window loads
+window.addEventListener('load', function() {
+    console.log('Window loaded, double-checking CartProducts...');
+    if (!CartProducts.initialized) {
+        console.log('CartProducts not initialized yet, trying again...');
+        CartProducts.init();
+        CartProducts.initialized = true;
     }
 });
 
