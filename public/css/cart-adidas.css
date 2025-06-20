@@ -462,6 +462,50 @@
     box-shadow: 0 2px 8px rgba(0,0,0,0.06);
     transition: box-shadow 0.12s, background 0.12s;
 }
+
+/* Cart Type Indicators */
+.cart-type-indicator {
+    margin-left: auto;
+}
+
+.badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: 2px solid;
+}
+
+.badge-mixed {
+    background: linear-gradient(135deg, #3b82f6 0%, #10b981 100%);
+    color: white;
+    border-color: #3b82f6;
+    animation: pulse 2s infinite;
+}
+
+.badge-ebook {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    color: white;
+    border-color: #3b82f6;
+}
+
+.badge-physical {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    border-color: #10b981;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.8;
+    }
+}
+
 @media (max-width: 1100px) {
     .adidas-cart-container {
         padding: 18px 4vw;
