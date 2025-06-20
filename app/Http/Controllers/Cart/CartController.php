@@ -185,14 +185,22 @@ class CartController extends Controller
             if (!$isEbook) {
                 if ($bookInfo->stock <= 0) {
                     return response()->json([
+                        'error' => 'Sản phẩm đã hết hàng',
                         'available_stock' => $bookInfo->stock
                     ], 422);
                 }
                 if ($quantity > $bookInfo->stock) {
                     return response()->json([
+                        'error' => "Số lượng yêu cầu vượt quá số lượng tồn kho. Tồn kho hiện tại: {$bookInfo->stock}",
                         'available_stock' => $bookInfo->stock
                     ], 422);
                 }
+            }
+
+            // Tính giá cuối cùng sau khi áp dụng discount (nếu có)
+            $finalPrice = $bookInfo->price;
+            if (isset($bookInfo->discount) && $bookInfo->discount > 0) {
+                $finalPrice = $bookInfo->price * (1 - $bookInfo->discount / 100);
             }
 
             // Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa (bao gồm cả thuộc tính)
@@ -222,6 +230,8 @@ class CartController extends Controller
                 $newQuantity = $existingCart->quantity + $quantity;
                 if (!$isEbook && $newQuantity > $bookInfo->stock) {
                     return response()->json([
+                        'error' => "Số lượng tổng cộng vượt quá tồn kho. Tồn kho hiện tại: {$bookInfo->stock}, số lượng trong giỏ: {$existingCart->quantity}",
+                        'available_stock' => $bookInfo->stock,
                         'current_cart_quantity' => $existingCart->quantity
                     ], 422);
                 }
@@ -230,6 +240,7 @@ class CartController extends Controller
                     ->where('id', $existingCart->id)
                     ->update([
                         'quantity' => $newQuantity,
+                        'price' => $finalPrice,
                         'updated_at' => now()
                     ]);
                 return response()->json([
@@ -357,7 +368,11 @@ class CartController extends Controller
                     ]);
                 return response()->json([
                     'success' => 'Đã cập nhật số lượng sản phẩm',
-                    'data' => [ ]
+                    'data' => [
+                        'stock' => $bookInfo->stock,
+                        'price' => $bookInfo->price,
+                        'quantity' => $quantity
+                    ]
                 ]);
             } else {
                 DB::table('carts')

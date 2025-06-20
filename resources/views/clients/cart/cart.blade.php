@@ -102,7 +102,10 @@
                                     @endphp
                                     <div class="adidas-cart-qty-control" data-book-id="{{ $item->book_id }}">
                                         @if($isEbook)
-                                            <input type="number" class="quantity-input" value="1" min="1" max="1" data-book-id="{{ $item->book_id }}" disabled style="background:#f5f5f5;cursor:not-allowed;width:48px;text-align:center;">
+                                            <input type="number" class="quantity-input" value="1" min="1" max="1" data-book-id="{{ $item->book_id }}" disabled style="background:#f5f5f5;cursor:not-allowed;width:60px;text-align:center;border:1px solid #ddd;">
+                                            <small class="ebook-notice" style="color:#666;font-size:11px;margin-top:2px;display:block;">
+                                                <i class="fas fa-info-circle"></i> Sách điện tử
+                                            </small>
                                         @else
                                             <button type="button" class="decrease-quantity" data-action="decrease" title="Giảm số lượng" aria-label="Giảm số lượng sản phẩm {{ $item->title ?? 'Sách' }}" {{ $item->quantity <= 1 ? 'disabled' : '' }}>
                                                 <i class="fas fa-minus"></i>

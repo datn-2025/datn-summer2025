@@ -140,6 +140,13 @@ const CartBase = {
             }
         },
 
+        // Show info message
+        showInfo(message) {
+            if (typeof toastr !== 'undefined') {
+                toastr.info(message);
+            }
+        },
+
         // Show confirmation dialog
         showConfirm(message) {
             return confirm(message);
