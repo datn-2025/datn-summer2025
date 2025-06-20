@@ -177,10 +177,18 @@ const CartBase = {
             }
         },
 
-        // Remove element safely
+        // Remove element safely with animation
         remove(element) {
             if (element && element.parentNode) {
-                element.parentNode.removeChild(element);
+                // Add fade out animation
+                element.style.transition = 'opacity 0.3s ease';
+                element.style.opacity = '0';
+                
+                setTimeout(() => {
+                    if (element.parentNode) {
+                        element.parentNode.removeChild(element);
+                    }
+                }, 300);
             }
         },
 
