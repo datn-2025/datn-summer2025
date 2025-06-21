@@ -37,46 +37,101 @@
                     @endif
 
                     <!-- Bộ lọc tìm kiếm -->
-                    <div class="row g-3 mb-4">
-                        <div class="col-md-4">
-                            <input type="text" name="search_order_code" class="form-control"
-                                placeholder="Tìm theo mã đơn hàng"
-                                value="{{ request()->get('search_order_code') }}">
-                        </div>
-                        <div class="col-md-3">
-                            <select name="payment_method" class="form-select">
-                                <option value="">-- Phương thức thanh toán --</option>
+                 <!-- Bộ lọc tìm kiếm -->
+<form method="GET" action="{{ route('admin.invoices.index') }}" autocomplete="off">
+    <div class="row g-3">
+        <div class="col-md-6">
+            <div class="row g-3">
+                <!-- Mã đơn hàng -->
+                <div class="col-md-6">
+                    <label for="search_order_code" class="form-label">Mã đơn hàng</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="ri-hashtag"></i></span>
+                        <input type="text" name="search_order_code" id="search_order_code" class="form-control"
+                            placeholder="Nhập mã đơn hàng" value="{{ request()->get('search_order_code') }}">
+                    </div>
+                </div>
+                
+                <!-- Ngày tạo -->
+                <div class="col-md-6">
+                    <label class="form-label">Ngày tạo</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="ri-calendar-2-line"></i></span>
+                        <input type="date" class="form-control" name="start_date" placeholder="Từ ngày"
+                            value="{{ request()->get('start_date') }}">
+                        <input type="date" class="form-control" name="end_date" placeholder="Đến ngày"
+                            value="{{ request()->get('end_date') }}">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="row g-3">
+                <!-- Thông tin khách hàng -->
+                <div class="col-md-6">
+                    <label for="customer_name" class="form-label">Thông tin khách hàng</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="ri-user-line"></i></span>
+                        <input type="text" name="customer_name" id="customer_name" class="form-control"
+                            placeholder="Tên khách hàng" value="{{ request()->get('customer_name') }}">
+                    </div>
+                    <div class="input-group mt-2">
+                        <span class="input-group-text"><i class="ri-mail-line"></i></span>
+                        <input type="text" name="customer_email" id="customer_email" class="form-control"
+                            placeholder="Email khách hàng" value="{{ request()->get('customer_email') }}">
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="row g-3">
+                        <!-- Phương thức thanh toán -->
+                        <div class="col-12">
+                            <label for="payment_method" class="form-label">Phương thức thanh toán</label>
+                            <select name="payment_method" id="payment_method" class="form-select">
+                                <option value="">Tất cả phương thức</option>
                                 @foreach ($paymentMethods as $method)
-                                    <option value="{{ $method->id }}"
-                                        {{ request()->get('payment_method') == $method->id ? 'selected' : '' }}>
+                                    <option value="{{ $method->id }}" {{ request()->get('payment_method') == $method->id ? 'selected' : '' }}>
                                         {{ $method->name }}
                                     </option>
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md-3">
-                            <select name="payment_status" class="form-select">
-                                <option value="">-- Trạng thái thanh toán --</option>
+
+                        <!-- Trạng thái thanh toán -->
+                        <div class="col-12">
+                            <label for="payment_status" class="form-label">Trạng thái thanh toán</label>
+                            <select name="payment_status" id="payment_status" class="form-select">
+                                <option value="">Tất cả trạng thái</option>
                                 <option value="paid" {{ request()->get('payment_status') == 'paid' ? 'selected' : '' }}>Đã thanh toán</option>
                                 <option value="unpaid" {{ request()->get('payment_status') == 'unpaid' ? 'selected' : '' }}>Chưa thanh toán</option>
                             </select>
                         </div>
-                        <div class="col-md-2 d-flex gap-2">
-                            <button type="submit" class="btn btn-primary w-100">
-                                <i class="ri-search-2-line me-1"></i> Tìm kiếm
-                            </button>
-                            <a href="{{ route('admin.invoices.index') }}" class="btn btn-outline-secondary">
-                                <i class="ri-refresh-line"></i>
-                            </a>
-                        </div>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Nút tìm kiếm -->
+        <div class="col-12">
+            <div class="d-flex justify-content-end gap-2">
+                <button type="submit" class="btn btn-primary">
+                    <i class="ri-search-2-line me-1"></i> Tìm kiếm
+                </button>
+                <a href="{{ route('admin.invoices.index') }}" class="btn btn-light">
+                    <i class="ri-refresh-line me-1"></i> Làm mới bộ lọc
+                </a>
+            </div>
+        </div>
+    </div>
+</form>
 
                     <!-- Bảng hóa đơn -->
                     <div class="table-responsive table-card mt-3">
                         @if ($invoices->isEmpty())
                             <div class="noresult text-center py-5">
                                 <lord-icon src="https://cdn.lordicon.com/nocovwne.json" trigger="loop"
-                                    colors="primary:#405189,secondary:#0ab39c" style="width:100px;height:100px">
+                                           colors="primary:#405189,secondary:#0ab39c" style="width:100px;height:100px">
                                 </lord-icon>
                                 <h5 class="mt-3 text-muted">Không tìm thấy hóa đơn nào</h5>
                                 <p class="text-muted">Hãy thử thay đổi bộ lọc hoặc làm mới danh sách.</p>
@@ -116,12 +171,10 @@
                                             <td>{{ $invoice->created_at->format('d/m/Y') }}</td>
                                             <td class="text-center">
                                                 <div class="btn-group">
-                                                    <a href="{{ route('admin.invoices.show', $invoice->id) }}"
-                                                        class="btn btn-sm btn-info" title="Xem chi tiết">
+                                                    <a href="{{ route('admin.invoices.show', $invoice->id) }}" class="btn btn-sm btn-info" title="Xem chi tiết">
                                                         <i class="ri-eye-line"></i>
                                                     </a>
-                                                    <a href="{{ route('admin.invoices.generate-pdf', $invoice->id) }}"
-                                                        target="_blank" class="btn btn-sm btn-primary" title="Tải PDF">
+                                                    <a href="{{ route('admin.invoices.generate-pdf', $invoice->id) }}" target="_blank" class="btn btn-sm btn-primary" title="Tải PDF">
                                                         <i class="ri-file-pdf-line"></i>
                                                     </a>
                                                 </div>
@@ -132,7 +185,7 @@
                             </table>
 
                             <!-- Phân trang -->
-                             <div class="d-flex justify-content-between align-items-center mt-3 px-3">
+                            <div class="d-flex justify-content-between align-items-center mt-3 px-3">
                                 <div class="text-muted">
                                     Hiển thị <strong>{{ $invoices->firstItem() }}</strong> đến
                                     <strong>{{ $invoices->lastItem() }}</strong> trên tổng số
