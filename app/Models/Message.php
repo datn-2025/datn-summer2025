@@ -13,6 +13,7 @@ class Message extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
+        'id',
         'conversation_id',
         'sender_id',
         'content',

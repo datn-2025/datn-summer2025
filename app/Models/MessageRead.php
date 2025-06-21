@@ -13,6 +13,7 @@ class MessageRead extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
+        'id',
         'message_id',
         'user_id',
         'read_at',
