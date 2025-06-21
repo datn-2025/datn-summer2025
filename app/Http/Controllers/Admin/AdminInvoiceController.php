@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Invoice;
+use App\Models\PaymentMethod;
 use Illuminate\Http\Request;
 use PDF;
 
 class AdminInvoiceController extends Controller
-{    public function index(Request $request)
+{  
+      public function index(Request $request)
     {        $query = Invoice::query();
         $query->with([
             'order' => function($q) {
@@ -17,37 +19,40 @@ class AdminInvoiceController extends Controller
             'items' => function($q) {
                 $q->with(['book', 'book.author']);
             }
-        ]);
-
-        // Tìm kiếm theo mã đơn hàng
-        if ($request->filled('search_order_code')) {
-            $orderCode = $request->search_order_code;
-            $query->whereHas('order', function($q) use ($orderCode) {
-                $q->where('order_code', 'like', '%' . $orderCode . '%');
+        ]);        // Gom các điều kiện tìm kiếm liên quan đến order và user
+        $query->whereHas('order', function($q) use ($request) {
+            // Mã đơn hàng
+            if ($request->filled('search_order_code')) {
+                $q->where('order_code', 'like', '%' . $request->search_order_code . '%');
+            }
+            // Trạng thái thanh toán
+            if ($request->filled('payment_status')) {
+                $q->where('payment_status', $request->payment_status);
+            }
+            // Phương thức thanh toán
+            if ($request->filled('payment_method')) {
+                $q->where('payment_method_id', $request->payment_method);
+            }
+            // Điều kiện liên quan đến user
+            $q->whereHas('user', function($userQ) use ($request) {
+                if ($request->filled('customer_name')) {
+                    $userQ->where('name', 'like', '%' . $request->customer_name . '%');
+                }
+                if ($request->filled('customer_email')) {
+                    $userQ->where('email', 'like', '%' . $request->customer_email . '%');
+                }
             });
+        });
+
+        // Tìm kiếm theo ngày tạo hóa đơn
+        if ($request->filled(['start_date', 'end_date'])) {
+            $startDate = date('Y-m-d', strtotime($request->start_date));
+            $endDate = date('Y-m-d', strtotime($request->end_date));
+            $query->whereBetween('created_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59']);
         }
 
-        // Lọc theo trạng thái thanh toán
-        if ($request->filled('payment_status')) {
-            $paymentStatus = $request->payment_status;
-            $query->whereHas('order', function($q) use ($paymentStatus) {
-                $q->where('payment_status', $paymentStatus);
-            });
-        }        // Lọc theo phương thức thanh toán
-        if ($request->filled('payment_method')) {
-            $paymentMethodId = $request->payment_method;
-            $query->whereHas('order', function($q) use ($paymentMethodId) {
-                $q->where('payment_method_id', $paymentMethodId);
-            });
-        }
-
-        // Lấy danh sách phương thức thanh toán từ bảng payment_methods
-        $paymentMethods = \App\Models\PaymentMethod::all();
-
-        $invoices = $query->latest()
-            ->paginate(10)
-            ->withQueryString();
-        
+        $paymentMethods = PaymentMethod::all();
+        $invoices = $query->latest()->paginate(10)->withQueryString();
         return view('admin.invoices.index', compact('invoices', 'paymentMethods'));
     }
 
