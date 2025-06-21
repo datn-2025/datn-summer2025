@@ -47,9 +47,9 @@
       <div class="flex items-center space-x-4">
         <!-- Search -->
         <div class="relative hidden lg:block">
-          <form method="GET" action="{{ route('books.index') }}" class="flex">
-            <input type="search" name="search" placeholder="Tìm kiếm sách..." 
-                   value="{{ request('search') }}"
+          <form method="GET" action="{{ route('search.index') }}" class="flex">
+            <input type="search" name="q" placeholder="Tìm kiếm sách, tác giả, NXB..." 
+                   value="{{ request('q') }}"
                    class="w-64 px-4 py-2 border-2 border-gray-200 rounded-l-xl focus:border-black focus:outline-none transition-all duration-200 text-sm">
             <button type="submit" class="search-btn bg-black text-white px-4 py-2 rounded-r-xl hover:bg-blue-800 transition-colors duration-200">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -13,7 +13,7 @@
         min-width: 250px;
         background: white;
         padding: 25px;
-        border-radius: 16px;
+        border-radius: 5px;
         box-shadow: 0 4px 20px rgba(0,0,0,0.05);
         position: sticky;
         top: 60px;
@@ -25,7 +25,7 @@
         margin-bottom: 8px;
         color: #4b5563;
         text-decoration: none;
-        border-radius: 10px;
+        border-radius: 5px;
         transition: all 0.3s ease;
         position: relative;
         overflow: hidden;
@@ -37,7 +37,7 @@
         top: 0;
         height: 100%;
         width: 3px;
-        background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+        background: linear-gradient(135deg, #000000 0%, #333333 100%);
         transform: scaleY(0);
         transition: transform 0.3s ease;
     }
@@ -53,7 +53,7 @@
     .sidebar a:hover,
     .sidebar a.active {
         background: #f3f4f6;
-        color: #6366f1;
+        color: #000000;
         transform: translateX(5px);
     }
     .sidebar a:hover i,
@@ -63,7 +63,7 @@
     .main-content {
         background: #fff;
         padding: 40px;
-        border-radius: 16px;
+        border-radius: 5px;
         box-shadow: 0 4px 20px rgba(0,0,0,0.05);
         animation: fadeIn 0.5s ease;
     }
@@ -72,14 +72,14 @@
         to { opacity: 1; transform: translateY(0); }
     }
     .form-control {
-        border-radius: 10px;
+        border-radius: 5px;
         border: 1.5px solid #e5e7eb;
         padding: 12px;
         transition: all 0.3s ease;
     }
     .form-control:focus {
-        border-color: #6366f1;
-        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        border-color: #000000;
+        box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
         transform: translateY(-1px);
     }
     .form-label {
@@ -91,16 +91,16 @@
         gap: 8px;
     }
     .form-label i {
-        color: #6366f1;
+        color: #000000;
         font-size: 0.9em;
     }
     .btn-save {
-        background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+        background: #000000;
         border: none;
         padding: 12px 30px;
         font-weight: 600;
         color: white;
-        border-radius: 10px;
+        border-radius: 5px;
         transition: all 0.3s ease;
         position: relative;
         overflow: hidden;
@@ -125,23 +125,24 @@
     }
     .btn-save:hover {
         transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(99, 102, 241, 0.3);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        background: #333333;
     }
     .input-group-text {
         background: transparent;
         border-right: none;
-        color: #6366f1;
+        color: #000000;
     }
     .input-group .form-control {
         border-left: none;
     }
     .input-group .btn-outline-secondary {
         border-color: #e5e7eb;
-        color: #6366f1;
+        color: #000000;
     }
     .input-group .btn-outline-secondary:hover {
         background-color: #f3f4f6;
-        color: #4f46e5;
+        color: #000000;
     }
     @media (max-width: 768px) {
         .container {
@@ -165,15 +166,16 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 
 <script>
-    @if(Session::has('success'))
-        toastr.options = {
-            "closeButton": true,
-            "progressBar": true,
-            "positionClass": "toast-top-right",
-            "timeOut": "3000"
-        }
-        toastr.success("{{ Session::get('success') }}", "Thành công!");
-    @endif
+    // Cấu hình Toastr
+    toastr.options = {
+        "closeButton": true,
+        "progressBar": true,
+        "positionClass": "toast-top-right",
+        "timeOut": "3000"
+    };
+
+    // Hiển thị thông báo Toastr
+    {!! Toastr::message() !!}
 </script>
 <div class="container" style="padding-top: 40px; padding-bottom: 60px;">
     <div class="row g-4">
@@ -199,7 +201,7 @@
         <div class="col-md-9">
             <div class="main-content">
                 <h2 class="mb-3">
-                    <i class="fas fa-lock text-primary me-2"></i>
+                    <i class="fas fa-lock me-2" style="color: #000000;"></i>
                     Đổi mật khẩu
                 </h2>
                 <p class="text-muted mb-4">Để bảo mật tài khoản, vui lòng không chia sẻ mật khẩu cho người khác</p>
@@ -208,45 +210,39 @@
 
                         <div class="form-group mb-3">
                             <label for="current_password" class="form-label">
-                                <i class="fas fa-lock text-primary me-1"></i>
+                                <i class="fas fa-lock me-1" style="color: #000000;"></i>
                                 Mật khẩu hiện tại
                             </label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="fas fa-lock"></i></span>
                                 <input id="current_password" type="password" 
-                                       class="form-control @error('current_password') is-invalid @enderror" 
+                                       class="form-control" 
                                        name="current_password" required>
                                 <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('current_password')">
                                     <i class="fas fa-eye"></i>
                                 </button>
                             </div>
-                            @error('current_password')
-                                <div class="invalid-feedback d-block">{{ $message }}</div>
-                            @enderror
                         </div>
 
                         <div class="form-group mb-3">
                             <label for="password" class="form-label">
-                                <i class="fas fa-key text-primary me-1"></i>
+                                <i class="fas fa-key me-1" style="color: #000000;"></i>
                                 Mật khẩu mới
                             </label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="fas fa-key"></i></span>
                                 <input id="password" type="password" 
-                                       class="form-control @error('password') is-invalid @enderror" 
+                                       class="form-control" 
                                        name="password" required>
                                 <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('password')">
                                     <i class="fas fa-eye"></i>
                                 </button>
                             </div>
-                            @error('password')
-                                <div class="invalid-feedback d-block">{{ $message }}</div>
-                            @enderror
                         </div>
 
                         <div class="form-group mb-4">
                             <label for="password_confirmation" class="form-label">
-                                <i class="fas fa-check-circle text-primary me-1"></i>
+                                <i class="fas fa-check-circle me-1" style="color: #000000;"></i>
                                 Xác nhận mật khẩu mới
                             </label>
                             <div class="input-group">
