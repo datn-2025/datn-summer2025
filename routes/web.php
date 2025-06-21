@@ -139,6 +139,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     // Route có conversation ID
     Route::get('/{conversation}', [AdminChatRealTimeController::class, 'show'])->name('index');
+    Route::post('/send', [AdminChatRealTimeController::class, 'send'])->name('send');
     });
     // Route admin/categories
     Route::prefix('categories')->name('categories.')->group(function () {
