@@ -106,6 +106,7 @@
             placeholder: 'Nhập mô tả chi tiết...'
         });
     </script>
+    @livewireStyles
 
 </head>
 
@@ -1728,6 +1729,7 @@
     </script>
 
     @yield('scripts')
+    @livewireScripts
 </body>
 
 </html>
