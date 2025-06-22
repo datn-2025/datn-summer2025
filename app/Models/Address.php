@@ -18,6 +18,9 @@ class Address extends Model
         'city',
         'district',
         'ward',
+        'province_id',
+        'district_id',
+        'ward_code',
         'is_default'
     ];
 

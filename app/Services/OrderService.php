@@ -130,7 +130,41 @@ class OrderService
 
     protected function calculateShippingFee($addressId, $shippingMethod = 'standard')
     {
-        // Tính phí vận chuyển dựa trên phương thức
+        // Lấy thông tin địa chỉ
+        $address = \App\Models\Address::find($addressId);
+        
+        if (!$address || !$address->district_id || !$address->ward_code) {
+            // Fallback về phí cũ nếu không có thông tin GHN
+            return $shippingMethod === 'standard' ? 20000 : 40000;
+        }
+        
+        // Sử dụng GHN service để tính phí thực tế
+        $ghnService = app(\App\Services\GhnService::class);
+        
+        $data = [
+            'from_district_id' => config('ghn.from_district_id'),
+            'from_ward_code' => config('ghn.from_ward_code'),
+            'to_district_id' => $address->district_id,
+            'to_ward_code' => $address->ward_code,
+            'weight' => config('ghn.default_weight'),
+            'length' => config('ghn.default_length'),
+            'width' => config('ghn.default_width'),
+            'height' => config('ghn.default_height'),
+            'insurance_value' => 0
+        ];
+        
+        $result = $ghnService->calculateShippingFee($data);
+        
+        if ($result && isset($result['data']['total'])) {
+            // Lưu service_id để sử dụng cho việc tạo đơn GHN sau này
+            if (isset($result['data']['service_id'])) {
+                // Có thể lưu service_id vào session hoặc cache để sử dụng sau
+                session(['ghn_service_id_' . $addressId => $result['data']['service_id']]);
+            }
+            return $result['data']['total'];
+        }
+        
+        // Fallback về phí cũ nếu API thất bại
         return $shippingMethod === 'standard' ? 20000 : 40000;
     }
 

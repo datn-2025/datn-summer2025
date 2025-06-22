@@ -19,21 +19,26 @@ class Order extends Model
         'voucher_id',
         'total_amount',
         'order_code',
+        'ghn_order_code',
         'order_status_id',
         'payment_method_id',
         'payment_status_id',
         'qr_code',
         'shipping_fee',
+        'ghn_service_id',
+        'expected_delivery_time',
+        'ghn_shipping_info',
         'note',
         'discount_amount',
         'recipient_name',
         'recipient_phone',
         'recipient_email',
-
     ];
 
     protected $casts = [
-        'total_amount' => 'decimal:2'
+        'total_amount' => 'decimal:2',
+        'expected_delivery_time' => 'datetime',
+        'ghn_shipping_info' => 'array'
     ];
 
     public $incrementing = false;

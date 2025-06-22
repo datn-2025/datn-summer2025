@@ -20,6 +20,8 @@ use App\Services\OrderService;
 use App\Services\PaymentService;
 use App\Services\QrCodeService;
 use App\Services\VoucherService;
+use App\Services\GhnService;
+use App\Services\ShippingService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Brian2694\Toastr\Facades\Toastr;
@@ -35,19 +37,25 @@ class OrderController extends Controller
     protected $paymentService;
     protected $emailService;
     protected $qrCodeService;
+    protected $ghnService;
+    protected $shippingService;
 
     public function __construct(
         OrderService $orderService,
         VoucherService $voucherService,
         PaymentService $paymentService,
         EmailService $emailService,
-        QrCodeService $qrCodeService
+        QrCodeService $qrCodeService,
+        GhnService $ghnService,
+        ShippingService $shippingService
     ) {
         $this->orderService = $orderService;
         $this->voucherService = $voucherService;
         $this->paymentService = $paymentService;
         $this->emailService = $emailService;
         $this->qrCodeService = $qrCodeService;
+        $this->ghnService = $ghnService;
+        $this->shippingService = $shippingService;
     }
 
     public function checkout(Request $request)
@@ -184,6 +192,9 @@ class OrderController extends Controller
                     'city' => $request->input('new_address_city_name'),
                     'district' => $request->input('new_address_district_name'),
                     'ward' => $request->input('new_address_ward_name'),
+                    'province_id' => $request->input('new_address_province_id'),
+                    'district_id' => $request->input('new_address_ghn_district_id'),
+                    'ward_code' => $request->input('new_address_ward_code'),
                     'is_default' => false
                 ]);
                 $addressIdToUse = $address->id;
@@ -247,6 +258,28 @@ class OrderController extends Controller
             }
             $paymentMethod = PaymentMethod::findOrFail($request->payment_method_id);
 //            dd($paymentMethod);
+            
+            // Lấy thông tin GHN nếu có
+            $address = Address::find($addressIdToUse);
+            $ghnServiceId = session('ghn_service_id_' . $addressIdToUse);
+            $expectedDeliveryTime = null;
+            
+            if ($ghnServiceId && $address && $address->district_id && $address->ward_code) {
+                // Tính thời gian giao hàng dự kiến
+                $deliveryData = [
+                    'from_district_id' => config('ghn.from_district_id'),
+                    'from_ward_code' => config('ghn.from_ward_code'),
+                    'to_district_id' => $address->district_id,
+                    'to_ward_code' => $address->ward_code,
+                    'service_id' => $ghnServiceId
+                ];
+                
+                $deliveryResult = $this->ghnService->getExpectedDeliveryTime($deliveryData);
+                if ($deliveryResult && isset($deliveryResult['data']['leadtime'])) {
+                    $expectedDeliveryTime = now()->addSeconds($deliveryResult['data']['leadtime']);
+                }
+            }
+            
             // Tính tổng tiền cuối cùng
             $finalTotalAmount = $subtotal + $request->shipping_fee_applied - $actualDiscountAmount;
 
@@ -269,6 +302,8 @@ class OrderController extends Controller
                     'total_amount' => $finalTotalAmount,
                     'shipping_fee' => $request->shipping_fee_applied,
                     'discount_amount' => (int) $actualDiscountAmount,
+                    'ghn_service_id' => $ghnServiceId,
+                    'expected_delivery_time' => $expectedDeliveryTime,
                 ]);
 
                 // Tạo OrderItems
@@ -333,6 +368,8 @@ class OrderController extends Controller
                 'total_amount' => $finalTotalAmount,
                 'shipping_fee' => $request->shipping_fee_applied,
                 'discount_amount' => (int) $actualDiscountAmount,
+                'ghn_service_id' => $ghnServiceId,
+                'expected_delivery_time' => $expectedDeliveryTime,
             ]);
 //            dd($order->recipient_email);
 
@@ -385,6 +422,10 @@ class OrderController extends Controller
             DB::commit();
             // Generate and save QR Code using QrCodeService
             $this->qrCodeService->generateOrderQrCode($order);
+            
+            // Tạo đơn hàng GHN cho sách vật lý
+            $this->createGhnOrderIfNeeded($order);
+            
             $this->emailService->sendOrderConfirmation($order);
             $successMessage = 'Đặt hàng thành công!';
 
@@ -734,6 +775,45 @@ class OrderController extends Controller
 
             Toastr::error('Có lỗi xảy ra trong quá trình xử lý thanh toán.');
             return redirect()->route('orders.checkout')->with('error', 'Có lỗi xảy ra trong quá trình xử lý thanh toán.');
+        }
+    }
+
+    /**
+     * Tạo đơn hàng GHN nếu cần thiết (cho sách vật lý)
+     */
+    private function createGhnOrderIfNeeded(Order $order)
+    {
+        // Kiểm tra xem đơn hàng có sách vật lý không
+        $hasPhysicalBooks = false;
+        foreach ($order->orderItems as $item) {
+            if ($item->bookFormat && strtolower($item->bookFormat->format_name) !== 'ebook') {
+                $hasPhysicalBooks = true;
+                break;
+            }
+        }
+
+        // Chỉ tạo đơn GHN cho sách vật lý và có địa chỉ GHN hợp lệ
+        if ($hasPhysicalBooks && $order->address && $order->address->district_id && $order->address->ward_code) {
+            try {
+                $result = $this->shippingService->createGhnOrder($order);
+                
+                if ($result['success']) {
+                    Log::info('GHN order created successfully', [
+                        'order_id' => $order->id,
+                        'ghn_order_code' => $result['ghn_order_code']
+                    ]);
+                } else {
+                    Log::warning('Failed to create GHN order', [
+                        'order_id' => $order->id,
+                        'error' => $result['message']
+                    ]);
+                }
+            } catch (\Exception $e) {
+                Log::error('Error creating GHN order', [
+                    'order_id' => $order->id,
+                    'error' => $e->getMessage()
+                ]);
+            }
         }
     }
 }

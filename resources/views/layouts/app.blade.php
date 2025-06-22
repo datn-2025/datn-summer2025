@@ -97,45 +97,139 @@
     @include('layouts.partials.footer')
     <script>
        $(document).ready(function() {
-    // Lấy tỉnh thành
-    $.getJSON('https://provinces.open-api.vn/api/p/', function(provinces) {
-        provinces.forEach(function(province) {
-            $("#tinh").append(`<option value="${province.code}">${province.name}</option>`);
-        });
+    // Lấy tỉnh thành từ GHN API
+    $.get('/ghn/provinces', function(response) {
+        if (response.success) {
+            response.data.forEach(function(province) {
+                $("#tinh").append(`<option value="${province.ProvinceID}">${province.ProvinceName}</option>`);
+            });
+        }
+    }).fail(function() {
+        console.error('Không thể lấy danh sách tỉnh/thành phố');
     });
 
     // Xử lý khi chọn tỉnh
     $("#tinh").change(function() {
-        const provinceCode = $(this).val();
-        $("#ten_tinh").val($(this).find("option:selected").text());
+        const provinceId = $(this).val();
+        const provinceName = $(this).find("option:selected").text();
+        $("#ten_tinh").val(provinceName);
+        $("#province_id").val(provinceId);
         
-        // Lấy quận/huyện
-        $.getJSON(`https://provinces.open-api.vn/api/p/${provinceCode}?depth=2`, function(provinceData) {
-            $("#quan").html('<option value="">Chọn Quận/Huyện</option>');
-            provinceData.districts.forEach(function(district) {
-                $("#quan").append(`<option value="${district.code}">${district.name}</option>`);
+        // Reset quận/huyện và phường/xã
+        $("#quan").html('<option value="">Chọn Quận/Huyện</option>');
+        $("#phuong").html('<option value="">Chọn Phường/Xã</option>');
+        $("#shipping-info").hide();
+        
+        if (provinceId) {
+            // Lấy quận/huyện từ GHN API
+            $.post('/ghn/districts', {
+                province_id: provinceId,
+                _token: $('meta[name="csrf-token"]').attr('content')
+            }, function(response) {
+                if (response.success) {
+                    response.data.forEach(function(district) {
+                        $("#quan").append(`<option value="${district.DistrictID}">${district.DistrictName}</option>`);
+                    });
+                }
+            }).fail(function() {
+                console.error('Không thể lấy danh sách quận/huyện');
             });
-        });
+        }
     });
 
     // Xử lý khi chọn quận
     $("#quan").change(function() {
-        const districtCode = $(this).val();
-        $("#ten_quan").val($(this).find("option:selected").text());
+        const districtId = $(this).val();
+        const districtName = $(this).find("option:selected").text();
+        $("#ten_quan").val(districtName);
+        $("#ghn_district_id").val(districtId);
         
-        // Lấy phường/xã
-        $.getJSON(`https://provinces.open-api.vn/api/d/${districtCode}?depth=2`, function(districtData) {
-            $("#phuong").html('<option value="">Chọn Phường/Xã</option>');
-            districtData.wards.forEach(function(ward) {
-                $("#phuong").append(`<option value="${ward.code}">${ward.name}</option>`);
+        // Reset phường/xã
+        $("#phuong").html('<option value="">Chọn Phường/Xã</option>');
+        $("#shipping-info").hide();
+        
+        if (districtId) {
+            // Lấy phường/xã từ GHN API
+            $.post('/ghn/wards', {
+                district_id: districtId,
+                _token: $('meta[name="csrf-token"]').attr('content')
+            }, function(response) {
+                if (response.success) {
+                    response.data.forEach(function(ward) {
+                        $("#phuong").append(`<option value="${ward.WardCode}">${ward.WardName}</option>`);
+                    });
+                }
+            }).fail(function() {
+                console.error('Không thể lấy danh sách phường/xã');
             });
-        });
+        }
     });
 
     // Xử lý khi chọn phường
     $("#phuong").change(function() {
-        $("#ten_phuong").val($(this).find("option:selected").text());
+        const wardCode = $(this).val();
+        const wardName = $(this).find("option:selected").text();
+        $("#ten_phuong").val(wardName);
+        $("#ward_code").val(wardCode);
+        
+        // Tính phí vận chuyển và thời gian giao hàng
+        if (wardCode && $("#ghn_district_id").val()) {
+            calculateShippingInfo();
+        }
     });
+    
+    // Hàm tính phí vận chuyển và thời gian giao hàng
+    function calculateShippingInfo() {
+        const districtId = $("#ghn_district_id").val();
+        const wardCode = $("#ward_code").val();
+        
+        if (!districtId || !wardCode) return;
+        
+        // Tính phí vận chuyển
+        $.post('/ghn/shipping-fee', {
+            to_district_id: districtId,
+            to_ward_code: wardCode,
+            weight: 200, // Trọng lượng mặc định (gram)
+            _token: $('meta[name="csrf-token"]').attr('content')
+        }, function(response) {
+            if (response.success) {
+                const shippingFee = response.data.total;
+                $("#ghn-shipping-fee").text(new Intl.NumberFormat('vi-VN').format(shippingFee) + 'đ');
+                
+                // Cập nhật phí vận chuyển trong form
+                $("#form_hidden_shipping_fee").val(shippingFee);
+                $("#shipping-fee").text(new Intl.NumberFormat('vi-VN').format(shippingFee) + 'đ');
+                
+                // Cập nhật tổng tiền
+                updateTotal();
+                
+                $("#shipping-info").show();
+            }
+        }).fail(function() {
+            console.error('Không thể tính phí vận chuyển');
+        });
+        
+        // Tính thời gian giao hàng dự kiến
+        $.post('/ghn/delivery-time', {
+            to_district_id: districtId,
+            to_ward_code: wardCode,
+            _token: $('meta[name="csrf-token"]').attr('content')
+        }, function(response) {
+            if (response.success) {
+                const deliveryTime = new Date(response.data.leadtime * 1000);
+                const options = { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                };
+                $("#expected-delivery").text(deliveryTime.toLocaleDateString('vi-VN', options));
+            }
+        }).fail(function() {
+            console.error('Không thể lấy thời gian giao hàng dự kiến');
+        });
+    }
 });
     </script>
 </body>

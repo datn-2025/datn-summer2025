@@ -20,11 +20,12 @@
                 @csrf
                 {{-- Hidden fields for form submission --}}
                 <input type="hidden" name="final_total_amount" id="form_hidden_total_amount"
-                    value="{{ $subtotal + 20000 }}"> {{-- Default, JS will update --}}
+                    value="{{ $subtotal }}"> {{-- Default, JS will update --}}
                 <input type="hidden" name="discount_amount_applied" id="form_hidden_discount_amount" value="0">
                 <input type="hidden" name="applied_voucher_code" id="form_hidden_applied_voucher_code" value="">
-                <input type="hidden" name="shipping_fee_applied" id="form_hidden_shipping_fee" value="20000"> {{--
-                Default, JS will update --}}
+                <input type="hidden" name="shipping_fee_applied" id="form_hidden_shipping_fee" value="0"> {{--
+                Default to 0, JS will update with GHN --}}
+                <input type="hidden" name="ghn_service_id" id="form_hidden_ghn_service_id" value="">
                 {{-- Khu vực nhập địa chỉ mới --}}
                 <div id="new-address-form" class="mt-6 pt-6 border-t border-gray-200">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
@@ -58,7 +59,9 @@
                         <select name="address_id" class="w-full border rounded-lg px-3 py-2">
                             <option value="">Chọn địa chỉ</option>
                             @foreach($addresses as $address)
-                            <option value="{{ $address->id }}">
+                            <option value="{{ $address->id }}" 
+                                data-district-id="{{ $address->ghn_district_id }}" 
+                                data-ward-code="{{ $address->ward_code }}">
                                 {{ $address->recipient_name }} - {{ $address->phone }} - {{ $address->address_detail }},
                                 {{ $address->ward }}, {{ $address->district }}, {{ $address->city }}
                             </option>
@@ -78,6 +81,7 @@
                                 <option value="">Chọn Tỉnh/Thành phố</option>
                             </select>
                             <input type="hidden" name="new_address_city_name" id="ten_tinh">
+                            <input type="hidden" name="new_address_province_id" id="province_id">
                             @error('new_address_city_id') <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                             @enderror
                             @error('new_address_city_name') <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -90,6 +94,7 @@
                                 <option value="">Chọn Quận/Huyện</option>
                             </select>
                             <input type="hidden" name="new_address_district_name" id="ten_quan">
+                            <input type="hidden" name="new_address_ghn_district_id" id="ghn_district_id">
                             @error('new_address_district_id') <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                             @enderror
                             @error('new_address_district_name') <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -102,6 +107,7 @@
                                 <option value="">Chọn Phường/Xã</option>
                             </select>
                             <input type="hidden" name="new_address_ward_name" id="ten_phuong">
+                            <input type="hidden" name="new_address_ward_code" id="ward_code">
                             @error('new_address_ward_id') <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                             @enderror
                             @error('new_address_ward_name') <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -116,15 +122,29 @@
                             placeholder="Ví dụ: Số 123, Đường ABC" value="{{ old('new_address_detail') }}">
                         @error('new_address_detail') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
+                    
+                    <!-- Thông tin vận chuyển từ GHN cho địa chỉ mới -->
+                    <div id="shipping-info" class="mb-4 p-4 bg-blue-50 rounded-lg" style="display: none;">
+                        <h6 class="font-semibold text-blue-800 mb-2">Thông tin vận chuyển</h6>
+                        <div id="shipping-details">
+                            <p class="text-sm text-blue-700 mb-1">Phí vận chuyển: <span id="ghn-shipping-fee" class="font-medium">-</span></p>
+                            <p class="text-sm text-blue-700">Thời gian giao hàng dự kiến: <span id="expected-delivery" class="font-medium">-</span></p>
+                        </div>
+                    </div>
+
+                    <!-- Thông tin vận chuyển từ GHN cho địa chỉ đã chọn -->
+                    <div id="selected-address-shipping" class="mb-4" style="display: none;">
+                        <!-- Shipping info for selected address will be displayed here -->
+                    </div>
                 </div>
                 <!-- Phương thức vận chuyển -->
-                <div class="mb-6">
+                {{-- <div class="mb-6">
                     <h5 class="text-xl font-semibold text-gray-800 mb-3">Phương thức vận chuyển</h5>
                     <div class="space-y-2">
                         <label
                             class="flex items-center justify-between p-4 border rounded-lg cursor-pointer hover:bg-gray-50">
                             <div class="flex items-center">
-                                <input type="radio" name="shipping_method" value="standard" class="mr-2" checked>
+                                <input type="radio" name="shipping_method" value="standard" class="mr-2" >
                                 <div>
                                     <span class="font-medium">Giao hàng tiết kiệm</span>
                                     <p class="text-sm text-gray-600">Giao hàng trong 3-5 ngày</p>
@@ -147,7 +167,7 @@
                     @error('shipping_method')
                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                     @enderror
-                </div>
+                </div> --}}
                 <!-- Phương thức thanh toán -->
                 <div class="mb-6">
                     <h5 class="text-xl font-semibold text-gray-800 mb-3">Phương thức thanh toán</h5>
@@ -230,11 +250,11 @@
             <div class="mt-6 pt-6 border-t border-gray-200 space-y-3">
                 <div class="flex justify-between">
                     <span class="text-gray-600">Tạm tính:</span>
-                    <span class="text-gray-800 font-medium">{{ number_format($item->price * $item->quantity) }}đ</span>
+                    <span class="text-gray-800 font-medium">{{ number_format($subtotal) }}đ</span>
                 </div>
                 <div class="flex justify-between">
                     <span class="text-gray-600">Phí vận chuyển:</span>
-                    <span id="shipping-fee" class="text-gray-800 font-medium">20.000đ</span>
+                    <span id="shipping-fee" class="text-gray-800 font-medium">0đ</span>
                 </div>
                 <div class="flex justify-between">
                     <span class="text-gray-600">Giảm giá:</span>
@@ -243,7 +263,7 @@
                 <div class="flex justify-between items-center font-bold text-lg">
                     <span class="text-gray-900 font-bold text-lg">Tổng cộng:</span>
                     <span id="total-amount" class="text-green-600 font-bold text-xl">
-                        {{ number_format($item->price * $item->quantity + 20000) }}đ
+                        {{ number_format($subtotal) }}đ
                     </span>
                 </div>
             </div>
@@ -297,6 +317,7 @@
 </div>
 
 @push('scripts')
+<script src="{{ asset('js/ghn-shipping.js') }}"></script>
 <script>
     // Hàm hỗ trợ định dạng số tiền
 let discountValue = 0; // Global discount value
@@ -331,19 +352,19 @@ function updateTotal() {
     });
 }
 
-// Cập nhật phí vận chuyển khi thay đổi phương thức
-document.querySelectorAll('input[name="shipping_method"]').forEach(input => {
-    input.addEventListener('change', function() {
-        const shippingFee = this.value === 'standard' ? 20000 : 40000;
-        document.getElementById('shipping-fee').textContent = `${number_format(shippingFee)}đ`;
-        updateTotal();
-    });
-});
+// // Cập nhật phí vận chuyển khi thay đổi phương thức
+// document.querySelectorAll('input[name="shipping_method"]').forEach(input => {
+//     input.addEventListener('change', function() {
+//         const shippingFee = this.value === 'standard' ? 20000 : 40000;
+//         document.getElementById('shipping-fee').textContent = `${number_format(shippingFee)}đ`;
+//         updateTotal();
+//     });
+// });
 
 document.getElementById('apply-voucher-btn-new').addEventListener('click', function() {
     const applyBtn = this;
     const originalBtnText = applyBtn.textContent;
-    const voucherCode = document.querySelector('input[name="voucher_code"]').value;
+    const voucherCode = document.getElementById('voucher_code_input').value;
     const discountEl = document.getElementById('discount-amount');
     console.log(voucherCode);
 
@@ -419,14 +440,13 @@ document.getElementById('apply-voucher-btn-new').addEventListener('click', funct
 // Hàm áp dụng mã giảm giá được gợi ý
 function applySuggestedVoucher(code, event) {
     event.preventDefault();
-    const input = document.querySelector('input[name="voucher_code"]');
+    const input = document.getElementById('voucher_code_input');
     input.value = code;
-    document.getElementById('apply-voucher').click();
+    document.getElementById('apply-voucher-btn-new').click();
 }
 
 // Cập nhật tổng tiền lần đầu khi trang load
 updateTotal();
-
 
 document.addEventListener('DOMContentLoaded', function () {
     const voucherModal = document.getElementById('voucher-modal');

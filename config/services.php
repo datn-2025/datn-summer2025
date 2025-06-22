@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Third Party Services
@@ -34,7 +33,7 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
-   'vnpay' => [
+    'vnpay' => [
         'tmn_code' => env('VNP_TMNCODE'),
         'hash_secret' => env('VNP_HASHSECRET'),
         'url' => env('VNP_URL'),
@@ -45,4 +44,9 @@ return [
         'redirect' => env('GOOGLE_REDIRECT'),
     ],
 
+    'ghn' => [
+        'api_url' => env('GHN_API_URL'),
+        'api_key' => env('GHN_API_KEY'),
+        'shop_id' => env('GHN_SHOP_ID'),
+    ],
 ];

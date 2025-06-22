@@ -161,11 +161,20 @@ Route::middleware('auth')->group(function () {
 });
 // Đơn hàng Add commentMore actions
 Route::prefix('orders')->name('orders.')->group(function () {
-    Route::get('/', [\App\Http\Controllers\OrderController::class, 'index'])->name('index');
-    Route::get('/checkout', [\App\Http\Controllers\OrderController::class, 'checkout'])->name('checkout');
-    Route::get('/{order}', [\App\Http\Controllers\OrderController::class, 'show'])->name('show');
     Route::post('/store', [\App\Http\Controllers\OrderController::class, 'store'])->name('store');
     Route::post('/apply-voucher', [\App\Http\Controllers\OrderController::class, 'applyVoucher'])->name('apply-voucher');
+});
+
+// GHN API routes
+Route::prefix('ghn')->name('ghn.')->middleware('ghn.error')->group(function () {
+    Route::get('/provinces', [\App\Http\Controllers\GhnController::class, 'getProvinces'])->name('provinces');
+    Route::post('/districts', [\App\Http\Controllers\GhnController::class, 'getDistricts'])->name('districts');
+    Route::post('/wards', [\App\Http\Controllers\GhnController::class, 'getWards'])->name('wards');
+    Route::post('/shipping-fee', [\App\Http\Controllers\GhnController::class, 'calculateShippingFee'])->name('shipping-fee');
+    Route::post('/delivery-time', [\App\Http\Controllers\GhnController::class, 'getExpectedDeliveryTime'])->name('delivery-time');
+    Route::post('/services', [\App\Http\Controllers\GhnController::class, 'getServices'])->name('services');
+    Route::post('/full-shipping-info', [\App\Http\Controllers\GhnController::class, 'calculateFullShippingInfo'])->name('full-shipping-info');
+    Route::post('/full-shipping-info', [\App\Http\Controllers\GhnController::class, 'calculateFullShippingInfo'])->name('full-shipping-info');
 });
 
 Route::prefix('admin')->name('admin.')->group(function () {
