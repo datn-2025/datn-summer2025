@@ -215,6 +215,7 @@ Route::middleware(['auth:admin', 'admin'])->prefix('admin')->name('admin.')->gro
         Route::delete('/force-delete/{id}', [AdminBookController::class, 'forceDelete'])->name('force-delete');
     });
 
+
     // Admin Payment Methods
     Route::prefix('payment-methods')->name('payment-methods.')->group(function () {
         Route::get('/', [AdminPaymentMethodController::class, 'index'])->name('index');

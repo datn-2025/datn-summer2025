@@ -382,10 +382,22 @@
                         </li> <!-- end Dashboard Menu -->
                         <li class="menu-title"><span data-key="t-menu">Quản Lý Hệ Thống</span></li>
                         <li class="nav-item">
-                            <a class="nav-link menu-link" href="{{ route('admin.users.index') }}">
+
+                            <a class="nav-link menu-link" href="#sidebarAuth" data-bs-toggle="collapse"
+                                role="button" aria-expanded="false" aria-controls="sidebarAuth">
                                 <i class="ri-account-circle-line"></i> <span data-key="t-authentication">Quản lý người
-                                    dùng</span>
+                                    dùng </span>
                             </a>
+                            <div class="collapse menu-dropdown" id="sidebarAuth">
+                                <ul class="nav nav-sm flex-column">
+                                    <li class="nav-item">
+
+                                        <a href="{{ route('admin.users.index') }}" class="nav-link"
+                                            data-key="t-signin"> Danh sách
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
                         </li>
 
                         <!-- Quản lý sản phẩm -->
@@ -396,10 +408,17 @@
                             </a>
                             <div class="collapse menu-dropdown" id="sidebarApps">
                                 <ul class="nav nav-sm flex-column">
-                                    <li><a href="{{ route('admin.books.index') }}" class="nav-link">Danh sách</a>
+                                    <li class="nav-item">
+
+                                        <a href="{{ route('admin.books.index') }}" class="nav-link"
+                                            data-key="t-chat">
+                                            Danh sách </a>
                                     </li>
-                                    <li><a href="{{ route('admin.attributes.index') }}" class="nav-link">Thuộc
-                                            tính</a></li>
+                                    <li class="nav-item">
+                                        <a href="{{ route('admin.attributes.index') }}" class="nav-link"> <span
+                                                data-key="t-file-manager">Thuộc tính</span></a>
+
+                                    </li>
                                 </ul>
                             </div>
                         </li>
@@ -413,12 +432,18 @@
                             </a>
                             <div class="collapse menu-dropdown" id="sidebarCate">
                                 <ul class="nav nav-sm flex-column">
-                                    <li><a href="{{ route('admin.categories.index') }}" class="nav-link">Loại
-                                            sách</a></li>
-                                    <li><a href="{{ route('admin.categories.authors.index') }}" class="nav-link">Tác
-                                            giả</a></li>
-                                    <li><a href="{{ route('admin.categories.brands.brand') }}"
-                                            class="nav-link">Thương hiệu</a></li>
+                                    <li class="nav-item">
+                                        <a href="{{route('admin.categories.index')}}" class="nav-link"
+                                            data-key="t-chat"> Loại sách </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{ route('admin.categories.authors.index') }}" class="nav-link"
+                                            data-key="t-chat"> Tác giả </a>
+                                    </li>
+
+                                    <li class="nav-item">
+                                        <a href="{{route('admin.categories.brands.brand')}}" class="nav-link" data-key="t-chat"> Thương hiệu </a>
+                                    </li>
                                 </ul>
                             </div>
                         </li>
@@ -452,8 +477,13 @@
                             </a>
                             <div class="collapse menu-dropdown" id="sidebarContacts">
                                 <ul class="nav nav-sm flex-column">
-                                    <li><a href="{{ route('admin.contacts.index') }}" class="nav-link">Danh sách liên
-                                            hệ</a></li>
+                                    <li class="nav-item">
+                                        <a href="{{ route('admin.contacts.index') }}" class="nav-link"
+                                            data-key="t-contacts-list">
+                                            Danh sách liên hệ
+                                        </a>
+                                    </li>
+
                                 </ul>
                             </div>
                         </li>
@@ -461,14 +491,22 @@
                         <!-- Khuyến mãi -->
                         <li class="nav-item">
                             <a class="nav-link menu-link" href="#sidebarAdvanceUI" data-bs-toggle="collapse"
-                                aria-expanded="false">
-                                <i class="ri-stack-line"></i> <span data-key="t-promotions">Quản lý khuyến mãi</span>
+                                role="button" aria-expanded="false" aria-controls="sidebarAdvanceUI">
+
+                                <i class="ri-stack-line"></i> <span data-key="t-advance-ui">Quản lý khuyến mãi toàn
+                                    nền
+                                    tảng</span>
                             </a>
                             <div class="collapse menu-dropdown" id="sidebarAdvanceUI">
                                 <ul class="nav nav-sm flex-column">
                                     <li><a href="{{ route('admin.vouchers.index') }}" class="nav-link">Danh sách</a>
                                     </li>
-                                    <li><a href="advance-ui-nestable.html" class="nav-link">Thêm</a></li>
+                                    <li class="nav-item">
+
+                                        <a href="advance-ui-nestable.html" class="nav-link"
+                                            data-key="t-nestable-list">
+                                            Thêm</a>
+                                    </li>
                                 </ul>
                             </div>
                         </li>
