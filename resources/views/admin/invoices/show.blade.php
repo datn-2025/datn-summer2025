@@ -16,7 +16,8 @@
                         </div>
                         <div class="text-muted">
                             <span class="me-3"><i class="fas fa-hashtag me-1"></i>#{{ $invoice->order->order_code }}</span>
-                            <span class="me-3"><i class="far fa-calendar-alt me-1"></i>{{ $invoice->created_at->format('H:i:s d/m/Y') }}</span>
+                            Ngày thanh toán: <span class="me-3"><i class="far fa-calendar-alt me-1"></i>{{ $invoice->created_at->format('H:i:s d/m/Y') }}</span>
+                            Ngày in hóa đơn: <span class="me-3"><i class="far fa-calendar-alt me-1"></i>{{ now()->format('H:i:s d/m/Y') }}</span>
                             <span class="badge bg-success">
                                 {{ $invoice->order->paymentStatus->name }}
                             </span>
@@ -106,6 +107,18 @@
                     </div>
                     <div class="card-body">
                         <table class="table table-sm">
+                            @php
+                                $totalQuantity = 0;
+                            @endphp
+                            @foreach($invoice->items as $item)
+                                @php
+                                    $totalQuantity += $item->quantity;
+                                @endphp
+                            @endforeach
+                            <tr>
+                                <td class="border-0 ps-0">Tổng số lượng:</td>
+                                <td class="border-0 text-end">{{ number_format($totalQuantity) }}</td>
+                            </tr>
                             <tr>
                                 <td class="border-0 ps-0">Tạm tính:</td>
                                 <td class="border-0 text-end">{{ number_format($invoice->subtotal) }}đ</td>
