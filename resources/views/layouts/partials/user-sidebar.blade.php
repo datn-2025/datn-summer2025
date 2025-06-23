@@ -23,7 +23,7 @@
                 $currentRoute = request()->route()->getName();
                 $menuItems = [
                     [
-                        'route' => 'account.index',
+                        'route' => 'account.profile',
                         'icon' => 'fas fa-home',
                         'title' => 'Tổng quan',
                         'active' => $currentRoute === 'account.index'
