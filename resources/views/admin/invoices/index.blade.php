@@ -99,14 +99,14 @@
                         </div>
 
                         <!-- Trạng thái thanh toán -->
-                        <div class="col-12">
+                        {{-- <div class="col-12">
                             <label for="payment_status" class="form-label">Trạng thái thanh toán</label>
                             <select name="payment_status" id="payment_status" class="form-select">
                                 <option value="">Tất cả trạng thái</option>
                                 <option value="paid" {{ request()->get('payment_status') == 'paid' ? 'selected' : '' }}>Đã thanh toán</option>
                                 <option value="unpaid" {{ request()->get('payment_status') == 'unpaid' ? 'selected' : '' }}>Chưa thanh toán</option>
                             </select>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </div>
@@ -144,8 +144,8 @@
                                         <th>Mã đơn hàng</th>
                                         <th>Khách hàng</th>
                                         <th>Phương thức</th>
-                                        <th class="text-center">Trạng thái</th>
-                                        <th class="text-end">Tổng tiền</th>
+                                        <!-- <th class="text-center">Trạng thái</th> -->
+                                        <th>Tổng tiền</th>
                                         <th>Ngày tạo</th>
                                         <th class="text-center">Thao tác</th>
                                     </tr>
@@ -160,15 +160,15 @@
                                                 <small class="text-muted"><i class="fas fa-envelope-open me-1"></i>{{ $invoice->order->user->email }}</small>
                                             </td>
                                             <td>{{ $invoice->order->paymentMethod->name ?? 'Không xác định' }}</td>
-                                            <td class="text-center">
+                                            <!-- <td class="text-center">
                                                 @if ($invoice->order->payment_status == 'paid')
                                                     <span class="badge bg-success"><i class="ri-check-line me-1"></i> Đã thanh toán</span>
                                                 @else
                                                     <span class="badge bg-warning"><i class="ri-time-line me-1"></i> Chưa thanh toán</span>
                                                 @endif
-                                            </td>
-                                            <td class="text-end">{{ number_format($invoice->total_amount) }}đ</td>
-                                            <td>{{ $invoice->created_at->format('d/m/Y') }}</td>
+                                            </td> -->
+                                            <td>{{ number_format($invoice->total_amount) }}đ</td>
+                                            <td>{{ $invoice->created_at->format('H:i:s d/m/Y') }}</td>
                                             <td class="text-center">
                                                 <div class="btn-group">
                                                     <a href="{{ route('admin.invoices.show', $invoice->id) }}" class="btn btn-sm btn-info" title="Xem chi tiết">
