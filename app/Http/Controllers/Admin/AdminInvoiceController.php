@@ -11,15 +11,32 @@ use PDF;
 class AdminInvoiceController extends Controller
 {  
       public function index(Request $request)
-    {        $query = Invoice::query();
+    {        
+        $query = Invoice::query();
+        // $query->with([
+        //     'order' => function($q) {
+        //         $q->with(['user', 'address', 'paymentMethod']);
+        //     },
+        //     'items' => function($q) {
+        //         $q->with(['book', 'book.author']);
+        //     }
+        // ]);  
+        // Lọc chỉ lấy các invoice có order với trạng thái 'Thành công'
+        $query->whereHas('order', function($q) {
+            $q->whereHas('orderStatus', function($q) {
+                $q->where('name', 'Thành công');
+            });
+        });
         $query->with([
             'order' => function($q) {
                 $q->with(['user', 'address', 'paymentMethod']);
+                //   ->where('order_status_id', 'completed'); // Thêm điều kiện lọc đơn hàng đã hoàn thành
             },
             'items' => function($q) {
                 $q->with(['book', 'book.author']);
             }
-        ]);        // Gom các điều kiện tìm kiếm liên quan đến order và user
+        ]);      
+        // Gom các điều kiện tìm kiếm liên quan đến order và user
         $query->whereHas('order', function($q) use ($request) {
             // Mã đơn hàng
             if ($request->filled('search_order_code')) {
