@@ -228,13 +228,19 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @php
+                        $totalQuantity = 0;
+                    @endphp
                     @foreach ($invoice->items as $item)
+                        @php
+                            $totalQuantity += $item->quantity;
+                        @endphp
                         <tr>
                             <td>
                                 <div class="book-title">{{ $item->book->title }}</div>
                                 <div class="book-author">Tác giả: {{ $item->book->author->name }}</div>
                             </td>
-                            <td>{{ number_format($item->price) }}đ</td>
+                            <td>{{ number_format($item->price) }}</td>
                             <td class="text-center">{{ $item->quantity }}</td>
                             <td class="text-right">{{ number_format($item->quantity * $item->price) }}đ</td>
                         </tr>
@@ -242,6 +248,10 @@
                 </tbody>
             </table>
             <div class="totals">
+                <div class="total-row">
+                    <span>Tổng số lượng:</span>
+                    <span>{{ number_format($totalQuantity) }}</span>
+                </div>
                 <div class="total-row">
                     <span>Tổng tiền hàng:</span>
                     <span>{{ number_format($invoice->subtotal) }}đ</span>
@@ -265,10 +275,36 @@
 
         <div style="clear: both;"></div>
 
-        <div class="footer">
+        <!-- <div class="footer">
             <p>Cảm ơn bạn đã mua sách tại BookBee!</p>
             <p>Mọi thắc mắc xin vui lòng liên hệ: {{ config('app.phone') }} hoặc email {{ config('app.email') }}</p>
             <p>Website: {{ config('app.url') }}</p>
+        </div> -->
+        <div class="footer">
+            <div style="margin-bottom: 30px;">
+                <p>Ngày in hóa đơn: {{ now()->format('H:i:s d/m/Y') }}</p>
+            </div>
+            
+            <div style="text-align: center; margin-top: 50px; position: relative;">
+                <div style="display: inline-block; text-align: center;">
+                    <div style="width: 150px; height: 150px; border: 2px solid #f00; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; position: relative;">
+                        <div style="text-align: center;">
+                            <div style="font-weight: bold; color: #f00; font-size: 16px;">CÔNG TY BOOKBEE</div>
+                            <div style="color: #f00; font-size: 14px;">ĐÃ THANH TOÁN</div>
+                        </div>
+                    </div>
+                    <div style="font-style: italic; color: #666;">(Ký và đóng dấu)</div>
+                </div>
+                
+                <div style="margin-top: 50px; text-align: center;">
+                    <div style="font-weight: bold;">Người lập hóa đơn</div>
+                    <div style="font-style: italic; margin-top: 40px;">(Ký và ghi rõ họ tên)</div>
+                </div>
+            </div>
+            
+            <p>-----------------------------------</p>
+            <p>Trân trọng cảm ơn quý khách đã sử dụng dịch vụ của BookBee!</p>
+            <p>Mọi thắc mắc xin liên hệ: 1900 1234 - Email: support@bookbee.vn</p>
         </div>
     </div>
 </body>
