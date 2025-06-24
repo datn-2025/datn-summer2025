@@ -353,12 +353,20 @@
                       </div>
                       <div class="flex items-center space-x-2">
                         @php
-                          $totalStock = $book->total_stock ?? 0;
+                          $physicalStock = $book->physical_stock ?? 0;
+                          $hasEbook = $book->has_ebook ?? 0;
                         @endphp
-                        @if($totalStock > 0)
+                        
+                        @if($physicalStock > 0)
+                          {{-- Có sách vật lý --}}
                           <span class="w-2 h-2 bg-adidas-green rounded-full"></span>
-                          <span class="text-xs text-adidas-gray font-medium">Còn {{ $totalStock }} cuốn</span>
+                          <span class="text-xs text-adidas-gray font-medium">Còn {{ $physicalStock }} cuốn</span>
+                        @elseif($hasEbook)
+                          {{-- Hết sách vật lý nhưng còn ebook --}}
+                          <span class="w-2 h-2 bg-blue-500 rounded-full"></span>
+                          <span class="text-xs text-blue-600 font-medium">Ebook có sẵn</span>
                         @else
+                          {{-- Hết hàng hoàn toàn --}}
                           <span class="w-2 h-2 bg-adidas-red rounded-full"></span>
                           <span class="text-xs text-adidas-red font-medium">Hết hàng</span>
                         @endif
