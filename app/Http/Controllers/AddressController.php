@@ -6,6 +6,7 @@ use App\Models\Address;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class AddressController extends Controller
 {
@@ -23,7 +24,7 @@ class AddressController extends Controller
     public function store(Request $request)
     {
         // Log incoming request data for debugging
-        \Log::info('Address store request data:', $request->all());
+        Log::info('Address store request data:', $request->all());
         
         $request->validate([
             'city' => 'required|string|max:255',
@@ -51,7 +52,7 @@ class AddressController extends Controller
                 'is_default' => $request->is_default || $isFirstAddress
             ]);
             
-            \Log::info('Address created successfully:', $address->toArray());
+            Log::info('Address created successfully:', $address->toArray());
 
             DB::commit();
 
@@ -63,7 +64,7 @@ class AddressController extends Controller
 
         } catch (\Exception $e) {
             DB::rollback();
-            \Log::error('Address store error: ' . $e->getMessage());
+            Log::error('Address store error: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'Có lỗi xảy ra khi thêm địa chỉ: ' . $e->getMessage(),
@@ -115,7 +116,7 @@ class AddressController extends Controller
 
         } catch (\Exception $e) {
             DB::rollback();
-            \Log::error('Address update error: ' . $e->getMessage());
+            Log::error('Address update error: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'Có lỗi xảy ra khi cập nhật địa chỉ: ' . $e->getMessage()
