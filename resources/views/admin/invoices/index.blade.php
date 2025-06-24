@@ -125,11 +125,24 @@
                         <div class="table-responsive table-card mt-3">
                             @if ($invoices->isEmpty())
                                 <div class="noresult text-center py-5">
-                                    <lord-icon src="https://cdn.lordicon.com/nocovwne.json" trigger="loop"
-                                        colors="primary:#405189,secondary:#0ab39c" style="width:100px;height:100px">
-                                    </lord-icon>
-                                    <h5 class="mt-3 text-muted">Không tìm thấy hóa đơn nào</h5>
-                                    <p class="text-muted">Hãy thử thay đổi bộ lọc hoặc làm mới danh sách.</p>
+                                    @if (filled(request()->get('search_invoice_code')))
+                                        <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
+                                            colors="primary:#121331,secondary:#08a88a" style="width:75px;height:75px">
+                                        </lord-icon>
+                                        <h5 class="mt-3 text-danger">Không tìm thấy hóa đơn phù hợp</h5>
+                                        <p class="text-muted">
+                                            Không có hóa đơn nào khớp với từ khóa
+                                            <strong>"{{ request()->get('search_invoice_code') }}"</strong>.<br>
+                                            Vui lòng kiểm tra lại từ khóa hoặc thử tìm kiếm khác.
+                                        </p>
+                                    @else
+                                        <lord-icon src="https://cdn.lordicon.com/nocovwne.json" trigger="loop"
+                                            colors="primary:#405189,secondary:#0ab39c" style="width:100px;height:100px">
+                                        </lord-icon>
+                                        <h5 class="mt-3 text-muted">Danh sách hóa đơn hiện đang trống</h5>
+                                        <p class="text-muted">Hãy nhấn <strong>“Tạo hóa đơn”</strong> để bắt đầu quản lý
+                                            hóa đơn.</p>
+                                    @endif
                                 </div>
                             @else
                                 <table class="table align-middle table-nowrap">
