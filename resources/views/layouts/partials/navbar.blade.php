@@ -8,14 +8,14 @@
     </div>
     <div class="flex space-x-4">
       @auth
-        <a href="{{ route('account.showUser') }}" class="hover:text-gray-300 transition-colors">{{ Auth::user()->name }}</a>
+        <a href="{{ route('account.profile') }}" class="hover:text-gray-300 transition-colors">{{ Auth::user()->name }}</a>
         <form method="POST" action="{{ route('logout') }}" class="inline">
           @csrf
           <button type="submit" class="hover:text-gray-300 transition-colors">Đăng xuất</button>
         </form>
       @else
         <a href="{{ route('login') }}" class="hover:text-gray-300 transition-colors">Đăng nhập</a>
-        <a href="{{ route('account.register') }}" class="hover:text-gray-300 transition-colors">Đăng ký</a>
+        <a href="{{ route('register') }}" class="hover:text-gray-300 transition-colors">Đăng ký</a>
       @endauth
     </div>
   </div>
@@ -70,7 +70,7 @@
           <!-- Dropdown menu -->
           <div class="dropdown-menu">
             @auth
-              <a href="{{ route('account.showUser') }}" class="block px-4 py-2 text-sm text-black hover:bg-gray-100">
+              <a href="{{ route('account.profile') }}" class="block px-4 py-2 text-sm text-black hover:bg-gray-100">
                 <div class="flex items-center space-x-3">
                   <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
@@ -115,7 +115,7 @@
                   <span>Đăng nhập</span>
                 </div>
               </a>
-              <a href="{{ route('account.register') }}" class="block px-4 py-2 text-sm text-black hover:bg-gray-100">
+              <a href="{{ route('register') }}" class="block px-4 py-2 text-sm text-black hover:bg-gray-100">
                 <div class="flex items-center space-x-3">
                   <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
