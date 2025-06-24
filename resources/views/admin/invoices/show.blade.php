@@ -47,33 +47,43 @@
                         </h6>
                     </div>
                     <div class="card-body">
-                        thông tin tài khoản
                         <div class="mb-3">
-                            <h5 class="mb-1">{{ $invoice->order->user->name }}</h5>
-                            <p class="text-muted mb-1">
-                                <i class="fas fa-envelope me-2"></i>{{ $invoice->order->user->email }}
-                            </p>
-                            <p class="text-muted mb-1">
-                                <i class="fas fa-phone me-2"></i>{{ $invoice->order->user->phone ?? 'N/A' }}
-                            </p>
+                            <div class="fw-bold text-primary mb-1">
+                                <i class="fas fa-user-circle me-2"></i>Tài khoản khách hàng
+                            </div>
+                            <div class="ps-3">
+                                <h5 class="mb-1">{{ $invoice->order->user->name }}</h5>
+                                <p class="text-muted mb-1">
+                                    <i class="fas fa-envelope me-2"></i>{{ $invoice->order->user->email }}
+                                </p>
+                                <p class="text-muted mb-0">
+                                    <i class="fas fa-phone me-2"></i>{{ $invoice->order->user->phone ?? 'N/A' }}
+                                </p>
+                            </div>
                         </div>
-                        thông tin người nhận
-                        <div class="mb-2">
-                            <h5 class="mb-1">{{ $invoice->order->recipient_name }}</h5>
-                            <p class="text-muted mb-1">
-                                <i class="fas fa-envelope me-2"></i>{{ $invoice->order->recipient_email ?? 'N/A' }}
-                            </p>
-                            <p class="text-muted mb-1">
-                                <i class="fas fa-phone me-2"></i>{{ $invoice->order->recipient_phone ?? 'N/A' }}
-                            </p>
+                        <div class="mb-3">
+                            <div class="fw-bold text-primary mb-1">
+                                <i class="fas fa-user-friends me-2"></i>Người nhận hàng
+                            </div>
+                            <div class="ps-3">
+                                <h5 class="mb-1">{{ $invoice->order->recipient_name }}</h5>
+                                <p class="text-muted mb-1">
+                                    <i class="fas fa-envelope me-2"></i>{{ $invoice->order->recipient_email ?? 'N/A' }}
+                                </p>
+                                <p class="text-muted mb-0">
+                                    <i class="fas fa-phone me-2"></i>{{ $invoice->order->recipient_phone ?? 'N/A' }}
+                                </p>
+                            </div>
                         </div>
-                        <hr>
                         <div>
-                            <h6 class="mb-2">Địa chỉ giao hàng</h6>
-                            <p class="mb-0">
-                                <i class="fas fa-map-marker-alt me-2"></i>
-                                {{ $invoice->order->address->full_address ?? 'N/A' }}
-                            </p>
+                            <div class="fw-bold text-primary mb-1">
+                                <i class="fas fa-map-marker-alt me-2"></i>Địa chỉ giao hàng
+                            </div>
+                            <div class="ps-3">
+                                <p class="mb-0">
+                                    {{ $invoice->order->address->full_address ?? 'N/A' }}
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
