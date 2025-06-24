@@ -16,8 +16,10 @@
                         </div>
                         <div class="text-muted">
                             <span class="me-3"><i class="fas fa-hashtag me-1"></i>#{{ $invoice->order->order_code }}</span>
-                            Ngày thanh toán: <span class="me-3"><i class="far fa-calendar-alt me-1"></i>{{ $invoice->created_at->format('H:i:s d/m/Y') }}</span>
-                            Ngày in hóa đơn: <span class="me-3"><i class="far fa-calendar-alt me-1"></i>{{ now()->format('H:i:s d/m/Y') }}</span>
+                            Ngày thanh toán: <span class="me-3"><i
+                                    class="far fa-calendar-alt me-1"></i>{{ $invoice->created_at->format('H:i:s d/m/Y') }}</span>
+                            Ngày in hóa đơn: <span class="me-3"><i
+                                    class="far fa-calendar-alt me-1"></i>{{ now()->format('H:i:s d/m/Y') }}</span>
                             <span class="badge bg-success">
                                 {{ $invoice->order->paymentStatus->name }}
                             </span>
@@ -45,6 +47,7 @@
                         </h6>
                     </div>
                     <div class="card-body">
+                        thông tin tài khoản
                         <div class="mb-3">
                             <h5 class="mb-1">{{ $invoice->order->user->name }}</h5>
                             <p class="text-muted mb-1">
@@ -52,6 +55,16 @@
                             </p>
                             <p class="text-muted mb-1">
                                 <i class="fas fa-phone me-2"></i>{{ $invoice->order->user->phone ?? 'N/A' }}
+                            </p>
+                        </div>
+                        thông tin người nhận
+                        <div class="mb-2">
+                            <h5 class="mb-1">{{ $invoice->order->recipient_name }}</h5>
+                            <p class="text-muted mb-1">
+                                <i class="fas fa-envelope me-2"></i>{{ $invoice->order->recipient_email ?? 'N/A' }}
+                            </p>
+                            <p class="text-muted mb-1">
+                                <i class="fas fa-phone me-2"></i>{{ $invoice->order->recipient_phone ?? 'N/A' }}
                             </p>
                         </div>
                         <hr>
@@ -82,15 +95,16 @@
                             </p>
                             <p class="mb-1">
                                 <span class="text-muted">Trạng thái:</span>
-                                <span class="float-end badge bg-{{ $invoice->order->paymentStatus->name == 'Đã Thanh Toán' ? 'success' : 'warning' }}">
+                                <span
+                                    class="float-end badge bg-{{ $invoice->order->paymentStatus->name == 'Đã Thanh Toán' ? 'success' : 'warning' }}">
                                     {{ $invoice->order->paymentStatus->name }}
                                 </span>
                             </p>
-                            @if($invoice->order->paid_at)
-                            <p class="mb-0">
-                                <span class="text-muted">Ngày thanh toán:</span>
-                                <span class="float-end">{{ $invoice->order->paid_at->format('H:i:s d/m/Y') }}</span>
-                            </p>
+                            @if ($invoice->order->paid_at)
+                                <p class="mb-0">
+                                    <span class="text-muted">Ngày thanh toán:</span>
+                                    <span class="float-end">{{ $invoice->order->paid_at->format('H:i:s d/m/Y') }}</span>
+                                </p>
                             @endif
                         </div>
                     </div>
@@ -110,7 +124,7 @@
                             @php
                                 $totalQuantity = 0;
                             @endphp
-                            @foreach($invoice->items as $item)
+                            @foreach ($invoice->items as $item)
                                 @php
                                     $totalQuantity += $item->quantity;
                                 @endphp
@@ -123,15 +137,17 @@
                                 <td class="border-0 ps-0">Tạm tính:</td>
                                 <td class="border-0 text-end">{{ number_format($invoice->subtotal) }}đ</td>
                             </tr>
-                            @if($invoice->discount > 0)
-                            <tr>
-                                <td class="border-0 ps-0">Giảm giá:</td>
-                                <td class="border-0 text-end text-danger">-{{ number_format($invoice->discount) }}đ</td>
-                            </tr>
+                            @if ($invoice->order->discount_amount > 0)
+                                <tr>
+                                    <td class="border-0 ps-0">Giảm giá:</td>
+                                    <td class="border-0 text-end text-danger">
+                                        -{{ number_format($invoice->order->discount_amount) }}đ
+                                    </td>
+                                </tr>
                             @endif
                             <tr>
                                 <td class="border-0 ps-0">Phí vận chuyển:</td>
-                                <td class="border-0 text-end">{{ number_format($invoice->shipping_fee) }}đ</td>
+                                <td class="border-0 text-end">{{ number_format($invoice->order->shipping_fee) }}đ</td>
                             </tr>
                             <tr class="table-active">
                                 <th class="border-0 ps-0">Tổng cộng:</th>
@@ -162,26 +178,26 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($invoice->items as $item)
-                            <tr>
-                                <td class="ps-4">
-                                    <div class="d-flex align-items-center">
-                                        <img src="{{ $item->book->thumbnail ?? 'https://via.placeholder.com/60x80' }}" 
-                                             alt="{{ $item->book->title }}" 
-                                             class="me-3" 
-                                             style="width: 60px; height: 80px; object-fit: cover;">
-                                        <div>
-                                            <h6 class="mb-1">{{ $item->book->title }}</h6>
-                                            <p class="text-muted small mb-0">
-                                                Tác giả: {{ $item->book->author->name ?? 'N/A' }}
-                                            </p>
+                            @foreach ($invoice->items as $item)
+                                <tr>
+                                    <td class="ps-4">
+                                        <div class="d-flex align-items-center">
+                                            <img src="{{ $item->book->thumbnail ?? 'https://via.placeholder.com/60x80' }}"
+                                                alt="{{ $item->book->title }}" class="me-3"
+                                                style="width: 60px; height: 80px; object-fit: cover;">
+                                            <div>
+                                                <h6 class="mb-1">{{ $item->book->title }}</h6>
+                                                <p class="text-muted small mb-0">
+                                                    Tác giả: {{ $item->book->author->name ?? 'N/A' }}
+                                                </p>
+                                            </div>
                                         </div>
-                                    </div>
-                                </td>
-                                <td class="text-end align-middle pe-4">{{ number_format($item->price) }}đ</td>
-                                <td class="text-center align-middle">{{ $item->quantity }}</td>
-                                <td class="text-end align-middle pe-4">{{ number_format($item->price * $item->quantity) }}đ</td>
-                            </tr>
+                                    </td>
+                                    <td class="text-end align-middle pe-4">{{ number_format($item->price) }}đ</td>
+                                    <td class="text-center align-middle">{{ $item->quantity }}</td>
+                                    <td class="text-end align-middle pe-4">
+                                        {{ number_format($item->price * $item->quantity) }}đ</td>
+                                </tr>
                             @endforeach
                         </tbody>
                     </table>
@@ -190,20 +206,20 @@
         </div>
 
         <!-- Ghi chú đơn hàng -->
-        @if($invoice->note)
-        <div class="card border-left-info shadow mb-4">
-            <div class="card-body">
-                <div class="d-flex">
-                    <div class="icon-circle bg-info text-white me-3">
-                        <i class="fas fa-info"></i>
-                    </div>
-                    <div>
-                        <h6 class="text-info mb-1">Ghi chú đơn hàng</h6>
-                        <p class="mb-0">{{ $invoice->note }}</p>
+        @if ($invoice->note)
+            <div class="card border-left-info shadow mb-4">
+                <div class="card-body">
+                    <div class="d-flex">
+                        <div class="icon-circle bg-info text-white me-3">
+                            <i class="fas fa-info"></i>
+                        </div>
+                        <div>
+                            <h6 class="text-info mb-1">Ghi chú đơn hàng</h6>
+                            <p class="mb-0">{{ $invoice->note }}</p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
         @endif
     </div>
 @endsection
