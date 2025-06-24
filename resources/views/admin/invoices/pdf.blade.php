@@ -284,10 +284,11 @@
             <div style="margin-bottom: 30px;">
                 <p>Ngày in hóa đơn: {{ now()->format('H:i:s d/m/Y') }}</p>
             </div>
-            
+
             <div style="text-align: center; margin-top: 50px; position: relative;">
                 <div style="display: inline-block; text-align: center;">
-                    <div style="width: 150px; height: 150px; border: 2px solid #f00; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; position: relative;">
+                    <div
+                        style="width: 150px; height: 150px; border: 2px solid #f00; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; position: relative;">
                         <div style="text-align: center;">
                             <div style="font-weight: bold; color: #f00; font-size: 16px;">CÔNG TY BOOKBEE</div>
                             <div style="color: #f00; font-size: 14px;">ĐÃ THANH TOÁN</div>
@@ -295,13 +296,13 @@
                     </div>
                     <div style="font-style: italic; color: #666;">(Ký và đóng dấu)</div>
                 </div>
-                
+
                 <div style="margin-top: 50px; text-align: center;">
                     <div style="font-weight: bold;">Người lập hóa đơn</div>
                     <div style="font-style: italic; margin-top: 40px;">(Ký và ghi rõ họ tên)</div>
                 </div>
             </div>
-            
+
             <p>-----------------------------------</p>
             <p>Trân trọng cảm ơn quý khách đã sử dụng dịch vụ của BookBee!</p>
             <p>Mọi thắc mắc xin liên hệ: 1900 1234 - Email: support@bookbee.vn</p>
