@@ -76,6 +76,9 @@ Route::post('/wishlist/delete', [WishlistController::class, 'delete'])->name('wi
 Route::post('/wishlist/delete-all', [WishlistController::class, 'deleteAll'])->name('wishlist.delete-all');
 Route::post('/wishlist/add-to-cart', [WishlistController::class, 'addToCartFromWishlist'])->name('wishlist.addToCart');
 
+// preorder
+Route::post('/preorder', [\App\Http\Controllers\PreorderController::class, 'store'])->name('preorder.store');
+
 // lien he
 Route::get('/news', [NewsController::class, 'index'])->name('news.index');
 Route::get('/news/{id}', [NewsController::class, 'show'])->name('news.show');
@@ -353,6 +356,16 @@ Route::middleware(['auth:admin', 'admin'])->prefix('admin')->name('admin.')->gro
     Route::prefix('settings')->name('settings.')->group(function () {
         Route::get('/', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('index');
         Route::post('/update', [App\Http\Controllers\Admin\SettingController::class, 'update'])->name('update');
+    });
+
+    // Route admin/preorders
+    Route::prefix('preorders')->name('preorders.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\PreorderController::class, 'index'])->name('index');
+        Route::get('/export', [\App\Http\Controllers\Admin\PreorderController::class, 'export'])->name('export');
+        Route::get('/{preorder}', [\App\Http\Controllers\Admin\PreorderController::class, 'show'])->name('show');
+        Route::put('/{preorder}/status', [\App\Http\Controllers\Admin\PreorderController::class, 'updateStatus'])->name('updateStatus');
+        Route::delete('/{preorder}', [\App\Http\Controllers\Admin\PreorderController::class, 'destroy'])->name('destroy');
+        Route::post('/bulk-update-status', [\App\Http\Controllers\Admin\PreorderController::class, 'bulkUpdateStatus'])->name('bulkUpdateStatus');
     });
 });
 
