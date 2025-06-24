@@ -42,10 +42,6 @@ class AdminInvoiceController extends Controller
             if ($request->filled('search_order_code')) {
                 $q->where('order_code', 'like', '%' . $request->search_order_code . '%');
             }
-            // Trạng thái thanh toán
-            if ($request->filled('payment_status')) {
-                $q->where('payment_status', $request->payment_status);
-            }
             // Phương thức thanh toán
             if ($request->filled('payment_method')) {
                 $q->where('payment_method_id', $request->payment_method);
