@@ -201,8 +201,11 @@
                                         @else
                                         {{ number_format($format->price) }}đ
                                         @endif
-                                        @if($format->stock !== null)
-                                        ({{ $format->stock }} cuốn)
+                                        
+                                        @if(stripos($format->format_name, 'ebook') !== false)
+                                            <span class="badge bg-info">Không giới hạn</span>
+                                        @elseif($format->stock !== null)
+                                            ({{ $format->stock }} cuốn)
                                         @endif
                                     </div>
                                     @endforeach
