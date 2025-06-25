@@ -50,7 +50,7 @@
         width: 80px;
         height: 80px;
         object-fit: cover;
-        border: 2px solid #111;
+        border: 1px solid #111;
         margin-bottom: 12px;
         transition: border-color 0.18s;
     }
@@ -92,7 +92,7 @@
         text-decoration: none;
         font-weight: 700;
         font-size: 1.01rem;
-        border-bottom: 1px solid #e5e5e5;
+        border: 1px solid #e5e5e5;
         background: #fff;
         transition: background 0.15s, color 0.15s, transform 0.2s;
     }
@@ -120,7 +120,7 @@
         color: red !important;
         background: none;
         border: none;
-        padding: 13px 18px;
+        padding: 12px 18px;
         font-weight: 700;
         font-size: 1.01rem;
         display: flex;
@@ -132,7 +132,7 @@
     }
 
     .sidebar-logout-btn:hover {
-        background: #fbe9e9;
+        background: #ffa5a5;
         color: red !important;
     }
 
@@ -170,7 +170,7 @@
         .sidebar-link.active, .sidebar-link:hover {
             background: #111;
             color: #fff;
-            border-bottom: 2px solid #fff;
+            border-bottom: 1px solid #fff;
         }
 
         .sidebar-profile {
