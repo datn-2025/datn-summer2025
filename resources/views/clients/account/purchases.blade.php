@@ -37,6 +37,9 @@
                                 $review = $order->reviews()->withTrashed()->where('book_id', $item->book_id)->first();
                             @endphp
                             <div class="flex flex-col lg:flex-row gap-6 pb-6 border-b border-slate-200 last:border-b-0 last:pb-0">
+                                <div class="lg:w-32 flex-shrink-0 flex items-center justify-center bg-gray-100 border border-black" style="border-radius:0; min-height: 120px;">
+                                    <img src="{{ $item->book->cover_image_url }}" alt="{{ $item->book->title }}" class="w-20 h-28 object-cover shadow-sm border border-slate-300" style="border-radius:0;">
+                                </div>
                                 <div class="flex-1 min-w-0">
                                     <h4 class="text-lg font-bold text-black mb-1">{{ $item->book->title }}</h4>
                                     <div class="text-sm text-gray-700 mb-1">
