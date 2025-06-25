@@ -592,11 +592,17 @@
                     </div>
                     <!-- Enhanced Add to Cart Button -->
                     <div class="space-y-4">
-                        <button id="addToCartBtn" class="adidas-btn-enhanced w-full h-16 bg-black text-white font-bold text-lg uppercase tracking-wider transition-all duration-300 flex items-center justify-center">
-                            <i class="fas fa-shopping-bag mr-3"></i>
-                            THÊM VÀO GIỎ HÀNG 
-                        </button>
-                        
+                        @if($defaultStock <= 1)
+                            <button class="adidas-btn-enhanced w-full h-16 bg-gray-400 text-white font-bold text-lg uppercase tracking-wider flex items-center justify-center cursor-not-allowed" aria-disabled="true" tabindex="0" style="pointer-events: auto;">
+                                <i class="fas fa-info-circle mr-3"></i>
+                                SẢN PHẨM ĐANG ĐƯỢC CẬP NHẬT
+                            </button>
+                        @else
+                            <button id="addToCartBtn" class="adidas-btn-enhanced w-full h-16 bg-black text-white font-bold text-lg uppercase tracking-wider transition-all duration-300 flex items-center justify-center">
+                                <i class="fas fa-shopping-bag mr-3"></i>
+                                THÊM VÀO GIỎ HÀNG 
+                            </button>
+                        @endif
                         <!-- Wishlist Button -->
                         <button class="wishlist-btn w-full h-14 border-2 border-black text-black font-bold text-lg uppercase tracking-wider transition-all duration-300 flex items-center justify-center">
                             <i class="far fa-heart mr-3"></i>
@@ -1481,5 +1487,19 @@
             button.innerHTML = originalText;
         });
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var updatingBtn = document.querySelector('button[aria-disabled="true"].adidas-btn-enhanced');
+        if (updatingBtn) {
+            updatingBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (typeof toastr !== 'undefined') {
+                    toastr.warning('Sản phẩm hiện trong kho đang sắp hết, vui lòng đợi');
+                } else {
+                    alert('Sản phẩm hiện trong kho đang sắp hết, vui lòng đợi');
+                }
+            });
+        }
+    });
 </script>
 @endpush
