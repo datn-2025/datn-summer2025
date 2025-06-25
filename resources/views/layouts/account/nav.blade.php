@@ -59,7 +59,7 @@
     object-fit: cover;
     border: 2px solid #111;
     margin-bottom: 12px;
-    background: #fff;
+    background: #111;
     box-shadow: none;
     display: block;
     transition: border-color 0.18s;
