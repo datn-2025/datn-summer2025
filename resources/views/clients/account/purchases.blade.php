@@ -171,6 +171,11 @@
     </div>
 </div>
 
+
+@php
+                print_r($item->order);
+            @endphp
+
 <!-- Modal for Edit Review Form (Sửa) -->
 <div id="editReviewModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-40 flex items-center justify-center">
     <div class="bg-white shadow-lg w-full max-w-lg p-8 relative border border-black" style="border-radius:0;">
@@ -186,15 +191,12 @@
                 <span class="block text-sm font-medium text-black mb-1">Sản phẩm: {{ $item->book->title }}</span>
                 <span id="edit_modal_book_name" class="font-semibold text-base text-black"></span>
             </div>
-            <!-- @php
-                print_r($item->order);
-            @endphp -->
             <div class="grid grid-cols-2 gap-4 mb-2">
-                <div><span class="block text-xs text-gray-500">Mã đơn hàng: {{ $item->order->id }}</span><span id="edit_modal_order_code" class="font-semibold text-sm text-black"></span></div>
-                <div><span class="block text-xs text-gray-500">Trạng thái: {{ $item->order->status }}</span><span id="edit_modal_order_status" class="font-semibold text-sm text-black"></span></div>
-                <div><span class="block text-xs text-gray-500">Vận chuyển: {{ $item->order->shipping_method }}</span><span id="edit_modal_shipping_method" class="font-semibold text-sm text-black"></span></div>
-                <div><span class="block text-xs text-gray-500">Địa chỉ nhận: {{ $item->order->shipping_address }}</span><span id="edit_modal_shipping_address" class="font-semibold text-sm text-black"></span></div>
-                <div><span class="block text-xs text-gray-500">Phương thức thanh toán: {{ $item->order->payment_method }}</span><span id="edit_modal_payment_method" class="font-semibold text-sm text-black"></span></div>
+                <div><span class="block text-xs text-gray-500">Mã đơn hàng: {{ $item->order->order_code }}</span><span id="edit_modal_order_code" class="font-semibold text-sm text-black"></span></div>
+                <div><span class="block text-xs text-gray-500">Trạng thái: {{ $item->order->orderStatus->name }}</span><span id="edit_modal_order_status" class="font-semibold text-sm text-black"></span></div>
+                <div><span class="block text-xs text-gray-500">Phí vận chuyển: {{ $item->order->shipping_fee }}</span><span id="edit_modal_shipping_method" class="font-semibold text-sm text-black"></span></div>
+                <div><span class="block text-xs text-gray-500">Địa chỉ nhận: {{ $item->order->address->address_detail }}</span><span id="edit_modal_shipping_address" class="font-semibold text-sm text-black"></span></div>
+                <div><span class="block text-xs text-gray-500">Phương thức thanh toán: {{ $item->order->paymentMethod->name }}</span><span id="edit_modal_payment_method" class="font-semibold text-sm text-black"></span></div>
                 <div><span class="block text-xs text-gray-500">Thời gian đặt hàng: {{ $item->order->created_at }}</span><span id="edit_modal_order_created_at" class="font-semibold text-sm text-black"></span></div>
                 <div><span class="block text-xs text-gray-500">Thời gian thanh toán: {{ $item->order->paid_at }}</span><span id="edit_modal_order_paid_at" class="font-semibold text-sm text-black"></span></div>
                 <div><span class="block text-xs text-gray-500">Thời gian hoàn thành: {{ $item->order->completed_at }}</span><span id="edit_modal_order_completed_at" class="font-semibold text-sm text-black"></span></div>
