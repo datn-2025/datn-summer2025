@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\OrderStatus;
 use App\Models\PaymentStatus;
 use App\Models\Review;
+use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -110,33 +111,24 @@ class ReviewClientController extends Controller
     public function update(Request $request, $id)
     {
         $review = Review::findOrFail($id);
-        
-        // Kiểm tra quyền sở hữu
         if ($review->user_id !== Auth::id()) {
             abort(403);
         }
-        
-        // Kiểm tra thời gian (24h)
         $timeLimit = $review->created_at->addHours(24);
         if (now()->gt($timeLimit)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Chỉ có thể cập nhật đánh giá trong vòng 24 giờ'
-            ], 403);
+            return redirect()->route('account.purchase')->with('error', 'Chỉ có thể cập nhật đánh giá trong vòng 24 giờ');
         }
-        
         $validated = $request->validate([
-            // Không cho sửa rating
-            // 'rating' => 'required|integer|min:1|max:5',
             'comment' => 'required|string|max:1000',
         ]);
-        
-        // Không cập nhật rating, chỉ cập nhật comment
+        // Nếu không thay đổi gì thì thông báo info và quay lại danh sách
+        if ($review->comment === $validated['comment']) {
+            return redirect()->route('account.purchase')->with('info', 'Không có thay đổi nào cho đánh giá.');
+        }
         $review->update([
             'comment' => $validated['comment'],
         ]);
-        
-        return redirect()->back()->with('success', 'Cập nhật đánh giá thành công');
+        return redirect()->route('account.purchase')->with('success', 'Cập nhật đánh giá thành công');
     }
     
     public function destroy($id)

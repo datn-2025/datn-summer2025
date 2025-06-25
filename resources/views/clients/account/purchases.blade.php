@@ -49,7 +49,7 @@
                                         <span class="font-medium">Tác giả:</span> {{ $item->book->author->name ?? 'Không rõ' }}
                                     </div>
                                     <div class="text-sm text-gray-700 mb-1">
-                                        <span class="font-medium">Nhà xuất bản:</span> {{ $item->book->publisher->name ?? 'Không rõ' }}
+                                        <span class="font-medium">Nhà xuất bản:</span> {{ $item->book->brand->name ?? 'Không rõ' }}
                                     </div>
                                     <div class="text-sm text-gray-700 mb-1">
                                         <span class="font-medium">Số lượng:</span> {{ $item->quantity }}
@@ -69,7 +69,7 @@
                                             <div class="text-sm text-slate-700 mb-2">{{ $review->comment ?? 'Không có nhận xét' }}</div>
                                             <div class="flex gap-2">
                                                 @if($review->user_id === auth()->id())
-                                                    <button type="button" class="px-3 py-1 bg-black text-white text-xs font-medium rounded-none hover:bg-gray-900 transition-colors duration-150" onclick="showReviewModal('{{ $order->id }}', '{{ $item->book_id }}', '{{ addslashes($item->book->title) }}', '{{ $review->rating }}', '{{ addslashes($review->comment) }}')">Sửa đánh giá</button>
+                                                    <button type="button" class="px-3 py-1 bg-black text-white text-xs font-medium rounded-none hover:bg-gray-900 transition-colors duration-150" onclick="showEditReviewModal('{{ $review->id }}', '{{ addslashes($item->book->title) }}', '{{ $review->rating }}', '{{ addslashes($review->comment) }}')">Sửa đánh giá</button>
                                                     <form action="{{ route('account.reviews.destroy', $review->id) }}" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn xóa đánh giá này?');" class="inline">
                                                         @csrf
                                                         @method('DELETE')
@@ -119,11 +119,11 @@
     </div>
 </div>
 
-<!-- Modal for Review Form -->
+<!-- Modal for Review Form (Chi tiết) -->
 <div id="reviewModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-40 flex items-center justify-center">
     <div class="bg-white shadow-lg w-full max-w-lg p-8 relative border border-black" style="border-radius:0;">
         <button type="button" class="absolute top-3 right-3 text-gray-400 hover:text-black text-2xl" onclick="closeReviewModal()">&times;</button>
-        <h2 class="text-xl font-bold mb-4 text-black">Sửa đánh giá sản phẩm</h2>
+        <h2 class="text-xl font-bold mb-4 text-black">Đánh giá chi tiết sản phẩm</h2>
         <form id="reviewForm" action="{{ route('account.review.store') }}" method="POST" class="space-y-4">
             @csrf
             <input type="hidden" name="order_id" id="modal_order_id">
@@ -134,17 +134,49 @@
             </div>
             <div>
                 <label class="block text-sm font-medium text-black mb-2">Số sao đánh giá:</label>
-                <div class="flex items-center mb-2">
-                    @for($i = 1; $i <= 5; $i++)
-                        <i class="fas fa-star {{ $i <= $review->rating ? 'text-yellow-400' : 'text-slate-300' }} text-3xl"></i>
+                <div class="flex items-center space-x-1" id="modal_star_rating">
+                    @for($i = 5; $i >= 1; $i--)
+                        <input type="radio" id="modal_star{{ $i }}" name="rating" value="{{ $i }}" class="sr-only">
+                        <label for="modal_star{{ $i }}" class="cursor-pointer text-3xl text-slate-300 hover:text-yellow-400 transition-colors duration-150" title="{{ $i }} sao">★</label>
                     @endfor
                 </div>
-                <div class="text-xs text-gray-500 mt-1">Bạn chỉ có thể sửa mô tả, không thể thay đổi số sao đã đánh giá.</div>
             </div>
             <div>
                 <textarea name="comment" id="modal_comment" rows="3"
                           class="w-full px-3 py-2 border border-black rounded-none focus:ring-2 focus:ring-black focus:border-black transition-colors duration-200 text-sm resize-none text-black bg-white"
-                          placeholder="Nhận xét về sản phẩm..." required></textarea>
+                          placeholder="Nhận xét về sản phẩm..."></textarea>
+            </div>
+            <button type="submit" class="w-full inline-flex items-center justify-center px-4 py-2 bg-black hover:bg-gray-900 text-white text-sm font-medium rounded-none transition-colors duration-200 focus:ring-2 focus:ring-black focus:ring-offset-2">
+                Gửi đánh giá chi tiết
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- Modal for Edit Review Form (Sửa) -->
+<div id="editReviewModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-40 flex items-center justify-center">
+    <div class="bg-white shadow-lg w-full max-w-lg p-8 relative border border-black" style="border-radius:0;">
+        <button type="button" class="absolute top-3 right-3 text-gray-400 hover:text-black text-2xl" onclick="closeEditReviewModal()">&times;</button>
+        <h2 class="text-xl font-bold mb-4 text-black">Sửa mô tả đánh giá</h2>
+        <form id="editReviewForm" action="" method="POST" class="space-y-4">
+            @csrf
+            @method('PUT')
+            <input type="hidden" name="review_id" id="edit_modal_review_id">
+            <div class="mb-2">
+                <span class="block text-sm font-medium text-black mb-1">Sản phẩm:</span>
+                <span id="edit_modal_book_name" class="font-semibold text-base text-black"></span>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-black mb-2">Số sao đánh giá:</label>
+                <div class="flex items-center mb-2" id="edit_modal_star_display">
+                    <!-- Số sao sẽ render bằng JS -->
+                </div>
+                <div class="text-xs text-gray-500 mt-1">Bạn chỉ có thể sửa mô tả, không thể thay đổi số sao đã đánh giá.</div>
+            </div>
+            <div>
+                <textarea name="comment" id="edit_modal_comment" rows="3"
+                          class="w-full px-3 py-2 border border-black rounded-none focus:ring-2 focus:ring-black focus:border-black transition-colors duration-200 text-sm resize-none text-black bg-white"
+                          placeholder="Nhận xét về sản phẩm..."></textarea>
             </div>
             <button type="submit" class="w-full inline-flex items-center justify-center px-4 py-2 bg-black hover:bg-gray-900 text-white text-sm font-medium rounded-none transition-colors duration-200 focus:ring-2 focus:ring-black focus:ring-offset-2">
                 Lưu mô tả đánh giá
@@ -152,6 +184,7 @@
         </form>
     </div>
 </div>
+
 
 @push('scripts')
 <script>
@@ -174,6 +207,27 @@ function showReviewModal(orderId, bookId, bookName, rating, comment) {
 function closeReviewModal() {
     document.getElementById('reviewModal').classList.add('hidden');
 }
+
+function showEditReviewModal(reviewId, bookName, rating, comment) {
+    document.getElementById('editReviewModal').classList.remove('hidden');
+    document.getElementById('edit_modal_review_id').value = reviewId;
+    document.getElementById('edit_modal_book_name').textContent = bookName;
+    document.getElementById('edit_modal_comment').value = comment || '';
+    // Render số sao cứng
+    let starHtml = '';
+    for (let i = 1; i <= 5; i++) {
+        starHtml += `<i class=\"fas fa-star ${i <= rating ? 'text-yellow-400' : 'text-slate-300'} text-3xl\"></i>`;
+    }
+    document.getElementById('edit_modal_star_display').innerHTML = starHtml;
+    // Set form action đúng route update
+    var form = document.getElementById('editReviewForm');
+    form.action = '/account/reviews/' + reviewId;
+}
+
+function closeEditReviewModal() {
+    document.getElementById('editReviewModal').classList.add('hidden');
+}
+
 // Highlight stars on hover and selection
 const starLabels = document.querySelectorAll('#modal_star_rating label');
 starLabels.forEach(label => {
