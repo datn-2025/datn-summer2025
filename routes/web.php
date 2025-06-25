@@ -21,8 +21,10 @@ use App\Http\Controllers\Admin\WalletController;
 use App\Http\Controllers\Article\NewsController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\Cart\CartController;
-use App\Http\Controllers\Client\ClientOrderController;
-use App\Http\Controllers\Client\ClientReviewController;
+use App\Http\Controllers\Client\AddressClientController;
+use App\Http\Controllers\Client\OrderClientController;
+use App\Http\Controllers\Client\ProfileClientController;
+use App\Http\Controllers\Client\ReviewClientController;
 use App\Http\Controllers\Client\UserClientController;
 use App\Http\Controllers\Contact\ContactController;
 use App\Http\Controllers\HomeController;
@@ -110,34 +112,34 @@ Route::middleware('auth')->group(function () {
         // Route::get('/', [LoginController::class, 'index'])->name('index');
 
         // Profile management
-        Route::get('/profile', [LoginController::class, 'showUser'])->name('profile');
-        Route::put('/profile/update', [LoginController::class, 'updateProfile'])->name('profile.update');
+        Route::get('/profile', [ProfileClientController::class, 'showUser'])->name('profile');
+        Route::put('/profile/update', [ProfileClientController::class, 'updateProfile'])->name('profile.update');
 
         // Password change
-        Route::get('/password/change', [LoginController::class, 'showChangePasswordForm'])->name('changePassword');
-        Route::post('/password/change', [LoginController::class, 'changePassword'])->name('password.update');
+        Route::get('/password/change', [ProfileClientController::class, 'showChangePasswordForm'])->name('changePassword');
+        Route::post('/password/change', [ProfileClientController::class, 'changePassword'])->name('password.update');
 
         // Address management
-        Route::get('/addresses', [AddressController::class, 'index'])->name('addresses');
-        Route::post('/addresses', [AddressController::class, 'store'])->name('addresses.store');
-        Route::get('/addresses/{id}/edit', [AddressController::class, 'edit'])->name('addresses.edit');
-        Route::put('/addresses/{id}', [AddressController::class, 'update'])->name('addresses.update');
-        Route::delete('/addresses/{id}', [AddressController::class, 'destroy'])->name('addresses.destroy');
-        Route::post('/addresses/{id}/set-default', [AddressController::class, 'setDefault'])->name('addresses.setDefault');
+        Route::get('/addresses', [AddressClientController::class, 'index'])->name('addresses');
+        Route::post('/addresses', [AddressClientController::class, 'store'])->name('addresses.store');
+        Route::get('/addresses/{id}/edit', [AddressClientController::class, 'edit'])->name('addresses.edit');
+        Route::put('/addresses/{id}', [AddressClientController::class, 'update'])->name('addresses.update');
+        Route::delete('/addresses/{id}', [AddressClientController::class, 'destroy'])->name('addresses.destroy');
+        Route::post('/addresses/{id}/set-default', [AddressClientController::class, 'setDefault'])->name('addresses.setDefault');
 
         Route::get('/purchase', [UserClientController::class, 'index'])->name('purchase');
         Route::post('/review', [UserClientController::class, 'storeReview'])->name('review.store');
 
         Route::prefix('orders')->name('orders.')->group(function () {
-            Route::get('/', [ClientOrderController::class, 'index'])->name('index');
-            Route::get('/{id}', [ClientOrderController::class, 'show'])->name('show');
-            Route::put('/{id}', [ClientOrderController::class, 'update'])->name('update');
-            Route::delete('/{id}', [ClientOrderController::class, 'destroy'])->name('destroy');
+            Route::get('/', [OrderClientController::class, 'index'])->name('index');
+            Route::get('/{id}', [OrderClientController::class, 'show'])->name('show');
+            Route::put('/{id}', [OrderClientController::class, 'update'])->name('update');
+            Route::delete('/{id}', [OrderClientController::class, 'destroy'])->name('destroy');
         });
 
         Route::prefix('reviews')->name('reviews.')->group(function () {
-            Route::put('/{id}', [ClientReviewController::class, 'update'])->name('update');
-            Route::delete('/{id}', [ClientReviewController::class, 'destroy'])->name('destroy');
+            Route::put('/{id}', [ReviewClientController::class, 'update'])->name('update');
+            Route::delete('/{id}', [ReviewClientController::class, 'destroy'])->name('destroy');
         });
     });
     // Đơn hàng checkout và storex
