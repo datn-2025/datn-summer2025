@@ -33,12 +33,10 @@
                     </div>
                     <div class="p-6 space-y-6">
                         @foreach($order->orderItems as $item)
+                            @php
+                                $review = $order->reviews()->withTrashed()->where('book_id', $item->book_id)->first();
+                            @endphp
                             <div class="flex flex-col lg:flex-row gap-6 pb-6 border-b border-slate-200 last:border-b-0 last:pb-0">
-                                <div class="flex-shrink-0">
-                                    <img src="{{ $item->book->image_url ?? 'https://via.placeholder.com/120x160' }}"
-                                         alt="{{ $item->book->name }}"
-                                         class="w-24 h-32 object-cover shadow-sm" style="border-radius:0;">
-                                </div>
                                 <div class="flex-1 min-w-0">
                                     <h4 class="text-lg font-bold text-black mb-1">{{ $item->book->title }}</h4>
                                     <div class="text-sm text-gray-700 mb-1">
@@ -51,15 +49,8 @@
                                         <span class="font-medium">Số lượng:</span> {{ $item->quantity }}
                                     </div>
                                 </div>
-                                @php
-                                    $review = $order->reviews()->withTrashed()->where('book_id', $item->book_id)->first();
-                                @endphp
                                 <div class="lg:w-96 flex flex-col gap-2">
-                                    @if($review && $review->trashed())
-                                        <div class="bg-amber-50 border border-amber-200 p-4" style="border-radius:0;">
-                                            <p class="text-center text-red-500">Đánh giá đã bị xóa</p>
-                                        </div>
-                                    @elseif($review)
+                                    @if($review && !$review->trashed())
                                         <div class="bg-blue-50 border border-blue-200 p-4" style="border-radius:0;">
                                             <div class="mb-2">
                                                 <span class="text-xs text-slate-500">Cập nhật lần cuối: {{ $review->updated_at->format('d/m/Y') }}</span>
@@ -70,10 +61,9 @@
                                                 @endfor
                                             </div>
                                             <div class="text-sm text-slate-700 mb-2">{{ $review->comment ?? 'Không có nhận xét' }}</div>
-                                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="showReviewModal('{{ $order->id }}', '{{ $item->book_id }}', '{{ addslashes($item->book->name) }}', '{{ $review->rating }}', '{{ addslashes($review->comment) }}')">Chỉnh sửa đánh giá</button>
                                         </div>
                                     @else
-                                        <form action="{{ route('account.review.store') }}" method="POST" class="flex items-center gap-2">
+                                        <form action="{{ route('account.review.store') }}" method="POST" class="flex items-center gap-2 mb-2 quick-review-form">
                                             @csrf
                                             <input type="hidden" name="order_id" value="{{ $order->id }}">
                                             <input type="hidden" name="book_id" value="{{ $item->book_id }}">
@@ -85,52 +75,9 @@
                                             </div>
                                             <input type="hidden" name="rating" id="quick_rating_{{ $order->id }}_{{ $item->book_id }}" value="5">
                                             <input type="hidden" name="comment" value="">
-                                            <button type="submit" class="px-3 py-1 bg-black text-white text-xs font-medium rounded-none hover:bg-gray-900 transition-colors duration-150">Gửi</button>
-                                            <button type="button" class="px-3 py-1 bg-white border border-black text-black text-xs font-medium rounded-none hover:bg-gray-100 transition-colors duration-150" onclick="showReviewModal('{{ $order->id }}', '{{ $item->book_id }}', '{{ addslashes($item->book->name) }}', '', '')">Đánh giá chi tiết</button>
+                                            <button type="submit" class="px-3 py-1 bg-black text-white text-xs font-medium rounded-none hover:bg-gray-900 transition-colors duration-150">Gửi đánh giá nhanh</button>
                                         </form>
-                                        <script>
-                                            document.querySelectorAll('.quick-star-group').forEach(function(group) {
-                                                var orderId = group.getAttribute('data-order');
-                                                var bookId = group.getAttribute('data-book');
-                                                var radios = group.querySelectorAll('input[type=radio]');
-                                                var labels = group.querySelectorAll('.quick-star-label');
-                                                var hiddenInput = document.getElementById('quick_rating_' + orderId + '_' + bookId);
-
-                                                function updateStars(val) {
-                                                    labels.forEach(function(label) {
-                                                        var star = parseInt(label.getAttribute('data-star'));
-                                                        if (star <= val) {
-                                                            label.classList.add('text-yellow-400');
-                                                            label.classList.remove('text-slate-300');
-                                                        } else {
-                                                            label.classList.remove('text-yellow-400');
-                                                            label.classList.add('text-slate-300');
-                                                        }
-                                                    });
-                                                }
-
-                                                // Init: highlight default checked
-                                                var checked = group.querySelector('input[type=radio]:checked');
-                                                updateStars(checked ? checked.value : 5);
-
-                                                radios.forEach(function(radio) {
-                                                    radio.addEventListener('change', function() {
-                                                        updateStars(this.value);
-                                                        hiddenInput.value = this.value;
-                                                    });
-                                                });
-
-                                                labels.forEach(function(label) {
-                                                    label.addEventListener('mouseenter', function() {
-                                                        updateStars(this.getAttribute('data-star'));
-                                                    });
-                                                    label.addEventListener('mouseleave', function() {
-                                                        var checked = group.querySelector('input[type=radio]:checked');
-                                                        updateStars(checked ? checked.value : 5);
-                                                    });
-                                                });
-                                            });
-                                        </script>
+                                        <button type="button" class="px-3 py-1 bg-white border border-black text-black text-xs font-medium rounded-none hover:bg-gray-100 transition-colors duration-150" onclick="showReviewModal('{{ $order->id }}', '{{ $item->book_id }}', '{{ addslashes($item->book->title) }}', '', '')">Đánh giá chi tiết</button>
                                     @endif
                                 </div>
                             </div>
@@ -231,6 +178,42 @@ starLabels.forEach(label => {
     label.addEventListener('click', function() {
         let val = parseInt(this.htmlFor.replace('modal_star', ''));
         document.getElementById('modal_star' + val).checked = true;
+    });
+});
+document.querySelectorAll('.quick-star-group').forEach(function(group) {
+    var orderId = group.getAttribute('data-order');
+    var bookId = group.getAttribute('data-book');
+    var radios = group.querySelectorAll('input[type=radio]');
+    var labels = group.querySelectorAll('.quick-star-label');
+    var hiddenInput = document.getElementById('quick_rating_' + orderId + '_' + bookId);
+    function updateStars(val) {
+        labels.forEach(function(label) {
+            var star = parseInt(label.getAttribute('data-star'));
+            if (star <= val) {
+                label.classList.add('text-yellow-400');
+                label.classList.remove('text-slate-300');
+            } else {
+                label.classList.remove('text-yellow-400');
+                label.classList.add('text-slate-300');
+            }
+        });
+    }
+    var checked = group.querySelector('input[type=radio]:checked');
+    updateStars(checked ? checked.value : 5);
+    radios.forEach(function(radio) {
+        radio.addEventListener('change', function() {
+            updateStars(this.value);
+            hiddenInput.value = this.value;
+        });
+    });
+    labels.forEach(function(label) {
+        label.addEventListener('mouseenter', function() {
+            updateStars(this.getAttribute('data-star'));
+        });
+        label.addEventListener('mouseleave', function() {
+            var checked = group.querySelector('input[type=radio]:checked');
+            updateStars(checked ? checked.value : 5);
+        });
     });
 });
 </script>
