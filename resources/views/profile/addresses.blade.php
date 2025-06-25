@@ -13,7 +13,7 @@
         min-width: 250px;
         background: white;
         padding: 25px;
-        border-radius: 16px;
+        border-radius: 5px;
         box-shadow: 0 4px 20px rgba(0,0,0,0.05);
         position: sticky;
         top: 60px;
@@ -25,7 +25,7 @@
         margin-bottom: 8px;
         color: #4b5563;
         text-decoration: none;
-        border-radius: 10px;
+        border-radius: 5px;
         transition: all 0.3s ease;
         position: relative;
         overflow: hidden;
@@ -37,7 +37,7 @@
         top: 0;
         height: 100%;
         width: 3px;
-        background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+        background: linear-gradient(135deg, #000000 0%, #333333 100%);
         transform: scaleY(0);
         transition: transform 0.3s ease;
     }
@@ -53,7 +53,7 @@
     .sidebar a:hover,
     .sidebar a.active {
         background: #f3f4f6;
-        color: #6366f1;
+        color: #000000;
         transform: translateX(5px);
     }
     .sidebar a:hover i,
@@ -63,7 +63,7 @@
     .main-content {
         background: #fff;
         padding: 40px;
-        border-radius: 16px;
+        border-radius: 5px;
         box-shadow: 0 4px 20px rgba(0,0,0,0.05);
         animation: fadeIn 0.5s ease;
     }
@@ -73,7 +73,7 @@
     }
     .address-card {
         border: 2px solid #e5e7eb;
-        border-radius: 12px;
+        border-radius: 5px;
         padding: 20px;
         margin-bottom: 20px;
         transition: all 0.3s ease;
@@ -81,8 +81,8 @@
         background: #fff;
     }
     .address-card:hover {
-        border-color: #6366f1;
-        box-shadow: 0 8px 25px rgba(99, 102, 241, 0.15);
+        border-color: #000000;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         transform: translateY(-2px);
     }
     .address-card.default {
@@ -101,27 +101,28 @@
         font-weight: 600;
     }
     .form-control, .form-select {
-        border-radius: 10px;
+        border-radius: 5px;
         border: 1.5px solid #e5e7eb;
         padding: 12px;
         transition: all 0.3s ease;
     }
     .form-control:focus, .form-select:focus {
-        border-color: #6366f1;
-        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        border-color: #000000;
+        box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
         transform: translateY(-1px);
     }
     .btn-primary {
-        background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+        background: #000000;
         border: none;
         padding: 12px 24px;
         font-weight: 600;
-        border-radius: 10px;
+        border-radius: 5px;
         transition: all 0.3s ease;
     }
     .btn-primary:hover {
         transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(99, 102, 241, 0.3);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        background: #333333;
     }
     .btn-success {
         background: linear-gradient(135deg, #10b981 0%, #059669 100%);
@@ -140,7 +141,7 @@
         font-size: 0.875rem;
     }
     .modal-content {
-        border-radius: 16px;
+        border-radius: 5px;
         border: none;
         box-shadow: 0 20px 50px rgba(0,0,0,0.15);
     }
@@ -227,7 +228,7 @@
             <div class="main-content">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h2 class="mb-0">
-                        <i class="fas fa-map-marker-alt text-primary me-2"></i>
+                        <i class="fas fa-map-marker-alt me-2" style="color: #000000;"></i>
                         Quản lý địa chỉ
                     </h2>
                     <button class="btn btn-primary" onclick="openAddressModal()">
@@ -250,7 +251,7 @@
                                 <div class="row">
                                     <div class="col-md-8">
                                         <p class="mb-0 text-muted">
-                                            <i class="fas fa-map-marker-alt text-primary me-2"></i>
+                                            <i class="fas fa-map-marker-alt me-2" style="color: #000000;"></i>
                                             {{ $address->address_detail }}, {{ $address->ward }}, {{ $address->district }}, {{ $address->city }}
                                         </p>
                                     </div>
@@ -298,7 +299,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="addressModalLabel">
-                    <i class="fas fa-map-marker-alt me-2"></i>
+                    <i class="fas fa-map-marker-alt me-2" style="color: #000000;"></i>
                     Thêm địa chỉ mới
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

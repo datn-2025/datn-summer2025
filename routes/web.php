@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\AuthorController;
 use App\Http\Controllers\Login\LoginController;
 use App\Http\Controllers\Admin\VoucherController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\Login\ActivationController;
 use App\Http\Controllers\Login\GoogleController;
 use App\Http\Controllers\HomeController;
@@ -50,6 +51,11 @@ Route::get('storage/private/{filename}', function ($filename) {
 Route::get('/vnpay/return', [\App\Http\Controllers\OrderController::class, 'vnpayReturn'])->name('vnpay.return');
 // Route public cho books (categoryId optional)
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
+// Search routes - tìm kiếm sách
+Route::get('/search', [SearchController::class, 'index'])->name('search.index');
+Route::get('/search/suggestions', [SearchController::class, 'suggestions'])->name('search.suggestions');
+
 // Hiển thị danh sách và danh mục
 Route::get('/books/{slug?}', [BookController::class, 'index'])->name('books.index');
 Route::get('/book/{slug}', [HomeController::class, 'show'])->name('books.show');
@@ -114,7 +120,7 @@ Route::middleware('auth')->prefix('account')->name('account.')->group(function (
 
     // Password change
     Route::get('/password/change', [LoginController::class, 'showChangePasswordForm'])->name('changePassword');
-    Route::post('/password/change', [LoginController::class, 'changePassword'])->name('password.update');
+    Route::post('/password/update', [LoginController::class, 'changePassword'])->name('password.update');
 
     // Address management
     Route::get('/addresses', [\App\Http\Controllers\AddressController::class, 'index'])->name('addresses');
