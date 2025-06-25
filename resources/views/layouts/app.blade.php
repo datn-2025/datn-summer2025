@@ -13,20 +13,18 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
 
     <!-- Toastr CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
 
-    @vite(['resources/js/app.js', 'resources/css/app.css'])
     @stack('styles')
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    
+
 
     <!-- Toastr JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
@@ -45,36 +43,41 @@
     <!-- Tailwind CSS CDN (for nav effects) -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-      .adidas-nav {
-        font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      }
-      .adidas-btn {
-        transition: all 0.2s ease;
-        position: relative;
-        overflow: hidden;
-      }
-      .adidas-btn:hover {
-        transform: scale(1.05);
-      }
-      .adidas-btn::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-        transition: left 0.5s;
-      }
-      .adidas-btn:hover::before {
-        left: 100%;
-      }
-      .adidas-gradient-text {
-        background: linear-gradient(45deg, #000000, #767677, #000000);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-      }
+        .adidas-nav {
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .adidas-btn {
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .adidas-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .adidas-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .adidas-btn:hover::before {
+            left: 100%;
+        }
+
+        .adidas-gradient-text {
+            background: linear-gradient(45deg, #000000, #767677, #000000);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
     </style>
 </head>
 
@@ -91,87 +94,109 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Toastr JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-     @include('components.chat-widget')
+    <div id="app">
+        @auth
+            @isset($messages)
+                @auth
+    @isset($messages)
+        <chat-widget
+            :initial-messages="{{ Js::from($messages) }}"
+            :current-user="{{ Js::from(auth()->user()) }}"
+            :conversation-id="'{{ $selectedConversation->id }}'"
+        />
+    @endisset
+@endauth
+
+            @endisset
+        @endauth
+    </div>
+
 
     @stack('scripts')
     @include('layouts.partials.footer')
     <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const toggleBtn = document.getElementById('chat-toggle');
-        const chatBox = document.getElementById('chat-box');
-        const chatForm = document.getElementById('chat-form');
-        const chatInput = document.getElementById('chat-input');
-        const chatContent = document.getElementById('chat-content');
+        document.addEventListener("DOMContentLoaded", function() {
+            const toggleBtn = document.getElementById('chat-toggle');
+            const chatBox = document.getElementById('chat-box');
+            const chatForm = document.getElementById('chat-form');
+            const chatInput = document.getElementById('chat-input');
+            const chatContent = document.getElementById('chat-content');
 
-        toggleBtn.addEventListener('click', function () {
-            chatBox.style.display = (chatBox.style.display === 'none') ? 'block' : 'none';
-        });
+            toggleBtn.addEventListener('click', function() {
+                chatBox.style.display = (chatBox.style.display === 'none') ? 'block' : 'none';
+            });
 
-        chatForm.addEventListener('submit', function (e) {
-            e.preventDefault();
-            const msg = chatInput.value.trim();
-            if (msg === '') return;
+            chatForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const msg = chatInput.value.trim();
+                if (msg === '') return;
 
-            const message = document.createElement('div');
-            message.classList.add('text-end', 'mb-2');
-            message.innerHTML = `<span class="badge bg-success">${msg}</span>`;
-            chatContent.appendChild(message);
-            chatInput.value = '';
-            chatContent.scrollTop = chatContent.scrollHeight;
-
-            setTimeout(() => {
-                const reply = document.createElement('div');
-                reply.classList.add('text-start', 'mb-2');
-                reply.innerHTML = `<span class="badge bg-light text-dark">Cảm ơn bạn! Chúng tôi sẽ phản hồi sớm.</span>`;
-                chatContent.appendChild(reply);
+                const message = document.createElement('div');
+                message.classList.add('text-end', 'mb-2');
+                message.innerHTML = `<span class="badge bg-success">${msg}</span>`;
+                chatContent.appendChild(message);
+                chatInput.value = '';
                 chatContent.scrollTop = chatContent.scrollHeight;
-            }, 800);
+
+                setTimeout(() => {
+                    const reply = document.createElement('div');
+                    reply.classList.add('text-start', 'mb-2');
+                    reply.innerHTML =
+                        `<span class="badge bg-light text-dark">Cảm ơn bạn! Chúng tôi sẽ phản hồi sớm.</span>`;
+                    chatContent.appendChild(reply);
+                    chatContent.scrollTop = chatContent.scrollHeight;
+                }, 800);
+            });
         });
-    });
-</script>
+    </script>
 
     <script>
-       $(document).ready(function() {
-    // Lấy tỉnh thành
-    $.getJSON('https://provinces.open-api.vn/api/p/', function(provinces) {
-        provinces.forEach(function(province) {
-            $("#tinh").append(`<option value="${province.code}">${province.name}</option>`);
-        });
-    });
+        $(document).ready(function() {
+            // Lấy tỉnh thành
+            $.getJSON('https://provinces.open-api.vn/api/p/', function(provinces) {
+                provinces.forEach(function(province) {
+                    $("#tinh").append(`<option value="${province.code}">${province.name}</option>`);
+                });
+            });
 
-    // Xử lý khi chọn tỉnh
-    $("#tinh").change(function() {
-        const provinceCode = $(this).val();
-        $("#ten_tinh").val($(this).find("option:selected").text());
-        
-        // Lấy quận/huyện
-        $.getJSON(`https://provinces.open-api.vn/api/p/${provinceCode}?depth=2`, function(provinceData) {
-            $("#quan").html('<option value="">Chọn Quận/Huyện</option>');
-            provinceData.districts.forEach(function(district) {
-                $("#quan").append(`<option value="${district.code}">${district.name}</option>`);
+            // Xử lý khi chọn tỉnh
+            $("#tinh").change(function() {
+                const provinceCode = $(this).val();
+                $("#ten_tinh").val($(this).find("option:selected").text());
+
+                // Lấy quận/huyện
+                $.getJSON(`https://provinces.open-api.vn/api/p/${provinceCode}?depth=2`, function(
+                    provinceData) {
+                    $("#quan").html('<option value="">Chọn Quận/Huyện</option>');
+                    provinceData.districts.forEach(function(district) {
+                        $("#quan").append(
+                            `<option value="${district.code}">${district.name}</option>`
+                        );
+                    });
+                });
+            });
+
+            // Xử lý khi chọn quận
+            $("#quan").change(function() {
+                const districtCode = $(this).val();
+                $("#ten_quan").val($(this).find("option:selected").text());
+
+                // Lấy phường/xã
+                $.getJSON(`https://provinces.open-api.vn/api/d/${districtCode}?depth=2`, function(
+                    districtData) {
+                    $("#phuong").html('<option value="">Chọn Phường/Xã</option>');
+                    districtData.wards.forEach(function(ward) {
+                        $("#phuong").append(
+                            `<option value="${ward.code}">${ward.name}</option>`);
+                    });
+                });
+            });
+
+            // Xử lý khi chọn phường
+            $("#phuong").change(function() {
+                $("#ten_phuong").val($(this).find("option:selected").text());
             });
         });
-    });
-
-    // Xử lý khi chọn quận
-    $("#quan").change(function() {
-        const districtCode = $(this).val();
-        $("#ten_quan").val($(this).find("option:selected").text());
-        
-        // Lấy phường/xã
-        $.getJSON(`https://provinces.open-api.vn/api/d/${districtCode}?depth=2`, function(districtData) {
-            $("#phuong").html('<option value="">Chọn Phường/Xã</option>');
-            districtData.wards.forEach(function(ward) {
-                $("#phuong").append(`<option value="${ward.code}">${ward.name}</option>`);
-            });
-        });
-    });
-
-    // Xử lý khi chọn phường
-    $("#phuong").change(function() {
-        $("#ten_phuong").val($(this).find("option:selected").text());
-    });
-});
     </script>
 </body>
 
