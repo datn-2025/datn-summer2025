@@ -8,7 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class ClientReviewController extends Controller
+class ReviewClientController extends Controller
 {
     public function update(Request $request, $id)
     {
