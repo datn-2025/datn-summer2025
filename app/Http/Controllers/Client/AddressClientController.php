@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Client;
 
-use App\Models\Address;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Request;
 
-class AddressController extends Controller
+class AddressClientController extends Controller
 {
     public function __construct()
     {
@@ -18,7 +18,7 @@ class AddressController extends Controller
     public function index()
     {
         $addresses = Auth::user()->addresses()->orderBy('is_default', 'desc')->orderBy('created_at', 'desc')->get();
-        return view('profile.addresses', compact('addresses'));
+        return view('clients.profile.profile', compact('addresses'));
     }
 
     public function store(Request $request)
