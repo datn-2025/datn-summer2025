@@ -126,11 +126,15 @@ class ReviewClientController extends Controller
         }
         
         $validated = $request->validate([
-            'rating' => 'required|integer|min:1|max:5',
+            // Không cho sửa rating
+            // 'rating' => 'required|integer|min:1|max:5',
             'comment' => 'required|string|max:1000',
         ]);
         
-        $review->update($validated);
+        // Không cập nhật rating, chỉ cập nhật comment
+        $review->update([
+            'comment' => $validated['comment'],
+        ]);
         
         return redirect()->back()->with('success', 'Cập nhật đánh giá thành công');
     }
