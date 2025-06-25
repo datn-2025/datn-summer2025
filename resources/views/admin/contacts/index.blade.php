@@ -21,6 +21,96 @@
         <!-- end page title -->
 
         <div class="row">
+            <div class="col-xl-3 col-md-6">
+                <div class="card card-animate">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-grow-1 overflow-hidden">
+                                <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Tổng khách hàng</p>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-end justify-content-between mt-4">
+                            <div>
+                                <h4 class="fs-22 fw-semibold ff-secondary mb-4"><span class="counter-value" data-target="{{ $contactCounts['total_customers'] }}">{{ $contactCounts['total_customers'] }}</span></h4>
+                            </div>
+                            <div class="avatar-sm flex-shrink-0">
+                                <span class="avatar-title bg-soft-info rounded fs-3">
+                                    <i class="bx bx-user-circle text-info"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div><!-- end card body -->
+                </div><!-- end card -->
+            </div><!-- end col -->
+
+            <div class="col-xl-3 col-md-6">
+                <div class="card card-animate">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-grow-1 overflow-hidden">
+                                <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Tổng số phản hồi</p>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-end justify-content-between mt-4">
+                            <div>
+                                <h4 class="fs-22 fw-semibold ff-secondary mb-4"><span class="counter-value" data-target="{{ $contactCounts['total_contacts'] }}">{{ $contactCounts['total_contacts'] }}</span></h4>
+                            </div>
+                            <div class="avatar-sm flex-shrink-0">
+                                <span class="avatar-title bg-soft-primary rounded fs-3">
+                                    <i class="bx bx-message-square-dots text-primary"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div><!-- end card body -->
+                </div><!-- end card -->
+            </div><!-- end col -->
+
+            <div class="col-xl-3 col-md-6">
+                <div class="card card-animate">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-grow-1 overflow-hidden">
+                                <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Chưa phản hồi</p>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-end justify-content-between mt-4">
+                            <div>
+                                <h4 class="fs-22 fw-semibold ff-secondary mb-4"><span class="counter-value" data-target="{{ $contactCounts['unreplied'] }}">{{ $contactCounts['unreplied'] }}</span></h4>
+                            </div>
+                            <div class="avatar-sm flex-shrink-0">
+                                <span class="avatar-title bg-soft-warning rounded fs-3">
+                                    <i class="bx bx-time-five text-warning"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div><!-- end card body -->
+                </div><!-- end card -->
+            </div><!-- end col -->
+
+            <div class="col-xl-3 col-md-6">
+                <div class="card card-animate">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-grow-1 overflow-hidden">
+                                <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Đã phản hồi</p>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-end justify-content-between mt-4">
+                            <div>
+                                <h4 class="fs-22 fw-semibold ff-secondary mb-4"><span class="counter-value" data-target="{{ $contactCounts['replied'] }}">{{ $contactCounts['replied'] }}</span></h4>
+                            </div>
+                            <div class="avatar-sm flex-shrink-0">
+                                <span class="avatar-title bg-soft-success rounded fs-3">
+                                    <i class="bx bx-check-circle text-success"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div><!-- end card body -->
+                </div><!-- end card -->
+            </div><!-- end col -->
+        </div>
+
+        <div class="row">
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
