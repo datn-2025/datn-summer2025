@@ -62,58 +62,48 @@ class ReviewClientController extends Controller
     {
         Log::info('Review data:', $request->all());
         Log::info('User ID:', ['user_id' => Auth::id()]);
-        
+
         $request->validate([
             'order_id' => 'required|exists:orders,id',
             'book_id' => 'required|exists:books,id',
             'rating' => 'required|integer|min:1|max:5',
-            'comment' => 'required|string|max:1000',
+            // comment có thể null nếu là đánh giá nhanh
+            'comment' => 'nullable|string|max:1000',
         ], [
             'order_id.required' => 'Đơn hàng không hợp lệ',
             'book_id.required' => 'Sách không hợp lệ',
             'rating.required' => 'Đánh giá không hợp lệ',
-            'comment.required' => 'Nội dung đánh giá không hợp lệ',
             'rating.min' => 'Đánh giá phải từ 1 đến 5',
             'rating.max' => 'Đánh giá phải từ 1 đến 5',
             'comment.max' => 'Nội dung đánh giá không hợp lệ'
         ]);
-        
-        $user = Auth::user();
 
-        $order = $user->orders()
-            ->where('id', $request->order_id)
+        $user = Auth::user();
+        $order = $user->orders()->where('id', $request->order_id)
             ->whereHas('orderStatus', function($q) {
                 $q->where('name', 'Thành công');
-            })
-            ->firstOrFail();
-        
-        $order->orderItems()
-            ->where('book_id', $request->book_id)
-            ->firstOrFail();
+            })->firstOrFail();
+        $order->orderItems()->where('book_id', $request->book_id)->firstOrFail();
 
+        // Kiểm tra đã đánh giá chưa (kể cả đã xóa mềm)
         $existingReview = Review::withTrashed()
             ->where('user_id', $user->id)
             ->where('book_id', $request->book_id)
             ->where('order_id', $order->id)
             ->first();
-
         if ($existingReview) {
-            if ($existingReview->trashed()) {
-                return redirect()->back()->with('error', 'Bạn đã xóa đánh giá cho sản phẩm này và không thể đánh giá lại');
-            }
             return redirect()->back()->with('error', 'Bạn đã đánh giá sản phẩm này rồi');
         }
-        
+
         Review::create([
-            'id' => (string) Str::uuid(),
             'user_id' => $user->id,
             'book_id' => $request->book_id,
             'order_id' => $order->id,
             'rating' => $request->rating,
             'comment' => $request->comment,
-            'status' => 'approved', 
+            'status' => 'approved',
         ]);
-        
+
         return redirect()->back()->with('success', 'Cảm ơn bạn đã đánh giá sản phẩm!');
     }
     
