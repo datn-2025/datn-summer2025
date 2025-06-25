@@ -13,8 +13,6 @@
             ['route' => 'account.profile', 'icon' => 'fas fa-user', 'title' => 'Thông tin cá nhân'],
             ['route' => 'account.orders.index', 'icon' => 'fas fa-shopping-bag', 'title' => 'Đơn hàng'],
             ['route' => 'account.purchase', 'icon' => 'fas fa-star', 'title' => 'Đánh giá'],
-            ['route' => 'account.addresses', 'icon' => 'fas fa-map-marker-alt', 'title' => 'Địa chỉ'],
-            ['route' => 'account.changePassword', 'icon' => 'fas fa-lock', 'title' => 'Đổi mật khẩu'],
             ['route' => 'home', 'icon' => 'fas fa-home', 'title' => 'Trang chủ'],
         ] as $item)
             <a href="{{ route($item['route']) }}" class="sidebar-link{{ request()->routeIs($item['route']) ? ' active' : '' }}">
