@@ -304,15 +304,12 @@
 
                                 <!-- Gửi -->
                                 <div class="col-auto ps-2">
-                                    <button type="submit" class="btn btn-danger rounded-circle p-2">
+                                    <button type="submit" class="btn btn-primary rounded-circle p-2">
                                         <i class="bx bx-send text-white"></i>
                                     </button>
                                 </div>
                             </div>
                         </form>
-
-
-
                     </div>
 
 
