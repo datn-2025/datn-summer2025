@@ -1,9 +1,10 @@
 <div class="sidebar-nav-outer">
     <div class="sidebar-profile">
-        <img src="{{ Auth::user()->avatar ?? 'https://ui-avatars.com/api/?name=' . urlencode(Auth::user()->name) . '&background=fff&color=111' }}" alt="User Avatar" class="sidebar-profile-avatar">
+        @php $user = Auth::user(); @endphp
+        <img src="{{ $user->avatar ? asset('storage/' . $user->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode($user->name) . '&background=fff&color=111' }}" alt="User Avatar" class="sidebar-profile-avatar">
         <div class="sidebar-profile-info text-center">
-            <div class="sidebar-profile-name font-semibold text-xl">{{ Auth::user()->name }}</div>
-            <div class="sidebar-profile-email text-sm text-gray-600">{{ Auth::user()->email }}</div>
+            <div class="sidebar-profile-name font-semibold text-xl">{{ $user->name }}</div>
+            <div class="sidebar-profile-email text-sm text-gray-600">{{ $user->email }}</div>
         </div>
     </div>
 
