@@ -48,7 +48,8 @@ class DatabaseSeeder extends Seeder
             InvoiceSeeder::class,
             InvoiceItemSeeder::class,
             WalletSeeder::class,
-            WalletTransactionSeeder::class
+            WalletTransactionSeeder::class,
+            ContactSeeder::class
         ]);
     }
 }

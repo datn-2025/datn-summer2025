@@ -29,11 +29,13 @@ class Order extends Model
         'recipient_name',
         'recipient_phone',
         'recipient_email',
-
+        'cancelled_at',
+        'cancellation_reason',
     ];
 
     protected $casts = [
-        'total_amount' => 'decimal:2'
+        'total_amount' => 'decimal:2',
+        'cancelled_at' => 'datetime',
     ];
 
     public $incrementing = false;
@@ -89,10 +91,10 @@ class Order extends Model
         return $this->hasMany(OrderItem::class);
     }
 
-     public function shipping()
-    {
-        return $this->hasOne(Shipping::class);
-    }
+    //  public function shipping()
+    // {
+    //     return $this->hasOne(Shipping::class);
+    // }
 
     protected static function boot()
     {

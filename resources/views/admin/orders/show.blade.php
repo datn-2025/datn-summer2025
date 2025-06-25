@@ -178,6 +178,7 @@
                                                     @elseif($order->orderStatus->name == 'Đang xử lý') bg-warning text-dark
                                                     @elseif($order->orderStatus->name == 'Đang giao hàng') bg-info
                                                     @elseif($order->orderStatus->name == 'Giao thất bại') bg-danger
+                                                    @elseif($order->orderStatus->name == 'Đã hủy') bg-danger
                                                     @elseif($order->orderStatus->name == 'Chờ xác nhận') bg-secondary
                                                     @else bg-dark  @endif">
                                                     {{ $order->orderStatus->name ?? 'N/A' }}
@@ -456,6 +457,40 @@
                                 </div>
                             </div>
                         </div>
+                        @if ($order->orderStatus->name == 'Đã hủy')
+                            <div class="mb-4">
+                                <div class="d-flex mb-2">
+                                    <div class="flex-shrink-0">
+                                        <div class="avatar-sm">
+                                            <div class="avatar-title bg-light text-danger rounded-circle shadow fs-3">
+                                                <i class="ri-calendar-close-line"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1 ms-3">
+                                        <h6 class="mb-1">Ngày hủy</h6>
+                                        <p class="text-muted mb-0">
+                                            {{ $order->cancelled_at ? \Carbon\Carbon::parse($order->cancelled_at)->format('d/m/Y H:i') : 'N/A' }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <div class="d-flex mb-2">
+                                    <div class="flex-shrink-0">
+                                        <div class="avatar-sm">
+                                            <div class="avatar-title bg-light text-danger rounded-circle shadow fs-3">
+                                                <i class="ri-file-text-line"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1 ms-3">
+                                        <h6 class="mb-1">Lý do hủy</h6>
+                                        <p class="text-muted mb-0">{{ $order->cancellation_reason ?? 'Không có' }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 </div>
 

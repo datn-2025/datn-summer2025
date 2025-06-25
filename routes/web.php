@@ -32,6 +32,7 @@ use App\Http\Controllers\Client\ClientOrderController;
 use App\Http\Controllers\Client\ClientReviewController;
 use App\Http\Controllers\Client\UserClientController;
 use App\Livewire\RevenueReport;
+use App\Http\Controllers\Admin\NotificationController;
 
 // Route QR code
 Route::get('storage/private/{filename}', function ($filename) {
@@ -344,6 +345,7 @@ Route::middleware(['auth:admin', 'admin'])->prefix('admin')->name('admin.')->gro
     // Route admin/orders
     Route::prefix('orders')->name('orders.')->group(function () {
         Route::get('/', [OrderController::class, 'index'])->name('index');
+        Route::get('/cancelled', [OrderController::class, 'cancelled'])->name('cancelled');
         Route::get('/show/{id}', [OrderController::class, 'show'])->name('show');
         Route::get('/edit/{id}', [OrderController::class, 'edit'])->name('edit');
         Route::put('/update/{id}', [OrderController::class, 'update'])->name('update');

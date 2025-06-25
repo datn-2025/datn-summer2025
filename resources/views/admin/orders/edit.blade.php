@@ -84,6 +84,20 @@
                                 </div>
                             </div>
 
+                            <div class="row mb-3" id="cancellation-reason-group" style="display: none;">
+                                <div class="col-12">
+                                    <div class="mb-3">
+                                        <label for="cancellation_reason" class="form-label">Lý do hủy</label>
+                                        <textarea class="form-control @error('cancellation_reason') is-invalid @enderror" id="cancellation_reason" name="cancellation_reason" rows="3" placeholder="Nhập lý do hủy đơn hàng">{{ old('cancellation_reason', $order->cancellation_reason) }}</textarea>
+                                        @error('cancellation_reason')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="row">
                                 <div class="col-12">
                                     <div class="alert alert-info" role="alert">
@@ -267,4 +281,31 @@
                 </div>
             </div>
         </div>
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const orderStatusSelect = document.getElementById('order_status_id');
+        const cancellationReasonGroup = document.getElementById('cancellation-reason-group');
+        const cancelledStatusName = 'Đã Hủy';
+
+        function toggleCancellationReason() {
+            const selectedOption = orderStatusSelect.options[orderStatusSelect.selectedIndex];
+            const selectedStatusName = selectedOption ? selectedOption.text.trim() : '';
+
+            if (selectedStatusName === cancelledStatusName) {
+                cancellationReasonGroup.style.display = 'flex';
+            } else {
+                cancellationReasonGroup.style.display = 'none';
+            }
+        }
+
+        // Initial check in case the page loads with the status already set
+        toggleCancellationReason();
+
+        // Listen for changes
+        orderStatusSelect.addEventListener('change', toggleCancellationReason);
+    });
+</script>
+@endpush
+
 @endsection

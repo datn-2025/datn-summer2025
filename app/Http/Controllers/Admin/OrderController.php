@@ -114,6 +114,7 @@ class OrderController extends Controller
         $request->validate([
             'order_status_id' => 'required|exists:order_statuses,id',
             'payment_status_id' => 'required|exists:payment_statuses,id',
+            'cancellation_reason' => 'nullable|string|max:255', // Thêm validation cho lý do hủy
         ]);
 
         try {
@@ -124,23 +125,28 @@ class OrderController extends Controller
             $newStatus = OrderStatus::findOrFail($request->order_status_id)->name;
             $allowed = OrderStatusHelper::getNextStatuses($currentStatus);
 
-            // ✅ Kiểm tra hợp lệ TRƯỚC khi cập nhật
             if (!in_array($newStatus, $allowed)) {
                 Toastr::error("Trạng thái mới không hợp lệ với trạng thái hiện tại", 'Lỗi');
                 return back()->withInput();
             }
 
-            $order->update([
+            $updateData = [
                 'order_status_id' => $request->order_status_id,
                 'payment_status_id' => $request->payment_status_id,
-            ]);
+            ];
 
-            // Ghi log
+            // Nếu trạng thái là 'Đã Hủy' và chưa có ngày hủy, cập nhật thông tin hủy
+            if ($newStatus == 'Đã Hủy' && is_null($order->cancelled_at)) {
+                $updateData['cancelled_at'] = now();
+                $updateData['cancellation_reason'] = $request->cancellation_reason;
+            }
+
+            $order->update($updateData);
+
             Log::info("Order {$order->id} status changed from {$currentStatus} to {$newStatus} by admin");
 
             DB::commit();
 
-            // Gửi mail thông báo cập nhật trạng thái đơn hàng qua queue
             dispatch(new SendOrderStatusUpdatedMail($order, $newStatus));
 
             Toastr::success('Cập nhật trạng thái đơn hàng thành công', 'Thành công');
@@ -182,4 +188,57 @@ class OrderController extends Controller
     //         Log::error('Error generating QR code: ' . $e->getMessage());
     //     }
     // }
+
+    public function cancelled(Request $request)
+    {
+        // Bắt đầu với các đơn hàng đã bị hủy
+        $query = Order::whereHas('orderStatus', function ($q) {
+            $q->where('name', 'Đã Hủy');
+        })->with(['user', 'address', 'orderStatus', 'paymentStatus'])
+          ->orderBy('created_at', 'desc');
+
+        $orderStatuses = OrderStatus::query()->get();
+        $paymentStatuses = PaymentStatus::query()->get();
+
+        // Áp dụng bộ lọc tìm kiếm nếu có
+        if ($request->has('search') ) {
+            $query->where(function($q) use ($request) {
+                $q->where('id', 'like', '%' . $request->search . '%')
+                  ->orWhereHas('user', function ($userQuery) use ($request) {
+                      $userQuery->where('name', 'like', '%' . $request->search . '%');
+                  });
+            });
+        }
+        if ($request->has('payment')) {
+            $query->whereHas('paymentStatus', function ($q) use ($request) {
+                $q->where('name', $request->payment);
+            });
+        }
+        if ($request->has('date')) {
+            $query->whereDate('created_at', $request->date);
+        }
+
+        $orders = $query->paginate(10);
+
+        // Lấy số lượng đơn hàng, tương tự như trong index
+        $cancelledCustomerCount = Order::whereHas('orderStatus', function ($q) {
+            $q->where('name', 'Đã Hủy');
+        })->distinct('user_id')->count('user_id');
+
+        $orderCounts = [
+            'total' => Order::count(),
+            'Chờ Xác Nhận' => Order::whereHas('orderStatus', function ($q) {
+                $q->where('name', 'Chờ Xác Nhận');
+            })->count(),
+            'Đã Giao Thành Công' => Order::whereHas('orderStatus', function ($q) {
+                $q->where('name', 'Đã Giao Thành Công');
+            })->count(),
+            'Đã Hủy' => Order::whereHas('orderStatus', function ($q) {
+                $q->where('name', 'Đã Hủy');
+            })->count(),
+            'cancelled_customers' => $cancelledCustomerCount,
+        ];
+
+        return view('admin.orders.cancelled', compact('orders', 'orderCounts', 'orderStatuses', 'paymentStatuses'));
+    }
 }

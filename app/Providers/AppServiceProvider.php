@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Pagination\Paginator;
 use App\Models\Payment;
 use App\Observers\PaymentObserver;
 
@@ -22,5 +23,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Payment::observe(PaymentObserver::class);
+        Paginator::useBootstrapFive();
     }
 }
