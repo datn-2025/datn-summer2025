@@ -46,16 +46,23 @@ class ReviewClientController extends Controller
         }
 
         // Sắp xếp: đơn hàng chưa đánh giá lên đầu, sau đó mới đến đơn hàng đã đánh giá
-        $orders = $query->select('orders.*')
-            ->leftJoin('reviews', function ($join) {
-                $join->on('orders.id', '=', 'reviews.order_id')
-                    ->whereNull('reviews.deleted_at');
-            })
-            ->groupBy('orders.id')
-            ->orderByRaw('COUNT(reviews.id) = 0 DESC') // Sắp xếp đơn hàng chưa đánh giá lên đầu
+        // $orders = $query->select('orders.*')
+        //     ->leftJoin('reviews', function ($join) {
+        //         $join->on('orders.id', '=', 'reviews.order_id')
+        //             ->whereNull('reviews.deleted_at');
+        //     })
+        //     ->groupBy('orders.id')
+        //     ->orderByRaw('COUNT(reviews.id) = 0 DESC') // Sắp xếp đơn hàng chưa đánh giá lên đầu
+        //     ->latest('orders.created_at') // Sau đó sắp xếp theo thời gian tạo mới nhất
+        //     ->paginate(10);
+
+        $orders = $query->withCount(['reviews' => function ($q) {
+            $q->whereNull('deleted_at');
+        }])
+            ->orderBy('reviews_count', 'asc') // Sắp xếp đơn hàng chưa đánh giá lên đầu
             ->latest('orders.created_at') // Sau đó sắp xếp theo thời gian tạo mới nhất
             ->paginate(10);
-
+            
         return view('clients.account.purchases', [
             'orders' => $orders,
             'currentType' => $type,
