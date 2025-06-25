@@ -73,6 +73,7 @@ class DatabaseSeeder extends Seeder
             RWishlistSeeder::class,
             RCartSeeder::class,            // Đưa CartSeeder xuống sau các bảng dữ liệu liên quan
             ROrderSeeder::class,
+            ROrderItemSeeder::class,
             InvoiceSeeder::class,
             RInvoiceItemSeeder::class,
             RWalletSeeder::class,

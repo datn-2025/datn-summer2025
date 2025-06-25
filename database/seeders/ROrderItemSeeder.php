@@ -3,83 +3,59 @@
 namespace Database\Seeders;
 
 use App\Models\OrderItem;
+use App\Models\Order;
+use App\Models\Book;
+use App\Models\BookFormat;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class ROrderItemSeeder extends Seeder
 {
     public function run(): void
     {
-        $orderItems = [
-            // Đơn hàng 1 - 3 sản phẩm
-            [
-                'order_id' => 1, // Lấy order_id từ bảng orders
-                'book_id' => 1, // Đắc Nhân Tâm
-                'book_format_id' => 1, // Bìa mềm
-                'quantity' => 2,
-                'price' => 150000,
-                'discount_price' => 135000,
-                'total_price' => 270000,
-            ],
-            [
-                'order_id' => 1,
-                'book_id' => 2, // Nhà Giả Kim
-                'book_format_id' => 1, // Bìa mềm
-                'quantity' => 1,
-                'price' => 120000,
-                'discount_price' => 108000,
-                'total_price' => 108000,
-            ],
-            [
-                'order_id' => 1,
-                'book_id' => 3, // Đời Ngắn Đừng Ngủ Dài
-                'book_format_id' => 1, // Bìa mềm
-                'quantity' => 1,
-                'price' => 72000,
-                'discount_price' => 72000,
-                'total_price' => 72000,
-            ],
-            
-            // Đơn hàng 2 - 2 sản phẩm
-            [
-                'order_id' => 2,
-                'book_id' => 4, // Tôi Tài Giỏi Bạn Cũng Thế
-                'book_format_id' => 1, // Bìa mềm
-                'quantity' => 1,
-                'price' => 120000,
-                'discount_price' => 108000,
-                'total_price' => 108000,
-            ],
-            [
-                'order_id' => 2,
-                'book_id' => 5, // Đừng Bao Giờ Đi Ăn Một Mình
-                'book_format_id' => 2, // Bìa cứng
-                'quantity' => 1,
-                'price' => 242000,
-                'discount_price' => 242000,
-                'total_price' => 242000,
-            ],
-            
-            // Đơn hàng 3 - 1 sản phẩm (đã hủy)
-            [
-                'order_id' => 3,
-                'book_id' => 6, // Dạy Con Làm Giàu
-                'book_format_id' => 1, // Bìa mềm
-                'quantity' => 1,
-                'price' => 350000,
-                'discount_price' => 250000,
-                'total_price' => 250000,
-            ],
-        ];
+        // Lấy tất cả các đơn hàng
+        $orders = Order::all();
 
-        foreach ($orderItems as $item) {
-            OrderItem::updateOrCreate(
-                [
-                    'order_id' => $item['order_id'],
-                    'book_id' => $item['book_id'],
-                    'book_format_id' => $item['book_format_id']
-                ],
-                $item
-            );
+        // Lặp qua từng đơn hàng và tạo các OrderItem
+        foreach ($orders as $order) {
+            // Giả sử mỗi đơn hàng có từ 1 đến 3 sản phẩm
+            $numOfItems = rand(1, 3);
+            
+            for ($i = 0; $i < $numOfItems; $i++) {
+                // Chọn ngẫu nhiên một quyển sách
+                $book = Book::inRandomOrder()->first();
+                // Chọn ngẫu nhiên một định dạng sách
+                $bookFormat = BookFormat::where('book_id', $book->id)->inRandomOrder()->first();
+                // Chọn số lượng sản phẩm ngẫu nhiên
+                $quantity = rand(1, 5);
+                // Giá của sách
+                $price = $bookFormat->price;
+                // Tính tổng tiền
+                $total = $price * $quantity;
+
+                // Tạo OrderItem mới
+                $orderItem = OrderItem::create([
+                    'id' => (string) Str::uuid(),
+                    'order_id' => $order->id,
+                    'book_id' => $book->id,
+                    'book_format_id' => $bookFormat->id,
+                    'quantity' => $quantity,
+                    'price' => $price,
+                    'total' => $total,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+
+                // Giả sử bạn có thêm một số thuộc tính cho OrderItem
+                // Thêm các AttributeValue nếu có
+                $attributeValues = $book->attributeValues->random(rand(1, 2)); // Lấy ngẫu nhiên 1-2 attributeValue cho sản phẩm
+                
+                // Dùng phương thức attach() để thêm liên kết giữa OrderItem và AttributeValue
+                foreach ($attributeValues as $attributeValue) {
+                    // Thêm vào bảng liên kết order_item_attribute_values
+                    $orderItem->attributeValues()->attach($attributeValue->id);
+                }
+            }
         }
     }
 }
