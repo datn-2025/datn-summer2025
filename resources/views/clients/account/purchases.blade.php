@@ -123,7 +123,7 @@
 <div id="reviewModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-40 flex items-center justify-center">
     <div class="bg-white shadow-lg w-full max-w-lg p-8 relative border border-black" style="border-radius:0;">
         <button type="button" class="absolute top-3 right-3 text-gray-400 hover:text-black text-2xl" onclick="closeReviewModal()">&times;</button>
-        <h2 class="text-xl font-bold mb-4 text-black">Đánh giá sản phẩm</h2>
+        <h2 class="text-xl font-bold mb-4 text-black">Sửa đánh giá sản phẩm</h2>
         <form id="reviewForm" action="{{ route('account.review.store') }}" method="POST" class="space-y-4">
             @csrf
             <input type="hidden" name="order_id" id="modal_order_id">
@@ -133,13 +133,13 @@
                 <span id="modal_book_name" class="font-semibold text-base text-black"></span>
             </div>
             <div>
-                <label class="block text-sm font-medium text-black mb-2">Đánh giá của bạn:</label>
-                <div class="flex items-center space-x-1" id="modal_star_rating">
-                    @for($i = 5; $i >= 1; $i--)
-                        <input type="radio" id="modal_star{{ $i }}" name="rating" value="{{ $i }}" class="sr-only">
-                        <label for="modal_star{{ $i }}" class="cursor-pointer text-3xl text-slate-300 hover:text-yellow-400 transition-colors duration-150" title="{{ $i }} sao">★</label>
+                <label class="block text-sm font-medium text-black mb-2">Số sao đánh giá:</label>
+                <div class="flex items-center mb-2">
+                    @for($i = 1; $i <= 5; $i++)
+                        <i class="fas fa-star {{ $i <= $review->rating ? 'text-yellow-400' : 'text-slate-300' }} text-3xl"></i>
                     @endfor
                 </div>
+                <div class="text-xs text-gray-500 mt-1">Bạn chỉ có thể sửa mô tả, không thể thay đổi số sao đã đánh giá.</div>
             </div>
             <div>
                 <textarea name="comment" id="modal_comment" rows="3"
@@ -147,7 +147,7 @@
                           placeholder="Nhận xét về sản phẩm..." required></textarea>
             </div>
             <button type="submit" class="w-full inline-flex items-center justify-center px-4 py-2 bg-black hover:bg-gray-900 text-white text-sm font-medium rounded-none transition-colors duration-200 focus:ring-2 focus:ring-black focus:ring-offset-2">
-                Gửi đánh giá
+                Lưu mô tả đánh giá
             </button>
         </form>
     </div>
