@@ -127,19 +127,19 @@ Route::middleware('auth')->group(function () {
         Route::delete('/addresses/{id}', [AddressClientController::class, 'destroy'])->name('addresses.destroy');
         Route::post('/addresses/{id}/set-default', [AddressClientController::class, 'setDefault'])->name('addresses.setDefault');
 
-        Route::get('/purchase', [UserClientController::class, 'index'])->name('purchase');
-        Route::post('/review', [UserClientController::class, 'storeReview'])->name('review.store');
-
-        Route::prefix('orders')->name('orders.')->group(function () {
-            Route::get('/', [OrderClientController::class, 'index'])->name('index');
-            Route::get('/{id}', [OrderClientController::class, 'show'])->name('show');
-            Route::put('/{id}', [OrderClientController::class, 'update'])->name('update');
-            Route::delete('/{id}', [OrderClientController::class, 'destroy'])->name('destroy');
-        });
+        Route::get('/purchase', [ReviewClientController::class, 'index'])->name('purchase');
+        Route::post('/review', [ReviewClientController::class, 'storeReview'])->name('review.store');
 
         Route::prefix('reviews')->name('reviews.')->group(function () {
             Route::put('/{id}', [ReviewClientController::class, 'update'])->name('update');
             Route::delete('/{id}', [ReviewClientController::class, 'destroy'])->name('destroy');
+        });
+
+          Route::prefix('orders')->name('orders.')->group(function () {
+            Route::get('/', [OrderClientController::class, 'index'])->name('index');
+            Route::get('/{id}', [OrderClientController::class, 'show'])->name('show');
+            Route::put('/{id}', [OrderClientController::class, 'update'])->name('update');
+            Route::delete('/{id}', [OrderClientController::class, 'destroy'])->name('destroy');
         });
     });
     // Đơn hàng checkout và storex
