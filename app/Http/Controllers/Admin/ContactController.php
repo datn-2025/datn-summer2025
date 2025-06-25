@@ -29,7 +29,15 @@ class ContactController extends Controller
         }
 
         $contacts = $query->orderBy('created_at', 'desc')->paginate(15);
-        return view('admin.contacts.index', compact('contacts'));
+
+        $contactCounts = [
+            'total_customers' => Contact::distinct('email')->count('email'),
+            'total_contacts' => Contact::count(),
+            'unreplied' => Contact::whereIn('status', ['new', 'processing'])->count(),
+            'replied' => Contact::whereIn('status', ['replied', 'closed'])->count(),
+        ];
+
+        return view('admin.contacts.index', compact('contacts', 'contactCounts'));
     }
 
     // Xem chi tiết liên hệ / khiếu nại
