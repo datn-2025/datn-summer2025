@@ -32,15 +32,13 @@ class ReviewClientController extends Controller
             ->with(['orderItems.book', 'reviews'])
             ->where('order_status_id', $completedStatus->id);
         
-        // Filter based on review status
         switch ($type) {
-            case '2': // Not reviewed
+            case '2': 
                 $query->whereDoesntHave('reviews');
                 break;
-            case '3': // Already reviewed
+            case '3':
                 $query->whereHas('reviews');
                 break;
-            // Default (type=1): Show all
         }
         
         // Sắp xếp: đơn hàng chưa đánh giá lên đầu, sau đó mới đến đơn hàng đã đánh giá
