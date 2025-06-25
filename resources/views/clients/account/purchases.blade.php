@@ -41,15 +41,24 @@
                                         </div>
                                         <div class="flex-1 min-w-0">
                                             <h4 class="text-lg font-medium text-slate-900 mb-3">{{ $item->book->name }}</h4>
-                                            <div class="space-y-1">
-                                                <p class="text-sm text-slate-600">
+                                            <p class="text-sm text-slate-600"><span class="font-medium">Tác giả:</span> {{ $item->book->author ?? 'N/A' }}</p>
+                                            <p class="text-sm text-slate-600"><span class="font-medium">Nhà xuất bản:</span> {{ $item->book->publisher ?? 'N/A' }}</p>
+                                            <p class="text-sm text-slate-600">
+                                                <span class="font-medium">Còn {{ $item->review_deadline }} ngày để đánh giá</span>
+                                            </p>
+                                            <p class="text-sm text-slate-600">
                                                     <span class="font-medium">Số lượng:</span> {{ $item->quantity }}
                                                 </p>
                                                 <p class="text-sm text-slate-600">
                                                     <span class="font-medium">Giá:</span>
                                                     <span class="text-red-600 font-semibold">{{ number_format($item->price, 0, ',', '.') }} đ</span>
                                                 </p>
-                                            </div>
+                                        </div>
+                                        <div class="flex items-center justify-between">
+                                            <a href="{{ route('account.order.details', $order->id) }}" class="text-blue-500">Xem chi tiết</a>
+                                            <form action="{{ route('account.review.form', ['order_id' => $order->id, 'book_id' => $item->book_id]) }}" method="GET">
+                                                <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded-lg">Đánh giá</button>
+                                            </form>
                                         </div>
                                     </div>
                                 @endforeach
