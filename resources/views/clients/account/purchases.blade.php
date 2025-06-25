@@ -7,7 +7,7 @@
     </div>
     <div class="p-8">
         <div class="flex space-x-1 mb-8 border-b border-black">
-            @foreach ([1 => 'Tất cả đơn hàng', 2 => 'Chưa đánh giá', 3 => 'Đã đánh giá'] as $type => $label)
+            @foreach ([1 => 'Tất cả đánh giá', 2 => 'Chưa đánh giá', 3 => 'Đã đánh giá'] as $type => $label)
                 <a href="{{ route('account.purchase', ['type' => $type]) }}"
                    class="flex-1 text-center px-6 py-3 text-base font-semibold border-b-2 transition
                        {{ request('type', '1') == $type ? 'border-black text-black bg-white' : 'border-transparent text-gray-500 hover:text-black hover:bg-gray-100' }}"
