@@ -21,7 +21,13 @@ class ProfileClientController extends Controller
         }
 
         $user = Auth::user();
-        return view('clients.profile.profile', compact('user'));
+        // Truyền $addresses nếu là tab Địa Chỉ
+        if ($request->get('type', '1') == 2) {
+            $addresses = $user->addresses()->orderBy('is_default', 'desc')->orderBy('created_at', 'desc')->get();
+        } else {
+            $addresses = null;
+        }
+        return view('clients.profile.profile', compact('user', 'addresses'));
     }
     public function updateProfile(Request $request)
     {
