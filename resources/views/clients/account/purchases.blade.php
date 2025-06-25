@@ -6,6 +6,7 @@
         <h1 class="text-2xl font-bold text-white uppercase tracking-wide">Đánh giá của tôi</h1>
     </div>
     <div class="p-8">
+        <!-- Tabs -->
         <div class="flex space-x-1 mb-8 border-b border-black">
             @foreach ([1 => 'Tất cả đánh giá', 2 => 'Chưa đánh giá', 3 => 'Đã đánh giá'] as $type => $label)
                 <a href="{{ route('account.purchase', ['type' => $type]) }}"
@@ -16,6 +17,8 @@
                 </a>
             @endforeach
         </div>
+
+        <!-- Orders List -->
         <div class="space-y-6">
             @forelse($orders as $order)
                 <div class="bg-white border border-black shadow transition hover:shadow-lg" style="border-radius:0;">
@@ -64,8 +67,19 @@
                                                 @endfor
                                             </div>
                                             <div class="text-sm text-slate-700 mb-2">{{ $review->comment ?? 'Không có nhận xét' }}</div>
+                                            <div class="flex gap-2">
+                                                @if($review->user_id === auth()->id())
+                                                    <button type="button" class="px-3 py-1 bg-black text-white text-xs font-medium rounded-none hover:bg-gray-900 transition-colors duration-150" onclick="showReviewModal('{{ $order->id }}', '{{ $item->book_id }}', '{{ addslashes($item->book->title) }}', '{{ $review->rating }}', '{{ addslashes($review->comment) }}')">Sửa đánh giá</button>
+                                                    <form action="{{ route('account.reviews.destroy', $review->id) }}" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn xóa đánh giá này?');" class="inline">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="px-3 py-1 bg-red-600 text-white text-xs font-medium rounded-none hover:bg-red-700 transition-colors duration-150">Xóa</button>
+                                                    </form>
+                                                @endif
+                                            </div>
                                         </div>
                                     @else
+                                        <!-- Quick Review Form -->
                                         <form action="{{ route('account.review.store') }}" method="POST" class="flex items-center gap-2 mb-2 quick-review-form">
                                             @csrf
                                             <input type="hidden" name="order_id" value="{{ $order->id }}">
@@ -141,6 +155,7 @@
 
 @push('scripts')
 <script>
+// JavaScript code for modal functionality and star rating
 function showReviewModal(orderId, bookId, bookName, rating, comment) {
     document.getElementById('reviewModal').classList.remove('hidden');
     document.getElementById('modal_order_id').value = orderId;
@@ -155,6 +170,7 @@ function showReviewModal(orderId, bookId, bookName, rating, comment) {
         document.getElementById('modal_star5').checked = true;
     }
 }
+
 function closeReviewModal() {
     document.getElementById('reviewModal').classList.add('hidden');
 }
