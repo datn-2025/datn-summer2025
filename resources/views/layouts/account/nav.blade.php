@@ -1,4 +1,3 @@
-{{-- layouts/account/nav.blade.php --}}
 <div class="sidebar-nav-outer">
     <div class="sidebar-profile">
         <img src="{{ Auth::user()->avatar ?? 'https://ui-avatars.com/api/?name=' . urlencode(Auth::user()->name) . '&background=fff&color=111' }}" alt="User Avatar" class="sidebar-profile-avatar">
@@ -37,25 +36,23 @@
         display: flex;
         flex-direction: column;
         height: 100%;
+        background: #fff;
     }
-    
+
     .sidebar-profile {
         display: flex;
         flex-direction: column;
         align-items: center;
         padding: 26px 8px 14px;
         border-bottom: 1px solid #111;
-        background: #fafbfc;
     }
-    
+
     .sidebar-profile-avatar {
         width: 80px;
         height: 80px;
-        border-radius: 0;
         object-fit: cover;
         border: 2px solid #111;
         margin-bottom: 12px;
-        background: #111;
         transition: border-color 0.18s;
     }
 
@@ -78,15 +75,12 @@
         color: #222;
         font-size: 0.98rem;
         font-weight: 600;
-        word-break: break-all;
         opacity: 0.92;
     }
 
-    /* Danh sách liên kết sidebar */
     .sidebar-nav-list {
         display: flex;
         flex-direction: column;
-        margin-top: 1px;
         flex: 1;
     }
 
@@ -99,29 +93,32 @@
         text-decoration: none;
         font-weight: 700;
         font-size: 1.01rem;
-        border-left: 2px solid transparent;
         border-bottom: 1px solid #e5e5e5;
         background: #fff;
-        transition: background 0.15s, color 0.15s, border-color 0.15s;
+        transition: background 0.15s, color 0.15s, transform 0.2s;
     }
 
-    .sidebar-link.active, .sidebar-link:hover {
+    .sidebar-link:hover, .sidebar-link.active {
         background: #111;
         color: #fff;
-        border-left: 2px solid #111;
+        transform: none;
     }
 
     .sidebar-link i {
         font-size: 1.08rem;
         color: #111;
-        transition: color 0.15s;
+        transition: color 0.2s, transform 0.2s;
     }
 
-    /* Nút đăng xuất */
+    .sidebar-link:hover i, .sidebar-link.active i {
+        color: #fff;
+        transform: scale(1.1);
+    }
+
     .sidebar-logout-btn {
         width: 100%;
         text-align: left;
-        color: #ef4444 !important;
+        color: red !important;
         background: none;
         border: none;
         padding: 13px 18px;
@@ -132,16 +129,15 @@
         gap: 12px;
         cursor: pointer;
         border-top: 1px solid #111;
-        transition: background 0.13s;
-        margin-top: auto;
+        transition: background 0.3s;
     }
 
     .sidebar-logout-btn:hover {
         background: #fbe9e9;
-        color: #b91c1c !important;
+        color: red !important;
     }
 
-    /* Media Queries cho các kích thước màn hình nhỏ */
+    /* Media Queries */
     @media (max-width: 1100px) {
         .sidebar-profile {
             padding: 16px 2px 8px;
@@ -149,7 +145,6 @@
         .sidebar-profile-avatar {
             width: 60px;
             height: 60px;
-            border-width: 2px;
         }
         .sidebar-link, .sidebar-logout-btn {
             padding: 10px 6px;
@@ -171,13 +166,12 @@
             border-bottom: 2px solid transparent;
             padding: 10px 12px;
             font-size: 0.95rem;
-            white-space: nowrap;
         }
 
         .sidebar-link.active, .sidebar-link:hover {
             background: #111;
             color: #fff;
-            border-bottom: 2px solid #111;
+            border-bottom: 2px solid #fff;
         }
 
         .sidebar-profile {
@@ -185,3 +179,4 @@
         }
     }
 </style>
+
