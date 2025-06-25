@@ -26,7 +26,7 @@
         max-width: 260px;
         width: 100%;
         background: #fff;
-        border: 2.5px solid #111;
+        border: 1px solid #111;
         box-shadow: 0 2px 12px rgba(0,0,0,0.07);
         border-radius: 0 !important;
         display: flex;
@@ -54,6 +54,7 @@
         .sidebar {
             min-width: 160px;
             max-width: 200px;
+            border: 1px solid #111;
         }
     }
     @media (max-width: 991px) {
@@ -68,6 +69,7 @@
         .sidebar {
             min-width: 120px;
             max-width: 140px;
+            border: 1px solid #111;
         }
         .main-content {
             padding: 0;

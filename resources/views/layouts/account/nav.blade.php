@@ -26,7 +26,7 @@
             </a>
         @endforeach
     </nav>
-    <form method="POST" action="{{ route('logout') }}" style="margin-top: 24px;">
+    <form method="POST" action="{{ route('logout') }}" style="margin-top: 18px;">
         @csrf
         <button type="submit" class="sidebar-logout-btn">
             <i class="fas fa-sign-out-alt"></i> Đăng xuất
@@ -47,39 +47,39 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 32px 12px 20px 12px;
-    border-bottom: 2px solid #111;
+    padding: 26px 8px 14px 8px;
+    border-bottom: 1px solid #111;
     background: #fafbfc;
     border-radius: 0 !important;
 }
 .sidebar-profile-avatar {
-    width: 92px;
-    height: 92px;
+    width: 80px;
+    height: 80px;
     border-radius: 0;
     object-fit: cover;
-    border: 5px solid #111;
-    margin-bottom: 16px;
+    border: 2px solid #111;
+    margin-bottom: 12px;
     background: #fff;
-    box-shadow: 0 6px 24px rgba(0,0,0,0.18);
+    box-shadow: none;
     display: block;
-    transition: box-shadow 0.2s;
+    transition: border-color 0.18s;
 }
 .sidebar-profile-avatar:hover {
-    box-shadow: 0 12px 36px rgba(0,0,0,0.22);
+    border-color: #333;
 }
 .sidebar-profile-info {
     text-align: center;
 }
 .sidebar-profile-name {
-    font-weight: 900;
+    font-weight: 800;
     color: #111;
-    font-size: 1.13rem;
+    font-size: 1.08rem;
     margin-bottom: 2px;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.3px;
 }
 .sidebar-profile-email {
     color: #222;
-    font-size: 1.01rem;
+    font-size: 0.98rem;
     font-weight: 600;
     word-break: break-all;
     opacity: 0.92;
@@ -88,40 +88,39 @@
     display: flex;
     flex-direction: column;
     gap: 0;
-    margin-top: 18px;
+    margin-top: 12px;
     flex: 1 1 auto;
 }
 .sidebar-link {
     display: flex;
     align-items: center;
-    gap: 14px;
-    padding: 16px 24px;
+    gap: 12px;
+    padding: 13px 18px;
     color: #111;
     text-decoration: none;
     border-radius: 0 !important;
     font-weight: 700;
-    font-size: 1.06rem;
-    border-left: 4px solid transparent;
-    border-bottom: 1.5px solid #eee;
-    transition: background 0.18s, color 0.18s, border-color 0.18s, box-shadow 0.18s;
+    font-size: 1.01rem;
+    border-left: 2px solid transparent;
+    border-bottom: 1px solid #e5e5e5;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
     background: #fff;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.3px;
     position: relative;
 }
 .sidebar-link.active, .sidebar-link:hover {
     background: #111;
     color: #fff;
-    border-left: 4px solid #111;
-    box-shadow: 0 2px 12px 0 rgba(0,0,0,0.10);
+    border-left: 2px solid #111;
 }
 .sidebar-link.active i, .sidebar-link:hover i {
     color: #fff;
 }
 .sidebar-link i {
-    font-size: 1.13rem;
-    min-width: 24px;
+    font-size: 1.08rem;
+    min-width: 22px;
     color: #111;
-    transition: color 0.18s;
+    transition: color 0.15s;
 }
 .sidebar-logout-btn {
     width: 100%;
@@ -129,16 +128,16 @@
     color: #ef4444 !important;
     background: none;
     border: none;
-    padding: 16px 24px;
+    padding: 13px 18px;
     font-weight: 700;
-    font-size: 1.06rem;
+    font-size: 1.01rem;
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 12px;
     border-radius: 0 !important;
     cursor: pointer;
-    border-top: 2px solid #111;
-    transition: background 0.15s;
+    border-top: 1px solid #111;
+    transition: background 0.13s;
     margin-top: auto;
 }
 .sidebar-logout-btn:hover {
@@ -147,16 +146,16 @@
 }
 @media (max-width: 1100px) {
     .sidebar-profile {
-        padding: 24px 4px 12px 4px;
+        padding: 16px 2px 8px 2px;
     }
     .sidebar-profile-avatar {
-        width: 72px;
-        height: 72px;
-        border-width: 4px;
+        width: 60px;
+        height: 60px;
+        border-width: 2px;
     }
     .sidebar-link, .sidebar-logout-btn {
-        padding: 12px 10px;
-        font-size: 0.98rem;
+        padding: 10px 6px;
+        font-size: 0.95rem;
     }
 }
 @media (max-width: 700px) {
@@ -164,15 +163,15 @@
         flex-direction: row;
         gap: 0;
         overflow-x: auto;
-        border-bottom: 2px solid #111;
+        border-bottom: 1px solid #111;
         margin-top: 0;
     }
     .sidebar-link {
         border-left: none;
         border-bottom: 2px solid transparent;
         border-radius: 0 !important;
-        padding: 12px 18px;
-        font-size: 0.98rem;
+        padding: 10px 12px;
+        font-size: 0.95rem;
         white-space: nowrap;
     }
     .sidebar-link.active, .sidebar-link:hover {
@@ -182,7 +181,7 @@
         border-left: none;
     }
     .sidebar-profile {
-        padding: 18px 0 8px 0;
+        padding: 10px 0 4px 0;
     }
 }
 </style>
