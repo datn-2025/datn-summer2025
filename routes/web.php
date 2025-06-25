@@ -27,6 +27,7 @@ use App\Http\Controllers\Client\UserClientController;
 use App\Http\Controllers\Client\ClientReviewController;
 use App\Http\Controllers\Client\ClientOrderController;
 use App\Http\Controllers\cart\CartController;
+use App\Http\Controllers\ChatWidgetController;
 
 // Route QR code
 Route::get('storage/private/{filename}', function ($filename) {
@@ -52,6 +53,10 @@ Route::prefix('cart')->group(function () {
     // Route::post('/apply-voucher', [CartController::class, 'applyVoucher'])->name('cart.apply-voucher');
     Route::post('/remove-voucher', [CartController::class, 'removeVoucher'])->name('cart.remove-voucher');
 });
+
+
+
+
 
 // danh sach yeu thich
 Route::get('/wishlist', [WishlistController::class, 'getWishlist'])->name('wishlist.index');
@@ -84,6 +89,8 @@ Route::post('/contact', [ContactController::class, 'submitForm'])->name('contact
 Route::get('/news', [NewsController::class, 'index'])->name('news.index');
 Route::get('/news/{id}', [NewsController::class, 'show'])->name('news.show');
 
+// chat realtime
+Route::get('/chat-widget', [ChatWidgetController::class, 'index']);
 // Route nhóm admin
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/login', [AdminAuthController::class, 'showLoginForm'])->name('login');
@@ -589,4 +596,4 @@ Route::middleware('auth')->group(function () {
 //     });
 // });
        //Cổng thanh toán
-       Route::post('vnpay_payment', [PaymentController::class, 'vnpay_payment']);
+    //    Route::post('vnpay_payment', [PaymentController::class, 'vnpay_payment']);
