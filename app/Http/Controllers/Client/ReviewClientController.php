@@ -14,51 +14,54 @@ use Illuminate\Support\Str;
 
 class ReviewClientController extends Controller
 {
-     public function index(Request $request)
+    public function index(Request $request)
     {
         if (!Auth::check()) {
             return redirect()->route('login')->with('error', 'Vui lòng đăng nhập để xem đánh giá');
         }
-    
+
         $user = Auth::user();
         $type = $request->query('type', '1');
-        
+
+        // Get completed orders (assuming status 'Thành công' means completed)
         $completedStatus = OrderStatus::where('name', 'Thành công')->first();
-        
+
         if (!$completedStatus) {
             return redirect()->back()->with('error', 'Không tìm thấy trạng thái đơn hàng đã hoàn thành');
         }
-        
+
         $query = $user->orders()
             ->with(['orderItems.book', 'reviews'])
             ->where('order_status_id', $completedStatus->id);
-        
+
+        // Filter based on review status
         switch ($type) {
-            case '2': 
+            case '2': // Not reviewed
                 $query->whereDoesntHave('reviews');
                 break;
-            case '3':
+            case '3': // Already reviewed
                 $query->whereHas('reviews');
                 break;
+                // Default (type=1): Show all
         }
-        
+
         // Sắp xếp: đơn hàng chưa đánh giá lên đầu, sau đó mới đến đơn hàng đã đánh giá
         $orders = $query->select('orders.*')
-            ->leftJoin('reviews', function($join) {
+            ->leftJoin('reviews', function ($join) {
                 $join->on('orders.id', '=', 'reviews.order_id')
-                     ->whereNull('reviews.deleted_at');
+                    ->whereNull('reviews.deleted_at');
             })
             ->groupBy('orders.id')
             ->orderByRaw('COUNT(reviews.id) = 0 DESC') // Sắp xếp đơn hàng chưa đánh giá lên đầu
             ->latest('orders.created_at') // Sau đó sắp xếp theo thời gian tạo mới nhất
             ->paginate(10);
-        
+
         return view('clients.account.purchases', [
             'orders' => $orders,
             'currentType' => $type,
         ]);
     }
-    
+
     public function storeReview(Request $request)
     {
         Log::info('Review data:', $request->all());
@@ -68,78 +71,109 @@ class ReviewClientController extends Controller
             'order_id' => 'required|exists:orders,id',
             'book_id' => 'required|exists:books,id',
             'rating' => 'required|integer|min:1|max:5',
-            // comment có thể null nếu là đánh giá nhanh
-            'comment' => 'nullable|string|max:1000',
+            'comment' => 'required|string|max:1000',
         ], [
             'order_id.required' => 'Đơn hàng không hợp lệ',
             'book_id.required' => 'Sách không hợp lệ',
             'rating.required' => 'Đánh giá không hợp lệ',
+            'comment.required' => 'Nội dung đánh giá không hợp lệ',
             'rating.min' => 'Đánh giá phải từ 1 đến 5',
             'rating.max' => 'Đánh giá phải từ 1 đến 5',
             'comment.max' => 'Nội dung đánh giá không hợp lệ'
         ]);
 
         $user = Auth::user();
-        $order = $user->orders()->where('id', $request->order_id)
-            ->whereHas('orderStatus', function($q) {
-                $q->where('name', 'Thành công');
-            })->firstOrFail();
-        $order->orderItems()->where('book_id', $request->book_id)->firstOrFail();
 
-        // Kiểm tra đã đánh giá chưa (kể cả đã xóa mềm)
+        // Check if the order belongs to the user and is completed
+        $order = $user->orders()
+            ->where('id', $request->order_id)
+            ->whereHas('orderStatus', function ($q) {
+                $q->where('name', 'Thành công');
+            })
+            ->firstOrFail();
+
+        // Check if the book is in the order
+        $order->orderItems()
+            ->where('book_id', $request->book_id)
+            ->firstOrFail();
+
+        // Check if review already exists
+        // $existingReview = Review::where('user_id', $user->id)
+        //     ->where('book_id', $request->book_id)
+        //     ->where('order_id', $order->id)
+        //     ->exists();
+
+        // if ($existingReview) {
+        //     return redirect()->back()->with('error', 'Bạn đã đánh giá sản phẩm này rồi');
+        // }
         $existingReview = Review::withTrashed()
             ->where('user_id', $user->id)
             ->where('book_id', $request->book_id)
             ->where('order_id', $order->id)
             ->first();
+
         if ($existingReview) {
+            if ($existingReview->trashed()) {
+                return redirect()->back()->with('error', 'Bạn đã xóa đánh giá cho sản phẩm này và không thể đánh giá lại');
+            }
             return redirect()->back()->with('error', 'Bạn đã đánh giá sản phẩm này rồi');
         }
 
+        // Create the review
         Review::create([
+            'id' => (string) Str::uuid(),
             'user_id' => $user->id,
             'book_id' => $request->book_id,
             'order_id' => $order->id,
             'rating' => $request->rating,
             'comment' => $request->comment,
-            'status' => 'approved',
+            'status' => 'approved', // or 'pending' if you want to moderate reviews
         ]);
 
         return redirect()->back()->with('success', 'Cảm ơn bạn đã đánh giá sản phẩm!');
     }
-    
+
     public function update(Request $request, $id)
     {
         $review = Review::findOrFail($id);
-        if ($review->user_id !== Auth::id()) {
-            abort(403);
-        }
-        $timeLimit = $review->created_at->addHours(24);
-        if (now()->gt($timeLimit)) {
-            return redirect()->route('account.purchase')->with('error', 'Chỉ có thể cập nhật đánh giá trong vòng 24 giờ');
-        }
-        $validated = $request->validate([
-            'comment' => 'required|string|max:1000',
-        ]);
-        // Nếu không thay đổi gì thì thông báo info và quay lại danh sách
-        if ($review->comment === $validated['comment']) {
-            return redirect()->route('account.purchase')->with('info', 'Không có thay đổi nào cho đánh giá.');
-        }
-        $review->update([
-            'comment' => $validated['comment'],
-        ]);
-        return redirect()->route('account.purchase')->with('success', 'Cập nhật đánh giá thành công');
-    }
-    
-    public function destroy($id)
-    {
-        $review = Review::findOrFail($id);
-        
+
         // Kiểm tra quyền sở hữu
         if ($review->user_id !== Auth::id()) {
             abort(403);
         }
-        
+
+        // Kiểm tra thời gian (24h)
+        $timeLimit = $review->created_at->addHours(24);
+        if (now()->gt($timeLimit)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Chỉ có thể cập nhật đánh giá trong vòng 24 giờ'
+            ], 403);
+        }
+
+        $validated = $request->validate([
+            'rating' => 'required|integer|min:1|max:5',
+            'comment' => 'required|string|max:1000',
+        ]);
+
+        $review->update($validated);
+
+        // return response()->json([
+        //     'success' => true,
+        //     'message' => 'Cập nhật đánh giá thành công'
+        // ]);
+        return redirect()->back()->with('success', 'Cập nhật đánh giá thành công');
+    }
+
+    public function destroy($id)
+    {
+        $review = Review::findOrFail($id);
+
+        // Kiểm tra quyền sở hữu
+        if ($review->user_id !== Auth::id()) {
+            abort(403);
+        }
+
         // Kiểm tra thời gian (7 ngày)
         $timeLimit = $review->created_at->addDays(7);
         if (now()->gt($timeLimit)) {
@@ -148,9 +182,13 @@ class ReviewClientController extends Controller
                 'message' => 'Chỉ có thể xóa đánh giá trong vòng 7 ngày'
             ], 403);
         }
-        
+
         $review->delete();
-        
+
+        // return response()->json([
+        //     'success' => true,
+        //     'message' => 'Đã xóa đánh giá'
+        // ]);
         return redirect()->back()->with('success', 'Xóa đánh giá thành công');
     }
 }

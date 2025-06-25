@@ -132,6 +132,24 @@
                 <span class="block text-sm font-medium text-black mb-1">Sản phẩm:</span>
                 <span id="modal_book_name" class="font-semibold text-base text-black"></span>
             </div>
+            <div class="grid grid-cols-2 gap-4 mb-2">
+                <div><span class="block text-xs text-gray-500">Mã đơn hàng:</span><span id="modal_order_code" class="font-semibold text-sm text-black"></span></div>
+                <div><span class="block text-xs text-gray-500">Trạng thái:</span><span id="modal_order_status" class="font-semibold text-sm text-black"></span></div>
+                <div><span class="block text-xs text-gray-500">Vận chuyển:</span><span id="modal_shipping_method" class="font-semibold text-sm text-black"></span></div>
+                <div><span class="block text-xs text-gray-500">Địa chỉ nhận:</span><span id="modal_shipping_address" class="font-semibold text-sm text-black"></span></div>
+                <div><span class="block text-xs text-gray-500">Phương thức thanh toán:</span><span id="modal_payment_method" class="font-semibold text-sm text-black"></span></div>
+                <div><span class="block text-xs text-gray-500">Thời gian đặt hàng:</span><span id="modal_order_created_at" class="font-semibold text-sm text-black"></span></div>
+                <div><span class="block text-xs text-gray-500">Thời gian thanh toán:</span><span id="modal_order_paid_at" class="font-semibold text-sm text-black"></span></div>
+                <div><span class="block text-xs text-gray-500">Thời gian hoàn thành:</span><span id="modal_order_completed_at" class="font-semibold text-sm text-black"></span></div>
+            </div>
+            <div class="mb-2"><span class="block text-xs text-gray-500">Giá sản phẩm:</span><span id="modal_book_price" class="font-semibold text-sm text-black"></span></div>
+            <div class="mb-2"><span class="block text-xs text-gray-500">Số lượng:</span><span id="modal_book_quantity" class="font-semibold text-sm text-black"></span></div>
+            <div class="mb-2"><span class="block text-xs text-gray-500">Tác giả:</span><span id="modal_book_author" class="font-semibold text-sm text-black"></span></div>
+            <div class="mb-2"><span class="block text-xs text-gray-500">Nhà xuất bản/Brand:</span><span id="modal_book_brand" class="font-semibold text-sm text-black"></span></div>
+            <div class="mb-2"><span class="block text-xs text-gray-500">Tổng tiền hàng:</span><span id="modal_order_subtotal" class="font-semibold text-sm text-black"></span></div>
+            <div class="mb-2"><span class="block text-xs text-gray-500">Phí vận chuyển:</span><span id="modal_order_shipping_fee" class="font-semibold text-sm text-black"></span></div>
+            <div class="mb-2"><span class="block text-xs text-gray-500">Voucher giảm giá:</span><span id="modal_order_voucher" class="font-semibold text-sm text-black"></span></div>
+            <div class="mb-2"><span class="block text-xs text-gray-500">Thành tiền:</span><span id="modal_order_total" class="font-semibold text-sm text-red-600"></span></div>
             <div>
                 <label class="block text-sm font-medium text-black mb-2">Số sao đánh giá:</label>
                 <div class="flex items-center space-x-1" id="modal_star_rating">
@@ -144,7 +162,7 @@
             <div>
                 <textarea name="comment" id="modal_comment" rows="3"
                           class="w-full px-3 py-2 border border-black rounded-none focus:ring-2 focus:ring-black focus:border-black transition-colors duration-200 text-sm resize-none text-black bg-white"
-                          placeholder="Nhận xét về sản phẩm..."></textarea>
+                          placeholder="Nhận xét về sản phẩm..." required></textarea>
             </div>
             <button type="submit" class="w-full inline-flex items-center justify-center px-4 py-2 bg-black hover:bg-gray-900 text-white text-sm font-medium rounded-none transition-colors duration-200 focus:ring-2 focus:ring-black focus:ring-offset-2">
                 Gửi đánh giá chi tiết
@@ -157,29 +175,58 @@
 <div id="editReviewModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-40 flex items-center justify-center">
     <div class="bg-white shadow-lg w-full max-w-lg p-8 relative border border-black" style="border-radius:0;">
         <button type="button" class="absolute top-3 right-3 text-gray-400 hover:text-black text-2xl" onclick="closeEditReviewModal()">&times;</button>
-        <h2 class="text-xl font-bold mb-4 text-black">Sửa mô tả đánh giá</h2>
+        <h2 class="text-xl font-bold mb-4 text-black">Sửa đánh giá sản phẩm</h2>
         <form id="editReviewForm" action="" method="POST" class="space-y-4">
             @csrf
             @method('PUT')
             <input type="hidden" name="review_id" id="edit_modal_review_id">
+            <input type="hidden" name="order_id" id="edit_modal_order_id">
+            <input type="hidden" name="book_id" id="edit_modal_book_id">
             <div class="mb-2">
-                <span class="block text-sm font-medium text-black mb-1">Sản phẩm:</span>
+                <span class="block text-sm font-medium text-black mb-1">Sản phẩm: {{ $item->book->title }}</span>
                 <span id="edit_modal_book_name" class="font-semibold text-base text-black"></span>
+            </div>
+            <!-- @php
+                print_r($item->order);
+            @endphp -->
+            <div class="grid grid-cols-2 gap-4 mb-2">
+                <div><span class="block text-xs text-gray-500">Mã đơn hàng: {{ $item->order->id }}</span><span id="edit_modal_order_code" class="font-semibold text-sm text-black"></span></div>
+                <div><span class="block text-xs text-gray-500">Trạng thái: {{ $item->order->status }}</span><span id="edit_modal_order_status" class="font-semibold text-sm text-black"></span></div>
+                <div><span class="block text-xs text-gray-500">Vận chuyển: {{ $item->order->shipping_method }}</span><span id="edit_modal_shipping_method" class="font-semibold text-sm text-black"></span></div>
+                <div><span class="block text-xs text-gray-500">Địa chỉ nhận: {{ $item->order->shipping_address }}</span><span id="edit_modal_shipping_address" class="font-semibold text-sm text-black"></span></div>
+                <div><span class="block text-xs text-gray-500">Phương thức thanh toán: {{ $item->order->payment_method }}</span><span id="edit_modal_payment_method" class="font-semibold text-sm text-black"></span></div>
+                <div><span class="block text-xs text-gray-500">Thời gian đặt hàng: {{ $item->order->created_at }}</span><span id="edit_modal_order_created_at" class="font-semibold text-sm text-black"></span></div>
+                <div><span class="block text-xs text-gray-500">Thời gian thanh toán: {{ $item->order->paid_at }}</span><span id="edit_modal_order_paid_at" class="font-semibold text-sm text-black"></span></div>
+                <div><span class="block text-xs text-gray-500">Thời gian hoàn thành: {{ $item->order->completed_at }}</span><span id="edit_modal_order_completed_at" class="font-semibold text-sm text-black"></span></div>
+            </div>
+            <div class="mb-2">
+                <span class="block text-xs text-gray-500">Số lượng: {{ $item->quantity }}</span> <span id="edit_modal_book_quantity" class="font-semibold text-sm text-black"></span>
+                <span class="block text-xs text-gray-500">Tác giả: {{ $item->book->author->name }}</span> <span id="edit_modal_book_author" class="font-semibold text-sm text-black"></span>
+                <span class="block text-xs text-gray-500">Nhà xuất bản: {{ $item->book->brand->name }}</span> <span id="edit_modal_book_brand" class="font-semibold text-sm text-black"></span>
+                <span class="block text-xs text-gray-500">Giá: {{ $item->book->price }}</span> <span id="edit_modal_book_price" class="font-semibold text-sm text-black"></span>
+            </div>
+            <div class="mb-2">
+                <span class="block text-xs text-gray-500">Tổng tiền hàng:</span> <span id="edit_modal_order_subtotal" class="font-semibold text-sm text-black"></span>
+                <span class="block text-xs text-gray-500">Phí vận chuyển:</span> <span id="edit_modal_order_shipping_fee" class="font-semibold text-sm text-black"></span>
+                <span class="block text-xs text-gray-500">Voucher giảm:</span> <span id="edit_modal_order_voucher_discount" class="font-semibold text-sm text-black"></span>
+                <span class="block text-xs text-gray-500">Thành tiền:</span> <span id="edit_modal_order_total" class="font-semibold text-sm text-red-600"></span>
             </div>
             <div>
                 <label class="block text-sm font-medium text-black mb-2">Số sao đánh giá:</label>
-                <div class="flex items-center mb-2" id="edit_modal_star_display">
-                    <!-- Số sao sẽ render bằng JS -->
+                <div class="flex items-center space-x-1" id="edit_modal_star_rating">
+                    @for($i = 5; $i >= 1; $i--)
+                        <input type="radio" id="edit_modal_star{{ $i }}" name="rating" value="{{ $i }}" class="sr-only">
+                        <label for="edit_modal_star{{ $i }}" class="cursor-pointer text-3xl text-slate-300 hover:text-yellow-400 transition-colors duration-150" title="{{ $i }} sao">★</label>
+                    @endfor
                 </div>
-                <div class="text-xs text-gray-500 mt-1">Bạn chỉ có thể sửa mô tả, không thể thay đổi số sao đã đánh giá.</div>
             </div>
             <div>
                 <textarea name="comment" id="edit_modal_comment" rows="3"
                           class="w-full px-3 py-2 border border-black rounded-none focus:ring-2 focus:ring-black focus:border-black transition-colors duration-200 text-sm resize-none text-black bg-white"
-                          placeholder="Nhận xét về sản phẩm..."></textarea>
+                          placeholder="Nhận xét về sản phẩm..." required></textarea>
             </div>
             <button type="submit" class="w-full inline-flex items-center justify-center px-4 py-2 bg-black hover:bg-gray-900 text-white text-sm font-medium rounded-none transition-colors duration-200 focus:ring-2 focus:ring-black focus:ring-offset-2">
-                Lưu mô tả đánh giá
+                Lưu đánh giá
             </button>
         </form>
     </div>
@@ -202,26 +249,72 @@ function showReviewModal(orderId, bookId, bookName, rating, comment) {
     } else {
         document.getElementById('modal_star5').checked = true;
     }
+
+    // Load thêm thông tin đơn hàng, sản phẩm
+    axios.get('/account/orders/' + orderId + '/items/' + bookId)
+        .then(function(response) {
+            var data = response.data;
+            document.getElementById('modal_order_code').textContent = data.order_code;
+            document.getElementById('modal_order_status').textContent = data.status;
+            document.getElementById('modal_shipping_method').textContent = data.shipping_method;
+            document.getElementById('modal_shipping_address').textContent = data.shipping_address;
+            document.getElementById('modal_payment_method').textContent = data.payment_method;
+            document.getElementById('modal_order_created_at').textContent = data.created_at;
+            document.getElementById('modal_order_paid_at').textContent = data.paid_at;
+            document.getElementById('modal_order_completed_at').textContent = data.completed_at;
+            document.getElementById('modal_book_price').textContent = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(data.price);
+            document.getElementById('modal_book_quantity').textContent = data.quantity;
+            document.getElementById('modal_book_author').textContent = data.author;
+            document.getElementById('modal_book_brand').textContent = data.brand;
+            document.getElementById('modal_order_subtotal').textContent = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(data.subtotal);
+            document.getElementById('modal_order_shipping_fee').textContent = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(data.shipping_fee);
+            document.getElementById('modal_order_voucher').textContent = data.voucher ? data.voucher : 'Không có';
+            document.getElementById('modal_order_total').textContent = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(data.total);
+        })
+        .catch(function(error) {
+            console.error('Có lỗi xảy ra khi tải thông tin đơn hàng:', error);
+        });
 }
 
 function closeReviewModal() {
     document.getElementById('reviewModal').classList.add('hidden');
 }
 
-function showEditReviewModal(reviewId, bookName, rating, comment) {
+function showEditReviewModal(reviewId, orderId, bookId, bookName, rating, comment) {
     document.getElementById('editReviewModal').classList.remove('hidden');
     document.getElementById('edit_modal_review_id').value = reviewId;
+    document.getElementById('edit_modal_order_id').value = orderId;
+    document.getElementById('edit_modal_book_id').value = bookId;
     document.getElementById('edit_modal_book_name').textContent = bookName;
     document.getElementById('edit_modal_comment').value = comment || '';
-    // Render số sao cứng
-    let starHtml = '';
-    for (let i = 1; i <= 5; i++) {
-        starHtml += `<i class=\"fas fa-star ${i <= rating ? 'text-yellow-400' : 'text-slate-300'} text-3xl\"></i>`;
+    // Reset all stars
+    document.querySelectorAll('#edit_modal_star_rating input[type=radio]').forEach(r => r.checked = false);
+    if (rating) {
+        document.getElementById('edit_modal_star' + rating).checked = true;
+    } else {
+        document.getElementById('edit_modal_star5').checked = true;
     }
-    document.getElementById('edit_modal_star_display').innerHTML = starHtml;
-    // Set form action đúng route update
-    var form = document.getElementById('editReviewForm');
-    form.action = '/account/reviews/' + reviewId;
+    // Load thêm thông tin đơn hàng, sản phẩm
+    axios.get('/account/orders/' + orderId + '/items/' + bookId)
+        .then(function(response) {
+            var data = response.data;
+            document.getElementById('edit_modal_order_code').textContent = data.order_code;
+            document.getElementById('edit_modal_order_status').textContent = data.status;
+            document.getElementById('edit_modal_shipping_method').textContent = data.shipping_method;
+            document.getElementById('edit_modal_shipping_address').textContent = data.shipping_address;
+            document.getElementById('edit_modal_payment_method').textContent = data.payment_method;
+            document.getElementById('edit_modal_order_created_at').textContent = data.created_at;
+            document.getElementById('edit_modal_order_paid_at').textContent = data.paid_at;
+            document.getElementById('edit_modal_order_completed_at').textContent = data.completed_at;
+            document.getElementById('edit_modal_book_price').textContent = data.price;
+            document.getElementById('edit_modal_book_quantity').textContent = data.quantity;
+            document.getElementById('edit_modal_book_author').textContent = data.author;
+            document.getElementById('edit_modal_book_brand').textContent = data.brand;
+            document.getElementById('edit_modal_order_subtotal').textContent = data.subtotal;
+            document.getElementById('edit_modal_order_shipping_fee').textContent = data.shipping_fee;
+            document.getElementById('edit_modal_order_voucher_discount').textContent = data.voucher_discount;
+            document.getElementById('edit_modal_order_total').textContent = data.total;
+        });
 }
 
 function closeEditReviewModal() {
