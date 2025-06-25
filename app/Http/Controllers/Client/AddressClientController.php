@@ -17,15 +17,27 @@ class AddressClientController extends Controller
 
     public function index()
     {
+        // Lấy tất cả địa chỉ của người dùng, sắp xếp theo mặc định trước, sau đó theo thời gian tạo
         $addresses = Auth::user()->addresses()->orderBy('is_default', 'desc')->orderBy('created_at', 'desc')->get();
-        return view('clients.profile.profile', compact('addresses'));
+
+        dd($addresses);  // Dùng dd() để kiểm tra dữ liệu trả về
+        // Kiểm tra xem có địa chỉ nào không
+        if ($addresses->isEmpty()) {
+            Log::info('No addresses found for the user.');
+        } else {
+            Log::info('Addresses:', $addresses->toArray());  // Log để kiểm tra
+        }
+
+        // Trả về view và truyền dữ liệu $addresses
+        return view('clients.profile.profile', compact('addresses'));  // Chắc chắn rằng $addresses được truyền vào view
     }
 
     public function store(Request $request)
     {
-        // Log incoming request data for debugging
+        // Log dữ liệu request để kiểm tra
         Log::info('Address store request data:', $request->all());
-        
+
+        // Validate dữ liệu từ form
         $request->validate([
             'city' => 'required|string|max:255',
             'district' => 'required|string|max:255',
@@ -44,6 +56,7 @@ class AddressClientController extends Controller
             // Nếu đây là địa chỉ đầu tiên, tự động đặt làm mặc định
             $isFirstAddress = Auth::user()->addresses()->count() == 0;
 
+            // Tạo mới địa chỉ
             $address = Auth::user()->addresses()->create([
                 'city' => $request->city,
                 'district' => $request->district,
@@ -51,7 +64,7 @@ class AddressClientController extends Controller
                 'address_detail' => $request->address_detail,
                 'is_default' => $request->is_default || $isFirstAddress
             ]);
-            
+
             Log::info('Address created successfully:', $address->toArray());
 
             DB::commit();
@@ -61,7 +74,6 @@ class AddressClientController extends Controller
                 'message' => 'Thêm địa chỉ thành công!',
                 'address' => $address
             ]);
-
         } catch (\Exception $e) {
             DB::rollback();
             Log::error('Address store error: ' . $e->getMessage());
@@ -75,12 +87,14 @@ class AddressClientController extends Controller
 
     public function edit($id)
     {
+        // Lấy địa chỉ theo ID
         $address = Auth::user()->addresses()->findOrFail($id);
         return response()->json($address);
     }
 
     public function update(Request $request, $id)
     {
+        // Validate dữ liệu từ form
         $request->validate([
             'city' => 'required|string|max:255',
             'district' => 'required|string|max:255',
@@ -113,7 +127,6 @@ class AddressClientController extends Controller
                 'message' => 'Cập nhật địa chỉ thành công!',
                 'address' => $address
             ]);
-
         } catch (\Exception $e) {
             DB::rollback();
             Log::error('Address update error: ' . $e->getMessage());
@@ -139,7 +152,7 @@ class AddressClientController extends Controller
 
             $address->delete();
 
-            // Nếu xóa địa chỉ mặu định cuối cùng, đặt địa chỉ đầu tiên (nếu có) làm mặc định
+            // Nếu xóa địa chỉ mặc định cuối cùng, đặt địa chỉ đầu tiên (nếu có) làm mặc định
             if (Auth::user()->addresses()->count() > 0 && !Auth::user()->addresses()->where('is_default', true)->exists()) {
                 Auth::user()->addresses()->first()->update(['is_default' => true]);
             }
@@ -148,7 +161,6 @@ class AddressClientController extends Controller
                 'success' => true,
                 'message' => 'Xóa địa chỉ thành công!'
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -175,7 +187,6 @@ class AddressClientController extends Controller
                 'success' => true,
                 'message' => 'Đã đặt làm địa chỉ mặc định!'
             ]);
-
         } catch (\Exception $e) {
             DB::rollback();
             return response()->json([
