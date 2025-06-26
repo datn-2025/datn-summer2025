@@ -19,7 +19,8 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            SettingsSeeder::class,      // Thêm Settings trước
+            SettingsSeeder::class,    
+            // // Thêm Settings trước
             // RoleSeeder::class,
             // ActiveUserSeeder::class,
             // UserSeeder::class,
@@ -30,10 +31,10 @@ class DatabaseSeeder extends Seeder
             // AttributeValueSeeder::class,
             // NewsArticleSeeder::class,
             // BookSeeder::class,            // Book sẽ tự tạo Format, Image và Attribute Values
-            // Bỏ 3 seeder này vì đã được xử lý trong BookSeeder
-            // BookFormatSeeder::class,
-            // BookAttributeValueSeeder::class,
-            // BookImageSeeder::class,
+            // // Bỏ 3 seeder này vì đã được xử lý trong BookSeeder
+            // // BookFormatSeeder::class,
+            // // BookAttributeValueSeeder::class,
+            // // BookImageSeeder::class,
             // AddressSeeder::class,
             // PaymentMethodSeeder::class,
             // PaymentStatusSeeder::class,
