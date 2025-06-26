@@ -248,4 +248,28 @@ class ReviewClientController extends Controller
         // ]);
         return redirect()->back()->with('success', 'Xóa đánh giá thành công');
     }
+
+    public function createForm($orderId, $bookId)
+    {
+        $user = Auth::user();
+        $order = $user->orders()->with(['orderItems.book.author', 'orderItems.book.brand', 'orderStatus', 'address', 'paymentMethod'])->where('id', $orderId)->firstOrFail();
+        $item = $order->orderItems->where('book_id', $bookId)->first();
+        if (!$item) abort(404);
+        // Kiểm tra đã đánh giá chưa
+        $review = $order->reviews()->where('book_id', $bookId)->first();
+        if ($review) {
+            return redirect()->route('account.reviews.edit', $review->id);
+        }
+        return view('clients.account.review_form', compact('order', 'item'));
+    }
+
+    public function editForm($reviewId)
+    {
+        $user = Auth::user();
+        $review = $user->reviews()->where('id', $reviewId)->firstOrFail();
+        $order = $user->orders()->with(['orderItems.book.author', 'orderItems.book.brand', 'orderStatus', 'address', 'paymentMethod'])->where('id', $review->order_id)->firstOrFail();
+        $item = $order->orderItems->where('book_id', $review->book_id)->first();
+        if (!$item) abort(404);
+        return view('clients.account.review_edit', compact('order', 'item', 'review'));
+    }
 }
