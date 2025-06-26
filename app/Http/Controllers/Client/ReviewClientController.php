@@ -14,60 +14,110 @@ use Illuminate\Support\Str;
 
 class ReviewClientController extends Controller
 {
+    // public function index(Request $request)
+    // {
+    //     if (!Auth::check()) {
+    //         return redirect()->route('login')->with('error', 'Vui lòng đăng nhập để xem đánh giá');
+    //     }
+
+    //     $user = Auth::user();
+    //     $type = $request->query('type', '1');
+
+    //     // Get completed orders (assuming status 'Thành công' means completed)
+    //     $completedStatus = OrderStatus::where('name', 'Thành công')->first();
+
+    //     if (!$completedStatus) {
+    //         return redirect()->back()->with('error', 'Không tìm thấy trạng thái đơn hàng đã hoàn thành');
+    //     }
+
+    //     $query = $user->orders()
+    //         ->with(['orderItems.book', 'reviews'])
+    //         ->where('order_status_id', $completedStatus->id);
+
+    //     // Filter based on review status
+    //     switch ($type) {
+    //         case '2': // Not reviewed
+    //             $query->whereDoesntHave('reviews');
+    //             break;
+    //         case '3': // Already reviewed
+    //             $query->whereHas('reviews');
+    //             break;
+    //             // Default (type=1): Show all
+    //     }
+
+    //     // Sắp xếp: đơn hàng chưa đánh giá lên đầu, sau đó mới đến đơn hàng đã đánh giá
+    //     // $orders = $query->select('orders.*')
+    //     //     ->leftJoin('reviews', function ($join) {
+    //     //         $join->on('orders.id', '=', 'reviews.order_id')
+    //     //             ->whereNull('reviews.deleted_at');
+    //     //     })
+    //     //     ->groupBy('orders.id')
+    //     //     ->orderByRaw('COUNT(reviews.id) = 0 DESC') // Sắp xếp đơn hàng chưa đánh giá lên đầu
+    //     //     ->latest('orders.created_at') // Sau đó sắp xếp theo thời gian tạo mới nhất
+    //     //     ->paginate(10);
+
+    //     $orders = $query->withCount(['reviews' => function ($q) {
+    //         $q->whereNull('deleted_at');
+    //     }])
+    //         ->orderBy('reviews_count', 'asc') // Sắp xếp đơn hàng chưa đánh giá lên đầu
+    //         ->latest('orders.created_at') // Sau đó sắp xếp theo thời gian tạo mới nhất
+    //         ->paginate(10);
+            
+    //     return view('clients.account.purchases', [
+    //         'orders' => $orders,
+    //         'currentType' => $type,
+    //     ]);
+    // }
     public function index(Request $request)
-    {
-        if (!Auth::check()) {
-            return redirect()->route('login')->with('error', 'Vui lòng đăng nhập để xem đánh giá');
-        }
+{
+    if (!Auth::check()) {
+        return redirect()->route('login')->with('error', 'Vui lòng đăng nhập để xem đánh giá');
+    }
 
-        $user = Auth::user();
-        $type = $request->query('type', '1');
+    $user = Auth::user();
+    $type = $request->query('type', '1');
 
-        // Get completed orders (assuming status 'Thành công' means completed)
-        $completedStatus = OrderStatus::where('name', 'Thành công')->first();
+    // Get completed orders (assuming status 'Thành công' means completed)
+    $completedStatus = OrderStatus::where('name', 'Thành công')->first();
 
-        if (!$completedStatus) {
-            return redirect()->back()->with('error', 'Không tìm thấy trạng thái đơn hàng đã hoàn thành');
-        }
+    if (!$completedStatus) {
+        return redirect()->back()->with('error', 'Không tìm thấy trạng thái đơn hàng đã hoàn thành');
+    }
 
-        $query = $user->orders()
-            ->with(['orderItems.book', 'reviews'])
-            ->where('order_status_id', $completedStatus->id);
+    // Thêm eager loading cho paymentMethod và các quan hệ cần thiết
+    $query = $user->orders()
+        ->with([
+            'orderItems.book',
+            'reviews',
+            'paymentMethod',  // Thêm quan hệ paymentMethod
+            'orderStatus',    // Thêm quan hệ orderStatus
+            'address'        // Thêm quan hệ địa chỉ nếu cần
+        ])
+        ->where('order_status_id', $completedStatus->id);
 
-        // Filter based on review status
-        switch ($type) {
-            case '2': // Not reviewed
-                $query->whereDoesntHave('reviews');
-                break;
-            case '3': // Already reviewed
-                $query->whereHas('reviews');
-                break;
-                // Default (type=1): Show all
-        }
+    // Filter based on review status
+    switch ($type) {
+        case '2': // Not reviewed
+            $query->whereDoesntHave('reviews');
+            break;
+        case '3': // Already reviewed
+            $query->whereHas('reviews');
+            break;
+            // Default (type=1): Show all
+    }
 
-        // Sắp xếp: đơn hàng chưa đánh giá lên đầu, sau đó mới đến đơn hàng đã đánh giá
-        // $orders = $query->select('orders.*')
-        //     ->leftJoin('reviews', function ($join) {
-        //         $join->on('orders.id', '=', 'reviews.order_id')
-        //             ->whereNull('reviews.deleted_at');
-        //     })
-        //     ->groupBy('orders.id')
-        //     ->orderByRaw('COUNT(reviews.id) = 0 DESC') // Sắp xếp đơn hàng chưa đánh giá lên đầu
-        //     ->latest('orders.created_at') // Sau đó sắp xếp theo thời gian tạo mới nhất
-        //     ->paginate(10);
-
-        $orders = $query->withCount(['reviews' => function ($q) {
+    $orders = $query->withCount(['reviews' => function ($q) {
             $q->whereNull('deleted_at');
         }])
-            ->orderBy('reviews_count', 'asc') // Sắp xếp đơn hàng chưa đánh giá lên đầu
-            ->latest('orders.created_at') // Sau đó sắp xếp theo thời gian tạo mới nhất
-            ->paginate(10);
-            
-        return view('clients.account.purchases', [
-            'orders' => $orders,
-            'currentType' => $type,
-        ]);
-    }
+        ->orderBy('reviews_count', 'asc') // Sắp xếp đơn hàng chưa đánh giá lên đầu
+        ->latest('orders.created_at') // Sau đó sắp xếp theo thời gian tạo mới nhất
+        ->paginate(10);
+        
+    return view('clients.account.purchases', [
+        'orders' => $orders,
+        'currentType' => $type,
+    ]);
+}
 
     public function storeReview(Request $request)
     {
