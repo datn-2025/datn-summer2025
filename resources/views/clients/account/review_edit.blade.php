@@ -12,6 +12,11 @@
                 <div class="font-semibold text-lg text-black mb-1">{{ $item->book->title }}</div>
                 <div class="text-xs text-gray-500 mb-1">Tác giả: <span class="font-medium text-black">{{ $item->book->author->name ?? 'N/A' }}</span></div>
                 <div class="text-xs text-gray-500 mb-1">Nhà xuất bản: <span class="font-medium text-black">{{ $item->book->brand->name ?? 'N/A' }}</span></div>
+                <div class="text-xs text-gray-500 mb-1">Danh mục: <span class="font-medium text-black">{{ $item->book->category->name ?? 'N/A' }}</span></div>
+                <div class="text-xs text-gray-500 mb-1">Định dạng sách: <span class="font-medium text-black">{{ $item->book->is_ebook ? 'Ebook' : 'Sách vật lý' }}</span></div>
+                <div class="text-xs text-gray-500 mb-1">Ngôn ngữ: <span class="font-medium text-black">{{ $item->book->language ?? 'N/A' }}</span></div>
+                <div class="text-xs text-gray-500 mb-1">Loại bìa: <span class="font-medium text-black">{{ $item->book->cover_type ?? 'N/A' }}</span></div>
+                <div class="text-xs text-gray-500 mb-1">Kích thước: <span class="font-medium text-black">{{ $item->book->size ?? 'N/A' }}</span></div>
                 <div class="text-xs text-gray-500">Giá: <span class="font-medium text-black">{{ number_format($item->price, 0, ',', '.') }} đ</span></div>
                 <div class="text-xs text-gray-500">Số lượng: <span class="font-medium text-black">{{ $item->quantity }}</span></div>
             </div>
@@ -55,7 +60,7 @@
             <div class="flex flex-col sm:flex-row gap-2 mt-6">
                 <a href="{{ route('account.orders.show', $order->id) }}" class="flex-1 px-4 py-2 bg-gray-200 text-black text-sm font-medium rounded-none hover:bg-gray-300 transition-colors duration-150 text-center">Xem chi tiết đơn hàng</a>
                 <a href="{{ route('account.purchase') }}" class="flex-1 px-4 py-2 bg-gray-100 text-black text-sm font-medium rounded-none hover:bg-gray-200 transition-colors duration-150 text-center">Quay lại danh sách đánh giá</a>
-                <a href="{{ route('books.show', $item->book->slug) }}" class="flex-1 px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-none hover:bg-green-700 transition-colors duration-150 text-center">Mua lại</a>
+                <a href="/books/{{ $item->book->slug }}" class="flex-1 px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-none hover:bg-green-700 transition-colors duration-150 text-center">Mua lại</a>
                 <button type="submit" class="flex-1 px-4 py-2 bg-black hover:bg-gray-900 text-white text-base font-semibold rounded-none transition-colors duration-200 focus:ring-2 focus:ring-black focus:ring-offset-2">
                     Cập nhật đánh giá
                 </button>
