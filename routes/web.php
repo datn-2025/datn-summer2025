@@ -128,14 +128,17 @@ Route::middleware('auth')->group(function () {
         Route::post('/addresses/{id}/set-default', [AddressClientController::class, 'setDefault'])->name('addresses.setDefault');
 
         Route::get('/purchase', [ReviewClientController::class, 'index'])->name('purchase');
-        Route::post('/review', [ReviewClientController::class, 'storeReview'])->name('review.store');
 
         Route::prefix('reviews')->name('reviews.')->group(function () {
+            Route::get('/create/{orderId}/{bookId}', [ReviewClientController::class, 'createForm'])->name('create');
+            Route::post('/', [ReviewClientController::class, 'storeReview'])->name('store');
+
+            Route::get('/{id}/edit', [ReviewClientController::class, 'editForm'])->name('edit');
             Route::put('/{id}', [ReviewClientController::class, 'update'])->name('update');
             Route::delete('/{id}', [ReviewClientController::class, 'destroy'])->name('destroy');
         });
 
-          Route::prefix('orders')->name('orders.')->group(function () {
+        Route::prefix('orders')->name('orders.')->group(function () {
             Route::get('/', [OrderClientController::class, 'index'])->name('index');
             Route::get('/{id}', [OrderClientController::class, 'show'])->name('show');
             Route::put('/{id}', [OrderClientController::class, 'update'])->name('update');
