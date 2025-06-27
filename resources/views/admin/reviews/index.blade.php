@@ -78,12 +78,6 @@
                             </div>
 
                             <div class="col-md-2">
-                                <label for="customer_email" class="form-label">Email khách hàng</label>
-                                <input type="email" class="form-control" name="customer_email"
-                                    value="{{ request('customer_email') }}" placeholder="Email khách hàng">
-                            </div>
-
-                            <div class="col-md-2">
                                 <label for="rating" class="form-label">Số sao</label>
                                 <select name="rating" class="form-select">
                                     <option value="">Tất cả</option>
@@ -96,19 +90,11 @@
                                     @endforeach
                                 </select>
                             </div>
-
-                            <div class="col-md-2">
-                                <label for="comment" class="form-label">Bình luận khách hàng</label>
-                                <input type="text" class="form-control" name="comment" value="{{ request('comment') }}"
-                                    placeholder="Bình luận khách hàng">
+                            <div class="col-md-5">
+                                <label for="cmt" class="form-label">Nội dung bình luận</label>
+                                <input type="text" class="form-control" name="cmt" value="{{ request('cmt') }}"
+                                    placeholder="Tìm theo nội dung đánh giá hoặc phản hồi">
                             </div>
-
-                            <div class="col-md-2">
-                                <label for="admin_comment" class="form-label">Bình luận admin</label>
-                                <input type="text" class="form-control" name="admin_comment"
-                                    value="{{ request('admin_comment') }}" placeholder="Bình luận admin">
-                            </div>
-
                             <div class="col-md-3 d-flex align-items-end">
                                 <button type="submit" class="btn btn-primary me-2">
                                     <i class="fas fa-search me-1"></i> Tìm kiếm
@@ -129,8 +115,7 @@
                                             filled(request()->get('customer_name')) ||
                                             filled(request()->get('customer_email')) ||
                                             filled(request()->get('rating')) ||
-                                            filled(request()->get('comment')) ||
-                                            filled(request()->get('admin_comment')))
+                                            filled(request()->get('cmt')))
                                         <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
                                             colors="primary:#121331,secondary:#08a88a" style="width:75px;height:75px">
                                         </lord-icon>
@@ -195,8 +180,7 @@
                                                         class="badge bg-{{ $review->admin_response ? 'success' : 'secondary' }}">
                                                         {{ $review->admin_response ? 'Đã phản hồi' : 'Chưa phản hồi' }}
                                                     </span>
-                                                    <div class="mt-1 text-truncate small"
-                                                        style="max-height: 60px;">
+                                                    <div class="mt-1 text-truncate small" style="max-height: 60px;">
                                                         {{ $review->admin_response ?? 'Chưa có phản hồi' }}
                                                     </div>
                                                 </td>
