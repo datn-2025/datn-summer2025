@@ -156,7 +156,6 @@
                                             <th style="min-width: 150px;">Khách hàng</th>
                                             <th style="max-width: 250px;">Bình luận</th>
                                             <th style="max-width: 200px;">Phản hồi Admin</th>
-                                            <th style="width: 100px;">Phản hồi</th>
                                             <th class="text-center" style="width: 130px;">Thao tác</th>
                                         </tr>
                                     </thead>
@@ -164,77 +163,78 @@
                                         @foreach ($reviews as $index => $review)
                                             <tr>
                                                 <td>{{ $reviews->firstItem() + $index }}</td>
-                                                <td style="max-width: 200px; white-space: normal; word-break: break-word;">
+                                                <<td style="max-width: 200px; white-space: normal;">
                                                     @if ($review->book)
                                                         <a href="{{ route('admin.books.show', ['id' => $review->book->id, 'slug' => Str::slug($review->book->title)]) }}"
-                                                            class="fw-medium text-primary">
+                                                            class="text-dark text-decoration-none">
                                                             {{ $review->book->title }}
                                                         </a>
                                                     @else
                                                         <span class="text-muted">Sản phẩm đã xóa</span>
                                                     @endif
-                                                </td>
-                                                <td>
-                                                    <div class="fw-medium">
-                                                        {{ $review->user->name ?? 'Người dùng đã xóa' }}</div>
-                                                    <small class="text-muted">
-                                                        <i
-                                                            class="ri-mail-line me-1"></i>{{ $review->user->email ?? 'Không có email' }}
-                                                    </small>
-                                                </td>
-                                                <td style="max-width: 250px;">
-                                                    <div class="text-truncate mb-1">
-                                                        {{ $review->comment }}
-                                                    </div>
-                                                    <div class="d-flex align-items-center mb-1">
-                                                        @foreach (range(1, 5) as $i)
+                                                    </td>
+
+                                                    <td>
+                                                        <div class="fw-medium">
+                                                            {{ $review->user->name ?? 'Người dùng đã xóa' }}</div>
+                                                        <small class="text-muted">
                                                             <i
-                                                                class="fas fa-star{{ $i <= $review->rating ? ' text-warning' : ' text-muted' }}"></i>
-                                                        @endforeach
-                                                    </div>
-                                                    <small class="text-muted">
-                                                        <i
-                                                            class="ri-calendar-line me-1"></i>{{ $review->created_at->format('H:i d/m/Y') }}
-                                                    </small>
-                                                </td>
-                                                <td class="text-truncate" style="max-width: 200px;">
-                                                    {{ $review->admin_response ?? 'Chưa có phản hồi' }}
-                                                </td>
-                                                <td>
-                                                    <span
-                                                        class="badge bg-{{ $review->admin_response ? 'success' : 'secondary' }}">
-                                                        {{ $review->admin_response ? 'Đã phản hồi' : 'Chưa phản hồi' }}
-                                                    </span>
-                                                </td>
-                                                <td class="text-center">
-                                                    <div class="d-flex justify-content-center gap-1">
-                                                        <form
-                                                            action="{{ route('admin.reviews.update-status', $review->id) }}"
-                                                            method="POST">
-                                                            @csrf
-                                                            @method('PATCH')
-                                                            @if ($review->status === 'visible')
-                                                                <button type="submit" class="btn btn-sm btn-danger"
-                                                                    title="Ẩn">
-                                                                    <i class="fas fa-eye-slash"></i>
-                                                                </button>
-                                                            @else
-                                                                <button type="submit" class="btn btn-sm btn-primary"
-                                                                    title="Hiển thị">
-                                                                    <i class="fas fa-eye"></i>
-                                                                </button>
-                                                            @endif
-                                                        </form>
-                                                        <a href="{{ route('admin.reviews.response', $review) }}"
-                                                            class="btn btn-sm btn-outline-primary" title="Xem & phản hồi">
-                                                            <i class="ri-chat-3-fill"></i>
-                                                        </a>
-                                                    </div>
-                                                </td>
+                                                                class="ri-mail-line me-1"></i>{{ $review->user->email ?? 'Không có email' }}
+                                                        </small>
+                                                    </td>
+                                                    <td style="max-width: 250px;">
+                                                        <div class="text-truncate mb-1">
+                                                            {{ $review->comment }}
+                                                        </div>
+                                                        <div class="d-flex align-items-center mb-1">
+                                                            @foreach (range(1, 5) as $i)
+                                                                <i
+                                                                    class="fas fa-star{{ $i <= $review->rating ? ' text-warning' : ' text-muted' }}"></i>
+                                                            @endforeach
+                                                        </div>
+                                                        <small class="text-muted">
+                                                            <i
+                                                                class="ri-calendar-line me-1"></i>{{ $review->created_at->format('H:i d/m/Y') }}
+                                                        </small>
+                                                    </td>
+                                                    <td style="max-width: 250px;">
+                                                        <div class="text-truncate mb-1">
+                                                            {{ $review->admin_response ?? 'Chưa có phản hồi' }}
+                                                        </div>
+                                                        <span
+                                                            class="badge bg-{{ $review->admin_response ? 'success' : 'secondary' }}">
+                                                            {{ $review->admin_response ? 'Đã phản hồi' : 'Chưa phản hồi' }}
+                                                        </span>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <div class="d-flex justify-content-center gap-1">
+                                                            <form
+                                                                action="{{ route('admin.reviews.update-status', $review->id) }}"
+                                                                method="POST">
+                                                                @csrf
+                                                                @method('PATCH')
+                                                                @if ($review->status === 'visible')
+                                                                    <button type="submit" class="btn btn-sm btn-danger"
+                                                                        title="Ẩn">
+                                                                        <i class="fas fa-eye-slash"></i>
+                                                                    </button>
+                                                                @else
+                                                                    <button type="submit" class="btn btn-sm btn-primary"
+                                                                        title="Hiển thị">
+                                                                        <i class="fas fa-eye"></i>
+                                                                    </button>
+                                                                @endif
+                                                            </form>
+                                                            <a href="{{ route('admin.reviews.response', $review) }}"
+                                                                class="btn btn-sm btn-outline-primary"
+                                                                title="Xem & phản hồi">
+                                                                <i class="ri-chat-3-fill"></i>
+                                                            </a>
+                                                        </div>
+                                                    </td>
                                             </tr>
                                         @endforeach
                                     </tbody>
-
                                 </table>
 
                                 <!-- Phân trang -->
