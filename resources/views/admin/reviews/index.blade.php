@@ -224,7 +224,7 @@
                                                         </form>
                                                         <a href="{{ route('admin.reviews.response', $review) }}"
                                                             class="btn btn-sm btn-outline-primary" title="Xem & phản hồi">
-                                                            <i class="ri-chat-3-line"></i>
+                                                            <i class="ri-chat-3-fill"></i>
                                                         </a>
                                                     </div>
                                                 </td>
