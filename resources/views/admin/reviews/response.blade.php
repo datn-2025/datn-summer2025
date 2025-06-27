@@ -15,6 +15,7 @@
 
                 <div class="card-body">
 
+                    {{-- Thông tin sản phẩm --}}
                     @if ($review->book)
                     <div class="card mb-4">
                         <div class="card-header bg-light">
@@ -22,7 +23,8 @@
                         </div>
                         <div class="card-body row">
                             <div class="col-md-3 text-center">
-                                <img src="{{ $review->book->cover_image ? asset('storage/' . $review->book->cover_image) : asset('images/placeholder.jpg') }}" class="img-fluid rounded shadow-sm" alt="{{ $review->book->title }}" style="max-height: 300px;">
+                                <img src="{{ $review->book->cover_image ? asset('storage/' . $review->book->cover_image) : asset('images/placeholder.jpg') }}" 
+                                     class="img-fluid rounded shadow-sm" alt="{{ $review->book->title }}" style="max-height: 300px;">
                             </div>
 
                             <div class="col-md-9">
@@ -91,10 +93,12 @@
                                 <p><strong>Số lượng đã bán:</strong> {{ $review->book->sold_count ?? 0 }}</p>
 
                                 <div class="mt-3 d-flex gap-2">
-                                    <a href="{{ route('admin.books.show', ['id' => $review->book->id, 'slug' => $review->book->slug ?? Str::slug($review->book->title)]) }}" class="btn btn-outline-dark" target="_blank">
+                                    <a href="{{ route('admin.books.show', ['id' => $review->book->id, 'slug' => $review->book->slug ?? Str::slug($review->book->title)]) }}" 
+                                       class="btn btn-outline-dark" target="_blank">
                                         <i class="fas fa-cogs me-1"></i> Xem ở trang quản trị
                                     </a>
-                                    <a href="{{ route('books.show', $review->book->slug ?? $review->book->id) }}" class="btn btn-outline-primary" target="_blank">
+                                    <a href="{{ route('books.show', $review->book->slug ?? $review->book->id) }}" 
+                                       class="btn btn-outline-primary" target="_blank">
                                         <i class="fas fa-eye me-1"></i> Xem ở giao diện khách hàng
                                     </a>
                                 </div>
@@ -103,7 +107,7 @@
                     </div>
                     @endif
 
-                    <!-- Thông tin đánh giá khách hàng -->
+                    {{-- Thông tin đánh giá khách hàng --}}
                     <div class="card mb-4">
                         <div class="card-header bg-light">
                             <h5 class="mb-0">Đánh giá khách hàng</h5>
@@ -118,13 +122,9 @@
                                     @endforeach
                                 </p>
                                 <p><strong>Trạng thái đánh giá:</strong>
-                                    @if ($review->status === 'visible')
-                                        <span class="badge bg-success">Hiển thị</span>
-                                    @elseif ($review->status === 'hidden')
-                                        <span class="badge bg-secondary">Đã ẩn</span>
-                                    @else
-                                        <span class="badge bg-warning">Không xác định</span>
-                                    @endif
+                                    <span class="badge {{ $review->status === 'visible' ? 'bg-success' : 'bg-secondary' }}">
+                                        {{ $review->status === 'visible' ? 'Hiển thị' : 'Đã ẩn' }}
+                                    </span>
                                 </p>
                             </div>
                             <div class="col-md-6">
@@ -136,7 +136,7 @@
                         </div>
                     </div>
 
-                    <!-- Phản hồi của admin -->
+                    {{-- Phản hồi của admin --}}
                     <div class="card mb-4">
                         <div class="card-header bg-light">
                             <h5 class="mb-0">Phản hồi của quản trị viên</h5>
@@ -166,7 +166,7 @@
                         </div>
                     </div>
 
-                    <!-- Đánh giá khác của sản phẩm -->
+                    {{-- Đánh giá khác --}}
                     @if ($otherReviews->count())
                     <div class="card">
                         <div class="card-header bg-light">
