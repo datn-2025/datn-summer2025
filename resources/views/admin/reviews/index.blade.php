@@ -123,10 +123,29 @@
                         <div class="table-responsive table-card mt-3">
                             @if ($reviews->isEmpty())
                                 <div class="noresult text-center py-5">
-                                    <lord-icon src="https://cdn.lordicon.com/nocovwne.json" trigger="loop"
-                                        colors="primary:#405189,secondary:#0ab39c"
-                                        style="width:100px;height:100px"></lord-icon>
-                                    <h5 class="mt-3 text-muted">Không có đánh giá nào</h5>
+                                    @if (filled(request()->get('admin_response')) ||
+                                            filled(request()->get('status')) ||
+                                            filled(request()->get('product_name')) ||
+                                            filled(request()->get('customer_name')) ||
+                                            filled(request()->get('customer_email')) ||
+                                            filled(request()->get('rating')) ||
+                                            filled(request()->get('comment')) ||
+                                            filled(request()->get('admin_comment')))
+                                        <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
+                                            colors="primary:#121331,secondary:#08a88a" style="width:75px;height:75px">
+                                        </lord-icon>
+                                        <h5 class="mt-3 text-danger">Không tìm thấy đánh giá phù hợp</h5>
+                                        <p class="text-muted">
+                                            Không có đánh giá nào khớp với từ khóa tìm kiếm hiện tại.<br>
+                                            Vui lòng kiểm tra lại bộ lọc hoặc thử tìm kiếm khác.
+                                        </p>
+                                    @else
+                                        <lord-icon src="https://cdn.lordicon.com/nocovwne.json" trigger="loop"
+                                            colors="primary:#405189,secondary:#0ab39c" style="width:100px;height:100px">
+                                        </lord-icon>
+                                        <h5 class="mt-3 text-muted">Danh sách đánh giá hiện đang trống</h5>
+                                        <p class="text-muted">Hãy đợi khách hàng để lại đánh giá để bắt đầu quản lý.</p>
+                                    @endif
                                 </div>
                             @else
                                 <table class="table align-middle table-nowrap">
