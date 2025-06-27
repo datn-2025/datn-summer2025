@@ -436,7 +436,7 @@
                         <div class="space-y-3">
                             <div class="flex justify-between text-sm">
                                 <span class="text-gray-600 font-medium">XUẤT BẢN</span>
-                                <span class="text-black font-semibold">{{ $book->publication_date }}</span>
+                                <span class="text-black font-semibold">{{ $book->publication_date->format('d/m/Y') }}</span>
                             </div>
                             <div class="flex justify-between text-sm">
                                 <span class="text-gray-600 font-medium">SỐ TRANG</span>
