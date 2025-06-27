@@ -152,13 +152,11 @@
                                     <thead class="table-light">
                                         <tr>
                                             <th style="width: 50px;">#</th>
-                                            <th style="min-width: 150px;">Sản phẩm</th>
+                                            <th style="min-width: 150px; max-width: 200px;">Sản phẩm</th>
                                             <th style="min-width: 150px;">Khách hàng</th>
-                                            <th style="max-width: 200px;">Bình luận</th>
+                                            <th style="max-width: 250px;">Bình luận</th>
                                             <th style="max-width: 200px;">Phản hồi Admin</th>
-                                            <th style="width: 100px;">Đánh giá</th>
-                                            <th style="width: 130px;">Phản hồi</th>
-                                            <th style="width: 130px;">Ngày đăng</th>
+                                            <th style="width: 100px;">Phản hồi</th>
                                             <th class="text-center" style="width: 130px;">Thao tác</th>
                                         </tr>
                                     </thead>
@@ -166,7 +164,7 @@
                                         @foreach ($reviews as $index => $review)
                                             <tr>
                                                 <td>{{ $reviews->firstItem() + $index }}</td>
-                                                <td>
+                                                <td style="max-width: 200px; white-space: normal; word-break: break-word;">
                                                     @if ($review->book)
                                                         <a href="{{ route('admin.books.show', ['id' => $review->book->id, 'slug' => Str::slug($review->book->title)]) }}"
                                                             class="fw-medium text-primary">
@@ -184,17 +182,23 @@
                                                             class="ri-mail-line me-1"></i>{{ $review->user->email ?? 'Không có email' }}
                                                     </small>
                                                 </td>
-                                                <td class="text-truncate" style="max-width: 200px;">
-                                                    {{ $review->comment }}
+                                                <td style="max-width: 250px;">
+                                                    <div class="text-truncate mb-1">
+                                                        {{ $review->comment }}
+                                                    </div>
+                                                    <div class="d-flex align-items-center mb-1">
+                                                        @foreach (range(1, 5) as $i)
+                                                            <i
+                                                                class="fas fa-star{{ $i <= $review->rating ? ' text-warning' : ' text-muted' }}"></i>
+                                                        @endforeach
+                                                    </div>
+                                                    <small class="text-muted">
+                                                        <i
+                                                            class="ri-calendar-line me-1"></i>{{ $review->created_at->format('H:i d/m/Y') }}
+                                                    </small>
                                                 </td>
                                                 <td class="text-truncate" style="max-width: 200px;">
                                                     {{ $review->admin_response ?? 'Chưa có phản hồi' }}
-                                                </td>
-                                                <td>
-                                                    @foreach (range(1, 5) as $i)
-                                                        <i
-                                                            class="fas fa-star{{ $i <= $review->rating ? ' text-warning' : ' text-muted' }}"></i>
-                                                    @endforeach
                                                 </td>
                                                 <td>
                                                     <span
@@ -202,7 +206,6 @@
                                                         {{ $review->admin_response ? 'Đã phản hồi' : 'Chưa phản hồi' }}
                                                     </span>
                                                 </td>
-                                                <td>{{ $review->created_at->format('H:i d/m/Y') }}</td>
                                                 <td class="text-center">
                                                     <div class="d-flex justify-content-center gap-1">
                                                         <form
@@ -231,6 +234,7 @@
                                             </tr>
                                         @endforeach
                                     </tbody>
+
                                 </table>
 
                                 <!-- Phân trang -->
