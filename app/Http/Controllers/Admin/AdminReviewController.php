@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Review;
+use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
 
 class AdminReviewController extends Controller
@@ -46,7 +47,7 @@ class AdminReviewController extends Controller
 
         return view('admin.reviews.index', compact('reviews'));
     }
-    
+
     // Cập nhật trạng thái (Ẩn/Hiện) của đánh giá
     public function updateStatus(Request $request, Review $review)
     {
@@ -56,31 +57,32 @@ class AdminReviewController extends Controller
         // Cập nhật trạng thái cho đánh giá
         $review->update(['status' => $newStatus]);
 
-        return redirect()->route('admin.reviews.index')
-            ->with('success', 'Trạng thái đánh giá đã được cập nhật thành công.');
+        Toastr::success('Cập nhật trạng thái đánh giá thành công', 'Thành công');
+
+        return redirect()->route('admin.reviews.index');
     }
 
     // Hiển thị form phản hồi hoặc chỉnh sửa phản hồi của admin
-   public function showResponseForm(Review $review)
-{
-    $review->load([
-        'book' => function ($q) {
-            $q->withCount('reviews') // Tổng số đánh giá
-              ->withAvg('reviews', 'rating') // Trung bình sao
-              ->withSum('orderItems as sold_count', 'quantity') // Tổng đã bán
-              ->with(['author', 'brand', 'category']);
-        },
-        'user'
-    ]);
+    public function showResponseForm(Review $review)
+    {
+        $review->load([
+            'book' => function ($q) {
+                $q->withCount('reviews') // Tổng số đánh giá
+                    ->withAvg('reviews', 'rating') // Trung bình sao
+                    ->withSum('orderItems as sold_count', 'quantity') // Tổng đã bán
+                    ->with(['author', 'brand', 'category']);
+            },
+            'user'
+        ]);
 
-    $otherReviews = Review::where('book_id', $review->book_id)
-        ->where('id', '!=', $review->id)
-        ->with(['user' => fn($query) => $query->withTrashed()])
-        ->latest()
-        ->paginate(5);
+        $otherReviews = Review::where('book_id', $review->book_id)
+            ->where('id', '!=', $review->id)
+            ->with(['user' => fn($query) => $query->withTrashed()])
+            ->latest()
+            ->paginate(5);
 
-    return view('admin.reviews.response', compact('review', 'otherReviews'));
-}
+        return view('admin.reviews.response', compact('review', 'otherReviews'));
+    }
 
     // Lưu phản hồi admin
     public function storeResponse(Request $request, Review $review)
