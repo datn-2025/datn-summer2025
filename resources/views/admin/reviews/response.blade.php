@@ -151,7 +151,6 @@
                                     {{ $review->admin_response }}
                                 </div>
                             @else
-                                <p>Chưa có phản hồi nào từ quản trị viên.</p>
                                 <form action="{{ route('admin.reviews.response.store', $review) }}" method="POST">
                                     @csrf
                                     <div class="mb-3">
