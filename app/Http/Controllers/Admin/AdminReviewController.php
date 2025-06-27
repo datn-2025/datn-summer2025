@@ -46,7 +46,7 @@ class AdminReviewController extends Controller
 
         return view('admin.reviews.index', compact('reviews'));
     }
-
+    
     // Cập nhật trạng thái (Ẩn/Hiện) của đánh giá
     public function updateStatus(Request $request, Review $review)
     {
@@ -82,8 +82,6 @@ class AdminReviewController extends Controller
     return view('admin.reviews.response', compact('review', 'otherReviews'));
 }
 
-
-
     // Lưu phản hồi admin
     public function storeResponse(Request $request, Review $review)
     {
@@ -106,25 +104,5 @@ class AdminReviewController extends Controller
 
         return redirect()->route('admin.reviews.response', $review)
             ->with('success', 'Đã gửi phản hồi thành công');
-    }
-
-    // Cập nhật phản hồi (cho phép chỉnh sửa nếu cần)
-    public function updateResponse(Request $request, $review_id)
-    {
-        // Kiểm tra tính hợp lệ của phản hồi
-        $request->validate([
-            'admin_response' => 'required|string|max:1000',
-        ]);
-
-        // Tìm kiếm review và cập nhật phản hồi
-        $review = Review::findOrFail($review_id);  // Tìm kiếm review
-
-        // Cập nhật phản hồi của admin nếu có sự thay đổi
-        if ($review->admin_response !== $request->input('admin_response')) {
-            $review->admin_response = $request->input('admin_response');
-            $review->save();  // Lưu lại
-        }
-
-        return redirect()->route('admin.reviews.index')->with('success', 'Cập nhật phản hồi thành công.');
     }
 }
