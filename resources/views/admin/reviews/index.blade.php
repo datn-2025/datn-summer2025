@@ -165,37 +165,38 @@
                                                 <td style="max-width: 150px; white-space: normal;">
                                                     @if ($review->book)
                                                         <a href="{{ route('admin.books.show', ['id' => $review->book->id, 'slug' => Str::slug($review->book->title)]) }}"
-                                                            class="text-dark text-decoration-none">
+                                                            class="text-decoration-none fw-medium">
                                                             {{ $review->book->title }}
                                                         </a>
                                                     @else
                                                         <span class="text-muted">Sản phẩm đã xóa</span>
                                                     @endif
                                                 </td>
-                                                <td style="max-width: 300px;">
-                                                    
-                                                     {{ $review->user->name ?? 'Người dùng đã xóa' }}</div>
-                                                    
-                                                    <div class="d-flex align-items-center mb-1">
+                                                <td class="align-middle" style="max-width: 400px;">
+                                                    <div class="mb-1 fw-semibold">
+                                                        {{ $review->user->name ?? 'Người dùng đã xóa' }}
+                                                    </div>
+                                                    <div class="mb-1">
                                                         <small class="text-muted">
-                                                        <i
-                                                            class="ri-calendar-line me-1"></i>{{ $review->created_at->format('H:i d/m/Y') }}
-                                                    </small>
+                                                            <i
+                                                                class="ri-calendar-line me-1"></i>{{ $review->created_at->format('H:i d/m/Y') }}
+                                                        </small>
                                                         @foreach (range(1, 5) as $i)
                                                             <i
                                                                 class="fas fa-star{{ $i <= $review->rating ? ' text-warning' : ' text-muted' }}"></i>
                                                         @endforeach
                                                     </div>
-                                                    <div class="text-truncate mb-1">
+                                                    <div class="text-truncate small">
                                                         {{ $review->comment }}
                                                     </div>
                                                 </td>
-                                                <td style="max-width: 300px;">
+                                                <td class="align-middle" style="max-width: 300px;">
                                                     <span
                                                         class="badge bg-{{ $review->admin_response ? 'success' : 'secondary' }}">
                                                         {{ $review->admin_response ? 'Đã phản hồi' : 'Chưa phản hồi' }}
                                                     </span>
-                                                    <div class="text-truncate mb-1">
+                                                    <div class="mt-1 text-truncate small"
+                                                        style="max-height: 60px;">
                                                         {{ $review->admin_response ?? 'Chưa có phản hồi' }}
                                                     </div>
                                                 </td>
