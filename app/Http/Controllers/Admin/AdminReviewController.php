@@ -61,19 +61,28 @@ class AdminReviewController extends Controller
     }
 
     // Hiển thị form phản hồi hoặc chỉnh sửa phản hồi của admin
-    public function showResponseForm(Review $review)
-    {
-        $review->load(['book', 'user', 'book.author']);  // Nạp thông tin liên quan
+   public function showResponseForm(Review $review)
+{
+    $review->load([
+        'book' => function ($q) {
+            $q->withCount('reviews') // Tổng số đánh giá
+              ->withAvg('reviews', 'rating') // Trung bình sao
+              ->withSum('orderItems as sold_count', 'quantity') // Tổng đã bán
+              ->with(['author', 'brand', 'category']);
+        },
+        'user'
+    ]);
 
-        // Lấy các đánh giá khác của cùng sản phẩm, bỏ qua review hiện tại
-        $otherReviews = Review::where('book_id', $review->book_id)
-            ->where('id', '!=', $review->id)
-            ->with(['user' => fn($query) => $query->withTrashed()])  // Bao gồm cả người dùng đã xóa
-            ->latest()
-            ->paginate(5);
+    $otherReviews = Review::where('book_id', $review->book_id)
+        ->where('id', '!=', $review->id)
+        ->with(['user' => fn($query) => $query->withTrashed()])
+        ->latest()
+        ->paginate(5);
 
-        return view('admin.reviews.response', compact('review', 'otherReviews'));
-    }
+    return view('admin.reviews.response', compact('review', 'otherReviews'));
+}
+
+
 
     // Lưu phản hồi admin
     public function storeResponse(Request $request, Review $review)
