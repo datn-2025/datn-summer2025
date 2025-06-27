@@ -99,7 +99,6 @@ class AdminReviewController extends Controller
         // Cập nhật phản hồi của admin và thay đổi trạng thái đánh giá thành "approved"
         $review->update([
             'admin_response' => $request->admin_response,
-            'status' => 'approved'  // Đánh dấu là đã trả lời
         ]);
 
         return redirect()->route('admin.reviews.response', $review)
