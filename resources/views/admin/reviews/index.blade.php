@@ -208,13 +208,16 @@
                                                             @method('PATCH')
                                                             <button type="submit"
                                                                 class="btn btn-sm btn-{{ $review->status === 'hidden' ? 'danger' : 'primary' }}">
-                                                                <i class="fas fa-eye-slash"></i>
-                                                                {{ $review->status === 'hidden' ? 'Ẩn' : 'Hiển thị' }}
+                                                                @if ($review->status === 'hidden')
+                                                                    <i class="fas fa-eye-slash"></i>
+                                                                @else
+                                                                    <i class="fas fa-eye"></i>
+                                                                @endif
                                                             </button>
                                                         </form>
                                                         <a href="{{ route('admin.reviews.response', $review) }}"
                                                             class="btn btn-sm btn-outline-primary" title="Xem & phản hồi">
-                                                            <i class="fas fa-reply"></i>
+                                                            <i class="ri-chat-3-line"></i>
                                                         </a>
                                                     </div>
                                                 </td>
