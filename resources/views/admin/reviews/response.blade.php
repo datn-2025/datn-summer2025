@@ -24,7 +24,7 @@
                         <div class="card-body row">
                             <div class="col-md-3 text-center">
                                 @if ($review->book->image)
-                                    <img src="{{ asset('storage/' . $review->book->image) }}" class="img-fluid rounded shadow-sm" alt="Ảnh sản phẩm">
+                                    <img src="{{ asset('storage/' . $review->book->images->first()->image_url) }}" class="img-fluid rounded shadow-sm" alt="Ảnh sản phẩm">
                                 @else
                                     <img src="{{ asset('images/placeholder.jpg') }}" class="img-fluid rounded shadow-sm" alt="Không có hình">
                                 @endif
@@ -58,20 +58,16 @@
                                         @if($review->book->published_at)
                                             <p><strong>Ngày xuất bản:</strong> {{ $review->book->published_at->format('d/m/Y') }}</p>
                                         @endif
-                                        @if($review->book->number_of_pages)
-                                            <p><strong>Số trang:</strong> {{ $review->book->number_of_pages }}</p>
+                                        @if($review->book->page_count)
+                                            <p><strong>Số trang:</strong> {{ $review->book->page_count }}</p>
                                         @endif
                                         @if($review->book->language)
                                             <p><strong>Ngôn ngữ:</strong> {{ $review->book->language }}</p>
                                         @endif
-                                        <p><strong>Giá:</strong> {{ number_format($review->book->price, 0, ',', '.') }} VNĐ</p>
-                                        <p><strong>Giảm giá:</strong>
-                                            @if ($review->book->discount > 0)
-                                                <span class="badge bg-success">{{ $review->book->discount }}%</span>
-                                            @else
-                                                <span class="badge bg-secondary">Không giảm giá</span>
-                                            @endif
-                                        </p>
+
+                                        @if($review->book->dimensions)
+                                            <p><strong>Kích thước:</strong> {{ $review->book->dimensions }}</p>
+                                        @endif
                                         <p><strong>Trạng thái:</strong>
                                             @if ($review->book->is_active)
                                                 <span class="badge bg-success">Còn hàng</span>
@@ -115,7 +111,7 @@
                                 </p>
                             </div>
                             <div class="col-md-6">
-                                <p><strong>Nội dung:</strong></p>
+                                <p><strong>Bình luận:</strong></p>
                                 <div class="border p-3 rounded bg-light">
                                     {{ $review->comment }}
                                 </div>
