@@ -23,13 +23,9 @@
                                 </div>
                                 <div class="card-body row">
                                     <div class="col-md-3 text-center">
-                                        @if ($review->book->cover_image)
-                                            <img src="{{ asset('storage/' . $review->book->cover_image) }}"
-                                                class="img-fluid rounded shadow-sm" alt="{{ $book->title }}" style="max-height: 300px;">
-                                        @else
-                                            <img src="{{ asset('images/placeholder.jpg') }}"
-                                                class="img-fluid rounded shadow-sm" alt="Không có hình">
-                                        @endif
+                                        <img src="{{ $review->book->cover_image ? asset('storage/' . $review->book->cover_image) : asset('images/placeholder.jpg') }}"
+                                            class="img-fluid rounded shadow-sm" alt="{{ $review->book->title }}"
+                                            style="max-height: 300px;">
                                     </div>
 
                                     <div class="col-md-9">
@@ -56,28 +52,26 @@
                                                     <p><strong>Số trang:</strong> {{ $review->book->page_count }}</p>
                                                 @endif
                                             </div>
+
                                             <div class="col-md-6">
                                                 <p><strong>Trạng thái:</strong>
-                                                    @if ($review->book->is_active)
-                                                        <span class="badge bg-success">Còn hàng</span>
-                                                    @else
-                                                        <span class="badge bg-danger">Hết hàng</span>
-                                                    @endif
+                                                    <span
+                                                        class="badge {{ $review->book->is_active ? 'bg-success' : 'bg-danger' }}">
+                                                        {{ $review->book->is_active ? 'Còn hàng' : 'Hết hàng' }}
+                                                    </span>
                                                 </p>
+
                                                 @if ($review->orderItem)
                                                     <p><strong>Định dạng:</strong>
-                                                        @if (strtolower($review->orderItem->format) === 'ebook')
-                                                            <span class="badge bg-info">Ebook</span>
-                                                        @else
-                                                            <span class="badge bg-primary">Sách vật lý</span>
-                                                        @endif
+                                                        <span
+                                                            class="badge {{ strtolower($review->orderItem->format) === 'ebook' ? 'bg-info' : 'bg-primary' }}">
+                                                            {{ ucfirst($review->orderItem->format) }}
+                                                        </span>
                                                     </p>
-
                                                     @if ($review->orderItem->language)
                                                         <p><strong>Ngôn ngữ:</strong> {{ $review->orderItem->language }}
                                                         </p>
                                                     @endif
-
                                                     @if ($review->orderItem->dimensions)
                                                         <p><strong>Kích thước:</strong>
                                                             {{ $review->orderItem->dimensions }}</p>
@@ -85,10 +79,11 @@
                                                 @else
                                                     <p class="text-muted">Không có thông tin đơn hàng liên quan.</p>
                                                 @endif
-
                                             </div>
                                         </div>
+
                                         <hr>
+
                                         <p><strong>Đánh giá trung bình:</strong>
                                             @if ($review->book->reviews_avg_rating)
                                                 @foreach (range(1, 5) as $i)
@@ -100,8 +95,20 @@
                                                 <span class="text-muted">Chưa có đánh giá</span>
                                             @endif
                                         </p>
+
                                         <p><strong>Số lượng đánh giá:</strong> {{ $review->book->reviews_count ?? 0 }}</p>
                                         <p><strong>Số lượng đã bán:</strong> {{ $review->book->sold_count ?? 0 }}</p>
+
+                                        <div class="mt-3 d-flex gap-2">
+                                            <a href="{{ route('admin.books.show', ['id' => $review->book->id, 'slug' => $review->book->slug ?? Str::slug($review->book->title)]) }}"
+                                                class="btn btn-outline-dark" target="_blank">
+                                                <i class="fas fa-cogs me-1"></i> Xem ở trang quản trị
+                                            </a>
+                                            <a href="{{ route('books.show', $review->book->slug ?? $review->book->id) }}"
+                                                class="btn btn-outline-primary" target="_blank">
+                                                <i class="fas fa-eye me-1"></i> Xem ở giao diện khách hàng
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
