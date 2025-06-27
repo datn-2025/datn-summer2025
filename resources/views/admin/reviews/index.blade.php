@@ -151,15 +151,15 @@
                                 <table class="table align-middle table-nowrap">
                                     <thead class="table-light">
                                         <tr>
-                                            <th>#</th>
-                                            <th>Sản phẩm</th>
-                                            <th>Khách hàng</th>
-                                            <th>Bình luận</th>
-                                            <th>Phản hồi Admin</th>
-                                            <th>Đánh giá</th>
-                                            <th>Trạng thái phản hồi</th>
-                                            <th>Ngày đăng</th>
-                                            <th class="text-center">Thao tác</th>
+                                            <th style="width: 50px;">#</th>
+                                            <th style="min-width: 150px;">Sản phẩm</th>
+                                            <th style="min-width: 150px;">Khách hàng</th>
+                                            <th style="max-width: 200px;">Bình luận</th>
+                                            <th style="max-width: 200px;">Phản hồi Admin</th>
+                                            <th style="width: 100px;">Đánh giá</th>
+                                            <th style="width: 130px;">Phản hồi</th>
+                                            <th style="width: 130px;">Ngày đăng</th>
+                                            <th class="text-center" style="width: 130px;">Thao tác</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -184,8 +184,12 @@
                                                             class="ri-mail-line me-1"></i>{{ $review->user->email ?? 'Không có email' }}
                                                     </small>
                                                 </td>
-                                                <td>{{ Str::limit($review->comment, 50) }}</td>
-                                                <td>{{ $review->admin_response ?? 'Chưa có phản hồi' }}</td>
+                                                <td class="text-truncate" style="max-width: 200px;">
+                                                    {{ $review->comment }}
+                                                </td>
+                                                <td class="text-truncate" style="max-width: 200px;">
+                                                    {{ $review->admin_response ?? 'Chưa có phản hồi' }}
+                                                </td>
                                                 <td>
                                                     @foreach (range(1, 5) as $i)
                                                         <i
@@ -200,20 +204,23 @@
                                                 </td>
                                                 <td>{{ $review->created_at->format('H:i d/m/Y') }}</td>
                                                 <td class="text-center">
-                                                    <div class="btn-group">
+                                                    <div class="d-flex justify-content-center gap-1">
                                                         <form
                                                             action="{{ route('admin.reviews.update-status', $review->id) }}"
                                                             method="POST">
                                                             @csrf
                                                             @method('PATCH')
-                                                            <button type="submit"
-                                                                class="btn btn-sm btn-{{ $review->status === 'hidden' ? 'danger' : 'primary' }}">
-                                                                @if ($review->status === 'hidden')
+                                                            @if ($review->status === 'visible')
+                                                                <button type="submit" class="btn btn-sm btn-danger"
+                                                                    title="Ẩn">
                                                                     <i class="fas fa-eye-slash"></i>
-                                                                @else
+                                                                </button>
+                                                            @else
+                                                                <button type="submit" class="btn btn-sm btn-primary"
+                                                                    title="Hiển thị">
                                                                     <i class="fas fa-eye"></i>
-                                                                @endif
-                                                            </button>
+                                                                </button>
+                                                            @endif
                                                         </form>
                                                         <a href="{{ route('admin.reviews.response', $review) }}"
                                                             class="btn btn-sm btn-outline-primary" title="Xem & phản hồi">
