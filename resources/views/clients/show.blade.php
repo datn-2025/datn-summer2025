@@ -383,7 +383,7 @@
                 <!-- Main Image with Enhanced Container -->
                 <div class="product-image-main relative group">
                     <div class="aspect-square bg-white border border-gray-100 overflow-hidden">
-                        <img src="{{ asset('storage/' . ($book->images->first()->image_url ?? 'images/default.jpg')) }}"
+                        <img src="{{ asset('storage/' . ($book->cover_image ?? 'images/default.jpg')) }}"
                             alt="{{ $book->title }}" id="mainImage" 
                             class="product-image w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
                     </div>
@@ -798,7 +798,7 @@
                         <div class="relative aspect-square bg-gray-50 overflow-hidden">
                             <!-- Main Product Image -->
                             <a href="{{ route('books.show', $related->slug ?? $related->id) }}" class="block w-full h-full">
-                                <img src="{{ asset('storage/' . ($related->images->first()->image_url ?? 'default.jpg')) }}"
+                                <img src="{{ asset('storage/' . ($related->cover_image ?? 'default.jpg')) }}"
                                     alt="{{ $related->title }}" 
                                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out">
                             </a>
