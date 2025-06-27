@@ -191,7 +191,7 @@
                                                             method="POST">
                                                             @csrf
                                                             @method('PATCH')
-                                                            @if ($review->status === 'visible')
+                                                            @if ($review->status === 'hidden')
                                                                 <button type="submit" class="btn btn-sm btn-danger"
                                                                     title="Ẩn">
                                                                     <i class="fas fa-eye-slash"></i>
