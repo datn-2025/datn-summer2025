@@ -57,8 +57,6 @@
                                                 @endif
                                             </div>
                                             <div class="col-md-6">
-
-
                                                 <p><strong>Trạng thái:</strong>
                                                     @if ($review->book->is_active)
                                                         <span class="badge bg-success">Còn hàng</span>
