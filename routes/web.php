@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AuthorController;
+use App\Http\Controllers\Admin\CollectionController;
 use App\Http\Controllers\Login\LoginController;
 use App\Http\Controllers\Admin\VoucherController;
 use App\Http\Controllers\BookController;
@@ -354,6 +355,13 @@ Route::middleware(['auth:admin', 'admin'])->prefix('admin')->name('admin.')->gro
         Route::get('/', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('index');
         Route::post('/update', [App\Http\Controllers\Admin\SettingController::class, 'update'])->name('update');
     });
+
+    Route::resource('collections', CollectionController::class);
+    Route::post('collections/{collection}/attach-books', [CollectionController::class, 'attachBooks'])->name('collections.attachBooks');
+    Route::resource('collections', CollectionController::class);
+    Route::delete('collections/{id}/force', [CollectionController::class, 'forceDelete'])->name('collections.forceDelete');
+    Route::get('collections-trash', [CollectionController::class, 'trash'])->name('collections.trash');
+    Route::post('collections/{id}/restore', [CollectionController::class, 'restore'])->name('collections.restore');
 });
 
 
