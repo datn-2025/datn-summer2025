@@ -9,66 +9,74 @@ use Illuminate\Http\Request;
 
 class AdminReviewController extends Controller
 {
+    /**
+     * Hiển thị danh sách đánh giá với bộ lọc
+     */
     public function index(Request $request)
     {
         $reviews = Review::with(['book', 'user'])
             ->when($request->status, fn($q) => $q->where('status', $request->status))
-            ->when(
-                $request->admin_response,
-                fn($q) =>
+
+            ->when($request->admin_response, fn($q) =>
                 $q->when($request->admin_response === 'responded', fn($q) => $q->whereNotNull('admin_response'))
-                    ->when($request->admin_response === 'not_responded', fn($q) => $q->whereNull('admin_response'))
+                  ->when($request->admin_response === 'not_responded', fn($q) => $q->whereNull('admin_response'))
             )
-            ->when(
-                $request->product_name,
-                fn($q) =>
-                $q->whereHas('book', fn($bq) => $bq->where('title', 'like', '%' . $request->product_name . '%'))
-            )
-            ->when(
-                $request->customer_name,
-                fn($q) =>
-                $q->whereHas('user', fn($uq) => $uq->where('name', 'like', '%' . $request->customer_name . '%'))
-            )
-            ->when($request->rating, fn($q) => $q->where('rating', $request->rating))
-            ->when(
-                $request->cmt,
-                fn($q) =>
-                $q->where(
-                    fn($q) =>
-                    $q->where('comment', 'like', '%' . $request->cmt . '%')
-                        ->orWhere('admin_response', 'like', '%' . $request->cmt . '%')
+
+            ->when($request->product_name, fn($q) =>
+                $q->whereHas('book', fn($bq) =>
+                    $bq->where('title', 'like', '%' . $request->product_name . '%')
                 )
             )
+
+            ->when($request->customer_name, fn($q) =>
+                $q->whereHas('user', fn($uq) =>
+                    $uq->where('name', 'like', '%' . $request->customer_name . '%')
+                )
+            )
+
+            ->when($request->rating, fn($q) => $q->where('rating', $request->rating))
+
+            ->when($request->cmt, fn($q) =>
+                $q->where(function ($q) use ($request) {
+                    $q->where('comment', 'like', '%' . $request->cmt . '%')
+                      ->orWhere('admin_response', 'like', '%' . $request->cmt . '%');
+                })
+            )
+
             ->latest()
             ->paginate(10);
 
         return view('admin.reviews.index', compact('reviews'));
     }
 
+    /**
+     * Cập nhật trạng thái ẩn/hiện của đánh giá
+     */
     public function updateStatus(Request $request, Review $review)
     {
         if (!in_array($review->status, ['visible', 'hidden'])) {
-            Toastr::error('Trạng thái không hợp lệ', 'Lỗi');
+            Toastr::error('Trạng thái không hợp lệ.', 'Lỗi');
             return redirect()->route('admin.reviews.index');
         }
 
         $newStatus = $review->status === 'visible' ? 'hidden' : 'visible';
         $review->update(['status' => $newStatus]);
 
-        Toastr::success('Cập nhật trạng thái đánh giá thành công', 'Thành công');
+        Toastr::success('Cập nhật trạng thái đánh giá thành công.', 'Thành công');
         return redirect()->route('admin.reviews.index');
     }
 
-
-    // Hiển thị form phản hồi hoặc chỉnh sửa phản hồi của admin
+    /**
+     * Hiển thị form phản hồi cho đánh giá
+     */
     public function showResponseForm(Review $review)
     {
         $review->load([
             'book' => function ($q) {
-                $q->withCount('reviews') // Tổng số đánh giá
-                    ->withAvg('reviews', 'rating') // Trung bình sao
-                    ->withSum('orderItems as sold_count', 'quantity') // Tổng đã bán
-                    ->with(['author', 'brand', 'category']);
+                $q->withCount('reviews')
+                  ->withAvg('reviews', 'rating')
+                  ->withSum('orderItems as sold_count', 'quantity')
+                  ->with(['author', 'brand', 'category']);
             },
             'user'
         ]);
@@ -82,7 +90,9 @@ class AdminReviewController extends Controller
         return view('admin.reviews.response', compact('review', 'otherReviews'));
     }
 
-    // Lưu phản hồi admin
+    /**
+     * Lưu phản hồi của admin (một lần duy nhất)
+     */
     public function storeResponse(Request $request, Review $review)
     {
         if ($review->admin_response) {
