@@ -14,9 +14,9 @@ class Author extends Model
 
     protected $fillable = ['name', 'slug', 'description', 'image', 'status'];
 
-    public function books(): HasMany
+    public function books()
     {
-        return $this->hasMany(Book::class);
+        return $this->belongsToMany(Book::class, 'author_books');
     }
 
     protected static function boot()
