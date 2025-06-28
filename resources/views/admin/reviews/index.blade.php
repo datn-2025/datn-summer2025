@@ -67,7 +67,7 @@
                                 <input type="text" name="customer_name" class="form-control" value="{{ request('customer_name') }}" placeholder="Tên khách hàng">
                             </div>
                             <div class="col-md-2">
-                                <label class="form-label">Số sao</label>
+                                <label class="form-label">Số sao đánh giá</label>
                                 <select name="rating" class="form-select">
                                     <option value="">Tất cả</option>
                                     @foreach (range(5, 1) as $i)
