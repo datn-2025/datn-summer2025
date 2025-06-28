@@ -51,7 +51,7 @@
                                 </select>
                             </div>
                             <div class="col-md-2">
-                                <label class="form-label">Trạng thái đánh giá</label>
+                                <label class="form-label">Trạng thái hiển thị</label>
                                 <select name="status" class="form-select">
                                     <option value="">Tất cả</option>
                                     <option value="visible" {{ request('status') == 'visible' ? 'selected' : '' }}>Hiện</option>
