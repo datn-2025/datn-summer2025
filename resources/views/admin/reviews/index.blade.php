@@ -59,7 +59,7 @@
                                 </select>
                             </div>
                             <div class="col-md-2">
-                                <label class="form-label">Tên sản phẩm</label>
+                                <label class="form-label">Tên Sách</label>
                                 <input type="text" name="product_name" class="form-control" value="{{ request('product_name') }}" placeholder="Tên sản phẩm">
                             </div>
                             <div class="col-md-2">        
