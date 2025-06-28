@@ -506,8 +506,17 @@
                                 </ul>
                             </div>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link menu-link" href="{{ route('admin.reviews.index') }}">
+                                <i class="ri-file-list-3-line"></i> <span data-key="t-forms">Bình luận & Đánh giá</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link menu-link" href="{{ route('admin.invoices.index') }}">
+                                <i class="ri-file-list-3-line"></i> <span data-key="t-forms">Hóa Đơn</span>
+                            </a>
+                        </li>
                         <li class="menu-title"><span data-key="t-menu">Cấu Hình</span></li>
-
                         <li class="nav-item">
                             <a class="nav-link menu-link" href="{{ route('admin.settings.index') }}">
                                 <i class="ri-file-list-3-line"></i> <span data-key="t-forms">Cấu hình website</span>
