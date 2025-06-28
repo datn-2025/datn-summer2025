@@ -6,6 +6,7 @@
         "dev": "vite"
     },
     "devDependencies": {
+        "@laravel/echo-vue": "^2.1.6",
         "@tailwindcss/postcss": "^4.1.7",
         "@tailwindcss/vite": "^4.1.6",
         "autoprefixer": "^10.4.21",

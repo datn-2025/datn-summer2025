@@ -84,6 +84,10 @@
 <body style="margin:0; min-height:100vh;">
     @include('layouts.partials.navbar')
     @yield('content')
+    <div id="notification"
+    class="alert mx-3 invisible fixed bottom-0 end-0 mb-3 me-3 alert-dismissible fade show">
+     Bạn đã đăng nhập
+    </div>
 
     {!! Toastr::message() !!}
 
@@ -98,15 +102,11 @@
         @auth
             @isset($messages)
                 @auth
-    @isset($messages)
-        <chat-widget
-            :initial-messages="{{ Js::from($messages) }}"
-            :current-user="{{ Js::from(auth()->user()) }}"
-            :conversation-id="'{{ $selectedConversation->id }}'"
-        />
-    @endisset
-@endauth
-
+                    @isset($messages)
+                        <chat-widget :initial-messages="{{ Js::from($messages) }}" :current-user="{{ Js::from(auth()->user()) }}"
+                            :conversation-id="'{{ $selectedConversation->id }}'" />
+                    @endisset
+                @endauth
             @endisset
         @endauth
     </div>
@@ -114,42 +114,6 @@
 
     @stack('scripts')
     @include('layouts.partials.footer')
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const toggleBtn = document.getElementById('chat-toggle');
-            const chatBox = document.getElementById('chat-box');
-            const chatForm = document.getElementById('chat-form');
-            const chatInput = document.getElementById('chat-input');
-            const chatContent = document.getElementById('chat-content');
-
-            toggleBtn.addEventListener('click', function() {
-                chatBox.style.display = (chatBox.style.display === 'none') ? 'block' : 'none';
-            });
-
-            chatForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const msg = chatInput.value.trim();
-                if (msg === '') return;
-
-                const message = document.createElement('div');
-                message.classList.add('text-end', 'mb-2');
-                message.innerHTML = `<span class="badge bg-success">${msg}</span>`;
-                chatContent.appendChild(message);
-                chatInput.value = '';
-                chatContent.scrollTop = chatContent.scrollHeight;
-
-                setTimeout(() => {
-                    const reply = document.createElement('div');
-                    reply.classList.add('text-start', 'mb-2');
-                    reply.innerHTML =
-                        `<span class="badge bg-light text-dark">Cảm ơn bạn! Chúng tôi sẽ phản hồi sớm.</span>`;
-                    chatContent.appendChild(reply);
-                    chatContent.scrollTop = chatContent.scrollHeight;
-                }, 800);
-            });
-        });
-    </script>
-
     <script>
         $(document).ready(function() {
             // Lấy tỉnh thành

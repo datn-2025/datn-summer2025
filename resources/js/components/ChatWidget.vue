@@ -162,103 +162,111 @@ export default {
 
   computed: {
     currentUserAvatar() {
-      return this.currentUser.avatar 
-        ? `/storage/avatars/${this.currentUser.avatar}` 
-        : '/storage/avatars/default.png';
+      return this.getAvatar(this.currentUser);
     }
   },
 
   methods: {
+    // Toggle hiển thị khung chat
     toggleChat() {
       this.isChatOpen = !this.isChatOpen;
-      if (this.isChatOpen) {
-        this.$nextTick(this.scrollToBottom);
-      }
+      if (this.isChatOpen) this.scrollToBottom();
     },
+
     closeChat() {
       this.isChatOpen = false;
     },
+
+    // Kiểm tra tin nhắn do mình gửi
     isMe(message) {
-      // So sánh kiểu dữ liệu để tránh lỗi hiển thị
-      if (!message || !message.sender_id || !this.currentUser || !this.currentUser.id) return false;
-      return String(message.sender_id) === String(this.currentUser.id);
+      return String(message?.sender_id) === String(this.currentUser?.id);
     },
-    getAvatar(sender) {
-      if (!sender) return '/storage/avatars/default.png';
-      return sender.avatar 
-        ? `/storage/avatars/${sender.avatar}` 
+
+    // Trả về đường dẫn avatar
+    getAvatar(user) {
+      return user?.avatar 
+        ? `/storage/avatars/${user.avatar}` 
         : '/storage/avatars/default.png';
     },
+
+    // Trả về đường dẫn ảnh tin nhắn
     getImageUrl(filePath) {
       return `/storage/${filePath}`;
     },
+
+    // Định dạng thời gian
     formatTime(dateString) {
       if (!dateString) return '';
-      const date = new Date(dateString);
-      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    },
-    scrollToBottom() {
-      this.$nextTick(() => {
-        const container = this.$refs.chatContent;
-        if (container) container.scrollTop = container.scrollHeight;
+      return new Date(dateString).toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit'
       });
     },
+
+    // Scroll xuống cuối khung chat
+    scrollToBottom() {
+      this.$nextTick(() => {
+        const content = this.$refs.chatContent;
+        if (content) content.scrollTop = content.scrollHeight;
+      });
+    },
+
+    // Gửi tin nhắn
     async sendMessage() {
       if (!this.newMessage.trim()) return;
+
       try {
-        const response = await axios.post('/api/messages', {
+        const { data } = await axios.post('/api/messages', {
           conversation_id: this.conversationId,
-          // conversation_id: '013bf190-2615-41df-a6b6-b9a9a262aba4',
-          content: this.newMessage
+          content: this.newMessage,
+          type: 'text'
         });
-        this.messages.push(response.data);
+
+        this.messages.push(data);
         this.newMessage = '';
         this.scrollToBottom();
       } catch (error) {
-        console.error('Lỗi khi gửi tin nhắn:', error);
+        console.error('Lỗi khi gửi tin nhắn:', error.response?.data || error);
       }
     },
+
+    // Lấy danh sách tin nhắn cũ
     async fetchMessages() {
-      // Đã truyền cứng conversation_id nên không cần kiểm tra nữa
       try {
-        const response = await axios.get('/api/messages', {
-          params: {
-            conversation_id: this.conversationId,
-            // conversation_id: '013bf190-2615-41df-a6b6-b9a9a262aba4'
-          }
+        const { data } = await axios.get('/api/messages', {
+          params: { conversation_id: this.conversationId }
         });
-        this.messages = response.data;
+
+        this.messages = data;
         this.scrollToBottom();
       } catch (error) {
-        console.error('Lỗi khi lấy tin nhắn:', error);
+        console.error('Lỗi khi lấy tin nhắn:', error.response?.data || error);
       }
     },
+
+    // (Tuỳ chọn) Thiết lập realtime nếu cần
     setupRealtime() {
-      // Để trống hoặc thêm logic realtime nếu có
+      // Ví dụ nếu dùng Pusher thì khởi tạo tại đây
     }
   },
 
   watch: {
     messages: {
       handler() {
-        this.$nextTick(this.scrollToBottom);
+        this.scrollToBottom();
       },
       deep: true
     }
   },
 
   mounted() {
-    // Tự động scroll xuống khi component được tạo
-    this.scrollToBottom();
-    
-    // Khởi tạo real-time (nếu cần)
-    this.setupRealtime();
-    
-    // Gọi fetchMessages để hiển thị tin nhắn cũ
     this.fetchMessages();
+    this.setupRealtime();
+    this.scrollToBottom();
   }
 };
 </script>
+
 
 <style scoped>
 /* Thêm các kiểu tùy chỉnh ở đây nếu cần */

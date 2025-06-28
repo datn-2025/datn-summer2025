@@ -56,6 +56,7 @@ class MessageController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->all());
         $user = Auth::user();
         if (!$user) {
             return response()->json(['message' => 'Unauthorized'], 401);

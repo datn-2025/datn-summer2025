@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Message extends Model
 {
@@ -37,6 +38,13 @@ class Message extends Model
     public function reads()
     {
         return $this->hasMany(MessageRead::class);
+    }
+  // tạo id theo uuid
+    protected static function booted()
+    {
+        static::creating(function ($model) {
+            $model->id = (string) Str::uuid();
+        });
     }
 
 }
