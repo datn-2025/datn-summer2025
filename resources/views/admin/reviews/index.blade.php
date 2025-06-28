@@ -60,11 +60,11 @@
                             </div>
                             <div class="col-md-2">
                                 <label class="form-label">Tên sản phẩm</label>
-                                <input type="text" name="product_name" class="form-control" value="{{ request('product_name') }}">
+                                <input type="text" name="product_name" class="form-control" value="{{ request('product_name') }}" placeholder="Tên sản phẩm">
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-2">        
                                 <label class="form-label">Tên khách hàng</label>
-                                <input type="text" name="customer_name" class="form-control" value="{{ request('customer_name') }}">
+                                <input type="text" name="customer_name" class="form-control" value="{{ request('customer_name') }}" placeholder="Tên khách hàng">
                             </div>
                             <div class="col-md-2">
                                 <label class="form-label">Số sao</label>
@@ -157,7 +157,7 @@
                                                             @method('PATCH')
                                                             <button type="submit" class="btn btn-sm btn-{{ $review->status === 'hidden' ? 'danger' : 'primary' }}"
                                                                 title="{{ $review->status === 'hidden' ? 'Hiển thị' : 'Ẩn' }}">
-                                                                <i class="fas fa-eye{{ $review->status === 'hidden' ? '' : '-slash' }}"></i>
+                                                                <i class="fas fa-eye{{ $review->status === 'hidden' ? '-slash' : '' }}"></i>
                                                             </button>
                                                         </form>
                                                         <a href="{{ route('admin.reviews.response', $review) }}"
