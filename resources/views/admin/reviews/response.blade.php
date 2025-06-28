@@ -135,12 +135,6 @@
                                             {{ $review->status === 'visible' ? 'Hiển thị' : 'Đã ẩn' }}
                                         </span>
                                     </p>
-                                    <p><strong>Trạng thái đánh giá:</strong>
-                                        <span
-                                            class="badge {{ $review->status === 'visible' ? 'bg-success' : 'bg-secondary' }}">
-                                            {{ $review->status === 'visible' ? 'Hiển thị' : 'Đã ẩn' }}
-                                        </span>
-                                    </p>
                                 </div>
 
                                 <div class="col-md-6">
