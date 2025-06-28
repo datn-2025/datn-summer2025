@@ -255,13 +255,13 @@
                                                             Cập nhật
                                                         </a>
                                                     </li>
-                                                    <li class="dropdown-divider"></li>
+                                                    <!-- <li class="dropdown-divider"></li>
                                                     <li>
-                                                        <a href="#" class="dropdown-item">
+                                                        <a href="{{ route('admin.invoices.show', $order->id) }}" class="dropdown-item">
                                                             <i class="ri-printer-fill align-bottom me-2 text-muted"></i>
                                                             In hóa đơn
                                                         </a>
-                                                    </li>
+                                                    </li> -->
                                                 </ul>
                                             </div>
                                         </td>

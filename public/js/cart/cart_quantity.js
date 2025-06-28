@@ -28,21 +28,75 @@ const CartQuantity = {
 
         if (!itemData) return;
 
+        // Check if this is an ebook
+        const isEbook = this.isEbook(cartItem);
+        
         // Store initial value
         if (quantityInput) {
             quantityInput.dataset.lastValue = quantityInput.value;
-            this.setupQuantityInput(quantityInput, cartItem);
+            
+            // For ebooks, disable quantity changes
+            if (isEbook) {
+                quantityInput.disabled = true;
+                quantityInput.value = 1;
+                quantityInput.style.backgroundColor = '#f5f5f5';
+                quantityInput.style.cursor = 'not-allowed';
+            } else {
+                this.setupQuantityInput(quantityInput, cartItem);
+            }
         }
 
-        // Setup increase button
-        if (increaseBtn) {
-            this.setupIncreaseButton(increaseBtn, quantityInput, cartItem);
+        // Setup buttons only for physical books
+        if (!isEbook) {
+            if (increaseBtn) {
+                this.setupIncreaseButton(increaseBtn, quantityInput, cartItem);
+            }
+            if (decreaseBtn) {
+                this.setupDecreaseButton(decreaseBtn, quantityInput, cartItem);
+            }
+        } else {
+            // Disable buttons for ebooks
+            if (increaseBtn) {
+                increaseBtn.disabled = true;
+                increaseBtn.style.display = 'none';
+            }
+            if (decreaseBtn) {
+                decreaseBtn.disabled = true; 
+                decreaseBtn.style.display = 'none';
+            }
+        }
+    },
+
+    // Check if item is an ebook
+    isEbook(cartItem) {
+        // Method 1: Check format name in cart item data
+        const formatElement = cartItem.querySelector('.format-name, [data-format]');
+        if (formatElement) {
+            const formatText = formatElement.textContent || formatElement.dataset.format || '';
+            if (formatText.toLowerCase().includes('ebook')) {
+                return true;
+            }
         }
 
-        // Setup decrease button
-        if (decreaseBtn) {
-            this.setupDecreaseButton(decreaseBtn, quantityInput, cartItem);
+        // Method 2: Check if quantity input is disabled (typical for ebooks)
+        const quantityInput = cartItem.querySelector('.quantity-input');
+        if (quantityInput && quantityInput.disabled && quantityInput.max == 1) {
+            return true;
         }
+
+        // Method 3: Check for ebook notice element
+        const ebookNotice = cartItem.querySelector('.ebook-notice');
+        if (ebookNotice) {
+            return true;
+        }
+
+        // Method 4: Check meta data in the cart item element
+        const formatName = cartItem.dataset.formatName;
+        if (formatName && formatName.toLowerCase().includes('ebook')) {
+            return true;
+        }
+
+        return false;
     },
 
     // Setup quantity input events
@@ -142,8 +196,15 @@ const CartQuantity = {
         const newValue = parseInt(input.value) || 0;
         const min = parseInt(input.min) || 1;
         const max = parseInt(input.max) || itemData.stock;
+        const cartItem = input.closest('.cart-item');
 
-        // Check stock limit
+        // Skip validation for ebooks
+        if (this.isEbook(cartItem)) {
+            input.value = 1;
+            return;
+        }
+
+        // Check stock limit for physical books
         if (newValue > itemData.stock) {
             CartBase.utils.showError(`Số lượng không được vượt quá ${itemData.stock} sản phẩm (số lượng tồn kho hiện tại)`);
             input.value = itemData.stock;
@@ -272,7 +333,18 @@ const CartQuantity = {
 
         if (!itemData) return;
 
-        // Validate quantity against stock
+        // Skip validation for ebooks - always quantity = 1
+        const isEbook = this.isEbook(cartItem);
+        if (isEbook) {
+            if (quantityInput) {
+                quantityInput.value = 1;
+                quantityInput.dataset.lastValue = 1;
+            }
+            CartBase.utils.showInfo('Sách điện tử luôn có số lượng cố định là 1');
+            return;
+        }
+
+        // Validate quantity against stock for physical books
         if (newQuantity > itemData.stock) {
             CartBase.utils.showError(`Số lượng không được vượt quá ${itemData.stock} sản phẩm (số lượng tồn kho hiện tại)`);
             if (quantityInput) quantityInput.value = oldQuantity;
@@ -291,15 +363,20 @@ const CartQuantity = {
             window.CartSummary.updateItemPriceDisplay(cartItem, newQuantity);
         }
 
+        // Prepare data for update - include all identifying information
+        const updateData = {
+            book_id: itemData.bookId,
+            book_format_id: cartItem.dataset.bookFormatId || null,
+            attribute_value_ids: cartItem.dataset.attributeValueIds || null,
+            quantity: newQuantity,
+            _token: CartBase.utils.getCSRFToken()
+        };
+
         // Make AJAX request
         $.ajax({
             url: '/cart/update',
             method: 'POST',
-            data: {
-                book_id: itemData.bookId,
-                quantity: newQuantity,
-                _token: CartBase.utils.getCSRFToken()
-            },
+            data: updateData,
             success: (response) => {
                 this.handleUpdateSuccess(response, cartItem, newQuantity, controls, stockAmount, quantityInput, increaseBtn, decreaseBtn);
             },
@@ -321,28 +398,71 @@ const CartQuantity = {
         if (response.success) {
             CartBase.utils.showSuccess(response.success);
             
-            // Update item data
+            // Update item data based on response
             if (response.data) {
-                cartItem.dataset.price = response.data.price;
-                cartItem.dataset.stock = response.data.stock;
+                const isEbook = response.data.is_ebook || false;
                 
-                // Update stock display
-                if (stockAmount) {
-                    stockAmount.textContent = response.data.stock;
+                if (isEbook) {
+                    // For ebooks: ensure quantity is always 1 and disable controls
+                    cartItem.dataset.price = response.data.price;
+                    cartItem.dataset.stock = 999; // Ebook unlimited stock
+                    
+                    if (quantityInput) {
+                        quantityInput.value = 1;
+                        quantityInput.max = 1;
+                        quantityInput.disabled = true;
+                        quantityInput.dataset.lastValue = 1;
+                        quantityInput.style.backgroundColor = '#f5f5f5';
+                        quantityInput.style.cursor = 'not-allowed';
+                    }
+
+                    // Hide/disable increase/decrease buttons for ebooks
+                    if (increaseBtn) {
+                        increaseBtn.disabled = true;
+                        increaseBtn.style.display = 'none';
+                    }
+                    if (decreaseBtn) {
+                        decreaseBtn.disabled = true;
+                        decreaseBtn.style.display = 'none';
+                    }
+
+                    // Update stock display for ebook
+                    if (stockAmount) {
+                        const stockContainer = stockAmount.closest('.adidas-cart-product-stock');
+                        if (stockContainer) {
+                            stockContainer.innerHTML = `
+                                <small>
+                                    <span><i class="fas fa-infinity"></i> Ebook - Có sẵn</span>
+                                </small>
+                            `;
+                        }
+                    }
+                } else {
+                    // For physical books: normal quantity management
+                    cartItem.dataset.price = response.data.price;
+                    cartItem.dataset.stock = response.data.stock;
+                    
+                    // Update stock display
+                    if (stockAmount) {
+                        stockAmount.textContent = response.data.stock;
+                    }
+
+                    // Update input attributes
+                    if (quantityInput) {
+                        quantityInput.max = response.data.stock;
+                        quantityInput.dataset.lastValue = newQuantity;
+                        quantityInput.disabled = false;
+                        quantityInput.style.backgroundColor = '';
+                        quantityInput.style.cursor = '';
+                    }
+
+                    // Update button states for physical books
+                    this.updateButtonStates(cartItem);
                 }
 
-                // Update input attributes
-                if (quantityInput) {
-                    quantityInput.max = response.data.stock;
-                    quantityInput.dataset.lastValue = newQuantity;
-                }
-
-                // Update button states
-                this.updateButtonStates(cartItem);
-
-                // Update price display
+                // Update price display for both types
                 if (window.CartSummary && typeof window.CartSummary.updateItemPriceDisplay === 'function') {
-                    window.CartSummary.updateItemPriceDisplay(cartItem, newQuantity);
+                    window.CartSummary.updateItemPriceDisplay(cartItem, isEbook ? 1 : newQuantity);
                 }
             }
         } else if (response.error) {

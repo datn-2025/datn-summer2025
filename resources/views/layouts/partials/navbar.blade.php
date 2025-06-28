@@ -100,7 +100,6 @@
     </div>
 </nav>
 
-
 <style>
     /* Main Navigation */
     .adidas-nav {

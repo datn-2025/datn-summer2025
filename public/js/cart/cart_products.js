@@ -6,15 +6,34 @@
 const CartProducts = {
     // Initialize product management
     init() {
+        console.log('CartProducts init called');
         this.bindRemoveButtons();
         this.bindBulkActions();
+        this.initialized = true;
     },
 
-    // Bind individual product remove buttons
+    // Bind individual product remove buttons using event delegation
     bindRemoveButtons() {
-        const removeButtons = CartBase.dom.getAll('.remove-item');
+        console.log('Binding remove buttons with event delegation');
         
-        removeButtons.forEach(button => {
+        // Use event delegation on document body
+        document.body.addEventListener('click', (e) => {
+            if (e.target.closest('.adidas-cart-product-remove')) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const button = e.target.closest('.adidas-cart-product-remove');
+                console.log('Remove button clicked via delegation:', button);
+                this.removeItem(button);
+            }
+        });
+        
+        // Also bind directly for existing buttons
+        const removeButtons = document.querySelectorAll('.adidas-cart-product-remove');
+        console.log(`Found ${removeButtons.length} remove button(s) for direct binding`);
+        
+        removeButtons.forEach((button, index) => {
+            console.log(`Setting up remove button ${index}:`, button);
             this.setupRemoveButton(button);
         });
     },
@@ -23,9 +42,15 @@ const CartProducts = {
     setupRemoveButton(button) {
         if (!button) return;
         
-        CartBase.dom.on(button, 'click', () => {
+        console.log('Setting up remove button:', button);
+        
+        // Simple click handler
+        button.onclick = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('Button clicked directly:', button);
             this.removeItem(button);
-        });
+        };
     },
 
     // Remove individual item from cart
@@ -33,7 +58,12 @@ const CartProducts = {
         const cartItem = button.closest('.cart-item');
         const bookId = button.dataset.bookId;
         
-        if (!cartItem || !bookId) return;
+        console.log('Remove item called:', { cartItem, bookId, button });
+        
+        if (!cartItem || !bookId) {
+            console.error('Missing cart item or book ID');
+            return;
+        }
 
         // Show confirmation
         if (!CartBase.utils.showConfirm('Bạn có chắc muốn xóa sản phẩm này khỏi giỏ hàng?')) {
@@ -47,18 +77,32 @@ const CartProducts = {
         // Add loading state
         CartBase.dom.addClass(cartItem, 'loading');
 
+        // Get additional item data for precise removal
+        const bookFormatId = cartItem.dataset.bookFormatId || null;
+        const attributeValueIds = cartItem.dataset.attributeValueIds || null;
+
+        console.log('Remove item data:', {
+            bookId,
+            bookFormatId,
+            attributeValueIds
+        });
+
         // Make AJAX request
         $.ajax({
             url: '/cart/remove',
             method: 'POST',
             data: {
                 book_id: bookId,
+                book_format_id: bookFormatId,
+                attribute_value_ids: attributeValueIds,
                 _token: CartBase.utils.getCSRFToken()
             },
             success: (response) => {
+                console.log('Remove success:', response);
                 this.handleRemoveSuccess(response, cartItem);
             },
             error: (xhr) => {
+                console.error('Remove error:', xhr);
                 this.handleRemoveError(xhr, cartItem, controls);
             }
         });
@@ -69,22 +113,11 @@ const CartProducts = {
         if (response.success) {
             CartBase.utils.showSuccess(response.success);
             
-            // Remove item from DOM
-            CartBase.dom.remove(cartItem);
+            // Always reload page after successful removal to update all cart data
+            setTimeout(() => {
+                location.reload();
+            }, 1500); // Delay to show success message
             
-            // Check if cart is empty
-            const remainingItems = CartBase.dom.getAll('.cart-item');
-            if (remainingItems.length === 0) {
-                // Reload page if no items left
-                setTimeout(() => {
-                    location.reload();
-                }, 1000);
-            } else {
-                // Update cart totals
-                if (window.CartSummary && typeof window.CartSummary.updateCartTotal === 'function') {
-                    window.CartSummary.updateCartTotal();
-                }
-            }
         } else if (response.error) {
             CartBase.utils.showError(response.error);
             this.resetItemControls(cartItem);
@@ -292,8 +325,29 @@ const CartProducts = {
 
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded, checking CartBase...');
     if (window.CartBase) {
+        console.log('CartBase available, initializing CartProducts...');
         CartProducts.init();
+    } else {
+        console.error('CartBase not available');
+        // Try again after a delay
+        setTimeout(() => {
+            if (window.CartBase) {
+                console.log('CartBase available after delay, initializing CartProducts...');
+                CartProducts.init();
+            }
+        }, 100);
+    }
+});
+
+// Also try when window loads
+window.addEventListener('load', function() {
+    console.log('Window loaded, double-checking CartProducts...');
+    if (!CartProducts.initialized) {
+        console.log('CartProducts not initialized yet, trying again...');
+        CartProducts.init();
+        CartProducts.initialized = true;
     }
 });
 
