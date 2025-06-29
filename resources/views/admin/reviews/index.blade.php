@@ -152,14 +152,6 @@
                                                 </td>
                                                 <td class="text-center">
                                                     <div class="d-flex justify-content-center gap-1">
-                                                        <form action="{{ route('admin.reviews.update-status', $review->id) }}" method="POST">
-                                                            @csrf
-                                                            @method('PATCH')
-                                                            <button type="submit" class="btn btn-sm btn-{{ $review->status === 'hidden' ? 'danger' : 'primary' }}"
-                                                                title="{{ $review->status === 'hidden' ? 'Hiển thị' : 'Ẩn' }}">
-                                                                <i class="fas fa-eye{{ $review->status === 'hidden' ? '-slash' : '' }}"></i>
-                                                            </button>
-                                                        </form>
                                                         <a href="{{ route('admin.reviews.response', $review) }}"
                                                            class="btn btn-sm btn-outline-primary" title="Xem & phản hồi">
                                                             <i class="ri-chat-3-fill"></i>
