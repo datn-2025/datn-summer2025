@@ -34,6 +34,15 @@
                                             class="badge {{ $review->status === 'visible' ? 'bg-success' : 'bg-secondary' }}">
                                             {{ $review->status === 'visible' ? 'Hiển thị' : 'Đã ẩn' }}
                                         </span>
+                                    <form action="{{ route('admin.reviews.update-status', $review->id) }}" method="POST">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button type="submit"
+                                            class="btn btn-sm btn-{{ $review->status === 'hidden' ? 'danger' : 'primary' }}"
+                                            title="{{ $review->status === 'hidden' ? 'Hiển thị' : 'Ẩn' }}">
+                                            <i class="fas fa-eye{{ $review->status === 'hidden' ? '-slash' : '' }}"></i>
+                                        </button>
+                                    </form>
                                     </p>
                                 </div>
 
@@ -76,7 +85,7 @@
                             </div>
                         </div>
 
-                         {{-- Thông tin sản phẩm --}}
+                        {{-- Thông tin sản phẩm --}}
                         @if ($review->book)
                             <div class="card mb-4">
                                 <div class="card-header bg-light">
