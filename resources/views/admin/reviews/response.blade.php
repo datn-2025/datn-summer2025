@@ -75,8 +75,7 @@
                                         @csrf
                                         <div class="mb-3">
                                             <label for="admin_response" class="form-label">Nội dung phản hồi</label>
-                                            <textarea name="admin_response" id="admin_response" class="form-control" rows="4" required
-                                                placeholder="Nhập phản hồi..."></textarea>
+                                            <textarea name="admin_response" id="admin_response" class="form-control" rows="4" placeholder="Nhập phản hồi..."></textarea>
                                         </div>
                                         <button type="submit" class="btn btn-primary">
                                             <i class="fas fa-paper-plane me-1"></i> Gửi phản hồi
