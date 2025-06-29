@@ -433,8 +433,7 @@
                                 <ul class="nav nav-sm flex-column">
                                     <li><a href="{{ route('admin.orders.index') }}" class="nav-link">Danh sách</a>
                                     </li>
-                                    <li><a href="{{ route('admin.orders.cancelled') }}" class="nav-link">Đơn hàng hủy</a>
-                                    </li>
+                                    {{-- <li><a href="{{ route('admin.orders.cancelled') }}" class="nav-link">Đơn hàng hủy</a></li> --}}
                                 </ul>
                             </div>
                         </li>
