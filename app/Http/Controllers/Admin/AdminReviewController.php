@@ -52,8 +52,17 @@ class AdminReviewController extends Controller
     /**
      * Hiển thị form phản hồi cho đánh giá
      */
-    public function showResponseForm(Review $review)
+    public function showResponseForm($id)
     {
+        // Kiểm tra sự tồn tại của review
+        $review = Review::find($id);
+
+        // Nếu không tồn tại, hiển thị thông báo lỗi và chuyển hướng về danh sách review
+        if (!$review) {
+            Toastr::error('Không tìm thấy đánh giá.', 'Lỗi');
+            return redirect()->route('admin.reviews.index');
+        }
+
         $review->load([
             'book' => function ($q) {
                 $q->withCount('reviews')
@@ -76,7 +85,7 @@ class AdminReviewController extends Controller
     /**
      * Cập nhật trạng thái ẩn/hiện của đánh giá
      */
-    public function updateStatus(Request $request, Review $review)
+    public function updateStatus(Review $review)
     {
         if (!in_array($review->status, ['visible', 'hidden'])) {
             Toastr::error('Trạng thái không hợp lệ.', 'Lỗi');
@@ -93,11 +102,20 @@ class AdminReviewController extends Controller
     /**
      * Lưu phản hồi của admin (một lần duy nhất)
      */
-    public function storeResponse(Request $request, Review $review)
+    public function storeResponse(Request $request, $id)
     {
+        // Kiểm tra sự tồn tại của review
+        $review = Review::find($id);
+
+        // Nếu không tồn tại, hiển thị thông báo lỗi và chuyển hướng về danh sách review
+        if (!$review) {
+            Toastr::error('Không tìm thấy đánh giá.', 'Lỗi');
+            return redirect()->route('admin.reviews.index');
+        }
+
         if ($review->admin_response) {
-            return redirect()->back()
-                ->with('error', 'Đánh giá này đã có phản hồi và không thể chỉnh sửa.');
+            Toastr::error('Đánh giá này đã được phản hồi.', 'Lỗi');
+            return redirect()->route('admin.reviews.index');
         }
 
         $request->validate([
