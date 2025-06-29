@@ -46,40 +46,50 @@
                                 <label class="form-label">Trạng thái phản hồi</label>
                                 <select name="admin_response" class="form-select">
                                     <option value="">Tất cả</option>
-                                    <option value="responded" {{ request('admin_response') == 'responded' ? 'selected' : '' }}>Đã phản hồi</option>
-                                    <option value="not_responded" {{ request('admin_response') == 'not_responded' ? 'selected' : '' }}>Chưa phản hồi</option>
+                                    <option value="responded"
+                                        {{ request('admin_response') == 'responded' ? 'selected' : '' }}>Đã phản hồi
+                                    </option>
+                                    <option value="not_responded"
+                                        {{ request('admin_response') == 'not_responded' ? 'selected' : '' }}>Chưa phản hồi
+                                    </option>
                                 </select>
                             </div>
                             <div class="col-md-2">
                                 <label class="form-label">Trạng thái hiển thị</label>
                                 <select name="status" class="form-select">
                                     <option value="">Tất cả</option>
-                                    <option value="visible" {{ request('status') == 'visible' ? 'selected' : '' }}>Hiện</option>
+                                    <option value="visible" {{ request('status') == 'visible' ? 'selected' : '' }}>Hiện
+                                    </option>
                                     <option value="hidden" {{ request('status') == 'hidden' ? 'selected' : '' }}>Ẩn</option>
                                 </select>
                             </div>
                             <div class="col-md-2">
                                 <label class="form-label">Tên Sách</label>
-                                <input type="text" name="product_name" class="form-control" value="{{ request('product_name') }}" placeholder="Tên sản phẩm">
+                                <input type="text" name="product_name" class="form-control"
+                                    value="{{ request('product_name') }}" placeholder="Tên sản phẩm">
                             </div>
-                            <div class="col-md-2">        
+                            <div class="col-md-2">
                                 <label class="form-label">Tên khách hàng</label>
-                                <input type="text" name="customer_name" class="form-control" value="{{ request('customer_name') }}" placeholder="Tên khách hàng">
+                                <input type="text" name="customer_name" class="form-control"
+                                    value="{{ request('customer_name') }}" placeholder="Tên khách hàng">
                             </div>
                             <div class="col-md-2">
                                 <label class="form-label">Số sao đánh giá</label>
                                 <select name="rating" class="form-select">
                                     <option value="">Tất cả</option>
                                     @foreach (range(5, 1) as $i)
-                                        <option value="{{ $i }}" {{ request('rating') == $i ? 'selected' : '' }}>
-                                            {{ str_repeat('★', $i) }}{{ str_repeat('☆', 5 - $i) }} ({{ $i }} sao)
+                                        <option value="{{ $i }}"
+                                            {{ request('rating') == $i ? 'selected' : '' }}>
+                                            {{ str_repeat('★', $i) }}{{ str_repeat('☆', 5 - $i) }} ({{ $i }}
+                                            sao)
                                         </option>
                                     @endforeach
                                 </select>
                             </div>
                             <div class="col-md-5">
                                 <label class="form-label">Nội dung bình luận</label>
-                                <input type="text" name="cmt" class="form-control" value="{{ request('cmt') }}" placeholder="Tìm theo nội dung đánh giá hoặc phản hồi">
+                                <input type="text" name="cmt" class="form-control" value="{{ request('cmt') }}"
+                                    placeholder="Tìm theo nội dung đánh giá hoặc phản hồi">
                             </div>
                             <div class="col-md-3 d-flex align-items-end">
                                 <button type="submit" class="btn btn-primary me-2">
@@ -95,8 +105,10 @@
                         <div class="table-responsive table-card mt-3">
                             @if ($reviews->isEmpty())
                                 <div class="noresult text-center py-5">
-                                    <lord-icon src="https://cdn.lordicon.com/{{ filled(request()->all()) ? 'msoeawqm.json' : 'nocovwne.json' }}" trigger="loop"
-                                        colors="primary:#121331,secondary:#08a88a" style="width:100px;height:100px">
+                                    <lord-icon
+                                        src="https://cdn.lordicon.com/{{ filled(request()->all()) ? 'msoeawqm.json' : 'nocovwne.json' }}"
+                                        trigger="loop" colors="primary:#121331,secondary:#08a88a"
+                                        style="width:100px;height:100px">
                                     </lord-icon>
                                     <h5 class="mt-3 text-{{ filled(request()->all()) ? 'danger' : 'muted' }}">
                                         {{ filled(request()->all()) ? 'Không tìm thấy đánh giá phù hợp' : 'Danh sách đánh giá hiện đang trống' }}
@@ -123,7 +135,7 @@
                                                 <td style="max-width: 200px; white-space: normal;">
                                                     @if ($review->book)
                                                         <a href="{{ route('admin.books.show', ['id' => $review->book->id, 'slug' => Str::slug($review->book->title)]) }}"
-                                                           class="text-decoration-none fw-medium">
+                                                            class="text-decoration-none fw-medium">
                                                             {{ $review->book->title }}
                                                         </a>
                                                     @else
@@ -131,19 +143,23 @@
                                                     @endif
                                                 </td>
                                                 <td style="max-width: 400px;">
-                                                    <div class="fw-semibold">{{ $review->user->name ?? 'Người dùng đã xóa' }}</div>
+                                                    <div class="fw-semibold">
+                                                        {{ $review->user->name ?? 'Người dùng đã xóa' }}</div>
                                                     <div class="text-muted small mb-1">
-                                                        <i class="ri-calendar-line me-1"></i>{{ $review->created_at->format('H:i d/m/Y') }}
+                                                        <i
+                                                            class="ri-calendar-line me-1"></i>{{ $review->created_at->format('H:i d/m/Y') }}
                                                     </div>
                                                     <div>
                                                         @foreach (range(1, 5) as $i)
-                                                            <i class="fas fa-star{{ $i <= $review->rating ? ' text-warning' : ' text-muted' }}"></i>
+                                                            <i
+                                                                class="fas fa-star{{ $i <= $review->rating ? ' text-warning' : ' text-muted' }}"></i>
                                                         @endforeach
                                                     </div>
                                                     <div class="text-truncate small mt-1">{{ $review->comment }}</div>
                                                 </td>
                                                 <td style="max-width: 300px;">
-                                                    <span class="badge bg-{{ $review->admin_response ? 'success' : 'secondary' }}">
+                                                    <span
+                                                        class="badge bg-{{ $review->admin_response ? 'success' : 'secondary' }}">
                                                         {{ $review->admin_response ? 'Đã phản hồi' : 'Chưa phản hồi' }}
                                                     </span>
                                                     <div class="mt-1 text-truncate small" style="max-height: 60px;">
@@ -151,12 +167,10 @@
                                                     </div>
                                                 </td>
                                                 <td class="text-center">
-                                                    <div class="d-flex justify-content-center gap-1">
-                                                        <a href="{{ route('admin.reviews.response', $review) }}"
-                                                           class="btn btn-sm btn-outline-primary" title="Xem & phản hồi">
-                                                            <i class="ri-chat-3-fill"></i>
-                                                        </a>
-                                                    </div>
+                                                    <a href="{{ route('admin.reviews.response', $review) }}"
+                                                        class="btn btn-sm btn-outline-primary" title="Xem & phản hồi">
+                                                        <i class="ri-chat-3-fill"></i>
+                                                    </a>
                                                 </td>
                                             </tr>
                                         @endforeach
