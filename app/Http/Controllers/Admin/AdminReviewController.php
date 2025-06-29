@@ -50,23 +50,6 @@ class AdminReviewController extends Controller
     }
 
     /**
-     * Cập nhật trạng thái ẩn/hiện của đánh giá
-     */
-    public function updateStatus(Request $request, Review $review)
-    {
-        if (!in_array($review->status, ['visible', 'hidden'])) {
-            Toastr::error('Trạng thái không hợp lệ.', 'Lỗi');
-            return redirect()->route('admin.reviews.index');
-        }
-
-        $newStatus = $review->status === 'visible' ? 'hidden' : 'visible';
-        $review->update(['status' => $newStatus]);
-
-        Toastr::success('Cập nhật trạng thái đánh giá thành công.', 'Thành công');
-        return redirect()->route('admin.reviews.index');
-    }
-
-    /**
      * Hiển thị form phản hồi cho đánh giá
      */
     public function showResponseForm(Review $review)
@@ -89,6 +72,23 @@ class AdminReviewController extends Controller
 
         return view('admin.reviews.response', compact('review', 'otherReviews'));
     }
+
+    /**
+     * Cập nhật trạng thái ẩn/hiện của đánh giá
+     */
+    public function updateStatus(Request $request, Review $review)
+    {
+        if (!in_array($review->status, ['visible', 'hidden'])) {
+            Toastr::error('Trạng thái không hợp lệ.', 'Lỗi');
+            return redirect()->route('admin.reviews.response', $review);
+        }
+
+        $newStatus = $review->status === 'visible' ? 'hidden' : 'visible';
+        $review->update(['status' => $newStatus]);
+
+        Toastr::success('Cập nhật trạng thái đánh giá thành công.', 'Thành công');
+        return redirect()->route('admin.reviews.response', $review);
+    } 
 
     /**
      * Lưu phản hồi của admin (một lần duy nhất)
