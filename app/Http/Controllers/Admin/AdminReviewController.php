@@ -105,7 +105,7 @@ class AdminReviewController extends Controller
     public function storeResponse(Request $request, $id)
     {
         // Kiểm tra sự tồn tại của review
-        $review = Review::find($id);
+        $review = Review::lockForUpdate()->find($id);
 
         // Nếu không tồn tại, hiển thị thông báo lỗi và chuyển hướng về danh sách review
         if (!$review) {
