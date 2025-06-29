@@ -101,10 +101,11 @@ class AdminReviewController extends Controller
         }
 
         $request->validate([
-            'admin_response' => 'required|string|max:1000'
+            'admin_response' => 'required|string|not_regex:/<.*?>/i|max:1000'
         ], [
             'admin_response.required' => 'Nội dung phản hồi không được để trống.',
             'admin_response.string' => 'Nội dung phản hồi phải là chuỗi văn bản.',
+            'admin_response.not_regex' => 'Nội dung phản hồi không được chứa thẻ HTML.',
             'admin_response.max' => 'Nội dung phản hồi không được vượt quá 1000 ký tự.'
         ]);
 
