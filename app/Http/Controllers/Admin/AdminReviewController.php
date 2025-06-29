@@ -102,6 +102,10 @@ class AdminReviewController extends Controller
 
         $request->validate([
             'admin_response' => 'required|string|max:1000'
+        ], [
+            'admin_response.required' => 'Nội dung phản hồi là bắt buộc.',
+            'admin_response.string' => 'Nội dung phản hồi phải là chuỗi văn bản.',
+            'admin_response.max' => 'Nội dung phản hồi không được vượt quá 1000 ký tự.'
         ]);
 
         $review->update([
