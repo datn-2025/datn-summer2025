@@ -29,11 +29,13 @@
                                                 class="fas fa-star{{ $i <= $review->rating ? ' text-warning' : ' text-muted' }}"></i>
                                         @endforeach
                                     </p>
-                                    <p><strong>Trạng thái đánh giá:</strong>
+                                    <p>
+                                        <strong>Trạng thái đánh giá:</strong>
                                         <span
                                             class="badge {{ $review->status === 'visible' ? 'bg-success' : 'bg-secondary' }}">
                                             {{ $review->status === 'visible' ? 'Hiển thị' : 'Đã ẩn' }}
                                         </span>
+                                    </p>
                                     <form action="{{ route('admin.reviews.update-status', $review->id) }}" method="POST">
                                         @csrf
                                         @method('PATCH')
@@ -43,7 +45,6 @@
                                             <i class="fas fa-eye{{ $review->status === 'hidden' ? '-slash' : '' }}"></i>
                                         </button>
                                     </form>
-                                    </p>
                                 </div>
 
                                 <div class="col-md-6">
