@@ -73,10 +73,10 @@
         </div>
 
         <div class="p-6 md:p-8">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                 {{-- Customer Information --}}
-                <div class="bg-gray-50 p-5 rounded-lg shadow-sm">
-                    <h6 class="text-lg font-semibold text-gray-700 mb-3 border-b pb-2">Thông Tin Khách Hàng</h4>
+                <div class="bg-gray-50 p-5 rounded-lg shadow-sm lg:col-span-1">
+                    <h6 class="text-lg font-semibold text-gray-700 mb-3 border-b pb-2">Thông Tin Khách Hàng</h6>
                     <dl class="space-y-1 text-sm text-gray-600 font-medium" style="font-size: 14px;">
                         <div class="flex">
                             <dt class="font-medium text-gray-800">Tên:</dt>
@@ -101,7 +101,7 @@
                 </div>
 
                 {{-- Shipping Address --}}
-                <div class="bg-gray-50 p-5 rounded-lg shadow-sm">
+                <div class="bg-gray-50 p-5 rounded-lg shadow-sm lg:col-span-1">
                     <h4 class="text-lg font-semibold text-gray-700 mb-3 border-b pb-2">Địa Chỉ Giao Hàng</h4>
                     <address class="not-italic text-sm text-gray-600 space-y-1">
                         <p>{{ $order->address->address_detail }}</p>
@@ -111,7 +111,7 @@
                 </div>
 
                 {{-- Payment Information --}}
-                <div class="bg-gray-50 p-5 rounded-lg shadow-sm">
+                <div class="bg-gray-50 p-5 rounded-lg shadow-sm lg:col-span-1">
                     <h4 class="text-lg font-semibold text-gray-700 mb-3 border-b pb-2">Thông Tin Thanh Toán</h4>
                     <dl class="space-y-1 text-sm text-gray-600">
                         <div>
@@ -124,8 +124,35 @@
                                 {{ $order->paymentStatus->name }}
                             </dd>
                         </div>
+                        <div>
+                            <dt class="font-medium text-gray-800">Ngày đặt hàng:</dt>
+                            <dd>{{ $order->created_at->format('d/m/Y H:i:s') }}</dd>
+                        </div>
                     </dl>
                 </div>
+
+                {{-- Cancel Information --}}
+                @if($order->orderStatus->name == 'Đã hủy' || $order->cancelled_at || $order->cancel_reason)
+                <div class="bg-gray-50 p-5 rounded-lg shadow-sm lg:col-span-1">
+                    <h4 class="text-lg font-semibold text-red-700 mb-3 border-b pb-2">Thông Tin Hủy Đơn</h4>
+                    <dl class="space-y-1 text-sm text-gray-600">
+                        <div>
+                            <dt class="font-medium text-gray-800">Ngày hủy:</dt>
+                            <dd>
+                                @if($order->orderStatus->name == 'Đã hủy')
+                                    {{ optional($order->cancelled_at ?? $order->updated_at)->format('d/m/Y H:i:s') ?? 'N/A' }}
+                                @else
+                                    N/A
+                                @endif
+                            </dd>
+                        </div>
+                        <div>
+                            <dt class="font-medium text-gray-800">Lý do hủy:</dt>
+                            <dd>{{ $order->cancel_reason ?? 'Không có' }}</dd>
+                        </div>
+                    </dl>
+                </div>
+                @endif
             </div>
 
             {{-- Order Items --}}
@@ -174,11 +201,28 @@
 
             {{-- Order Summary & Notes --}}
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="md:col-span-2">
+                <div class="md:col-span-2 space-y-4">
                     @if($order->note)
                     <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-md shadow-sm">
                         <h5 class="text-md font-semibold text-yellow-800 mb-2">Ghi Chú Từ Khách Hàng:</h5>
                         <p class="text-sm text-yellow-700">{{ $order->note }}</p>
+                    </div>
+                    @endif
+
+                    {{-- Ngày hủy & Lý do hủy: chỉ hiển thị nếu có dữ liệu --}}
+                    @if($order->orderStatus->name == 'Đã hủy' || $order->cancelled_at || $order->cancel_reason)
+                    <div class="bg-red-50 border-l-4 border-red-400 p-4 rounded-md shadow-sm">
+                        <h5 class="text-md font-semibold text-red-800 mb-2">Thông Tin Hủy Đơn</h5>
+                        <div class="flex flex-col gap-1 text-sm">
+                            <div>
+                                <span class="font-medium text-gray-800">Ngày hủy:</span>
+                                <span class="text-gray-700">{{ $order->cancelled_at ? $order->cancelled_at->format('d/m/Y H:i:s') : 'N/A' }}</span>
+                            </div>
+                            <div>
+                                <span class="font-medium text-gray-800">Lý do hủy:</span>
+                                <span class="text-gray-700">{{ $order->cancel_reason ?? 'Không có' }}</span>
+                            </div>
+                        </div>
                     </div>
                     @endif
                 </div>
