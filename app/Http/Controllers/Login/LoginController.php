@@ -91,10 +91,10 @@ class LoginController extends Controller
                 session()->forget('login_attempts_' . $user->id);
             }
 
-            // // Kiểm tra quyền admin
-            // if (Auth::user()->isAdmin()) {
-            //     return redirect()->intended(route('admin.dashboard'));
-            // }
+            // Kiểm tra quyền admin
+            if (Auth::user()->isAdmin()) {
+                return redirect()->intended(route('admin.dashboard'));
+            }
             Toastr::success('Đăng nhập thành công!', 'Thành công');
             return redirect()->intended(route('home'));
         }
