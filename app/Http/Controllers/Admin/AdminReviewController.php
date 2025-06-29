@@ -54,7 +54,6 @@ class AdminReviewController extends Controller
      */
     public function showResponseForm($id)
     {
-        // Kiểm tra sự tồn tại của review
         $review = Review::find($id);
 
         // Nếu không tồn tại, hiển thị thông báo lỗi và chuyển hướng về danh sách review
@@ -97,14 +96,13 @@ class AdminReviewController extends Controller
 
         Toastr::success('Cập nhật trạng thái đánh giá thành công.', 'Thành công');
         return redirect()->route('admin.reviews.response', $review);
-    } 
+    }
 
     /**
      * Lưu phản hồi của admin (một lần duy nhất)
      */
     public function storeResponse(Request $request, $id)
     {
-        // Kiểm tra sự tồn tại của review
         $review = Review::lockForUpdate()->find($id);
 
         // Nếu không tồn tại, hiển thị thông báo lỗi và chuyển hướng về danh sách review
