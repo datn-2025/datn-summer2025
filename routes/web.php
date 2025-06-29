@@ -221,7 +221,10 @@ Route::middleware(['auth:admin', 'admin'])->prefix('admin')->name('admin.')->gro
 
     Route::prefix('wallets')->name('wallets.')->group(function () {
         Route::get('/', [WalletController::class, 'index'])->name('index');
-        Route::get('/{wallet}', [WalletController::class, 'show'])->name('show');
+        Route::get('/deposit-history', [\App\Http\Controllers\Admin\WalletController::class, 'depositHistory'])->name('depositHistory');
+        Route::get('/withdraw-history', [\App\Http\Controllers\Admin\WalletController::class, 'withdrawHistory'])->name('withdrawHistory');
+        Route::post('/approve/{id}', [WalletController::class, 'approveTransaction'])->name('approveTransaction');
+        Route::post('/reject/{id}', [WalletController::class, 'rejectTransaction'])->name('rejectTransaction');
     });
 
     // Route admin/categories
@@ -364,4 +367,14 @@ Route::middleware(['auth:admin', 'admin'])->prefix('admin')->name('admin.')->gro
     Route::delete('collections/{id}/force', [CollectionController::class, 'forceDelete'])->name('collections.forceDelete');
     Route::get('collections-trash', [CollectionController::class, 'trash'])->name('collections.trash');
     Route::post('collections/{id}/restore', [CollectionController::class, 'restore'])->name('collections.restore');
+});
+
+// Wallet user routes
+Route::middleware('auth')->prefix('wallet')->name('wallet.')->group(function () {
+    Route::get('/', [App\Http\Controllers\WalletController::class, 'index'])->name('index');
+    Route::get('/deposit', [App\Http\Controllers\WalletController::class, 'showDepositForm'])->name('deposit.form');
+    Route::post('/deposit', [App\Http\Controllers\WalletController::class, 'deposit'])->name('deposit');
+    Route::get('/withdraw', [App\Http\Controllers\WalletController::class, 'showWithdrawForm'])->name('withdraw.form');
+    Route::post('/withdraw', [App\Http\Controllers\WalletController::class, 'withdraw'])->name('withdraw');
+    Route::get('/vnpay-return', [App\Http\Controllers\WalletController::class, 'vnpayReturn'])->name('vnpayReturn');
 });
