@@ -506,6 +506,14 @@
                                             data-key="t-basic-elements">Danh
                                             sách</a>
                                     </li>
+                                    <li class="nav-item">
+                                        <a href="{{ route('admin.wallets.depositHistory') }}" class="nav-link"
+                                            data-key="t-basic-elements">Nạp ví</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{ route('admin.wallets.withdrawHistory') }}" class="nav-link"
+                                            data-key="t-basic-elements">Rút ví</a>
+                                    </li>
                                 </ul>
                             </div>
                         </li>
