@@ -78,7 +78,7 @@
                                         <div class="mb-3">
                                             <label for="admin_response" class="form-label">Nội dung phản hồi</label>
                                             <textarea name="admin_response" id="admin_response" class="form-control @error('admin_response') is-invalid @enderror"
-                                                rows="4" required placeholder="Nhập phản hồi..."></textarea>
+                                                rows="4" required placeholder="Nhập phản hồi...">{{ old('admin_response', $review->admin_response) }}</textarea>
                                             @error('admin_response')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
