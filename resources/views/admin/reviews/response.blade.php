@@ -36,7 +36,7 @@
                                             {{ $review->status === 'visible' ? 'Hiển thị' : 'Đã ẩn' }}
                                         </span>
                                     </p>
-                                    <form action="{{ route('admin.reviews.update-status', $review->id) }}" method="POST">
+                                    <form action="{{ route('admin.reviews.update-status', $review->id) }}" method="POST" onsubmit="return disableSubmitOnce(this)">
                                         @csrf
                                         @method('PATCH')
                                         <button type="submit"
@@ -71,7 +71,7 @@
                                         {{ $review->admin_response }}
                                     </div>
                                 @else
-                                    <form action="{{ route('admin.reviews.response.store', $review) }}" method="POST">
+                                    <form action="{{ route('admin.reviews.response.store', $review) }}" method="POST" onsubmit="return disableSubmitOnce(this)">
                                         @csrf
                                         <div class="mb-3">
                                             <label for="admin_response" class="form-label">Nội dung phản hồi</label>
@@ -237,3 +237,17 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+<script>
+    // Chống submit nhiều lần
+    function disableSubmitOnce(form) {
+        const btn = form.querySelector("button[type=submit]");
+        if (btn && !btn.disabled) {
+            btn.disabled = true;
+            btn.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> Đang xử lý...`;
+        }
+        return true;
+    }
+</script>
+@endpush
