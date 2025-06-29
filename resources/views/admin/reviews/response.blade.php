@@ -14,8 +14,69 @@
                     </div>
 
                     <div class="card-body">
+                        {{-- Thông tin đánh giá khách hàng --}}
+                        <div class="card mb-4">
+                            <div class="card-header bg-light">
+                                <h5 class="mb-0">Đánh giá khách hàng</h5>
+                            </div>
+                            <div class="card-body row">
+                                <div class="col-md-6">
+                                    <p><strong>Khách hàng:</strong> {{ $review->user->name ?? 'Khách' }}</p>
+                                    <p><strong>Ngày đánh giá:</strong> {{ $review->created_at->format('d/m/Y H:i') }}</p>
+                                    <p><strong>Số sao:</strong>
+                                        @foreach (range(1, 5) as $i)
+                                            <i
+                                                class="fas fa-star{{ $i <= $review->rating ? ' text-warning' : ' text-muted' }}"></i>
+                                        @endforeach
+                                    </p>
+                                    <p><strong>Trạng thái đánh giá:</strong>
+                                        <span
+                                            class="badge {{ $review->status === 'visible' ? 'bg-success' : 'bg-secondary' }}">
+                                            {{ $review->status === 'visible' ? 'Hiển thị' : 'Đã ẩn' }}
+                                        </span>
+                                    </p>
+                                </div>
 
-                        {{-- Thông tin sản phẩm --}}
+                                <div class="col-md-6">
+                                    <p><strong>Bình luận:</strong></p>
+                                    <div class="border p-3 rounded bg-light">
+                                        {{ $review->comment }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Phản hồi của admin --}}
+                        <div class="card mb-4">
+                            <div class="card-header bg-light">
+                                <h5 class="mb-0">Phản hồi của quản trị viên</h5>
+                            </div>
+                            <div class="card-body">
+                                @if ($review->admin_response)
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <strong>Ngày phản hồi:</strong>
+                                        <span>{{ $review->updated_at->format('d/m/Y H:i') }}</span>
+                                    </div>
+                                    <div class="bg-light border p-3 rounded">
+                                        {{ $review->admin_response }}
+                                    </div>
+                                @else
+                                    <form action="{{ route('admin.reviews.response.store', $review) }}" method="POST">
+                                        @csrf
+                                        <div class="mb-3">
+                                            <label for="admin_response" class="form-label">Nội dung phản hồi</label>
+                                            <textarea name="admin_response" id="admin_response" class="form-control" rows="4" required
+                                                placeholder="Nhập phản hồi..."></textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-paper-plane me-1"></i> Gửi phản hồi
+                                        </button>
+                                    </form>
+                                @endif
+                            </div>
+                        </div>
+
+                         {{-- Thông tin sản phẩm --}}
                         @if ($review->book)
                             <div class="card mb-4">
                                 <div class="card-header bg-light">
@@ -113,68 +174,6 @@
                                 </div>
                             </div>
                         @endif
-
-                        {{-- Thông tin đánh giá khách hàng --}}
-                        <div class="card mb-4">
-                            <div class="card-header bg-light">
-                                <h5 class="mb-0">Đánh giá khách hàng</h5>
-                            </div>
-                            <div class="card-body row">
-                                <div class="col-md-6">
-                                    <p><strong>Khách hàng:</strong> {{ $review->user->name ?? 'Khách' }}</p>
-                                    <p><strong>Ngày đánh giá:</strong> {{ $review->created_at->format('d/m/Y H:i') }}</p>
-                                    <p><strong>Số sao:</strong>
-                                        @foreach (range(1, 5) as $i)
-                                            <i
-                                                class="fas fa-star{{ $i <= $review->rating ? ' text-warning' : ' text-muted' }}"></i>
-                                        @endforeach
-                                    </p>
-                                    <p><strong>Trạng thái đánh giá:</strong>
-                                        <span
-                                            class="badge {{ $review->status === 'visible' ? 'bg-success' : 'bg-secondary' }}">
-                                            {{ $review->status === 'visible' ? 'Hiển thị' : 'Đã ẩn' }}
-                                        </span>
-                                    </p>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <p><strong>Bình luận:</strong></p>
-                                    <div class="border p-3 rounded bg-light">
-                                        {{ $review->comment }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {{-- Phản hồi của admin --}}
-                        <div class="card mb-4">
-                            <div class="card-header bg-light">
-                                <h5 class="mb-0">Phản hồi của quản trị viên</h5>
-                            </div>
-                            <div class="card-body">
-                                @if ($review->admin_response)
-                                    <div class="d-flex justify-content-between mb-2">
-                                        <strong>Ngày phản hồi:</strong>
-                                        <span>{{ $review->updated_at->format('d/m/Y H:i') }}</span>
-                                    </div>
-                                    <div class="bg-light border p-3 rounded">
-                                        {{ $review->admin_response }}
-                                    </div>
-                                @else
-                                    <form action="{{ route('admin.reviews.response.store', $review) }}" method="POST">
-                                        @csrf
-                                        <div class="mb-3">
-                                            <label for="admin_response" class="form-label">Nội dung phản hồi</label>
-                                            <textarea name="admin_response" id="admin_response" class="form-control" rows="4" required
-                                                placeholder="Nhập phản hồi..."></textarea>
-                                        </div>
-                                        <button type="submit" class="btn btn-primary">
-                                            <i class="fas fa-paper-plane me-1"></i> Gửi phản hồi
-                                        </button>
-                                    </form>
-                                @endif
-                            </div>
-                        </div>
 
                         {{-- Đánh giá khác --}}
                         @if ($otherReviews->count())
