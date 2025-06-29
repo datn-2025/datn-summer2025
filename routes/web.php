@@ -176,7 +176,7 @@ Route::middleware('guest.admin')->group(function () {
     Route::get('/admin/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
     Route::post('/admin/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
 });
-Route::middleware(['auth:admin', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware('auth:admin')->prefix('admin')->name('admin.')->group(function () {
     Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
 
     Route::get('/', [AdminDashboard::class, 'index'])->name('dashboard');
